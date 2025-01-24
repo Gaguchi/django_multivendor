@@ -1,0 +1,53 @@
+API Instructions
+
+1. Installation & Setup
+   - Make sure "django-rest-framework" and "djangorestframework-simplejwt" are in /e:/Work/WebDev/django_multivendor/requirements.txt.
+   - In your settings.py, add:
+       REST_FRAMEWORK = {
+           'DEFAULT_AUTHENTICATION_CLASSES': [
+               'rest_framework_simplejwt.authentication.JWTAuthentication',
+           ],
+       }
+
+2. Obtain & Refresh JWT Tokens
+   - POST to /api/token/ with valid username & password:
+       {
+         "username": "<your_username>",
+         "password": "<your_password>"
+       }
+   - On success, the response includes access and refresh tokens.
+   - To refresh, POST to /api/token/refresh/ with the refresh token:
+       {
+         "refresh": "<your_refresh_token>"
+       }
+
+3. Using the JWT in Requests
+   - Include the access token in the header:
+       Authorization: Bearer <access_token>
+   - Example (using cURL):
+       curl -H "Authorization: Bearer <access_token>" \
+            http://127.0.0.1:8000/api/products/
+
+4. Protected Endpoints
+   - All views using JWTAuthentication require a valid token.
+   - For example:
+       - /api/vendors/
+       - /api/products/
+       - /api/orders/  (if you add order endpoints)
+   - If the token is invalid or expired, you’ll get a 401 Unauthorized.
+
+5. Settings Recap
+   - In "django_multivendor/django_multivendor/settings.py":
+       INSTALLED_APPS includes 'rest_framework' and 'corsheaders'
+       MIDDLEWARE includes 'corsheaders.middleware.CorsMiddleware'
+       CORS_ALLOW_ALL_ORIGINS = True
+       REST_FRAMEWORK = {
+         'DEFAULT_AUTHENTICATION_CLASSES': [
+           'rest_framework_simplejwt.authentication.JWTAuthentication',
+         ],
+       }
+
+6. Next Steps
+   - Customize token lifetimes in SIMPLE_JWT settings if needed.
+   - Securely store tokens client-side.
+   - Configure additional endpoints and permissions as you expand.
