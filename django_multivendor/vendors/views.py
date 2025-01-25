@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from .models import Vendor, Product
+from .models import Vendor, VendorProduct
 from .serializers import VendorSerializer, ProductSerializer
 
 class VendorViewSet(viewsets.ModelViewSet):
@@ -7,5 +7,5 @@ class VendorViewSet(viewsets.ModelViewSet):
     serializer_class = VendorSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+    queryset = VendorProduct.objects.all()
     serializer_class = ProductSerializer

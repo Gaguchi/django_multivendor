@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from .models import Vendor, VendorProduct
-from users.models import UserProfile
 from django.contrib.auth.models import User
+from users.models import UserProfile
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,25 +9,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     userprofile = UserProfileSerializer()
+    password = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'userprofile']
+        fields = ['id', 'username', 'email', 'password', 'userprofile']
 
     def create(self, validated_data):
         userprofile_data = validated_data.pop('userprofile')
-        user = User.objects.create(**validated_data)
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data.get('email'),
+            password=validated_data['password']
+        )
         UserProfile.objects.create(user=user, **userprofile_data)
         return user
-
-class VendorSerializer(serializers.ModelSerializer):
-    user_profile = UserProfileSerializer()
-
-    class Meta:
-        model = Vendor
-        fields = ['id', 'user_profile', 'shop_name', 'shop_description']
-
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VendorProduct
-        fields = '__all__'
