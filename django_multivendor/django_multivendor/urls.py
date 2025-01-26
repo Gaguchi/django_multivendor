@@ -17,14 +17,73 @@ Including another URLconf
 from django.urls import path, include
 from django.contrib import admin
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from django.urls import get_resolver
+import logging
+
+logger = logging.getLogger(__name__)
+
+class LoggingMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        logger.info(f"=== Incoming Request ===")
+        logger.info(f"Path: {request.path}")
+        logger.info(f"Method: {request.method}")
+        logger.info(f"Headers: {request.headers}")
+        response = self.get_response(request)
+        logger.info(f"Response Status: {response.status_code}")
+        return response
+
+MIDDLEWARE = [
+    'django_multivendor.urls.LoggingMiddleware',
+    # ...existing middleware...
+]
+
+@api_view(['GET'])
+def api_endpoints(request):
+    """
+    List all available API endpoints
+    """
+    endpoints = []
+    resolver = get_resolver()
+    
+    def list_endpoints(resolver, prefix=''):
+        for pattern in resolver.url_patterns:
+            if hasattr(pattern, 'url_patterns'):
+                # This is an included URLconf
+                list_endpoints(pattern, prefix + str(pattern.pattern))
+            else:
+                # This is a URL pattern
+                path = prefix + str(pattern.pattern)
+                if hasattr(pattern.callback, 'actions'):
+                    # ViewSet
+                    for method, action in pattern.callback.actions.items():
+                        endpoints.append(f"{method.upper()}: {path}")
+                else:
+                    # Regular view
+                    endpoints.append(f"ALL: {path}")
+    
+    list_endpoints(resolver)
+    
+    # Log all endpoints
+    logger.info("=== Available API Endpoints ===")
+    for endpoint in endpoints:
+        logger.info(endpoint)
+    
+    return Response({
+        'available_endpoints': endpoints,
+        'note': 'Endpoints prefixed with api/ are REST endpoints'
+    })
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/vendors/', include('vendors.urls')),
-    # path('api/products/', include('products.urls')),
-    path('api/users/', include('users.urls')),  # Added this
-    # ...other URLs...
+    path('api/vendors/', include('vendors.urls')),  # This now handles /api/vendors/
+    path('api/users/', include('users.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/endpoints/', api_endpoints, name='api-endpoints'),  # Add this line
 ]
 # ...existing code...

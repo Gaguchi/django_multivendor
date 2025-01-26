@@ -1,0 +1,324 @@
+[2025-01-26 18:17:48,394] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 18:17:57,449] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 18:18:26,140] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 18:20:27,903] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\vendors\views.py changed, reloading.
+[2025-01-26 18:20:28,308] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 18:20:32,378] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 18:20:47,215] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 18:20:53,649] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 18:21:05,742] WARNING log Unauthorized: /api/vendors/vendors/
+[2025-01-26 18:21:11,206] WARNING log Not Found: /api/vendors/vendors/vendors/
+[2025-01-26 18:21:34,962] WARNING log Not Found: /api/
+[2025-01-26 18:37:29,243] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\django_multivendor\urls.py changed, reloading.
+[2025-01-26 18:37:29,653] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 18:37:32,955] INFO urls === Available API Endpoints ===
+[2025-01-26 18:37:32,955] INFO urls ALL: admin/
+[2025-01-26 18:37:32,955] INFO urls ALL: admin/login/
+[2025-01-26 18:37:32,955] INFO urls ALL: admin/logout/
+[2025-01-26 18:37:32,955] INFO urls ALL: admin/password_change/
+[2025-01-26 18:37:32,956] INFO urls ALL: admin/password_change/done/
+[2025-01-26 18:37:32,956] INFO urls ALL: admin/autocomplete/
+[2025-01-26 18:37:32,956] INFO urls ALL: admin/jsi18n/
+[2025-01-26 18:37:32,956] INFO urls ALL: admin/r/<int:content_type_id>/<path:object_id>/
+[2025-01-26 18:37:32,956] INFO urls ALL: admin/auth/group/
+[2025-01-26 18:37:32,956] INFO urls ALL: admin/auth/group/add/
+[2025-01-26 18:37:32,957] INFO urls ALL: admin/auth/group/<path:object_id>/history/
+[2025-01-26 18:37:32,957] INFO urls ALL: admin/auth/group/<path:object_id>/delete/
+[2025-01-26 18:37:32,957] INFO urls ALL: admin/auth/group/<path:object_id>/change/
+[2025-01-26 18:37:32,957] INFO urls ALL: admin/auth/group/<path:object_id>/
+[2025-01-26 18:37:32,957] INFO urls ALL: admin/auth/user/<id>/password/
+[2025-01-26 18:37:32,957] INFO urls ALL: admin/auth/user/
+[2025-01-26 18:37:32,958] INFO urls ALL: admin/auth/user/add/
+[2025-01-26 18:37:32,958] INFO urls ALL: admin/auth/user/<path:object_id>/history/
+[2025-01-26 18:37:32,958] INFO urls ALL: admin/auth/user/<path:object_id>/delete/
+[2025-01-26 18:37:32,958] INFO urls ALL: admin/auth/user/<path:object_id>/change/
+[2025-01-26 18:37:32,958] INFO urls ALL: admin/auth/user/<path:object_id>/
+[2025-01-26 18:37:32,959] INFO urls ALL: admin/cart/cart/
+[2025-01-26 18:37:32,959] INFO urls ALL: admin/cart/cart/add/
+[2025-01-26 18:37:32,959] INFO urls ALL: admin/cart/cart/<path:object_id>/history/
+[2025-01-26 18:37:32,959] INFO urls ALL: admin/cart/cart/<path:object_id>/delete/
+[2025-01-26 18:37:32,959] INFO urls ALL: admin/cart/cart/<path:object_id>/change/
+[2025-01-26 18:37:32,959] INFO urls ALL: admin/cart/cart/<path:object_id>/
+[2025-01-26 18:37:32,959] INFO urls ALL: admin/cart/cartitem/
+[2025-01-26 18:37:32,960] INFO urls ALL: admin/cart/cartitem/add/
+[2025-01-26 18:37:32,960] INFO urls ALL: admin/cart/cartitem/<path:object_id>/history/
+[2025-01-26 18:37:32,960] INFO urls ALL: admin/cart/cartitem/<path:object_id>/delete/
+[2025-01-26 18:37:32,960] INFO urls ALL: admin/cart/cartitem/<path:object_id>/change/
+[2025-01-26 18:37:32,960] INFO urls ALL: admin/cart/cartitem/<path:object_id>/
+[2025-01-26 18:37:32,961] INFO urls ALL: admin/categories/category/
+[2025-01-26 18:37:32,961] INFO urls ALL: admin/categories/category/add/
+[2025-01-26 18:37:32,961] INFO urls ALL: admin/categories/category/<path:object_id>/history/
+[2025-01-26 18:37:32,961] INFO urls ALL: admin/categories/category/<path:object_id>/delete/
+[2025-01-26 18:37:32,961] INFO urls ALL: admin/categories/category/<path:object_id>/change/
+[2025-01-26 18:37:32,961] INFO urls ALL: admin/categories/category/<path:object_id>/
+[2025-01-26 18:37:32,962] INFO urls ALL: admin/orders/order/
+[2025-01-26 18:37:32,962] INFO urls ALL: admin/orders/order/add/
+[2025-01-26 18:37:32,962] INFO urls ALL: admin/orders/order/<path:object_id>/history/
+[2025-01-26 18:37:32,962] INFO urls ALL: admin/orders/order/<path:object_id>/delete/
+[2025-01-26 18:37:32,963] INFO urls ALL: admin/orders/order/<path:object_id>/change/
+[2025-01-26 18:37:32,963] INFO urls ALL: admin/orders/order/<path:object_id>/
+[2025-01-26 18:37:32,963] INFO urls ALL: admin/orders/orderitem/
+[2025-01-26 18:37:32,963] INFO urls ALL: admin/orders/orderitem/add/
+[2025-01-26 18:37:32,963] INFO urls ALL: admin/orders/orderitem/<path:object_id>/history/
+[2025-01-26 18:37:32,963] INFO urls ALL: admin/orders/orderitem/<path:object_id>/delete/
+[2025-01-26 18:37:32,964] INFO urls ALL: admin/orders/orderitem/<path:object_id>/change/
+[2025-01-26 18:37:32,964] INFO urls ALL: admin/orders/orderitem/<path:object_id>/
+[2025-01-26 18:37:32,964] INFO urls ALL: admin/payments/payment/
+[2025-01-26 18:37:32,964] INFO urls ALL: admin/payments/payment/add/
+[2025-01-26 18:37:32,964] INFO urls ALL: admin/payments/payment/<path:object_id>/history/
+[2025-01-26 18:37:32,965] INFO urls ALL: admin/payments/payment/<path:object_id>/delete/
+[2025-01-26 18:37:32,965] INFO urls ALL: admin/payments/payment/<path:object_id>/change/
+[2025-01-26 18:37:32,965] INFO urls ALL: admin/payments/payment/<path:object_id>/
+[2025-01-26 18:37:32,965] INFO urls ALL: admin/payouts/vendorpayout/
+[2025-01-26 18:37:32,965] INFO urls ALL: admin/payouts/vendorpayout/add/
+[2025-01-26 18:37:32,966] INFO urls ALL: admin/payouts/vendorpayout/<path:object_id>/history/
+[2025-01-26 18:37:32,966] INFO urls ALL: admin/payouts/vendorpayout/<path:object_id>/delete/
+[2025-01-26 18:37:32,966] INFO urls ALL: admin/payouts/vendorpayout/<path:object_id>/change/
+[2025-01-26 18:37:32,966] INFO urls ALL: admin/payouts/vendorpayout/<path:object_id>/
+[2025-01-26 18:37:32,966] INFO urls ALL: admin/reviews/review/
+[2025-01-26 18:37:32,966] INFO urls ALL: admin/reviews/review/add/
+[2025-01-26 18:37:32,967] INFO urls ALL: admin/reviews/review/<path:object_id>/history/
+[2025-01-26 18:37:32,967] INFO urls ALL: admin/reviews/review/<path:object_id>/delete/
+[2025-01-26 18:37:32,967] INFO urls ALL: admin/reviews/review/<path:object_id>/change/
+[2025-01-26 18:37:32,967] INFO urls ALL: admin/reviews/review/<path:object_id>/
+[2025-01-26 18:37:32,967] INFO urls ALL: admin/shipping/shipment/
+[2025-01-26 18:37:32,968] INFO urls ALL: admin/shipping/shipment/add/
+[2025-01-26 18:37:32,968] INFO urls ALL: admin/shipping/shipment/<path:object_id>/history/
+[2025-01-26 18:37:32,968] INFO urls ALL: admin/shipping/shipment/<path:object_id>/delete/
+[2025-01-26 18:37:32,968] INFO urls ALL: admin/shipping/shipment/<path:object_id>/change/
+[2025-01-26 18:37:32,968] INFO urls ALL: admin/shipping/shipment/<path:object_id>/
+[2025-01-26 18:37:32,968] INFO urls ALL: admin/users/userprofile/
+[2025-01-26 18:37:32,969] INFO urls ALL: admin/users/userprofile/add/
+[2025-01-26 18:37:32,969] INFO urls ALL: admin/users/userprofile/<path:object_id>/history/
+[2025-01-26 18:37:32,969] INFO urls ALL: admin/users/userprofile/<path:object_id>/delete/
+[2025-01-26 18:37:32,969] INFO urls ALL: admin/users/userprofile/<path:object_id>/change/
+[2025-01-26 18:37:32,969] INFO urls ALL: admin/users/userprofile/<path:object_id>/
+[2025-01-26 18:37:32,970] INFO urls ALL: admin/vendors/vendor/
+[2025-01-26 18:37:32,970] INFO urls ALL: admin/vendors/vendor/add/
+[2025-01-26 18:37:32,970] INFO urls ALL: admin/vendors/vendor/<path:object_id>/history/
+[2025-01-26 18:37:32,970] INFO urls ALL: admin/vendors/vendor/<path:object_id>/delete/
+[2025-01-26 18:37:32,970] INFO urls ALL: admin/vendors/vendor/<path:object_id>/change/
+[2025-01-26 18:37:32,970] INFO urls ALL: admin/vendors/vendor/<path:object_id>/
+[2025-01-26 18:37:32,970] INFO urls ALL: admin/^(?P<app_label>auth|cart|categories|orders|payments|payouts|reviews|shipping|users|vendors)/$
+[2025-01-26 18:37:32,971] INFO urls ALL: admin/(?P<url>.*)$
+[2025-01-26 18:37:32,971] INFO urls GET: api/vendors/^$
+[2025-01-26 18:37:32,971] INFO urls POST: api/vendors/^$
+[2025-01-26 18:37:32,971] INFO urls GET: api/vendors/^\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,971] INFO urls POST: api/vendors/^\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,972] INFO urls GET: api/vendors/^(?P<pk>[^/.]+)/$
+[2025-01-26 18:37:32,972] INFO urls PUT: api/vendors/^(?P<pk>[^/.]+)/$
+[2025-01-26 18:37:32,972] INFO urls PATCH: api/vendors/^(?P<pk>[^/.]+)/$
+[2025-01-26 18:37:32,972] INFO urls DELETE: api/vendors/^(?P<pk>[^/.]+)/$
+[2025-01-26 18:37:32,972] INFO urls GET: api/vendors/^(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,972] INFO urls PUT: api/vendors/^(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,973] INFO urls PATCH: api/vendors/^(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,973] INFO urls DELETE: api/vendors/^(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,973] INFO urls GET: api/vendors/^products/$
+[2025-01-26 18:37:32,973] INFO urls POST: api/vendors/^products/$
+[2025-01-26 18:37:32,973] INFO urls GET: api/vendors/^products\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,974] INFO urls POST: api/vendors/^products\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,974] INFO urls GET: api/vendors/^products/(?P<pk>[^/.]+)/$
+[2025-01-26 18:37:32,974] INFO urls PUT: api/vendors/^products/(?P<pk>[^/.]+)/$
+[2025-01-26 18:37:32,974] INFO urls PATCH: api/vendors/^products/(?P<pk>[^/.]+)/$
+[2025-01-26 18:37:32,975] INFO urls DELETE: api/vendors/^products/(?P<pk>[^/.]+)/$
+[2025-01-26 18:37:32,975] INFO urls GET: api/vendors/^products/(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,975] INFO urls PUT: api/vendors/^products/(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,976] INFO urls PATCH: api/vendors/^products/(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,976] INFO urls DELETE: api/vendors/^products/(?P<pk>[^/.]+)\.(?P<format>[a-z0-9]+)/?$
+[2025-01-26 18:37:32,976] INFO urls ALL: api/vendors/
+[2025-01-26 18:37:32,976] INFO urls ALL: api/vendors/<drf_format_suffix:format>
+[2025-01-26 18:37:32,976] INFO urls ALL: api/users/register/
+[2025-01-26 18:37:32,977] INFO urls ALL: api/users/login-or-register/
+[2025-01-26 18:37:32,977] INFO urls ALL: api/users/token-info/
+[2025-01-26 18:37:32,977] INFO urls ALL: api/token/
+[2025-01-26 18:37:32,977] INFO urls ALL: api/token/refresh/
+[2025-01-26 18:37:32,977] INFO urls ALL: api/endpoints/
+[2025-01-26 18:37:35,598] WARNING log Not Found: /favicon.ico
+[2025-01-26 18:39:58,669] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\vendors\urls.py changed, reloading.
+[2025-01-26 18:39:59,071] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 18:40:09,383] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 18:49:55,745] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\vendors\views.py changed, reloading.
+[2025-01-26 18:49:56,148] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 18:50:20,882] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 18:50:54,992] WARNING log Not Found: /api/sendors/
+[2025-01-26 18:51:03,429] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 18:55:28,506] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\django_multivendor\settings.py changed, reloading.
+[2025-01-26 18:55:28,915] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 18:55:38,614] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 18:55:38,614] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:03:13,720] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\vendors\views.py changed, reloading.
+[2025-01-26 19:03:14,117] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 19:03:16,562] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:03:16,562] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:03:52,055] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:03:52,055] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:07:49,554] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\vendors\views.py changed, reloading.
+[2025-01-26 19:07:49,935] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 19:07:50,106] INFO urls === Registering Vendor URLs ===
+[2025-01-26 19:07:50,106] INFO urls === Registering Vendor URLs ===
+[2025-01-26 19:07:50,107] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-26 19:07:50,107] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-26 19:07:53,543] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\django_multivendor\urls.py changed, reloading.
+[2025-01-26 19:07:53,923] INFO autoreload Watching for file changes with StatReloader
+[2025-01-26 19:07:54,077] INFO urls === Registering Vendor URLs ===
+[2025-01-26 19:07:54,077] INFO urls === Registering Vendor URLs ===
+[2025-01-26 19:07:54,078] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-26 19:07:54,078] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-26 19:07:56,192] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:07:56,192] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:07:56,192] INFO views Request Method: POST
+[2025-01-26 19:07:56,192] INFO views Request Method: POST
+[2025-01-26 19:07:56,194] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:07:56,194] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:08:09,262] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:08:09,262] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:08:09,263] INFO views Request Method: POST
+[2025-01-26 19:08:09,263] INFO views Request Method: POST
+[2025-01-26 19:08:09,263] INFO views Request User: AnonymousUser
+[2025-01-26 19:08:09,263] INFO views Request User: AnonymousUser
+[2025-01-26 19:08:09,263] INFO views Request Auth: None
+[2025-01-26 19:08:09,263] INFO views Request Auth: None
+[2025-01-26 19:08:09,264] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'text/plain', 'Host': '127.0.0.1:8000', 'User-Agent': 'curl/7.78.0', 'Accept': '*/*'}
+[2025-01-26 19:08:09,264] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'text/plain', 'Host': '127.0.0.1:8000', 'User-Agent': 'curl/7.78.0', 'Accept': '*/*'}
+[2025-01-26 19:08:09,264] INFO views === Checking Permissions ===
+[2025-01-26 19:08:09,264] INFO views === Checking Permissions ===
+[2025-01-26 19:08:09,264] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03A5D450>]
+[2025-01-26 19:08:09,264] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03A5D450>]
+[2025-01-26 19:08:09,265] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:08:09,265] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:08:48,186] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:08:48,186] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:08:48,186] INFO views Request Method: POST
+[2025-01-26 19:08:48,186] INFO views Request Method: POST
+[2025-01-26 19:08:48,188] INFO views Request User: alice
+[2025-01-26 19:08:48,188] INFO views Request User: alice
+[2025-01-26 19:08:48,188] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:08:48,188] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:08:48,189] INFO views Request Headers: {'Content-Length': '13', 'Content-Type': 'application/json', 'Host': '127.0.0.1:8000', 'User-Agent': 'curl/7.78.0', 'Accept': '*/*', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo'}
+[2025-01-26 19:08:48,189] INFO views Request Headers: {'Content-Length': '13', 'Content-Type': 'application/json', 'Host': '127.0.0.1:8000', 'User-Agent': 'curl/7.78.0', 'Accept': '*/*', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo'}
+[2025-01-26 19:08:48,189] INFO views === Checking Permissions ===
+[2025-01-26 19:08:48,189] INFO views === Checking Permissions ===
+[2025-01-26 19:08:48,189] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03B2F750>]
+[2025-01-26 19:08:48,189] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03B2F750>]
+[2025-01-26 19:08:48,190] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:08:48,190] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:08:48,190] WARNING log Bad Request: /api/vendors/
+[2025-01-26 19:08:48,190] WARNING log Bad Request: /api/vendors/
+[2025-01-26 19:09:55,653] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:09:55,653] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:09:55,653] INFO views Request Method: POST
+[2025-01-26 19:09:55,653] INFO views Request Method: POST
+[2025-01-26 19:09:55,654] INFO views Request User: alice
+[2025-01-26 19:09:55,654] INFO views Request User: alice
+[2025-01-26 19:09:55,655] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:09:55,655] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:09:55,655] INFO views Request Headers: {'Content-Length': '60', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; ru-RU) WindowsPowerShell/5.1.19041.5369', 'Host': '127.0.0.1:8000', 'Expect': '100-continue', 'Connection': 'Keep-Alive'}
+[2025-01-26 19:09:55,655] INFO views Request Headers: {'Content-Length': '60', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; ru-RU) WindowsPowerShell/5.1.19041.5369', 'Host': '127.0.0.1:8000', 'Expect': '100-continue', 'Connection': 'Keep-Alive'}
+[2025-01-26 19:09:55,656] INFO views === Checking Permissions ===
+[2025-01-26 19:09:55,656] INFO views === Checking Permissions ===
+[2025-01-26 19:09:55,656] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF037C6E50>]
+[2025-01-26 19:09:55,656] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF037C6E50>]
+[2025-01-26 19:09:55,656] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:09:55,656] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:09:55,657] INFO views Request Data: {'store_name': 'Test Store', 'description': 'Test Description'}
+[2025-01-26 19:09:55,657] INFO views Request Data: {'store_name': 'Test Store', 'description': 'Test Description'}
+[2025-01-26 19:09:55,657] INFO views === Starting Vendor Creation ===
+[2025-01-26 19:09:55,657] INFO views === Starting Vendor Creation ===
+[2025-01-26 19:09:55,657] INFO views User: alice
+[2025-01-26 19:09:55,657] INFO views User: alice
+[2025-01-26 19:09:55,657] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:09:55,657] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:09:55,658] INFO views Headers: {'Content-Length': '60', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; ru-RU) WindowsPowerShell/5.1.19041.5369', 'Host': '127.0.0.1:8000', 'Expect': '100-continue', 'Connection': 'Keep-Alive'}
+[2025-01-26 19:09:55,658] INFO views Headers: {'Content-Length': '60', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'Mozilla/5.0 (Windows NT; Windows NT 10.0; ru-RU) WindowsPowerShell/5.1.19041.5369', 'Host': '127.0.0.1:8000', 'Expect': '100-continue', 'Connection': 'Keep-Alive'}
+[2025-01-26 19:09:55,660] WARNING log Bad Request: /api/vendors/
+[2025-01-26 19:09:55,660] WARNING log Bad Request: /api/vendors/
+[2025-01-26 19:10:08,382] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:10:08,382] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:10:08,383] INFO views Request Method: POST
+[2025-01-26 19:10:08,383] INFO views Request Method: POST
+[2025-01-26 19:10:08,384] INFO views Request User: alice
+[2025-01-26 19:10:08,384] INFO views Request User: alice
+[2025-01-26 19:10:08,384] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:10:08,384] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:10:08,385] INFO views Request Headers: {'Content-Length': '60', 'Content-Type': 'application/json', 'Host': '127.0.0.1:8000', 'User-Agent': 'curl/7.78.0', 'Accept': '*/*', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo'}
+[2025-01-26 19:10:08,385] INFO views Request Headers: {'Content-Length': '60', 'Content-Type': 'application/json', 'Host': '127.0.0.1:8000', 'User-Agent': 'curl/7.78.0', 'Accept': '*/*', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo'}
+[2025-01-26 19:10:08,385] INFO views === Checking Permissions ===
+[2025-01-26 19:10:08,385] INFO views === Checking Permissions ===
+[2025-01-26 19:10:08,386] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03B52F10>]
+[2025-01-26 19:10:08,386] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03B52F10>]
+[2025-01-26 19:10:08,386] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:10:08,386] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:10:08,386] INFO views Request Data: {'store_name': 'Test Store', 'description': 'Test Description'}
+[2025-01-26 19:10:08,386] INFO views Request Data: {'store_name': 'Test Store', 'description': 'Test Description'}
+[2025-01-26 19:10:08,386] INFO views === Starting Vendor Creation ===
+[2025-01-26 19:10:08,386] INFO views === Starting Vendor Creation ===
+[2025-01-26 19:10:08,387] INFO views User: alice
+[2025-01-26 19:10:08,387] INFO views User: alice
+[2025-01-26 19:10:08,387] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:10:08,387] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:10:08,387] INFO views Headers: {'Content-Length': '60', 'Content-Type': 'application/json', 'Host': '127.0.0.1:8000', 'User-Agent': 'curl/7.78.0', 'Accept': '*/*', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo'}
+[2025-01-26 19:10:08,387] INFO views Headers: {'Content-Length': '60', 'Content-Type': 'application/json', 'Host': '127.0.0.1:8000', 'User-Agent': 'curl/7.78.0', 'Accept': '*/*', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo'}
+[2025-01-26 19:10:08,389] WARNING log Bad Request: /api/vendors/
+[2025-01-26 19:10:08,389] WARNING log Bad Request: /api/vendors/
+[2025-01-26 19:10:27,166] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:10:27,166] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:10:27,166] INFO views Request Method: POST
+[2025-01-26 19:10:27,166] INFO views Request Method: POST
+[2025-01-26 19:10:27,167] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:10:27,167] WARNING log Unauthorized: /api/vendors/
+[2025-01-26 19:12:10,566] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:12:10,566] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:12:10,566] INFO views Request Method: POST
+[2025-01-26 19:12:10,566] INFO views Request Method: POST
+[2025-01-26 19:12:10,568] INFO views Request User: alice
+[2025-01-26 19:12:10,568] INFO views Request User: alice
+[2025-01-26 19:12:10,568] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:12:10,568] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:12:10,569] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '86360d76-e1f7-47de-9533-02ba6b16d1ef', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-26 19:12:10,569] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '86360d76-e1f7-47de-9533-02ba6b16d1ef', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-26 19:12:10,569] INFO views === Checking Permissions ===
+[2025-01-26 19:12:10,569] INFO views === Checking Permissions ===
+[2025-01-26 19:12:10,570] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03B2DAD0>]
+[2025-01-26 19:12:10,570] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03B2DAD0>]
+[2025-01-26 19:12:10,570] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:12:10,570] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:12:10,570] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-26 19:12:10,570] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-26 19:12:10,571] INFO views === Starting Vendor Creation ===
+[2025-01-26 19:12:10,571] INFO views === Starting Vendor Creation ===
+[2025-01-26 19:12:10,571] INFO views User: alice
+[2025-01-26 19:12:10,571] INFO views User: alice
+[2025-01-26 19:12:10,571] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:12:10,571] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:12:10,572] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '86360d76-e1f7-47de-9533-02ba6b16d1ef', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-26 19:12:10,572] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '86360d76-e1f7-47de-9533-02ba6b16d1ef', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-26 19:12:10,574] WARNING log Bad Request: /api/vendors/
+[2025-01-26 19:12:10,574] WARNING log Bad Request: /api/vendors/
+[2025-01-26 19:12:21,417] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:12:21,417] INFO views === VendorViewSet Initial Processing ===
+[2025-01-26 19:12:21,417] INFO views Request Method: POST
+[2025-01-26 19:12:21,417] INFO views Request Method: POST
+[2025-01-26 19:12:21,419] INFO views Request User: alice
+[2025-01-26 19:12:21,419] INFO views Request User: alice
+[2025-01-26 19:12:21,419] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:12:21,419] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:12:21,420] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '6553c8d3-7359-48bf-b644-5ab69d5600e3', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-26 19:12:21,420] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '6553c8d3-7359-48bf-b644-5ab69d5600e3', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-26 19:12:21,421] INFO views === Checking Permissions ===
+[2025-01-26 19:12:21,421] INFO views === Checking Permissions ===
+[2025-01-26 19:12:21,421] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03A99D90>]
+[2025-01-26 19:12:21,421] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001BF03A99D90>]
+[2025-01-26 19:12:21,421] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:12:21,421] INFO views === VendorViewSet Create Method ===
+[2025-01-26 19:12:21,422] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-26 19:12:21,422] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-26 19:12:21,422] INFO views === Starting Vendor Creation ===
+[2025-01-26 19:12:21,422] INFO views === Starting Vendor Creation ===
+[2025-01-26 19:12:21,423] INFO views User: alice
+[2025-01-26 19:12:21,423] INFO views User: alice
+[2025-01-26 19:12:21,423] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:12:21,423] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo
+[2025-01-26 19:12:21,423] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '6553c8d3-7359-48bf-b644-5ab69d5600e3', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-26 19:12:21,423] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '6553c8d3-7359-48bf-b644-5ab69d5600e3', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-26 19:12:21,426] WARNING log Bad Request: /api/vendors/
+[2025-01-26 19:12:21,426] WARNING log Bad Request: /api/vendors/

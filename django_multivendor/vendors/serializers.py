@@ -1,34 +1,58 @@
 from rest_framework import serializers
 from .models import Vendor, VendorProduct
+from users.serializers import UserSerializer
 from users.models import UserProfile
-from django.contrib.auth.models import User
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = ['user_type', 'first_name', 'last_name', 'phone', 'address']
-
-class UserSerializer(serializers.ModelSerializer):
-    userprofile = UserProfileSerializer()
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'userprofile']
-
-    def create(self, validated_data):
-        userprofile_data = validated_data.pop('userprofile')
-        user = User.objects.create(**validated_data)
-        UserProfile.objects.create(user=user, **userprofile_data)
-        return user
 
 class VendorSerializer(serializers.ModelSerializer):
-    user_profile = UserProfileSerializer()
+    user = UserSerializer(read_only=True)  # User will be set from the request
 
     class Meta:
         model = Vendor
-        fields = ['id', 'user_profile', 'shop_name', 'shop_description']
+        fields = [
+            'id', 'user', 'store_name', 'description', 
+            'contact_email', 'phone', 'address', 
+            'logo', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['user', 'created_at', 'updated_at']
+
+    def validate(self, data):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            raise serializers.ValidationError("Authentication required")
+
+        try:
+            user_profile = UserProfile.objects.get(user=request.user)
+            if user_profile.user_type != 'vendor':
+                raise serializers.ValidationError("User must be a vendor type")
+        except UserProfile.DoesNotExist:
+            raise serializers.ValidationError("User profile not found")
+
+        return data
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            raise serializers.ValidationError("Authentication required")
+        
+        vendor = Vendor.objects.create(**validated_data)
+        return vendor
 
 class ProductSerializer(serializers.ModelSerializer):
+    vendor = VendorSerializer(read_only=True)  # Vendor will be set from the authenticated user
+
     class Meta:
         model = VendorProduct
-        fields = '__all__'
+        fields = [
+            'id', 'vendor', 'name', 'sku', 
+            'price', 'stock', 'description',
+            'thumbnail', 'image', 'video'
+        ]
+        read_only_fields = ['vendor']
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        if not request or not request.user.is_authenticated:
+            raise serializers.ValidationError("Authentication required")
+        
+        product = VendorProduct.objects.create(**validated_data)
+        return product
