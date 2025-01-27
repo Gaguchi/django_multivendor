@@ -596,3 +596,5 @@ NameError: name 'UserProfileSerializer' is not defined
 [2025-01-27 22:24:03,734] WARNING log Method Not Allowed: /api/vendors/products/
 [2025-01-27 22:24:03,734] WARNING log Method Not Allowed: /api/vendors/products/
 [2025-01-27 22:24:19,369] INFO views Creating product for vendor: My New Store
+[2025-01-27 22:26:22,499] WARNING log Method Not Allowed: /api/products/
+[2025-01-27 22:26:22,499] WARNING log Method Not Allowed: /api/products/
