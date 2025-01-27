@@ -606,3 +606,37 @@ NameError: name 'UserProfileSerializer' is not defined
 [2025-01-27 22:31:17,800] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
 [2025-01-27 22:31:51,381] WARNING log Unauthorized: /api/users/profile/
 [2025-01-27 22:31:51,381] WARNING log Unauthorized: /api/users/profile/
+[2025-01-27 22:33:33,272] WARNING log Unauthorized: /api/users/profile/
+[2025-01-27 22:33:33,272] WARNING log Unauthorized: /api/users/profile/
+[2025-01-27 22:37:51,356] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:37:51,356] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:37:51,356] INFO views Request Method: GET
+[2025-01-27 22:37:51,356] INFO views Request Method: GET
+[2025-01-27 22:37:51,358] INFO views Request User: alice
+[2025-01-27 22:37:51,358] INFO views Request User: alice
+[2025-01-27 22:37:51,358] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:37:51,358] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:37:51,359] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '0bf72e86-bda4-4d34-a980-78c4c4c93f1b', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:37:51,359] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '0bf72e86-bda4-4d34-a980-78c4c4c93f1b', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:37:51,360] INFO views === Checking Permissions ===
+[2025-01-27 22:37:51,360] INFO views === Checking Permissions ===
+[2025-01-27 22:37:51,360] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002A2C9755CD0>]
+[2025-01-27 22:37:51,360] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002A2C9755CD0>]
+[2025-01-27 22:41:01,450] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:41:01,450] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:41:01,450] INFO views Request Method: GET
+[2025-01-27 22:41:01,450] INFO views Request Method: GET
+[2025-01-27 22:41:01,452] INFO views Request User: alice
+[2025-01-27 22:41:01,452] INFO views Request User: alice
+[2025-01-27 22:41:01,452] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:41:01,452] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:41:01,453] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'ecfc9875-e916-4465-9994-80ed22a0163d', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:41:01,453] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'ecfc9875-e916-4465-9994-80ed22a0163d', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:41:01,453] INFO views === Checking Permissions ===
+[2025-01-27 22:41:01,453] INFO views === Checking Permissions ===
+[2025-01-27 22:41:01,454] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002A2C9748690>]
+[2025-01-27 22:41:01,454] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002A2C9748690>]
+[2025-01-27 22:41:01,454] INFO views === Checking Permissions ===
+[2025-01-27 22:41:01,454] INFO views === Checking Permissions ===
+[2025-01-27 22:41:01,455] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002A2C96217D0>]
+[2025-01-27 22:41:01,455] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002A2C96217D0>]
