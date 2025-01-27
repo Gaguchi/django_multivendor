@@ -121,3 +121,16 @@ class UpdateProfileView(APIView):
             },
             'profile': UserProfileSerializer(userprofile).data
         })
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """Get current user's profile"""
+        user = request.user
+        user_data = {
+            'username': user.username,
+            'email': user.email,
+            'profile': UserProfileSerializer(user.userprofile).data
+        }
+        return Response(user_data)

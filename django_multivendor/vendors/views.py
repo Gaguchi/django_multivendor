@@ -1,6 +1,7 @@
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import action
 import logging
 from .models import Vendor, VendorProduct
 from .serializers import VendorSerializer, ProductSerializer
@@ -46,6 +47,27 @@ class VendorViewSet(viewsets.ModelViewSet):
         perms = super().get_permissions()
         logger.info(f"Permission Classes: {perms}")
         return perms
+
+    @action(detail=False, methods=['get'])
+    def my_vendor(self, request):
+        """Get the current user's vendor profile"""
+        try:
+            vendor = Vendor.objects.get(user=request.user)
+            serializer = self.get_serializer(vendor)
+            return Response(serializer.data)
+        except Vendor.DoesNotExist:
+            return Response(
+                {"detail": "No vendor profile found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    @action(detail=True, methods=['get'])
+    def products(self, request, pk=None):
+        """Get products for a specific vendor"""
+        vendor = self.get_object()
+        products = vendor.vendor_products.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = VendorProduct.objects.all()

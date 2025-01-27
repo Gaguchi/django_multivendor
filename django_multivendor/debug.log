@@ -598,3 +598,11 @@ NameError: name 'UserProfileSerializer' is not defined
 [2025-01-27 22:24:19,369] INFO views Creating product for vendor: My New Store
 [2025-01-27 22:26:22,499] WARNING log Method Not Allowed: /api/products/
 [2025-01-27 22:26:22,499] WARNING log Method Not Allowed: /api/products/
+[2025-01-27 22:31:17,210] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\users\urls.py changed, reloading.
+[2025-01-27 22:31:17,629] INFO autoreload Watching for file changes with StatReloader
+[2025-01-27 22:31:17,799] INFO urls === Registering Vendor URLs ===
+[2025-01-27 22:31:17,799] INFO urls === Registering Vendor URLs ===
+[2025-01-27 22:31:17,800] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 22:31:17,800] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 22:31:51,381] WARNING log Unauthorized: /api/users/profile/
+[2025-01-27 22:31:51,381] WARNING log Unauthorized: /api/users/profile/
