@@ -322,3 +322,277 @@
 [2025-01-26 19:12:21,423] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTA3NDE5LCJpYXQiOjE3Mzc5MDM4MTksImp0aSI6IjZmNzY0ZDI1M2QzMDQ4OTVhZWZkNjM4NzRjOThlMGQzIiwidXNlcl9pZCI6Mn0.Agkk7r5k9wTkkDvrGPtpk-a-dsd6vTZFZQIgM2piYyo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '6553c8d3-7359-48bf-b644-5ab69d5600e3', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
 [2025-01-26 19:12:21,426] WARNING log Bad Request: /api/vendors/
 [2025-01-26 19:12:21,426] WARNING log Bad Request: /api/vendors/
+[2025-01-27 10:08:13,934] INFO autoreload Watching for file changes with StatReloader
+[2025-01-27 10:08:14,198] INFO urls === Registering Vendor URLs ===
+[2025-01-27 10:08:14,198] INFO urls === Registering Vendor URLs ===
+[2025-01-27 10:08:14,198] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 10:08:14,198] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 10:08:24,977] WARNING log Not Found: /
+[2025-01-27 10:08:24,977] WARNING log Not Found: /
+[2025-01-27 10:08:25,267] WARNING log Not Found: /favicon.ico
+[2025-01-27 10:08:25,267] WARNING log Not Found: /favicon.ico
+[2025-01-27 11:57:25,504] WARNING log Bad Request: /api/users/register/
+[2025-01-27 11:57:25,504] WARNING log Bad Request: /api/users/register/
+[2025-01-27 12:05:46,619] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\users\views.py changed, reloading.
+[2025-01-27 12:05:47,119] INFO autoreload Watching for file changes with StatReloader
+[2025-01-27 12:05:47,336] INFO urls === Registering Vendor URLs ===
+[2025-01-27 12:05:47,336] INFO urls === Registering Vendor URLs ===
+[2025-01-27 12:05:47,337] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 12:05:47,337] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 12:06:29,188] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 12:06:29,188] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 12:06:29,189] INFO views Request Method: POST
+[2025-01-27 12:06:29,189] INFO views Request Method: POST
+[2025-01-27 12:06:29,190] WARNING log Unauthorized: /api/vendors/
+[2025-01-27 12:06:29,190] WARNING log Unauthorized: /api/vendors/
+[2025-01-27 12:09:11,575] WARNING log Unauthorized: /api/users/profile/update/
+[2025-01-27 12:09:11,575] WARNING log Unauthorized: /api/users/profile/update/
+[2025-01-27 12:09:49,661] WARNING log Unauthorized: /api/users/profile/update/
+[2025-01-27 12:09:49,661] WARNING log Unauthorized: /api/users/profile/update/
+[2025-01-27 12:12:07,290] ERROR log Internal Server Error: /api/users/profile/update/
+Traceback (most recent call last):
+  File "C:\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Work\WebDev\django_multivendor\django_multivendor\users\views.py", line 110, in patch
+    profile_serializer = UserProfileSerializer(userprofile, data=profile_data, partial=True)
+                         ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'UserProfileSerializer' is not defined
+[2025-01-27 12:12:07,290] ERROR log Internal Server Error: /api/users/profile/update/
+Traceback (most recent call last):
+  File "C:\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Work\WebDev\django_multivendor\django_multivendor\users\views.py", line 110, in patch
+    profile_serializer = UserProfileSerializer(userprofile, data=profile_data, partial=True)
+                         ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'UserProfileSerializer' is not defined
+[2025-01-27 12:12:45,939] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\users\views.py changed, reloading.
+[2025-01-27 12:12:46,337] INFO autoreload Watching for file changes with StatReloader
+[2025-01-27 12:12:46,497] INFO urls === Registering Vendor URLs ===
+[2025-01-27 12:12:46,497] INFO urls === Registering Vendor URLs ===
+[2025-01-27 12:12:46,498] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 12:12:46,498] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 16:45:31,630] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 16:45:31,630] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 16:45:31,630] INFO views Request Method: POST
+[2025-01-27 16:45:31,630] INFO views Request Method: POST
+[2025-01-27 16:45:31,631] WARNING log Unauthorized: /api/vendors/
+[2025-01-27 16:45:31,631] WARNING log Unauthorized: /api/vendors/
+[2025-01-27 16:46:02,023] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 16:46:02,023] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 16:46:02,024] INFO views Request Method: POST
+[2025-01-27 16:46:02,024] INFO views Request Method: POST
+[2025-01-27 16:46:02,025] INFO views Request User: alice
+[2025-01-27 16:46:02,025] INFO views Request User: alice
+[2025-01-27 16:46:02,026] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTg1NTM4LCJpYXQiOjE3Mzc5ODE5MzgsImp0aSI6ImRkNmUzZjdjN2ExOTQ5YzRhMjRkOWUzZmU0ZGFlMDVhIiwidXNlcl9pZCI6Mn0.e7Lbflbouoc1-C7nyuDjnIWWjHMDA1w7bNQfJRSEijo
+[2025-01-27 16:46:02,026] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTg1NTM4LCJpYXQiOjE3Mzc5ODE5MzgsImp0aSI6ImRkNmUzZjdjN2ExOTQ5YzRhMjRkOWUzZmU0ZGFlMDVhIiwidXNlcl9pZCI6Mn0.e7Lbflbouoc1-C7nyuDjnIWWjHMDA1w7bNQfJRSEijo
+[2025-01-27 16:46:02,026] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTg1NTM4LCJpYXQiOjE3Mzc5ODE5MzgsImp0aSI6ImRkNmUzZjdjN2ExOTQ5YzRhMjRkOWUzZmU0ZGFlMDVhIiwidXNlcl9pZCI6Mn0.e7Lbflbouoc1-C7nyuDjnIWWjHMDA1w7bNQfJRSEijo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '60c6deaf-91ae-4e80-9c05-61e6d78e42dc', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 16:46:02,026] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTg1NTM4LCJpYXQiOjE3Mzc5ODE5MzgsImp0aSI6ImRkNmUzZjdjN2ExOTQ5YzRhMjRkOWUzZmU0ZGFlMDVhIiwidXNlcl9pZCI6Mn0.e7Lbflbouoc1-C7nyuDjnIWWjHMDA1w7bNQfJRSEijo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '60c6deaf-91ae-4e80-9c05-61e6d78e42dc', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 16:46:02,027] INFO views === Checking Permissions ===
+[2025-01-27 16:46:02,027] INFO views === Checking Permissions ===
+[2025-01-27 16:46:02,027] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB509390>]
+[2025-01-27 16:46:02,027] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB509390>]
+[2025-01-27 16:46:02,028] INFO views === VendorViewSet Create Method ===
+[2025-01-27 16:46:02,028] INFO views === VendorViewSet Create Method ===
+[2025-01-27 16:46:02,028] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-27 16:46:02,028] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-27 16:46:02,028] INFO views === Starting Vendor Creation ===
+[2025-01-27 16:46:02,028] INFO views === Starting Vendor Creation ===
+[2025-01-27 16:46:02,028] INFO views User: alice
+[2025-01-27 16:46:02,028] INFO views User: alice
+[2025-01-27 16:46:02,029] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTg1NTM4LCJpYXQiOjE3Mzc5ODE5MzgsImp0aSI6ImRkNmUzZjdjN2ExOTQ5YzRhMjRkOWUzZmU0ZGFlMDVhIiwidXNlcl9pZCI6Mn0.e7Lbflbouoc1-C7nyuDjnIWWjHMDA1w7bNQfJRSEijo
+[2025-01-27 16:46:02,029] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTg1NTM4LCJpYXQiOjE3Mzc5ODE5MzgsImp0aSI6ImRkNmUzZjdjN2ExOTQ5YzRhMjRkOWUzZmU0ZGFlMDVhIiwidXNlcl9pZCI6Mn0.e7Lbflbouoc1-C7nyuDjnIWWjHMDA1w7bNQfJRSEijo
+[2025-01-27 16:46:02,029] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTg1NTM4LCJpYXQiOjE3Mzc5ODE5MzgsImp0aSI6ImRkNmUzZjdjN2ExOTQ5YzRhMjRkOWUzZmU0ZGFlMDVhIiwidXNlcl9pZCI6Mn0.e7Lbflbouoc1-C7nyuDjnIWWjHMDA1w7bNQfJRSEijo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '60c6deaf-91ae-4e80-9c05-61e6d78e42dc', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 16:46:02,029] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTg1NTM4LCJpYXQiOjE3Mzc5ODE5MzgsImp0aSI6ImRkNmUzZjdjN2ExOTQ5YzRhMjRkOWUzZmU0ZGFlMDVhIiwidXNlcl9pZCI6Mn0.e7Lbflbouoc1-C7nyuDjnIWWjHMDA1w7bNQfJRSEijo', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '60c6deaf-91ae-4e80-9c05-61e6d78e42dc', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 16:46:02,031] INFO views Performing create for user: alice
+[2025-01-27 16:46:02,031] INFO views Performing create for user: alice
+[2025-01-27 18:05:31,792] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 18:05:31,792] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 18:05:31,793] INFO views Request Method: POST
+[2025-01-27 18:05:31,793] INFO views Request Method: POST
+[2025-01-27 18:05:31,794] WARNING log Unauthorized: /api/vendors/
+[2025-01-27 18:05:31,794] WARNING log Unauthorized: /api/vendors/
+[2025-01-27 18:06:04,247] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 18:06:04,247] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 18:06:04,248] INFO views Request Method: POST
+[2025-01-27 18:06:04,248] INFO views Request Method: POST
+[2025-01-27 18:06:04,249] INFO views Request User: alice
+[2025-01-27 18:06:04,249] INFO views Request User: alice
+[2025-01-27 18:06:04,249] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTkwMzU1LCJpYXQiOjE3Mzc5ODY3NTUsImp0aSI6IjdlYTVjMTJiZjEyYzQxYjZiMDM3NmM3Nzk1MDI5YjFjIiwidXNlcl9pZCI6Mn0.KXQ11bVEGpTCjdVD0CiynExM8QXqsVExsWgLdT2_ukQ
+[2025-01-27 18:06:04,249] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTkwMzU1LCJpYXQiOjE3Mzc5ODY3NTUsImp0aSI6IjdlYTVjMTJiZjEyYzQxYjZiMDM3NmM3Nzk1MDI5YjFjIiwidXNlcl9pZCI6Mn0.KXQ11bVEGpTCjdVD0CiynExM8QXqsVExsWgLdT2_ukQ
+[2025-01-27 18:06:04,249] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTkwMzU1LCJpYXQiOjE3Mzc5ODY3NTUsImp0aSI6IjdlYTVjMTJiZjEyYzQxYjZiMDM3NmM3Nzk1MDI5YjFjIiwidXNlcl9pZCI6Mn0.KXQ11bVEGpTCjdVD0CiynExM8QXqsVExsWgLdT2_ukQ', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '2af101a2-b906-42d5-9015-e17906db3311', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 18:06:04,249] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTkwMzU1LCJpYXQiOjE3Mzc5ODY3NTUsImp0aSI6IjdlYTVjMTJiZjEyYzQxYjZiMDM3NmM3Nzk1MDI5YjFjIiwidXNlcl9pZCI6Mn0.KXQ11bVEGpTCjdVD0CiynExM8QXqsVExsWgLdT2_ukQ', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '2af101a2-b906-42d5-9015-e17906db3311', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 18:06:04,250] INFO views === Checking Permissions ===
+[2025-01-27 18:06:04,250] INFO views === Checking Permissions ===
+[2025-01-27 18:06:04,250] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB52DA90>]
+[2025-01-27 18:06:04,250] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB52DA90>]
+[2025-01-27 18:06:04,251] INFO views === VendorViewSet Create Method ===
+[2025-01-27 18:06:04,251] INFO views === VendorViewSet Create Method ===
+[2025-01-27 18:06:04,251] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-27 18:06:04,251] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-27 18:06:04,251] INFO views === Starting Vendor Creation ===
+[2025-01-27 18:06:04,251] INFO views === Starting Vendor Creation ===
+[2025-01-27 18:06:04,251] INFO views User: alice
+[2025-01-27 18:06:04,251] INFO views User: alice
+[2025-01-27 18:06:04,252] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTkwMzU1LCJpYXQiOjE3Mzc5ODY3NTUsImp0aSI6IjdlYTVjMTJiZjEyYzQxYjZiMDM3NmM3Nzk1MDI5YjFjIiwidXNlcl9pZCI6Mn0.KXQ11bVEGpTCjdVD0CiynExM8QXqsVExsWgLdT2_ukQ
+[2025-01-27 18:06:04,252] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTkwMzU1LCJpYXQiOjE3Mzc5ODY3NTUsImp0aSI6IjdlYTVjMTJiZjEyYzQxYjZiMDM3NmM3Nzk1MDI5YjFjIiwidXNlcl9pZCI6Mn0.KXQ11bVEGpTCjdVD0CiynExM8QXqsVExsWgLdT2_ukQ
+[2025-01-27 18:06:04,252] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTkwMzU1LCJpYXQiOjE3Mzc5ODY3NTUsImp0aSI6IjdlYTVjMTJiZjEyYzQxYjZiMDM3NmM3Nzk1MDI5YjFjIiwidXNlcl9pZCI6Mn0.KXQ11bVEGpTCjdVD0CiynExM8QXqsVExsWgLdT2_ukQ', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '2af101a2-b906-42d5-9015-e17906db3311', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 18:06:04,252] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM3OTkwMzU1LCJpYXQiOjE3Mzc5ODY3NTUsImp0aSI6IjdlYTVjMTJiZjEyYzQxYjZiMDM3NmM3Nzk1MDI5YjFjIiwidXNlcl9pZCI6Mn0.KXQ11bVEGpTCjdVD0CiynExM8QXqsVExsWgLdT2_ukQ', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '2af101a2-b906-42d5-9015-e17906db3311', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 18:06:04,254] WARNING log Bad Request: /api/vendors/
+[2025-01-27 18:06:04,254] WARNING log Bad Request: /api/vendors/
+[2025-01-27 21:52:48,297] WARNING log Not Found: /
+[2025-01-27 21:52:48,297] WARNING log Not Found: /
+[2025-01-27 22:18:46,835] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:18:46,835] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:18:46,835] INFO views Request Method: POST
+[2025-01-27 22:18:46,835] INFO views Request Method: POST
+[2025-01-27 22:18:46,837] INFO views Request User: alice
+[2025-01-27 22:18:46,837] INFO views Request User: alice
+[2025-01-27 22:18:46,837] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:18:46,837] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:18:46,838] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '808c592c-1842-4a6c-9e7e-eaee66b4f5fd', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:18:46,838] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '808c592c-1842-4a6c-9e7e-eaee66b4f5fd', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:18:46,839] INFO views === Checking Permissions ===
+[2025-01-27 22:18:46,839] INFO views === Checking Permissions ===
+[2025-01-27 22:18:46,839] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB5F2050>]
+[2025-01-27 22:18:46,839] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB5F2050>]
+[2025-01-27 22:18:46,839] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:18:46,839] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:20:19,495] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:20:19,495] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:20:19,495] INFO views Request Method: POST
+[2025-01-27 22:20:19,495] INFO views Request Method: POST
+[2025-01-27 22:20:19,497] INFO views Request User: alice
+[2025-01-27 22:20:19,497] INFO views Request User: alice
+[2025-01-27 22:20:19,497] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:20:19,497] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:20:19,497] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '7f74afd2-671f-4de8-93e1-57c748aa55e3', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:20:19,497] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '7f74afd2-671f-4de8-93e1-57c748aa55e3', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:20:19,498] INFO views === Checking Permissions ===
+[2025-01-27 22:20:19,498] INFO views === Checking Permissions ===
+[2025-01-27 22:20:19,498] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB5A2B50>]
+[2025-01-27 22:20:19,498] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB5A2B50>]
+[2025-01-27 22:20:19,499] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:20:19,499] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:20:56,823] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:20:56,823] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:20:56,823] INFO views Request Method: POST
+[2025-01-27 22:20:56,823] INFO views Request Method: POST
+[2025-01-27 22:20:56,825] INFO views Request User: alice
+[2025-01-27 22:20:56,825] INFO views Request User: alice
+[2025-01-27 22:20:56,825] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:20:56,825] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:20:56,826] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '227cc5c6-c36f-4fce-8558-f842ebc9b0ad', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:20:56,826] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '227cc5c6-c36f-4fce-8558-f842ebc9b0ad', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:20:56,827] INFO views === Checking Permissions ===
+[2025-01-27 22:20:56,827] INFO views === Checking Permissions ===
+[2025-01-27 22:20:56,827] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB566810>]
+[2025-01-27 22:20:56,827] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000021EAB566810>]
+[2025-01-27 22:20:56,827] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:20:56,827] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:22:37,336] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\django_multivendor\urls.py changed, reloading.
+[2025-01-27 22:22:37,784] INFO autoreload Watching for file changes with StatReloader
+[2025-01-27 22:22:37,971] INFO urls === Registering Vendor URLs ===
+[2025-01-27 22:22:37,971] INFO urls === Registering Vendor URLs ===
+[2025-01-27 22:22:37,972] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 22:22:37,972] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 22:22:42,336] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:22:42,336] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:22:42,336] INFO views Request Method: POST
+[2025-01-27 22:22:42,336] INFO views Request Method: POST
+[2025-01-27 22:22:42,338] INFO views Request User: alice
+[2025-01-27 22:22:42,338] INFO views Request User: alice
+[2025-01-27 22:22:42,339] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:22:42,339] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:22:42,339] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'ffe624c0-45a0-4319-85b6-e6a05ba63c17', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:22:42,339] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'ffe624c0-45a0-4319-85b6-e6a05ba63c17', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:22:42,341] INFO views === Checking Permissions ===
+[2025-01-27 22:22:42,341] INFO views === Checking Permissions ===
+[2025-01-27 22:22:42,341] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002AFBB1D6850>]
+[2025-01-27 22:22:42,341] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002AFBB1D6850>]
+[2025-01-27 22:22:42,343] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:22:42,343] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:22:50,743] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:22:50,743] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:22:50,743] INFO views Request Method: POST
+[2025-01-27 22:22:50,743] INFO views Request Method: POST
+[2025-01-27 22:22:50,745] INFO views Request User: alice
+[2025-01-27 22:22:50,745] INFO views Request User: alice
+[2025-01-27 22:22:50,745] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:22:50,745] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:22:50,746] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'f1cab8ba-2d6f-489d-9f6e-d30f27aa4487', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:22:50,746] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'f1cab8ba-2d6f-489d-9f6e-d30f27aa4487', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:22:50,747] INFO views === Checking Permissions ===
+[2025-01-27 22:22:50,747] INFO views === Checking Permissions ===
+[2025-01-27 22:22:50,747] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002AFBB189A50>]
+[2025-01-27 22:22:50,747] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002AFBB189A50>]
+[2025-01-27 22:22:50,747] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:22:50,747] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:23:57,789] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\products\urls.py changed, reloading.
+[2025-01-27 22:23:58,192] INFO autoreload Watching for file changes with StatReloader
+[2025-01-27 22:23:58,350] INFO urls === Registering Vendor URLs ===
+[2025-01-27 22:23:58,350] INFO urls === Registering Vendor URLs ===
+[2025-01-27 22:23:58,351] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 22:23:58,351] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 22:24:00,763] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\django_multivendor\urls.py changed, reloading.
+[2025-01-27 22:24:01,141] INFO autoreload Watching for file changes with StatReloader
+[2025-01-27 22:24:01,289] INFO urls === Registering Vendor URLs ===
+[2025-01-27 22:24:01,289] INFO urls === Registering Vendor URLs ===
+[2025-01-27 22:24:01,290] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 22:24:01,290] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-27 22:24:03,729] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:24:03,729] INFO views === VendorViewSet Initial Processing ===
+[2025-01-27 22:24:03,730] INFO views Request Method: POST
+[2025-01-27 22:24:03,730] INFO views Request Method: POST
+[2025-01-27 22:24:03,732] INFO views Request User: alice
+[2025-01-27 22:24:03,732] INFO views Request User: alice
+[2025-01-27 22:24:03,732] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:24:03,732] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0
+[2025-01-27 22:24:03,733] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '877a731f-2c1a-413e-a879-df282c976caa', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:24:03,733] INFO views Request Headers: {'Content-Length': '136', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MDA1NDkxLCJpYXQiOjE3MzgwMDE4OTEsImp0aSI6IjUyZWJhNmRlNjRkYTQ0YjNhZGY1OTVkNGEwZWVjMmYzIiwidXNlcl9pZCI6Mn0.2A8C8aWewR89Ba4gOxGTL1x2fEXMXm4CtwpMXI_DbV0', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '877a731f-2c1a-413e-a879-df282c976caa', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-27 22:24:03,733] INFO views === Checking Permissions ===
+[2025-01-27 22:24:03,733] INFO views === Checking Permissions ===
+[2025-01-27 22:24:03,734] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000029EA92CBE90>]
+[2025-01-27 22:24:03,734] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000029EA92CBE90>]
+[2025-01-27 22:24:03,734] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:24:03,734] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-27 22:24:19,369] INFO views Creating product for vendor: My New Store

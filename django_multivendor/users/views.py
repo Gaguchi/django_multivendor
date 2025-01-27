@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserProfileSerializer
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from .models import UserProfile
@@ -89,3 +89,35 @@ class TokenInfoView(APIView):
                 }, 
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+class UpdateProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def patch(self, request):
+        """Update user and profile information"""
+        user = request.user
+        userprofile = user.userprofile
+        
+        # Update User model fields
+        user_data = request.data.get('user', {})
+        if 'email' in user_data:
+            user.email = user_data['email']
+            user.save()
+            
+        # Update UserProfile fields
+        profile_data = request.data.get('profile', {})
+        if profile_data:
+            profile_serializer = UserProfileSerializer(userprofile, data=profile_data, partial=True)
+            if profile_serializer.is_valid():
+                profile_serializer.save()
+            else:
+                return Response(profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Return updated data
+        return Response({
+            'user': {
+                'email': user.email,
+                'username': user.username,
+            },
+            'profile': UserProfileSerializer(userprofile).data
+        })
