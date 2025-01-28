@@ -1085,3 +1085,5 @@ orders.models.Order.payment.RelatedObjectDoesNotExist: Order has no payment.
 [2025-01-28 23:13:08,192] WARNING log Unauthorized: /api/payouts/
 [2025-01-28 23:22:50,886] WARNING log Bad Request: /api/payouts/1/
 [2025-01-28 23:22:50,886] WARNING log Bad Request: /api/payouts/1/
+[2025-01-28 23:24:27,876] WARNING log Bad Request: /api/payouts/1/
+[2025-01-28 23:24:27,876] WARNING log Bad Request: /api/payouts/1/
