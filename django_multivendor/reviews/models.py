@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
-from products.models import Product
+from vendors.models import VendorProduct  # Changed from products.models import Product
 from django.utils import timezone
 
 class Review(models.Model):
     RATING_CHOICES = [(i, i) for i in range(1, 6)]
 
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
+    product = models.ForeignKey(VendorProduct, on_delete=models.CASCADE, related_name='reviews')  # Changed to VendorProduct
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     rating = models.IntegerField(choices=RATING_CHOICES, default=1)  # Added default
     comment = models.TextField(default='')  # Added default

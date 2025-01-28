@@ -81,10 +81,17 @@ def api_endpoints(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/vendors/', include('vendors.urls')),  # This now handles /api/vendors/
-    path('api/', include('products.urls')),  # Changed from 'api/products/' to 'api/'
+    #path('api/', include('products.urls')),  # Changed from 'api/products/' to 'api/'
     path('api/users/', include('users.urls')),
+    path('api/cart/', include('cart.urls')),
+    path('api/orders/', include('orders.urls')),
+    path('api/payments/', include('payments.urls')),
+    path('api/payouts/', include('payouts.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/endpoints/', api_endpoints, name='api-endpoints'),  # Add this line
+    path('api/categories/', include('categories.urls')),
+    path('api/orders/', include('orders.urls')),
+    path('api/payments/', include('payments.urls')),
 ]
 # ...existing code...

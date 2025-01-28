@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from products.models import Product
+from vendors.models import VendorProduct  # Changed from products.models import Product
 from vendors.models import Vendor
 from django.utils import timezone
 
@@ -33,11 +33,15 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    product = models.ForeignKey(VendorProduct, on_delete=models.CASCADE)  # Changed from Product to VendorProduct
     quantity = models.IntegerField(default=1)  # Added default
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Added default
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Added default
     
     def __str__(self):
         return f"{self.quantity} x {self.product.name}"
+    
+    @property
+    def vendor(self):
+        """Get vendor through the VendorProduct"""
+        return self.product.vendor
