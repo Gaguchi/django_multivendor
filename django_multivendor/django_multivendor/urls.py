@@ -21,6 +21,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.urls import get_resolver
 import logging
+from django.conf import settings
+from django.conf.urls.static import static
 
 logger = logging.getLogger(__name__)
 
@@ -96,4 +98,8 @@ urlpatterns = [
     path('api/reviews/', include('reviews.urls')),
     path('api/shipping/', include('shipping.urls')),
 ]
+
+# For development only, serve uploaded media
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 # ...existing code...

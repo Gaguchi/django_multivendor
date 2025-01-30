@@ -1,7 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-# from products.models import Product  # Remove or comment this out if present
+
+# Define helper functions first
+def product_media_path(instance, filename):
+    """Helper function to determine the path for product media uploads"""
+    media_type = 'thumbnails' if hasattr(instance, 'is_thumbnail') else 'images'
+    return f'vendor_products/{instance.product.vendor.store_name}/{instance.product.name}/{media_type}/{filename}'
+
+def product_video_path(instance, filename):
+    """Helper function for video uploads"""
+    return f'vendor_products/{instance.vendor.store_name}/{instance.name}/videos/{filename}'
 
 class Vendor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
@@ -19,19 +28,40 @@ class Vendor(models.Model):
 
 class VendorProduct(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='vendor_products')
-    name = models.CharField(max_length=100, default='')
-    sku = models.CharField(max_length=50, blank=True, default='')
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    name = models.CharField(max_length=100)
+    sku = models.CharField(max_length=50, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField(default=0)
-    description = models.TextField(blank=True, default='')
-
-    def product_directory_path(instance, filename):
-        return f'vendor_products/{instance.vendor.store_name}/{instance.name}/{filename}'
-
-    thumbnail = models.ImageField(upload_to=product_directory_path, null=True, blank=True)
-    image = models.ImageField(upload_to=product_directory_path, null=True, blank=True)
-    video = models.FileField(upload_to=product_directory_path, null=True, blank=True)
-    # ...add more product-specific fields as needed...
+    description = models.TextField(blank=True)
+    thumbnail = models.ImageField(
+        upload_to=product_media_path, 
+        blank=True, 
+        default='vendor_products/default_thumbnail.png'
+    )
+    video = models.FileField(
+        upload_to=product_video_path,
+        blank=True,
+        null=True,
+        help_text='Upload product video file (MP4 recommended)'
+    )
 
     def __str__(self):
         return f"{self.vendor.store_name} - {self.name}"
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        VendorProduct,
+        on_delete=models.CASCADE,
+        related_name='product_images'
+    )
+    file = models.ImageField(
+        upload_to=product_media_path
+    )
+    position = models.PositiveIntegerField(default=0, blank=False, null=False)
+
+    class Meta:
+        ordering = ['position']
+        # Add sortable ordering if necessary, e.g., using adminsortable2's proxy
+
+    def __str__(self):
+        return f"Image {self.position} for {self.product.name}"

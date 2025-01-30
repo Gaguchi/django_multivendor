@@ -1,0 +1,15 @@
+/* Removed custom sortable.css as django-admin-sortable2 handles styling */
+.sortable-images .field-position {
+    display: none;
+}
+
+.sortable-images .drag-handle {
+    cursor: move;
+    width: 20px;
+    height: 20px;
+    background: #f8f9fa;
+    display: inline-block;
+    margin-right: 10px;
+    text-align: center;
+    line-height: 20px;
+}
