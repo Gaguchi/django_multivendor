@@ -9,24 +9,21 @@ function ProductsPage() {
 
   useEffect(() => {
     let isMounted = true
-    const controller = new AbortController()
 
     const fetchProducts = async () => {
       try {
         const response = await api.get('/api/vendors/products', {
           headers: {
             'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN
-          },
-          signal: controller.signal
+          }
         })
 
         if (isMounted && Array.isArray(response.data)) {
           setProducts(response.data)
         }
       } catch (error) {
-        if (error.name === 'AbortError') {
-          console.log('Request cancelled')
-        } else {
+        // Only log real errors, not cancellations
+        if (!error.code || error.code !== 'ERR_CANCELED') {
           console.error('Error fetching products:', error)
         }
       } finally {
@@ -40,7 +37,6 @@ function ProductsPage() {
 
     return () => {
       isMounted = false
-      controller.abort()
     }
   }, [])
 
@@ -130,5 +126,4 @@ function ProductsPage() {
     </div>
   )
 }
-
 export default ProductsPage
