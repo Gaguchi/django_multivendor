@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework import serializers
 import logging
 from .models import Vendor, VendorProduct
 from .serializers import VendorSerializer, ProductSerializer
@@ -70,6 +71,48 @@ class VendorViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = VendorProduct.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]  # Only keep permission_classes, remove authentication_classes
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """Filter products by vendor if vendor_id provided, otherwise return all"""
+        queryset = VendorProduct.objects.all()
+        vendor_id = self.request.query_params.get('vendor_id', None)
+        if vendor_id:
+            queryset = queryset.filter(vendor_id=vendor_id)
+        return queryset
+
+    def perform_create(self, serializer):
+        """Set the vendor automatically based on the authenticated user"""
+        try:
+            vendor = Vendor.objects.get(user=self.request.user)
+            serializer.save(vendor=vendor)
+        except Vendor.DoesNotExist:
+            raise serializers.ValidationError("Must be a vendor to create products")
+
+    def perform_update(self, serializer):
+        """Ensure users can only update their own products"""
+        product = self.get_object()
+        if product.vendor.user != self.request.user:
+            raise serializers.ValidationError("Can only update your own products")
+        serializer.save()
+
+    def perform_destroy(self, instance):
+        """Ensure users can only delete their own products"""
+        if instance.vendor.user != self.request.user:
+            raise serializers.ValidationError("Can only delete your own products")
+        instance.delete()
+
+    @action(detail=False, methods=['get'])
+    def my_products(self, request):
+        """Get all products for the authenticated vendor"""
+        try:
+            vendor = Vendor.objects.get(user=request.user)
+            products = self.get_queryset().filter(vendor=vendor)
+            serializer = self.get_serializer(products, many=True)
+            return Response(serializer.data)
+        except Vendor.DoesNotExist:
+            return Response(
+                {"detail": "Vendor profile not found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Vendor, VendorProduct
+from .models import Vendor, VendorProduct, ProductImage
 from users.serializers import UserSerializer
 from users.models import UserProfile
 
@@ -37,15 +37,20 @@ class VendorSerializer(serializers.ModelSerializer):
         vendor = Vendor.objects.create(**validated_data)
         return vendor
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = ['id', 'file', 'position']
+
 class ProductSerializer(serializers.ModelSerializer):
     vendor = VendorSerializer(read_only=True)  # Vendor will be set from the authenticated user
+    images = ProductImageSerializer(many=True, read_only=True, source='product_images')
 
     class Meta:
         model = VendorProduct
         fields = [
-            'id', 'vendor', 'name', 'sku', 
-            'price', 'stock', 'description',
-            'thumbnail', 'image', 'video'
+            'id', 'vendor', 'name', 'sku', 'price', 'stock',
+            'description', 'thumbnail', 'video', 'images'
         ]
         read_only_fields = ['vendor']
 

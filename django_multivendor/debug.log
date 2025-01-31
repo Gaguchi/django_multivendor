@@ -2863,3 +2863,246 @@ django.db.utils.OperationalError: no such table: vendors_productimage
 [2025-01-30 23:10:20,122] INFO urls === Registering Vendor URLs ===
 [2025-01-30 23:10:20,123] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
 [2025-01-30 23:10:20,123] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 12:57:48,199] INFO autoreload Watching for file changes with StatReloader
+[2025-01-31 12:57:48,511] INFO urls === Registering Vendor URLs ===
+[2025-01-31 12:57:48,511] INFO urls === Registering Vendor URLs ===
+[2025-01-31 12:57:48,512] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 12:57:48,512] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 12:58:12,804] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 12:58:12,804] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 12:58:12,805] INFO views Request Method: POST
+[2025-01-31 12:58:12,805] INFO views Request Method: POST
+[2025-01-31 12:58:12,805] WARNING log Unauthorized: /api/vendors/
+[2025-01-31 12:58:12,805] WARNING log Unauthorized: /api/vendors/
+[2025-01-31 12:59:07,162] WARNING log Unauthorized: /api/products/
+[2025-01-31 12:59:07,162] WARNING log Unauthorized: /api/products/
+[2025-01-31 12:59:20,111] WARNING log Unauthorized: /api/products/
+[2025-01-31 12:59:20,111] WARNING log Unauthorized: /api/products/
+[2025-01-31 12:59:27,355] WARNING log Unauthorized: /api/products/
+[2025-01-31 12:59:27,355] WARNING log Unauthorized: /api/products/
+[2025-01-31 12:59:32,578] WARNING log Unauthorized: /api/products/
+[2025-01-31 12:59:32,578] WARNING log Unauthorized: /api/products/
+[2025-01-31 12:59:40,687] WARNING log Unauthorized: /api/products/
+[2025-01-31 12:59:40,687] WARNING log Unauthorized: /api/products/
+[2025-01-31 13:00:31,010] ERROR log Internal Server Error: /api/products/
+Traceback (most recent call last):
+  File "C:\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\mixins.py", line 18, in create
+    serializer.is_valid(raise_exception=True)
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 223, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 442, in run_validation
+    value = self.to_internal_value(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 495, in to_internal_value
+    for field in fields:
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 378, in _writable_fields
+    for field in self.fields.values():
+                 ^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 372, in fields
+    for key, value in self.get_fields().items():
+                      ^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 1103, in get_fields
+    field_class, field_kwargs = self.build_field(
+                                ^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 1249, in build_field
+    return self.build_unknown_field(field_name, model_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 1367, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `image` is not valid for model `VendorProduct` in `products.serializers.ProductSerializer`.
+[2025-01-31 13:00:31,010] ERROR log Internal Server Error: /api/products/
+Traceback (most recent call last):
+  File "C:\Python311\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\views\decorators\csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\viewsets.py", line 124, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "C:\Python311\Lib\site-packages\rest_framework\views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\mixins.py", line 18, in create
+    serializer.is_valid(raise_exception=True)
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 223, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 442, in run_validation
+    value = self.to_internal_value(data)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 495, in to_internal_value
+    for field in fields:
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 378, in _writable_fields
+    for field in self.fields.values():
+                 ^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\django\utils\functional.py", line 57, in __get__
+    res = instance.__dict__[self.name] = self.func(instance)
+                                         ^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 372, in fields
+    for key, value in self.get_fields().items():
+                      ^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 1103, in get_fields
+    field_class, field_kwargs = self.build_field(
+                                ^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 1249, in build_field
+    return self.build_unknown_field(field_name, model_class)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\rest_framework\serializers.py", line 1367, in build_unknown_field
+    raise ImproperlyConfigured(
+django.core.exceptions.ImproperlyConfigured: Field name `image` is not valid for model `VendorProduct` in `products.serializers.ProductSerializer`.
+[2025-01-31 13:03:34,223] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\products\serializers.py changed, reloading.
+[2025-01-31 13:03:34,627] INFO autoreload Watching for file changes with StatReloader
+[2025-01-31 13:03:34,782] INFO urls === Registering Vendor URLs ===
+[2025-01-31 13:03:34,782] INFO urls === Registering Vendor URLs ===
+[2025-01-31 13:03:34,782] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 13:03:34,782] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 13:09:22,452] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\vendors\serializers.py changed, reloading.
+[2025-01-31 13:09:22,867] INFO autoreload Watching for file changes with StatReloader
+[2025-01-31 13:12:22,611] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\django_multivendor\settings.py changed, reloading.
+[2025-01-31 13:12:23,004] INFO autoreload Watching for file changes with StatReloader
+[2025-01-31 13:12:23,168] INFO urls === Registering Vendor URLs ===
+[2025-01-31 13:12:23,168] INFO urls === Registering Vendor URLs ===
+[2025-01-31 13:12:23,169] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 13:12:23,169] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 13:12:28,541] WARNING log Not Found: /api/products/
+[2025-01-31 13:12:28,541] WARNING log Not Found: /api/products/
+[2025-01-31 13:19:41,148] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\vendors\urls.py changed, reloading.
+[2025-01-31 13:19:41,565] INFO autoreload Watching for file changes with StatReloader
+[2025-01-31 13:19:41,731] INFO urls === Registering Vendor URLs ===
+[2025-01-31 13:19:41,731] INFO urls === Registering Vendor URLs ===
+[2025-01-31 13:19:41,732] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 13:19:41,732] INFO urls Registered URLs: ["<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 13:20:19,387] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:20:19,387] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:20:19,387] INFO views Request Method: GET
+[2025-01-31 13:20:19,387] INFO views Request Method: GET
+[2025-01-31 13:20:19,389] WARNING log Unauthorized: /api/vendors/products/
+[2025-01-31 13:20:19,389] WARNING log Unauthorized: /api/vendors/products/
+[2025-01-31 13:20:33,701] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:20:33,701] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:20:33,701] INFO views Request Method: GET
+[2025-01-31 13:20:33,701] INFO views Request Method: GET
+[2025-01-31 13:20:33,703] INFO views Request User: alice
+[2025-01-31 13:20:33,703] INFO views Request User: alice
+[2025-01-31 13:20:33,703] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE4ODI2LCJpYXQiOjE3MzgzMTUyMjYsImp0aSI6Ijk5ZDVlZGJkYjBiOTQ2MTBhZmMxODY4ZjhkYzU4NGE3IiwidXNlcl9pZCI6Mn0.sXrZRNEY9ICKtINI1JodXyiEyw_933YIpfYN78Tb7YU
+[2025-01-31 13:20:33,703] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE4ODI2LCJpYXQiOjE3MzgzMTUyMjYsImp0aSI6Ijk5ZDVlZGJkYjBiOTQ2MTBhZmMxODY4ZjhkYzU4NGE3IiwidXNlcl9pZCI6Mn0.sXrZRNEY9ICKtINI1JodXyiEyw_933YIpfYN78Tb7YU
+[2025-01-31 13:20:33,704] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'text/plain', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE4ODI2LCJpYXQiOjE3MzgzMTUyMjYsImp0aSI6Ijk5ZDVlZGJkYjBiOTQ2MTBhZmMxODY4ZjhkYzU4NGE3IiwidXNlcl9pZCI6Mn0.sXrZRNEY9ICKtINI1JodXyiEyw_933YIpfYN78Tb7YU', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '3ebc1a83-9c20-4456-8ca2-f3b006095bc4', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-31 13:20:33,704] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'text/plain', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE4ODI2LCJpYXQiOjE3MzgzMTUyMjYsImp0aSI6Ijk5ZDVlZGJkYjBiOTQ2MTBhZmMxODY4ZjhkYzU4NGE3IiwidXNlcl9pZCI6Mn0.sXrZRNEY9ICKtINI1JodXyiEyw_933YIpfYN78Tb7YU', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': '3ebc1a83-9c20-4456-8ca2-f3b006095bc4', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-31 13:20:33,704] INFO views === Checking Permissions ===
+[2025-01-31 13:20:33,704] INFO views === Checking Permissions ===
+[2025-01-31 13:20:33,705] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000018AD7C4E250>]
+[2025-01-31 13:20:33,705] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000018AD7C4E250>]
+[2025-01-31 13:20:33,705] WARNING log Not Found: /api/vendors/products/
+[2025-01-31 13:20:33,705] WARNING log Not Found: /api/vendors/products/
+[2025-01-31 13:21:19,828] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:21:19,828] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:21:19,829] INFO views Request Method: POST
+[2025-01-31 13:21:19,829] INFO views Request Method: POST
+[2025-01-31 13:21:19,830] INFO views Request User: alice
+[2025-01-31 13:21:19,830] INFO views Request User: alice
+[2025-01-31 13:21:19,830] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE4ODI2LCJpYXQiOjE3MzgzMTUyMjYsImp0aSI6Ijk5ZDVlZGJkYjBiOTQ2MTBhZmMxODY4ZjhkYzU4NGE3IiwidXNlcl9pZCI6Mn0.sXrZRNEY9ICKtINI1JodXyiEyw_933YIpfYN78Tb7YU
+[2025-01-31 13:21:19,830] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE4ODI2LCJpYXQiOjE3MzgzMTUyMjYsImp0aSI6Ijk5ZDVlZGJkYjBiOTQ2MTBhZmMxODY4ZjhkYzU4NGE3IiwidXNlcl9pZCI6Mn0.sXrZRNEY9ICKtINI1JodXyiEyw_933YIpfYN78Tb7YU
+[2025-01-31 13:21:19,830] INFO views Request Headers: {'Content-Length': '139', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE4ODI2LCJpYXQiOjE3MzgzMTUyMjYsImp0aSI6Ijk5ZDVlZGJkYjBiOTQ2MTBhZmMxODY4ZjhkYzU4NGE3IiwidXNlcl9pZCI6Mn0.sXrZRNEY9ICKtINI1JodXyiEyw_933YIpfYN78Tb7YU', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'fc4ed9ef-a231-4b1f-b6fe-06e6f053e699', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-31 13:21:19,830] INFO views Request Headers: {'Content-Length': '139', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE4ODI2LCJpYXQiOjE3MzgzMTUyMjYsImp0aSI6Ijk5ZDVlZGJkYjBiOTQ2MTBhZmMxODY4ZjhkYzU4NGE3IiwidXNlcl9pZCI6Mn0.sXrZRNEY9ICKtINI1JodXyiEyw_933YIpfYN78Tb7YU', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'fc4ed9ef-a231-4b1f-b6fe-06e6f053e699', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-31 13:21:19,831] INFO views === Checking Permissions ===
+[2025-01-31 13:21:19,831] INFO views === Checking Permissions ===
+[2025-01-31 13:21:19,831] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000018AD7B49BD0>]
+[2025-01-31 13:21:19,831] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x0000018AD7B49BD0>]
+[2025-01-31 13:21:19,832] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-31 13:21:19,832] WARNING log Method Not Allowed: /api/vendors/products/
+[2025-01-31 13:23:42,927] INFO autoreload E:\Work\WebDev\django_multivendor\django_multivendor\vendors\urls.py changed, reloading.
+[2025-01-31 13:23:43,320] INFO autoreload Watching for file changes with StatReloader
+[2025-01-31 13:23:43,487] INFO urls === Registering Vendor URLs ===
+[2025-01-31 13:23:43,487] INFO urls === Registering Vendor URLs ===
+[2025-01-31 13:23:43,488] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 13:23:43,488] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-01-31 13:23:45,600] WARNING log Bad Request: /api/vendors/products/
+[2025-01-31 13:23:45,600] WARNING log Bad Request: /api/vendors/products/
+[2025-01-31 13:24:04,117] WARNING log Unauthorized: /api/users/profile/update/
+[2025-01-31 13:24:04,117] WARNING log Unauthorized: /api/users/profile/update/
+[2025-01-31 13:24:07,443] WARNING log Bad Request: /api/vendors/products/
+[2025-01-31 13:24:07,443] WARNING log Bad Request: /api/vendors/products/
+[2025-01-31 13:24:34,331] WARNING log Bad Request: /api/vendors/products/
+[2025-01-31 13:24:34,331] WARNING log Bad Request: /api/vendors/products/
+[2025-01-31 13:24:57,483] WARNING log Unauthorized: /api/users/profile/
+[2025-01-31 13:24:57,483] WARNING log Unauthorized: /api/users/profile/
+[2025-01-31 13:25:10,735] WARNING log Unauthorized: /api/users/profile/
+[2025-01-31 13:25:10,735] WARNING log Unauthorized: /api/users/profile/
+[2025-01-31 13:25:30,775] WARNING log Bad Request: /api/vendors/products/
+[2025-01-31 13:25:30,775] WARNING log Bad Request: /api/vendors/products/
+[2025-01-31 13:27:16,699] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:27:16,699] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:27:16,699] INFO views Request Method: POST
+[2025-01-31 13:27:16,699] INFO views Request Method: POST
+[2025-01-31 13:27:16,700] WARNING log Unauthorized: /api/vendors/
+[2025-01-31 13:27:16,700] WARNING log Unauthorized: /api/vendors/
+[2025-01-31 13:27:27,505] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:27:27,505] INFO views === VendorViewSet Initial Processing ===
+[2025-01-31 13:27:27,505] INFO views Request Method: POST
+[2025-01-31 13:27:27,505] INFO views Request Method: POST
+[2025-01-31 13:27:27,507] INFO views Request User: alice
+[2025-01-31 13:27:27,507] INFO views Request User: alice
+[2025-01-31 13:27:27,507] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE5MTAzLCJpYXQiOjE3MzgzMTU1MDMsImp0aSI6IjEwMzJjNDlkN2RhMjRkODI5MzA0OWJkY2I4MWI0MTgwIiwidXNlcl9pZCI6Mn0.P74-tEVdzviVclUenwce8_C-NCiQ1cKJYE-ezl0-KyQ
+[2025-01-31 13:27:27,507] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE5MTAzLCJpYXQiOjE3MzgzMTU1MDMsImp0aSI6IjEwMzJjNDlkN2RhMjRkODI5MzA0OWJkY2I4MWI0MTgwIiwidXNlcl9pZCI6Mn0.P74-tEVdzviVclUenwce8_C-NCiQ1cKJYE-ezl0-KyQ
+[2025-01-31 13:27:27,508] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE5MTAzLCJpYXQiOjE3MzgzMTU1MDMsImp0aSI6IjEwMzJjNDlkN2RhMjRkODI5MzA0OWJkY2I4MWI0MTgwIiwidXNlcl9pZCI6Mn0.P74-tEVdzviVclUenwce8_C-NCiQ1cKJYE-ezl0-KyQ', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'b596a510-68bd-457f-bd5f-86b02e3abf31', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-31 13:27:27,508] INFO views Request Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE5MTAzLCJpYXQiOjE3MzgzMTU1MDMsImp0aSI6IjEwMzJjNDlkN2RhMjRkODI5MzA0OWJkY2I4MWI0MTgwIiwidXNlcl9pZCI6Mn0.P74-tEVdzviVclUenwce8_C-NCiQ1cKJYE-ezl0-KyQ', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'b596a510-68bd-457f-bd5f-86b02e3abf31', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-31 13:27:27,508] INFO views === Checking Permissions ===
+[2025-01-31 13:27:27,508] INFO views === Checking Permissions ===
+[2025-01-31 13:27:27,509] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001EAB66B5650>]
+[2025-01-31 13:27:27,509] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000001EAB66B5650>]
+[2025-01-31 13:27:27,509] INFO views === VendorViewSet Create Method ===
+[2025-01-31 13:27:27,509] INFO views === VendorViewSet Create Method ===
+[2025-01-31 13:27:27,509] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-31 13:27:27,509] INFO views Request Data: {'store_name': 'My New Store', 'description': 'We sell awesome stuff'}
+[2025-01-31 13:27:27,510] INFO views === Starting Vendor Creation ===
+[2025-01-31 13:27:27,510] INFO views === Starting Vendor Creation ===
+[2025-01-31 13:27:27,510] INFO views User: alice
+[2025-01-31 13:27:27,510] INFO views User: alice
+[2025-01-31 13:27:27,510] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE5MTAzLCJpYXQiOjE3MzgzMTU1MDMsImp0aSI6IjEwMzJjNDlkN2RhMjRkODI5MzA0OWJkY2I4MWI0MTgwIiwidXNlcl9pZCI6Mn0.P74-tEVdzviVclUenwce8_C-NCiQ1cKJYE-ezl0-KyQ
+[2025-01-31 13:27:27,510] INFO views Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE5MTAzLCJpYXQiOjE3MzgzMTU1MDMsImp0aSI6IjEwMzJjNDlkN2RhMjRkODI5MzA0OWJkY2I4MWI0MTgwIiwidXNlcl9pZCI6Mn0.P74-tEVdzviVclUenwce8_C-NCiQ1cKJYE-ezl0-KyQ
+[2025-01-31 13:27:27,511] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE5MTAzLCJpYXQiOjE3MzgzMTU1MDMsImp0aSI6IjEwMzJjNDlkN2RhMjRkODI5MzA0OWJkY2I4MWI0MTgwIiwidXNlcl9pZCI6Mn0.P74-tEVdzviVclUenwce8_C-NCiQ1cKJYE-ezl0-KyQ', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'b596a510-68bd-457f-bd5f-86b02e3abf31', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-31 13:27:27,511] INFO views Headers: {'Content-Length': '75', 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzM4MzE5MTAzLCJpYXQiOjE3MzgzMTU1MDMsImp0aSI6IjEwMzJjNDlkN2RhMjRkODI5MzA0OWJkY2I4MWI0MTgwIiwidXNlcl9pZCI6Mn0.P74-tEVdzviVclUenwce8_C-NCiQ1cKJYE-ezl0-KyQ', 'User-Agent': 'PostmanRuntime/7.43.0', 'Accept': '*/*', 'Cache-Control': 'no-cache', 'Postman-Token': 'b596a510-68bd-457f-bd5f-86b02e3abf31', 'Host': '127.0.0.1:8000', 'Accept-Encoding': 'gzip, deflate, br', 'Connection': 'keep-alive'}
+[2025-01-31 13:27:27,513] INFO views Performing create for user: alice
+[2025-01-31 13:27:27,513] INFO views Performing create for user: alice
+[2025-01-31 13:29:06,522] WARNING log Unauthorized: /api/vendors/products/1/
+[2025-01-31 13:29:06,522] WARNING log Unauthorized: /api/vendors/products/1/
+[2025-01-31 13:29:12,532] WARNING log Unauthorized: /api/vendors/products/1/
+[2025-01-31 13:29:12,532] WARNING log Unauthorized: /api/vendors/products/1/

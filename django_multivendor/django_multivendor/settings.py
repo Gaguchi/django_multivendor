@@ -41,17 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'users',
+    'vendors',  # This now handles all product functionality
     'cart',
-    'categories',
     'orders',
     'payments',
     'payouts',
+    'categories',
     'reviews',
     'shipping',
-    'users',
-    'vendors', 
-    'products',
-    'adminsortable2',
 ]
 
 MIDDLEWARE = [
