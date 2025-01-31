@@ -7,6 +7,8 @@ import logging
 from .models import Vendor, VendorProduct
 from .serializers import VendorSerializer, ProductSerializer
 from users.models import UserProfile
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from .authentication import MasterTokenAuthentication
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +74,15 @@ class VendorViewSet(viewsets.ModelViewSet):
 
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
-    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication, MasterTokenAuthentication]
+    
+    def get_permissions(self):
+        """Allow read operations with master token, require authentication for others"""
+        if self.action in ['list', 'retrieve']:
+            permission_classes = []
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def get_queryset(self):
         """Filter products by vendor if vendor_id provided, otherwise return all"""
