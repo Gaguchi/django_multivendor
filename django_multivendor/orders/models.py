@@ -3,19 +3,28 @@ from django.contrib.auth.models import User
 from vendors.models import VendorProduct  # Changed from products.models import Product
 from vendors.models import Vendor
 from django.utils import timezone
+from datetime import timedelta
 
 class Order(models.Model):
     STATUS_CHOICES = [
         ('Pending', 'Pending'),
         ('Paid', 'Paid'),
         ('Shipped', 'Shipped'),
-        ('Completed', 'Completed'),
+        ('Delivered', 'Delivered'),
+        ('Completed', 'Completed'),  # Payment cleared to vendor
+        ('Disputed', 'Disputed'),
     ]
 
     PAYMENT_METHOD_CHOICES = [
         ('Credit Card', 'Credit Card'),
         ('PayPal', 'PayPal'),
         # Add other payment methods as needed
+    ]
+
+    PAYMENT_CLEARANCE_STATUS = [
+        ('Pending', 'Pending'),
+        ('Cleared', 'Cleared'),
+        ('Held', 'Held'),  # For disputes/refunds
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
@@ -27,9 +36,48 @@ class Order(models.Model):
     billing_address = models.TextField(default='')  # Added default
     created_at = models.DateTimeField(null=True, blank=True)  # Made nullable
     updated_at = models.DateTimeField(null=True, blank=True)  # Made nullable
+    delivered_at = models.DateTimeField(null=True, blank=True)
+    payment_clearance_status = models.CharField(
+        max_length=20, 
+        choices=PAYMENT_CLEARANCE_STATUS,
+        default='Pending'
+    )
+    payment_cleared_at = models.DateTimeField(null=True, blank=True)
+    dispute_raised_at = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
         return self.order_number
+
+    @property
+    def is_ready_for_clearance(self):
+        """Check if payment can be cleared to vendor"""
+        if not self.delivered_at or self.payment_clearance_status != 'Pending':
+            return False
+            
+        clearance_due_date = self.delivered_at + timedelta(days=7)
+        return timezone.now() >= clearance_due_date and not self.dispute_raised_at
+
+    def mark_as_delivered(self):
+        """Mark order as delivered and start payment clearance countdown"""
+        self.status = 'Delivered'
+        self.delivered_at = timezone.now()
+        self.save()
+
+    def clear_payment(self):
+        """Clear payment to vendor"""
+        if self.is_ready_for_clearance:
+            self.payment_clearance_status = 'Cleared'
+            self.payment_cleared_at = timezone.now()
+            self.status = 'Completed'
+            self.save()
+            return True
+        return False
+
+    def raise_dispute(self):
+        """Raise a dispute and hold payment clearance"""
+        self.dispute_raised_at = timezone.now()
+        self.payment_clearance_status = 'Held'
+        self.save()
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
