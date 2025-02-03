@@ -18,6 +18,9 @@ import jwt
 from social_core.backends.google import GoogleOAuth2
 from social_core.exceptions import AuthForbidden
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 
@@ -180,58 +183,80 @@ class GoogleCallbackView(APIView):
         try:
             code = request.data.get('code')
             redirect_uri = request.data.get('redirect_uri')
+            state = request.data.get('state', '')
 
-            if not code:
+            # Determine provider from state
+            provider = 'facebook' if 'facebook' in state else 'google'
+            
+            # Prepare provider-specific parameters
+            if provider == 'facebook':
+                token_url = 'https://graph.facebook.com/v16.0/oauth/access_token'
+                client_id = settings.SOCIAL_AUTH_FACEBOOK_KEY
+                client_secret = settings.SOCIAL_AUTH_FACEBOOK_SECRET
+                userinfo_url = 'https://graph.facebook.com/v16.0/me'
+                userinfo_params = {
+                    'fields': 'id,name,email,first_name,last_name',
+                    'access_token': None  # Will be set after token exchange
+                }
+            else:
+                # Existing Google configuration
+                token_url = 'https://oauth2.googleapis.com/token'
+                client_id = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+                client_secret = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
+                userinfo_url = 'https://www.googleapis.com/oauth2/v3/userinfo'
+
+            # Exchange code for token
+            token_response = requests.post(token_url, params={
+                'client_id': client_id,
+                'client_secret': client_secret,
+                'code': code,
+                'redirect_uri': redirect_uri,
+                'grant_type': 'authorization_code'
+            })
+
+            if token_response.status_code != 200:
+                return Response({
+                    'error': f'Token exchange failed: {token_response.text}'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            access_token = token_response.json().get('access_token')
+            
+            if provider == 'facebook':
+                userinfo_params['access_token'] = access_token
+                user_response = requests.get(userinfo_url, params=userinfo_params)
+            else:
+                # Existing Google user info fetch
+                user_response = requests.get(
+                    userinfo_url,
+                    headers={'Authorization': f'Bearer {access_token}'}
+                )
+
+            if user_response.status_code != 200:
                 return Response(
-                    {'error': 'Authorization code is required'}, 
+                    {'error': 'Failed to get user info'}, 
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            # Exchange auth code for tokens
-            token_response = requests.post(
-                'https://oauth2.googleapis.com/token',
-                data={
-                    'code': code,
-                    'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
-                    'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
-                    'redirect_uri': redirect_uri,
-                    'grant_type': 'authorization_code'
+            user_info = user_response.json()
+            email = user_info.get('email')
+            
+            if not email:
+                return Response(
+                    {'error': 'Email not provided by OAuth provider'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Get or create user and profile
+            user, created = User.objects.get_or_create(
+                email=email,
+                defaults={
+                    'username': email,
+                    'first_name': user_info.get('given_name', user_info.get('first_name', '')),
+                    'last_name': user_info.get('family_name', user_info.get('last_name', ''))
                 }
             )
-            
-            if token_response.status_code != 200:
-                return Response(
-                    {'error': 'Failed to exchange code for tokens'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
 
-            token_data = token_response.json()
-
-            # Get user info from Google
-            user_info = requests.get(
-                'https://www.googleapis.com/oauth2/v3/userinfo',
-                headers={'Authorization': f'Bearer {token_data["access_token"]}'}
-            ).json()
-
-            email = user_info['email']
-            
-            # Try to find existing user first
-            try:
-                user = User.objects.get(email=email)
-                # Existing user - just update their info
-                user.first_name = user_info.get('given_name', user.first_name)
-                user.last_name = user_info.get('family_name', user.last_name)
-                user.save()
-            except User.DoesNotExist:
-                # New user - create account
-                user = User.objects.create_user(
-                    username=email,
-                    email=email,
-                    first_name=user_info.get('given_name', ''),
-                    last_name=user_info.get('family_name', '')
-                )
-
-            # Ensure UserProfile exists
+            # Ensure profile exists
             profile, _ = UserProfile.objects.get_or_create(
                 user=user,
                 defaults={
@@ -240,17 +265,24 @@ class GoogleCallbackView(APIView):
                 }
             )
 
-            # Create JWT tokens for both new and existing users
+            # Create JWT tokens with additional user data
             refresh = RefreshToken.for_user(user)
-
+            
             return Response({
                 'token': str(refresh.access_token),
                 'refresh': str(refresh),
                 'user': {
                     'id': user.id,
                     'email': user.email,
+                    'username': user.username,
+                    'firstName': user.first_name,
+                    'lastName': user.last_name,
                     'name': f"{user.first_name} {user.last_name}".strip(),
-                    'isNewUser': _ # True if profile was created, False if it existed
+                    'profile': {
+                        'id': profile.id,
+                        'user_type': profile.user_type,
+                        # Add any other profile fields you need
+                    }
                 }
             })
 
@@ -259,3 +291,103 @@ class GoogleCallbackView(APIView):
                 {'error': str(e)}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+class FacebookCallbackView(APIView):
+    def post(self, request):
+        logger.debug(f"Facebook callback received: {request.data}")
+        
+        try:
+            code = request.data.get('code')
+            redirect_uri = request.data.get('redirect_uri')
+            
+            logger.info(f"Processing Facebook callback with code: {code[:10]}... and redirect_uri: {redirect_uri}")
+
+            # Exchange code for access token
+            token_params = {
+                'client_id': settings.SOCIAL_AUTH_FACEBOOK_KEY,
+                'client_secret': settings.SOCIAL_AUTH_FACEBOOK_SECRET,
+                'code': code,
+                'redirect_uri': redirect_uri,
+                'grant_type': 'authorization_code'
+            }
+            
+            logger.debug(f"Token exchange params: {token_params}")
+            token_response = requests.post('https://graph.facebook.com/v16.0/oauth/access_token', params=token_params)
+
+            if token_response.status_code != 200:
+                logger.error(f"Facebook token exchange failed: {token_response.text}")
+                return Response({
+                    'error': f'Facebook token exchange failed: {token_response.text}'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            access_token = token_response.json().get('access_token')
+            logger.info("Successfully obtained Facebook access token")
+
+            # Get user info
+            user_params = {
+                'fields': 'id,name,email,first_name,last_name',
+                'access_token': access_token
+            }
+            logger.debug(f"User info params: {user_params}")
+            user_response = requests.get('https://graph.facebook.com/v16.0/me', params=user_params)
+
+            if user_response.status_code != 200:
+                logger.error(f"Failed to get Facebook user info: {user_response.text}")
+                return Response({
+                    'error': f'Failed to get Facebook user info: {user_response.text}'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            user_info = user_response.json()
+            logger.info(f"Retrieved Facebook user info: {user_info}")
+            
+            email = user_info.get('email')
+            if not email:
+                logger.error("No email provided by Facebook")
+                return Response({
+                    'error': 'Email not provided by Facebook'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Get or create user
+            try:
+                user = User.objects.get(email=email)
+                logger.info(f"Found existing user: {user.username}")
+            except User.DoesNotExist:
+                user = User.objects.create_user(
+                    username=email,
+                    email=email,
+                    first_name=user_info.get('first_name', ''),
+                    last_name=user_info.get('last_name', '')
+                )
+                logger.info(f"Created new user: {user.username}")
+
+            # Create/update profile
+            profile, _ = UserProfile.objects.get_or_create(
+                user=user,
+                defaults={
+                    'first_name': user.first_name,
+                    'last_name': user.last_name
+                }
+            )
+
+            # Generate tokens
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'token': str(refresh.access_token),
+                'refresh': str(refresh),
+                'user': {
+                    'id': user.id,
+                    'email': user.email,
+                    'username': user.username,
+                    'firstName': user.first_name,
+                    'lastName': user.last_name,
+                    'name': user_info.get('name', ''),
+                    'profile': {
+                        'id': profile.id,
+                        'user_type': profile.user_type
+                    }
+                }
+            })
+
+        except Exception as e:
+            logger.exception("Facebook callback error")
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

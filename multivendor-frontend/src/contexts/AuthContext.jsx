@@ -1,57 +1,38 @@
-import { createContext, useContext, useState, useEffect } from 'react'
-import api from '../services/api'
+import { createContext, useContext, useState } from 'react';
 
-const AuthContext = createContext()
+const AuthContext = createContext(null);
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
-  useEffect(() => {
-    // Check if we have a token and validate it
-    const token = localStorage.getItem('token')
-    if (token) {
-      checkAuth()
-    } else {
-      setLoading(false)
-    }
-  }, [])
+  const isAuthenticated = Boolean(user);
 
-  const checkAuth = async () => {
-    try {
-      const response = await api.get('/api/users/profile/')
-      setUser(response.data)
-    } catch (error) {
-      logout()
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const login = async (username, password) => {
-    const response = await api.post('/api/token/', {
-      username,
-      password
-    })
-    
-    const { access, refresh } = response.data
-    localStorage.setItem('token', access)
-    localStorage.setItem('refreshToken', refresh)
-    
-    await checkAuth()
-  }
+  const login = (userData) => {
+    setUser(userData.user);
+    localStorage.setItem('user', JSON.stringify(userData.user));
+  };
 
   const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('refreshToken')
-    setUser(null)
-  }
+    setUser(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+  };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

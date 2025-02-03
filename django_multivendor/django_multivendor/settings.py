@@ -17,7 +17,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-FRONTEND_URL = 'http://localhost:5173'  # Add this at the top with other settings
+FRONTEND_URL = 'https://localhost:5173'  # Update frontend URL to use HTTPS
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -28,8 +28,7 @@ SECRET_KEY = 'django-insecure-!%mrkjmzu^xalr!*(_1#bo7z)8^gl=nzqip9d3)f)mq$-8e1ac
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -52,17 +51,19 @@ INSTALLED_APPS = [
     'reviews',
     'shipping',
     'social_django',
+    'django_extensions',  # Add this line
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', 
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_multivendor.middleware.RequestResponseLoggingMiddleware',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -81,6 +82,16 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+
+CORS_ALLOWED_ORIGINS = [
+    'https://localhost:5173',
+    'https://127.0.0.1:5173',
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'https://localhost:5173',
+    'https://127.0.0.1:5173',
+]
 
 ROOT_URLCONF = 'django_multivendor.urls'
 
@@ -236,6 +247,7 @@ LOGGING = {
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',  # Add this line
     'django.contrib.auth.backends.ModelBackend',
 )
 
@@ -248,7 +260,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 ]
 
 # Update this line to match Google Cloud Console configuration exactly
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:5173/auth/callback'
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://localhost:5173/auth/callback'
 
 # JWT token creation after successful social auth
 SOCIAL_AUTH_PIPELINE = (
@@ -266,10 +278,47 @@ SOCIAL_AUTH_PIPELINE = (
 
 # Add this setting to force the redirect URI
 SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
-    'redirect_uri': 'http://localhost:5173/auth/callback'
+    'redirect_uri': 'https://localhost:5173/auth/callback'
 }
 
 # Override the default callback URL
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://localhost:5173/auth/callback'
-SOCIAL_AUTH_REDIRECT_IS_HTTPS = False
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'https://localhost:5173/auth/callback'
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
+# Add Facebook OAuth Settings
+SOCIAL_AUTH_FACEBOOK_KEY = '980299590637567'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = 'b03af61c7593172da21275902236284c'  # App Secret
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id,name,email,first_name,last_name',
+    'auth_type': 'reauthenticate'  # Force re-authentication
+}
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
+    ('name', 'name'),
+    ('email', 'email'),
+    ('first_name', 'first_name'),
+    ('last_name', 'last_name'),
+]
+SOCIAL_AUTH_FACEBOOK_REDIRECT_URI = 'https://localhost:5173/auth/callback'
+SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {
+    'redirect_uri': SOCIAL_AUTH_FACEBOOK_REDIRECT_URI
+}
+SOCIAL_AUTH_FACEBOOK_API_VERSION = '16.0'  # Use latest stable version
+SOCIAL_AUTH_FACEBOOK_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_OAUTH2_METHOD = 'GET'  # Some setups work better with GET
+
+# Enable debug logging for social auth
+SOCIAL_AUTH_LOGGING_LEVEL = 'DEBUG'
+
+# SSL Settings
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+SSL_CERTIFICATE = BASE_DIR / 'certificates' / 'localhost.crt'
+SSL_PRIVATE_KEY = BASE_DIR / 'certificates' / 'localhost.key'
+
+# Update OAuth settings to include both localhost and 127.0.0.1
+SOCIAL_AUTH_ALLOWED_REDIRECT_HOSTS = ['localhost:5173', '127.0.0.1:5173']
