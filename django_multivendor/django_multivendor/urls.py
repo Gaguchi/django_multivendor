@@ -94,6 +94,7 @@ urlpatterns = [
     path('api/categories/', include('categories.urls')),
     path('api/reviews/', include('reviews.urls')),
     path('api/shipping/', include('shipping.urls')),
+    path('auth/', include('social_django.urls', namespace='social')),
 ]
 
 # For development only, serve uploaded media

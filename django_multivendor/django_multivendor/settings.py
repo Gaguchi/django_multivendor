@@ -17,6 +17,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+FRONTEND_URL = 'http://localhost:5173'  # Add this at the top with other settings
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
     'categories',
     'reviews',
     'shipping',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -231,3 +233,43 @@ LOGGING = {
         'level': 'INFO',
     },
 }
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+# Google OAuth2 settings
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '13306343475-jfr7948k9qrtsohfbpukkrmsgcvf6kiu.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+]
+
+# Update this line to match Google Cloud Console configuration exactly
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://localhost:5173/auth/callback'
+
+# JWT token creation after successful social auth
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    'users.pipeline.create_jwt_token',  # Custom pipeline step
+)
+
+# Add this setting to force the redirect URI
+SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
+    'redirect_uri': 'http://localhost:5173/auth/callback'
+}
+
+# Override the default callback URL
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://localhost:5173/auth/callback'
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = False

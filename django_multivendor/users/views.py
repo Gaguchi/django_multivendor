@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -15,6 +15,9 @@ from django.conf import settings  # Add this import
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import TokenError
 import jwt
+from social_core.backends.google import GoogleOAuth2
+from social_core.exceptions import AuthForbidden
+import requests
 
 # Create your views here.
 
@@ -64,6 +67,20 @@ class RegisterOrLoginView(APIView):
             'username': user.username,
             'expires_in': refresh.access_token['exp'] - refresh.access_token['iat'],  # Token validity duration
         }
+
+class UserLoginView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user:
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'username': user.username,
+            })
+        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class TokenInfoView(APIView):
     permission_classes = [IsAuthenticated]
@@ -128,9 +145,117 @@ class ProfileView(APIView):
     def get(self, request):
         """Get current user's profile"""
         user = request.user
-        user_data = {
-            'username': user.username,
-            'email': user.email,
-            'profile': UserProfileSerializer(user.userprofile).data
-        }
-        return Response(user_data)
+        try:
+            user_data = {
+                'username': user.username,
+                'email': user.email,
+                'profile': UserProfileSerializer(user.userprofile).data
+            }
+            return Response(user_data)
+        except UserProfile.DoesNotExist:
+            # Create profile if it doesn't exist
+            profile = UserProfile.objects.create(user=user)
+            user_data = {
+                'username': user.username,
+                'email': user.email,
+                'profile': UserProfileSerializer(profile).data
+            }
+            return Response(user_data)
+
+class GoogleLoginCallbackView(APIView):
+    def get(self, request, *args, **kwargs):
+        # Get tokens from session (set by pipeline)
+        tokens = request.session.get('jwt_tokens', {})
+        
+        # Clear tokens from session
+        if 'jwt_tokens' in request.session:
+            del request.session['jwt_tokens']
+            
+        # Redirect to frontend with tokens
+        frontend_url = settings.FRONTEND_URL  # Add this to settings.py
+        return redirect(f'{frontend_url}/login/callback?tokens={tokens}')
+
+class GoogleCallbackView(APIView):
+    def post(self, request):
+        try:
+            code = request.data.get('code')
+            redirect_uri = request.data.get('redirect_uri')
+
+            if not code:
+                return Response(
+                    {'error': 'Authorization code is required'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Exchange auth code for tokens
+            token_response = requests.post(
+                'https://oauth2.googleapis.com/token',
+                data={
+                    'code': code,
+                    'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
+                    'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
+                    'redirect_uri': redirect_uri,
+                    'grant_type': 'authorization_code'
+                }
+            )
+            
+            if token_response.status_code != 200:
+                return Response(
+                    {'error': 'Failed to exchange code for tokens'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            token_data = token_response.json()
+
+            # Get user info from Google
+            user_info = requests.get(
+                'https://www.googleapis.com/oauth2/v3/userinfo',
+                headers={'Authorization': f'Bearer {token_data["access_token"]}'}
+            ).json()
+
+            email = user_info['email']
+            
+            # Try to find existing user first
+            try:
+                user = User.objects.get(email=email)
+                # Existing user - just update their info
+                user.first_name = user_info.get('given_name', user.first_name)
+                user.last_name = user_info.get('family_name', user.last_name)
+                user.save()
+            except User.DoesNotExist:
+                # New user - create account
+                user = User.objects.create_user(
+                    username=email,
+                    email=email,
+                    first_name=user_info.get('given_name', ''),
+                    last_name=user_info.get('family_name', '')
+                )
+
+            # Ensure UserProfile exists
+            profile, _ = UserProfile.objects.get_or_create(
+                user=user,
+                defaults={
+                    'first_name': user.first_name,
+                    'last_name': user.last_name
+                }
+            )
+
+            # Create JWT tokens for both new and existing users
+            refresh = RefreshToken.for_user(user)
+
+            return Response({
+                'token': str(refresh.access_token),
+                'refresh': str(refresh),
+                'user': {
+                    'id': user.id,
+                    'email': user.email,
+                    'name': f"{user.first_name} {user.last_name}".strip(),
+                    'isNewUser': _ # True if profile was created, False if it existed
+                }
+            })
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )

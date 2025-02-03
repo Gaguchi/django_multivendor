@@ -1,10 +1,16 @@
-from django.urls import path
-from .views import UserRegisterView, TokenInfoView, RegisterOrLoginView, UpdateProfileView, ProfileView
+from django.urls import path, include
+from .views import (
+    UserRegisterView, TokenInfoView, RegisterOrLoginView,
+    UpdateProfileView, ProfileView, UserLoginView, GoogleCallbackView
+)
 
 urlpatterns = [
-    path('register/', UserRegisterView.as_view(), name='user_register'),
-    path('login-or-register/', RegisterOrLoginView.as_view(), name='register_or_login'),
-    path('token-info/', TokenInfoView.as_view(), name='token_info'),
-    path('profile/update/', UpdateProfileView.as_view(), name='profile-update'),  # New endpoint
+    path('register/', UserRegisterView.as_view(), name='register'),
+    path('login/', UserLoginView.as_view(), name='login'),
+    path('auth/google/callback/', GoogleCallbackView.as_view(), name='google-callback'),
     path('profile/', ProfileView.as_view(), name='profile'),
+    path('profile/update/', UpdateProfileView.as_view(), name='profile-update'),
+    path('token-info/', TokenInfoView.as_view(), name='token-info'),
+    path('login-or-register/', RegisterOrLoginView.as_view(), name='login-or-register'),
+    path('', include('social_django.urls', namespace='social')),
 ]
