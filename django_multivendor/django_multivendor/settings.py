@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users',
-    'vendors',  # This now handles all product functionality
+    'vendors',
     'cart',
     'orders',
     'payments',
@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'reviews',
     'shipping',
     'social_django',
-    'django_extensions',  # Add this line
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
