@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ErrorBoundary } from 'react-error-boundary'
 import { AuthProvider } from './contexts/AuthContext'
-import App from './App' // Add this import
+import App from './App' 
 
 const queryClient = new QueryClient()
 
