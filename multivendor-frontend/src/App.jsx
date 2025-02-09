@@ -3,16 +3,18 @@ import { AuthProvider } from './contexts/AuthContext'
 import Layout from './components/Layout'
 import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
+import AuthCallback from './pages/AuthCallback'
 
 function App() {
   return (
     <AuthProvider>
-      <Layout>
-        <Routes>
+      <Routes>
+        <Route path="/auth/callback" element={<AuthCallback />} />
+        <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-        </Routes>
-      </Layout>
+        </Route>
+      </Routes>
     </AuthProvider>
   )
 }

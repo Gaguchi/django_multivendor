@@ -1,27 +1,18 @@
-import { useEffect } from 'react'
+import { Outlet } from 'react-router-dom'
 import Navbar from './Navbar'
-import NavbarMobile from './NavbarMobile'
 import Footer from './Footer'
+import NavbarMobile from './NavbarMobile'
 
-export default function Layout({ children }) {
-  useEffect(() => {
-    // Initialize plugins after component mounts
-    if (window.jQuery) {
-      const $ = window.jQuery
-      // Re-initialize any required jQuery plugins
-      if ($.fn.owlCarousel) {
-        $('.owl-carousel').owlCarousel()
-      }
-      // Add other plugin initializations as needed
-    }
-  }, [])
-
+export default function Layout() {
   return (
     <div className="page-wrapper">
       <Navbar />
-      {children}
-      <Footer />
       <NavbarMobile />
+      {/* Main content area - renders child routes */}
+      <main className="main">
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   )
 }

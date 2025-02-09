@@ -8,11 +8,24 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
-  const isAuthenticated = Boolean(user);
-
-  const login = (userData) => {
-    setUser(userData.user);
-    localStorage.setItem('user', JSON.stringify(userData.user));
+  const login = async (authData) => {
+    try {
+      // Ensure we have the user data in the expected format
+      const userData = authData.user || authData;
+      
+      // Update state
+      setUser(userData);
+      
+      // Store in localStorage if not already stored
+      if (!localStorage.getItem('user')) {
+        localStorage.setItem('user', JSON.stringify(userData));
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Login error:', error);
+      return false;
+    }
   };
 
   const logout = () => {
@@ -21,6 +34,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
   };
+
+  const isAuthenticated = Boolean(user);
 
   return (
     <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
