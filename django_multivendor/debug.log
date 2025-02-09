@@ -3704,3 +3704,27 @@ django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has 
 [2025-02-09 18:36:57,189] WARNING log Bad Request: /api/users/auth/google/callback/
 [2025-02-09 18:36:57,200] WARNING log Bad Request: /api/users/auth/google/callback/
 [2025-02-09 18:36:57,200] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:40:10,579] INFO views Processing Facebook callback with code: AQBYljitq2... and redirect_uri: https://localhost:5173/auth/callback
+[2025-02-09 18:40:10,583] INFO views Processing Facebook callback with code: AQBYljitq2... and redirect_uri: https://localhost:5173/auth/callback
+[2025-02-09 18:40:11,377] INFO views Successfully obtained Facebook access token
+[2025-02-09 18:40:11,400] INFO views Successfully obtained Facebook access token
+[2025-02-09 18:40:11,983] INFO views Retrieved Facebook user info: {'id': '10235822747893509', 'name': 'Boris Karaya', 'email': 'gaga9393@gmail.com', 'first_name': 'Boris', 'last_name': 'Karaya'}
+[2025-02-09 18:40:11,986] INFO views Found existing user: gaga9393@gmail.com
+[2025-02-09 18:40:12,018] INFO views Retrieved Facebook user info: {'id': '10235822747893509', 'name': 'Boris Karaya', 'email': 'gaga9393@gmail.com', 'first_name': 'Boris', 'last_name': 'Karaya'}
+[2025-02-09 18:40:12,022] INFO views Found existing user: gaga9393@gmail.com
+[2025-02-09 18:40:12,037] INFO views Processing Facebook callback with code: AQBYljitq2... and redirect_uri: https://localhost:5173/auth/callback
+[2025-02-09 18:40:12,421] ERROR views Facebook token exchange failed: {"error":{"message":"This authorization code has been used.","type":"OAuthException","code":100,"error_subcode":36009,"fbtrace_id":"AtofIJNu0_Ra_XBUbQtUVm-"}}
+[2025-02-09 18:40:12,423] WARNING log Bad Request: /api/users/auth/facebook/callback/
+[2025-02-09 18:40:12,423] WARNING log Bad Request: /api/users/auth/facebook/callback/
+[2025-02-09 18:43:19,325] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:43:19,325] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:44:44,607] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:44:44,607] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:46:32,277] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:46:32,277] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:48:04,198] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:48:04,198] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:50:23,954] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 18:50:23,954] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 19:02:08,263] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-02-09 19:02:08,263] WARNING log Bad Request: /api/users/auth/google/callback/

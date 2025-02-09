@@ -98,7 +98,7 @@ export default function LoginPage() {
         <p>You are already logged in.</p>
         <button onClick={() => {
           logout();
-          navigate('/');
+          window.location.reload(); // Force page refresh after logout
         }} className="btn btn-danger">
           Logout
         </button>
