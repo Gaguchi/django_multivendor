@@ -247,26 +247,39 @@ export default function NavbarMobile() {
             </li>
             </ul>
             <ul className="mobile-menu">
-            <li>
-                <a href="login.html">My Account</a>
-            </li>
-            <li>
-                <a href="contact.html">Contact Us</a>
-            </li>
-            <li>
-                <a href="blog.html">Blog</a>
-            </li>
-            <li>
-                <a href="wishlist.html">My Wishlist</a>
-            </li>
-            <li>
-                <a href="cart.html">Cart</a>
-            </li>
-            <li>
-                <a href="login.html" className="login-link">
-                Log In
-                </a>
-            </li>
+            {user ? (
+                <li>
+                    <Link to="/account">
+                    {user.firstName || user.username}'s Account
+                    </Link>
+                </li>
+                ) : (
+                <li>
+                    <Link to="/login">Login</Link>
+                </li>
+                )}
+                <li>
+                <Link to="/contact">Contact Us</Link>
+                </li>
+                <li>
+                <Link to="/blog">Blog</Link>
+                </li>
+                <li>
+                <Link to="/wishlist">My Wishlist</Link>
+                </li>
+                <li>
+                <Link to="/cart">Cart</Link>
+                </li>
+                {user && (
+                <li>
+                    <a href="#" onClick={(e) => {
+                    e.preventDefault()
+                    logout()
+                    }}>
+                    Logout
+                    </a>
+                </li>
+                )}
             </ul>
         </nav>
         {/* End .mobile-nav */}
@@ -337,17 +350,9 @@ export default function NavbarMobile() {
         </a>
         </div>
     </div>
-    <a id="scroll-top" href="demo35.html#top" title="Top" role="button">
+    <a id="scroll-top" href="#top" title="Top" role="button">
         <i className="icon-angle-up" />
     </a>
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/products">Products</Link>
-        {user
-          ? <button onClick={logout}>Logout</button>
-          : <Link to="/login">Login</Link>
-        }
-      </nav>
     </>
   )
 }
