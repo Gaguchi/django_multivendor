@@ -11,22 +11,31 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // Get code from URL and determine provider
         const searchParams = new URLSearchParams(location.search);
         const code = searchParams.get('code');
         const state = searchParams.get('state');
         
-        console.log('Auth callback params:', { code, state });
+        // Detect Facebook login by checking state or URL parameters
+        const isFacebookLogin = state?.includes('facebook') || 
+                              location.search.includes('granted_scopes') || 
+                              location.hash.includes('#_=_');
+        
+        const provider = isFacebookLogin ? 'facebook' : 'google';
+        
+        console.log('Auth callback details:', {
+          code: code?.substring(0, 10) + '...',
+          state,
+          provider,
+          isFacebookLogin,
+          fullUrl: window.location.href
+        });
 
         if (!code) {
           throw new Error('No authorization code received');
         }
 
-        const provider = state?.includes('facebook') ? 'facebook' : 'google';
         const baseURL = import.meta.env.VITE_API_BASE_URL;
         const callbackEndpoint = `${baseURL}/api/users/auth/${provider}/callback/`;
-
-        console.log('Calling endpoint:', callbackEndpoint);
 
         const response = await axios.post(callbackEndpoint, {
           code,
@@ -34,13 +43,7 @@ export default function AuthCallback() {
           state
         });
 
-        console.log('Auth callback response:', response.data);
-
-        if (!response.data.token) {
-          throw new Error('No token received from server');
-        }
-
-        // Store authentication data
+        // Store auth data
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('refreshToken', response.data.refresh);
         localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -53,7 +56,11 @@ export default function AuthCallback() {
 
       } catch (error) {
         console.error('Auth callback error:', error);
-        console.error('Error response:', error.response?.data);
+        console.error('Error details:', {
+          message: error.message,
+          response: error.response?.data,
+          status: error.response?.status
+        });
         navigate('/login', { 
           replace: true,
           state: { error: 'Authentication failed. Please try again.' } 
