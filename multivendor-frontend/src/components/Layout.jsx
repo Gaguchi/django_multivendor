@@ -8,7 +8,6 @@ export default function Layout() {
     <div className="page-wrapper">
       <Navbar />
       <NavbarMobile />
-      {/* Main content area - renders child routes */}
       <main className="main">
         <Outlet />
       </main>

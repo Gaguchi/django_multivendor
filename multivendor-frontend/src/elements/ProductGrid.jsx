@@ -61,7 +61,7 @@ export default function ProductGrid({
     <div className={`products-grid ${className}`} style={{
       display: 'grid',
       gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      gap: '1rem'
+      gap: '2rem'
     }}>
       {displayProducts.map(product => (
         <ProductCard 

@@ -116,3 +116,17 @@ class RequestResponseLoggingMiddleware:
             )
         except Exception as e:
             logger.error(f"Error logging response: {str(e)}")
+
+class ResponseSizeMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        size = len(response.content)
+        kb_size = size / 1024
+        
+        if kb_size > 100:
+            logger.warning(f"Large response detected: {kb_size:.2f}KB for {request.path}")
+        
+        return response

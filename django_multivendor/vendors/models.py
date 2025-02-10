@@ -28,9 +28,11 @@ class Vendor(models.Model):
 
 class VendorProduct(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='vendor_products')
+    category = models.ForeignKey('categories.Category', on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=100)
     sku = models.CharField(max_length=50, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    old_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     stock = models.PositiveIntegerField(default=0)
     description = models.TextField(blank=True)
     thumbnail = models.ImageField(
@@ -38,6 +40,14 @@ class VendorProduct(models.Model):
         blank=True, 
         default='vendor_products/default_thumbnail.png'
     )
+    secondaryImage = models.ImageField(
+        upload_to=product_media_path,
+        blank=True,
+        null=True
+    )
+    is_hot = models.BooleanField(default=False)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    created_at = models.DateTimeField(default=timezone.now)
     video = models.FileField(
         upload_to=product_video_path,
         blank=True,

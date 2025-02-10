@@ -37,22 +37,42 @@ class VendorSerializer(serializers.ModelSerializer):
         vendor = Vendor.objects.create(**validated_data)
         return vendor
 
+class SimpleVendorSerializer(serializers.ModelSerializer):
+    """Lightweight serializer for vendor information in product listings"""
+    class Meta:
+        model = Vendor
+        fields = ['id', 'store_name']
+
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
         fields = ['id', 'file', 'position']
 
 class ProductSerializer(serializers.ModelSerializer):
-    vendor = VendorSerializer(read_only=True)  # Vendor will be set from the authenticated user
+    vendor = SimpleVendorSerializer(read_only=True)
     images = ProductImageSerializer(many=True, read_only=True, source='product_images')
+    category = serializers.CharField(source='category.name', read_only=True)
 
     class Meta:
         model = VendorProduct
         fields = [
-            'id', 'vendor', 'name', 'sku', 'price', 'stock',
-            'description', 'thumbnail', 'video', 'images'
+            'id',
+            'name',
+            'sku',
+            'price',
+            'old_price',
+            'stock',
+            'description',
+            'thumbnail',
+            'secondaryImage',
+            'category',
+            'vendor',
+            'images',
+            'rating',
+            'is_hot',
+            'created_at'
         ]
-        read_only_fields = ['vendor']
+        read_only_fields = ['vendor', 'rating']
 
     def create(self, validated_data):
         request = self.context.get('request')
@@ -61,3 +81,22 @@ class ProductSerializer(serializers.ModelSerializer):
         
         product = VendorProduct.objects.create(**validated_data)
         return product
+
+class ProductListSerializer(serializers.ModelSerializer):
+    """Ultra lightweight serializer for product listings"""
+    vendor_name = serializers.CharField(source='vendor.store_name', read_only=True)
+    category_name = serializers.CharField(source='category.name', read_only=True)
+
+    class Meta:
+        model = VendorProduct
+        fields = [
+            'id',
+            'name',
+            'price',
+            'old_price',
+            'thumbnail',
+            'category_name',
+            'vendor_name',
+            'rating',
+            'is_hot'
+        ]

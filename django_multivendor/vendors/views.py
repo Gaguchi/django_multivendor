@@ -5,10 +5,11 @@ from rest_framework.decorators import action
 from rest_framework import serializers
 import logging
 from .models import Vendor, VendorProduct
-from .serializers import VendorSerializer, ProductSerializer
+from .serializers import VendorSerializer, ProductSerializer, ProductListSerializer
 from users.models import UserProfile
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .authentication import MasterTokenAuthentication
+from rest_framework.pagination import PageNumberPagination
 
 logger = logging.getLogger(__name__)
 
@@ -72,9 +73,14 @@ class VendorViewSet(viewsets.ModelViewSet):
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
+class ProductPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
 class ProductViewSet(viewsets.ModelViewSet):
-    serializer_class = ProductSerializer
     authentication_classes = [JWTAuthentication, MasterTokenAuthentication]
+    pagination_class = ProductPagination
     
     def get_permissions(self):
         """Allow read operations with master token, require authentication for others"""
@@ -84,13 +90,17 @@ class ProductViewSet(viewsets.ModelViewSet):
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return ProductListSerializer
+        return ProductSerializer
+
     def get_queryset(self):
-        """Filter products by vendor if vendor_id provided, otherwise return all"""
-        queryset = VendorProduct.objects.all()
-        vendor_id = self.request.query_params.get('vendor_id', None)
-        if vendor_id:
-            queryset = queryset.filter(vendor_id=vendor_id)
-        return queryset
+        queryset = VendorProduct.objects.select_related('vendor', 'category').all()
+        if self.action == 'list':
+            # Optimize query for listings
+            queryset = queryset.defer('description', 'video')
+        return queryset.order_by('-created_at')
 
     def perform_create(self, serializer):
         """Set the vendor automatically based on the authenticated user"""
