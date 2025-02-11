@@ -4,7 +4,8 @@ import Layout from './components/Layout'
 import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
 import AuthCallback from './pages/AuthCallback'
-import Products from './pages/Products'
+import Products from './pages/Shop'
+import Product from './pages/Product'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/shop" element={<Products />} />
+          <Route path="/product" element={<Product />} />
         </Route>
       </Routes>
     </AuthProvider>
