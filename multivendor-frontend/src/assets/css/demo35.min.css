@@ -18703,7 +18703,7 @@ aside .widget-info i {
 }
 
 .rounded {
-    border-radius: 7px !important
+    border-radius: 5px !important
 }
 
 .rotate-text {
@@ -19571,3 +19571,4 @@ aside .widget-info i {
         padding-bottom: 3.3rem
     }
 }
+

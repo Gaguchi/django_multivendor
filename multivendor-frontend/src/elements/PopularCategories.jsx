@@ -7,7 +7,7 @@ export default function PopularCategories() {
             Products From These Categories Often Buy
           </p>
           <div
-            className="categories-slider owl-carousel owl-theme mb-4 appear-animate"
+            className="categories-slider owl-carousel owl-theme mb-4"
             data-owl-options="{
                   'items': 1,
                   'responsive': {
@@ -22,8 +22,6 @@ export default function PopularCategories() {
                       }
                   }
               }"
-            data-animation-name="fadeInUpShorter"
-            data-animation-delay={200}
           >
             <div className="product-category bg-white">
               <a href="category.html">

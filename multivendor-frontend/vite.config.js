@@ -4,7 +4,9 @@ import fs from 'fs'
 import path from 'path'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+  ],
   server: {
     https: {
       key: fs.readFileSync('../django_multivendor/certificates/localhost.key'),
@@ -19,5 +21,24 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  optimizeDeps: {
+    include: ['jquery'],
+    exclude: ['simple-line-icons'] // Exclude problematic assets
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['@tanstack/react-query', '@tanstack/react-virtual'],
+          jquery: ['jquery']
+        }
+      }
+    },
+    sourcemap: true,
+  },
+  css: {
+    devSourcemap: true,
   }
 })

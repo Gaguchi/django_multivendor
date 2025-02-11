@@ -10,3 +10,35 @@
     top: 4px;
     right: 46px;
 }
+
+.inner-icon .product-title {
+    font-family: Poppins, sans-serif;
+    margin-bottom: 0.4rem;
+}
+
+@media (max-width: 479px) {
+    .inner-icon .product-price {
+        font-size: 1.3rem;
+    }
+    .special-section .products-container {
+    padding: 3rem 1.7rem 1.7rem 1.7rem;
+    }
+}
+
+.inner-icon .ratings-container {
+    margin-left: 0;
+    margin-bottom: 7px;
+}
+
+.inner-icon {
+    position: relative;
+    margin-bottom: 0;
+}
+
+.special-section .products-container {
+    padding: 3rem 2.3rem 2.3rem;
+}
+
+.custom-products {
+    padding: 1.4rem 1.4rem 0;
+}

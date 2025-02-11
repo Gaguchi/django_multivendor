@@ -13,10 +13,12 @@ export default function ProductCard({
     category,  // Changed from category_name to match what we're passing
     price,
     old_price,
-    rating = 0,
     vendor_name,
     is_hot = false // Use the server-provided is_hot value if available
   } = product;
+
+  // Convert rating to number or default to 0
+  const rating = Number(product.rating) || 0
 
   // Calculate sale percentage if old_price exists
   const salePercentage = old_price ? 
@@ -31,6 +33,7 @@ export default function ProductCard({
             width={280}
             height={280}
             alt={name}
+            className='rounded'
           />
         </Link>
         <div className="label-group">
@@ -99,6 +102,12 @@ export default function ProductCard({
           )}
           <span className="product-price">${parseFloat(price).toFixed(2)}</span>
         </div>
+        <div className="product-action">
+          <a href="element-products.html#" className="btn-icon btn-add-cart product-type-simple">
+            <i className="icon-shopping-cart" />
+            <span>ADD TO CART</span>
+          </a>
+        </div>
       </div>
     </div>
   )
@@ -119,7 +128,10 @@ ProductCard.propTypes = {
       PropTypes.number,
       PropTypes.string
     ]),
-    rating: PropTypes.number,
+    rating: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string // Allow string since it gets converted
+    ]),
     is_hot: PropTypes.bool
   }).isRequired,
   isHot: PropTypes.bool,

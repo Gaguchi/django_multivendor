@@ -8,11 +8,7 @@ export default function PopularProducts() {
   const products = data?.pages?.[0]?.results || []
 
   return (
-    <div
-      className="appear-animate"
-      data-animation-name="fadeIn"
-      data-animation-delay={200}
-    >
+    <div>
       <h2 className="section-title">Most Popular Products</h2>
       <p className="section-info font2">
         All our new arrivals in a exclusive brand selection
@@ -34,14 +30,14 @@ export default function PopularProducts() {
             xs: 2,
             sm: 2, 
             md: 3,
-            lg: 7,
+            lg: 6,
             xl: 7
           }}
           defaultLimit={{
             xs: 6,
             sm: 6,
-            md: 9,
-            lg: 7,
+            md: 6,
+            lg: 6,
             xl: 7
           }}
         />

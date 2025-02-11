@@ -12,7 +12,23 @@
     <link rel="stylesheet" href="/src/assets/css/custom.css" />
   </head>
   <body>
-        <div id="root"></div>
+    <div id="root"></div>
+    
+    <!-- jQuery must be loaded before other scripts -->
+    <script src="/src/assets/js/jquery.min.js"></script>
+    
+    <!-- Then load your React app -->
+    <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Then load jQuery dependent scripts -->
+    <script src="/src/assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/src/assets/js/plugins.min.js"></script>
+    <script src="/src/assets/js/optional/isotope.pkgd.min.js"></script>
+    <script src="/src/assets/js/jquery.appear.min.js"></script>
+    <script src="/src/assets/js/jquery.plugin.min.js"></script>
+    <script src="/src/assets/js/jquery.countdown.min.js"></script>
+    <script src="/src/assets/js/nouislider.min.js"></script>
+    <script src="/src/assets/js/main.min.js"></script>
     
     <script>
       document.addEventListener("DOMContentLoaded", function() {
@@ -20,14 +36,4 @@
       });
     </script>
   </body>
-    <script type="module" src="/src/main.jsx"></script>
-    <script src="/src/assets/js/jquery.min.js"></script>
-    <script src="/src/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="/src/assets/js/plugins.min.js"></script>
-    <script src="/src/assets/js/optional/isotope.pkgd.min.js"></script>
-    <script src="/src/assets/js/jquery.appear.min.js"></script>
-    <script src="/src/assets/js/jquery.plugin.min.js"></script>
-    <script src="/src/assets/js/jquery.countdown.min.js"></script>
-    
-    <script src="/src/assets/js/main.min.js"></script>
 </html>
