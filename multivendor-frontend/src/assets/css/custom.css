@@ -88,3 +88,21 @@
     flex-direction: column;
     justify-content: center;
 }
+
+.custom-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.object-fit-cover {
+  object-fit: cover;
+}
+
+.sidebar-wrapper {
+    transition: none !important; 
+    transform: translateZ(0); 
+}

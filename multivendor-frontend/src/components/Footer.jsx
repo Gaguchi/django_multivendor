@@ -3,7 +3,7 @@ export default function Footer() {
 
   return (
       <>
-    <footer className="footer font2 footer-reveal">
+    <footer className="footer font2 ">
       <div className="container">
         <div className="footer-middle">
           <div className="row">

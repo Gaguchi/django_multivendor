@@ -6,6 +6,7 @@ import LoginPage from './pages/Login'
 import AuthCallback from './pages/AuthCallback'
 import Products from './pages/Shop'
 import Product from './pages/Product'
+import Shop2 from './pages/Shop2'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/shop" element={<Products />} />
           <Route path="/product" element={<Product />} />
         </Route>
+          <Route path="/shop2" element={<Shop2 />} />
       </Routes>
     </AuthProvider>
   )

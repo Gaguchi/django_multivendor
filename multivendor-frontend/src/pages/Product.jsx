@@ -46,6 +46,21 @@ export default function Product() {
     ]
   }
 
+  // Add customer media data
+  const customerMedia = [
+    { type: 'image', url: 'https://placehold.co/100x100?text=Review+1' },
+    { type: 'image', url: 'https://placehold.co/100x100?text=Review+2' },
+    { type: 'image', url: 'https://placehold.co/100x100?text=Review+3' },
+    { type: 'video', url: 'https://placehold.co/100x100?text=Video+1' },
+    { type: 'image', url: 'https://placehold.co/100x100?text=Review+4' },
+    { type: 'image', url: 'https://placehold.co/100x100?text=Review+5' },
+    { type: 'video', url: 'https://placehold.co/100x100?text=Video+2' }
+  ]
+
+  // Modified customer media section within the Product Info Section
+  const displayCount = 5
+  const remainingCount = customerMedia.length - displayCount
+
   return (
 <main className="main bg-gray">
     <div className="container py-4">
@@ -98,6 +113,51 @@ export default function Product() {
                       {'★'.repeat(product.rating)}
                     </div>
                     <span className="text-muted small">{product.reviews} reviews</span>
+                  </div>
+
+                  {/* Modified Customer Photos & Videos Section */}
+                  <div className="mb-4">
+                    <div className="d-flex align-items-center gap-2 mb-2">
+                      <h6 className="mb-0">Customer Photos & Videos</h6>
+                      <span className="text-muted small">({customerMedia.length})</span>
+                    </div>
+                    <div className="d-flex gap-2">
+                      {customerMedia.slice(0, displayCount).map((media, idx) => (
+                        <div 
+                          key={idx}
+                          className="position-relative"
+                          style={{
+                            width: '70px',
+                            height: '70px',
+                          }}
+                        >
+                          <img
+                            src={media.url}
+                            alt={`Customer media ${idx + 1}`}
+                            className="img-fluid rounded w-100 h-100 object-fit-cover"
+                          />
+                          {media.type === 'video' && (
+                            <div className="position-absolute top-50 start-50 translate-middle text-white">
+                              <i className="fas fa-play-circle fs-4"></i>
+                            </div>
+                          )}
+                          {/* Overlay for last visible item if there are more */}
+                          {idx === displayCount - 1 && remainingCount > 0 && (
+                            <div 
+                              className="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center rounded"
+                              style={{
+                                background: 'rgba(0,0,0,0.5)',
+                                color: 'white',
+                                fontSize: '1.2rem',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              +{remainingCount}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="specifications">
