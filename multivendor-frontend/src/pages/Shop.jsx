@@ -172,6 +172,45 @@ export default function Products() {
               }}
               className="row product-ajax-grid scroll-load"
             />
+            <ProductGrid 
+              products={products}
+              loading={isLoading}
+              error={error}
+              defaultColumns={{
+                xs: 2,
+                sm: 2,
+                md: 3,
+                lg: 4,
+                xl: 4
+              }}
+              defaultLimit={{
+                xs: 6,
+                sm: 6,
+                md: 9,
+                lg: 12,
+                xl: 12
+              }}
+              className="row product-ajax-grid scroll-load"
+            /><ProductGrid 
+              products={products}
+              loading={isLoading}
+              error={error}
+              defaultColumns={{
+                xs: 2,
+                sm: 2,
+                md: 3,
+                lg: 4,
+                xl: 4
+              }}
+              defaultLimit={{
+                xs: 6,
+                sm: 6,
+                md: 9,
+                lg: 12,
+                xl: 12
+              }}
+              className="row product-ajax-grid scroll-load"
+            />
 
           </div>
           <Sidebar />
