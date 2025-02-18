@@ -341,7 +341,7 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 
 		var recalculateLimits = function () {
 			for (var i = 0, len = elements.length; i < len; i++) {
-				var $this = elements[ i ];
+				var $this = elements[i];
 
 				if (options.minWidth && $window.width() <= options.minWidth) {
 					if ($this.parent().is(".pin-wrapper")) { $this.unwrap(); }
@@ -420,11 +420,11 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 			var window_height = window.innerHeight || $window.height();
 
 			for (var i = 0, len = elements.length; i < len; i++) {
-				var $this = $(elements[ i ]),
+				var $this = $(elements[i]),
 					data = $this.data("themePin"),
 					sidebarTop;
 
-				if (!data) { // Removed element
+				if (!data) {
 					continue;
 				}
 
@@ -438,13 +438,13 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 					data.to2 = $container.height() - $this.outerHeight() - data.pad.bottom - data.pb;
 				}
 
-				if (prevDataTo[ i ] === 0) {
-					prevDataTo[ i ] = data.to;
+				if (prevDataTo[i] === 0) {
+					prevDataTo[i] = data.to;
 				}
 
-				if (prevDataTo[ i ] != data.to) {
-					if (fixedSideBottom[ i ] && $this.height() + $this.offset().top + data.pad.bottom < scrollY + window_height) {
-						fixedSideBottom[ i ] = false;
+				if (prevDataTo[i] != data.to) {
+					if (fixedSideBottom[i] && $this.height() + $this.offset().top + data.pad.bottom < scrollY + window_height) {
+						fixedSideBottom[i] = false;
 					}
 				}
 
@@ -461,12 +461,16 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 						continue;
 					}
 					if (scrollY > from && scrollY < to) {
-						!($this.css("position") == "fixed") && $this.css({
+						if ($this.css("position") !== "fixed") {
+							console.log("Switching to fixed: from -> fixed, element top:", $this.offset().top);
+						}
+						$this.css({
 							left: $this.offset().left,
 							top: data.pad.top
 						}).css("position", "fixed");
 						if (options.activeClass) { $this.addClass(options.activeClass); }
 					} else if (scrollY >= to) {
+						console.log("Switching to absolute: fixed -> absolute, element top:", to - data.parentTop + data.pad.top);
 						$this.css({
 							left: "",
 							top: to - data.parentTop + data.pad.top
@@ -476,28 +480,25 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 						$this.css({ position: "", top: "", left: "" });
 						if (options.activeClass) { $this.removeClass(options.activeClass); }
 					}
-				} else if (($this.height() + data.pad.top + data.pad.bottom) > window_height || fixedSideTop[ i ] || fixedSideBottom[ i ]) {
+				} else if (($this.height() + data.pad.top + data.pad.bottom) > window_height || fixedSideTop[i] || fixedSideBottom[i]) {
 					var padTop = parseInt($this.parent().parent().css('padding-top'));
-					// Reset the sideSortables style when scrolling to the top.
 					if (scrollY + data.pad.top - padTop <= data.parentTop) {
 						$this.css({ position: "", top: "", bottom: "", left: "" });
-						fixedSideTop[ i ] = fixedSideBottom[ i ] = false;
+						fixedSideTop[i] = fixedSideBottom[i] = false;
 					} else if (scrollY >= data.to) {
+						console.log("Switching to absolute: possibly from fixed, element top:", data.to2);
 						$this.css({
 							left: "",
-							top: data.to2,
+							top: data.to2 + 550,
 							bottom: ""
 						}).css("position", "absolute");
 						if (options.activeClass) { $this.addClass(options.activeClass); }
 					} else {
-
-						// When scrolling down.
 						if (scrollY >= lastScrollY) {
-							if (fixedSideTop[ i ]) {
-
-								// Let it scroll.
-								fixedSideTop[ i ] = false;
-								sidebarTop = $this.offset().top - data.parentTop;
+							if (fixedSideTop[i]) {
+								console.log("Switching to absolute: pinned top -> scrolling down, element top:", $this.offset().top);
+								fixedSideTop[i] = false;
+								sidebarTop = $this.offset().top - data.parentTop + 550;
 
 								$this.css({
 									left: "",
@@ -505,24 +506,22 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 									bottom: ""
 								}).css("position", "absolute");
 								if (options.activeClass) { $this.addClass(options.activeClass); }
-							} else if (!fixedSideBottom[ i ] && $this.height() + $this.offset().top + data.pad.bottom < scrollY + window_height) {
-								// Pin the bottom.
-								fixedSideBottom[ i ] = true;
+							} else if (!fixedSideBottom[i] && $this.height() + $this.offset().top + data.pad.bottom < scrollY + window_height) {
+								console.log("Switching to fixed at bottom");
+								fixedSideBottom[i] = true;
 
-								!($this.css("position") == "fixed") && $this.css({
+								$this.css({
 									left: $this.offset().left,
 									bottom: data.pad.bottom,
 									top: ""
 								}).css("position", "fixed");
 								if (options.activeClass) { $this.addClass(options.activeClass); }
 							}
-
-							// When scrolling up.
 						} else if (scrollY < lastScrollY) {
-							if (fixedSideBottom[ i ]) {
-								// Let it scroll.
-								fixedSideBottom[ i ] = false;
-								sidebarTop = $this.offset().top - data.parentTop;
+							if (fixedSideBottom[i]) {
+								console.log("Switching to absolute: pinned bottom -> scrolling up, element top:", $this.offset().top);
+								fixedSideBottom[i] = false;
+								sidebarTop = $this.offset().top - data.parentTop + 550;
 
 								$this.css({
 									left: "",
@@ -530,11 +529,11 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 									bottom: ""
 								}).css("position", "absolute");
 								if (options.activeClass) { $this.addClass(options.activeClass); }
-							} else if (!fixedSideTop[ i ] && $this.offset().top >= scrollY + data.pad.top) {
-								// Pin the top.
-								fixedSideTop[ i ] = true;
+							} else if (!fixedSideTop[i] && $this.offset().top >= scrollY + data.pad.top) {
+								console.log("Switching to fixed at top");
+								fixedSideTop[i] = true;
 
-								!($this.css("position") == "fixed") && $this.css({
+								$this.css({
 									left: $this.offset().left,
 									top: data.pad.top,
 									bottom: ''
@@ -544,20 +543,25 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
 						}
 					}
 				} else {
-					// If the sidebar container is smaller than the viewport, then pin/unpin the top when scrolling.
 					if (scrollY >= (data.parentTop - data.pad.top)) {
+						if ($this.css("position") !== "fixed") {
+							console.log("Pinned to top in fixed");
+						}
 						$this.css({
 							position: 'fixed',
 							top: data.pad.top
 						});
 					} else {
+						if ($this.css("position") === "fixed") {
+							console.log("Unpinned from top");
+						}
 						$this.css({ position: "", top: "", bottom: "", left: "" });
 					}
 
-					fixedSideTop[ i ] = fixedSideBottom[ i ] = false;
+					fixedSideTop[i] = fixedSideBottom[i] = false;
 				}
 
-				prevDataTo[ i ] = data.to;
+				prevDataTo[i] = data.to;
 			}
 
 			lastScrollY = scrollY;
