@@ -11,7 +11,7 @@ export default function HeaderLeft() {
             </button>
             <a href="demo35.html" className="logo">
               <img
-                src="src/assets/images/logo-black.png"
+                src="/src/assets/images/logo-black.png"
                 className="w-100"
                 width={111}
                 height={44}

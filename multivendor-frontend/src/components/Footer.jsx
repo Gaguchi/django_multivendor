@@ -105,7 +105,7 @@ export default function Footer() {
               <div className="widget mb-3">
                 <h4 className="widget-title">Payment Methods</h4>
                 <img
-                  src="src/assets/images/demoes/demo35/payment.png"
+                  src="/src/assets/images/demoes/demo35/payment.png"
                   alt="payment"
                   width={240}
                   height={32}

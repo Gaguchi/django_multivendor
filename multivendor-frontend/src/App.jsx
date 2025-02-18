@@ -6,7 +6,7 @@ import LoginPage from './pages/Login'
 import AuthCallback from './pages/AuthCallback'
 import Products from './pages/Shop'
 import Product from './pages/Product'
-import Shop2 from './pages/Shop2'
+import ProductTemplate from './pages/Product_template'
 
 function App() {
   return (
@@ -17,9 +17,9 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/shop" element={<Products />} />
-          <Route path="/product" element={<Product />} />
+          <Route path="/product/:id" element={<Product />} /> 
+          <Route path="/product_template" element={<ProductTemplate />} />
         </Route>
-          <Route path="/shop2" element={<Shop2 />} />
       </Routes>
     </AuthProvider>
   )
