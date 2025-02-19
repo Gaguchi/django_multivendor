@@ -46,7 +46,7 @@ export default function Specials() {
             defaultLimit={{
               xs: 4,
               sm: 6,
-              md: 8,
+              md: 4,
               lg: 6,
               xl: 6
             }}

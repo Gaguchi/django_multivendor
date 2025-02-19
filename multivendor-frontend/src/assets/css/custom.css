@@ -132,3 +132,13 @@ span.input-group-btn.input-group-append {
     right: 31px;
     top: 11px;
 }
+
+.product-single-qty {
+    width: 100%;
+    max-width: 100%;
+}
+
+.product-single-qty .bootstrap-touchspin .form-control {
+    width: 100%;
+    max-width: 100%;
+}
