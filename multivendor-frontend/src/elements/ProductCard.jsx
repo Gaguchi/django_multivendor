@@ -1,11 +1,47 @@
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import axios from 'axios'
+import { useAuth } from '../contexts/AuthContext'
+import { useCart } from '../contexts/CartContext'
 
 export default function ProductCard({ 
   product, 
   isHot = false,
   showQuickView = false 
 }) {
+  const { cart, addToCart, updateCartItem } = useCart()
+  const { user } = useAuth()
+  const [loading, setLoading] = useState(false)
+
+  // Get current quantity from cart context instead of making a separate request
+  const cartItem = cart?.items?.find(item => item.product.id === product.id)
+  const cartQuantity = cartItem?.quantity || 0
+
+  const handleAddToCart = async () => {
+    if (!user) return
+    try {
+      setLoading(true)
+      await addToCart(product.id, 1)
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleUpdateQuantity = async (newQuantity) => {
+    if (newQuantity < 0) return
+    try {
+      setLoading(true)
+      await updateCartItem(product.id, newQuantity)
+    } catch (error) {
+      console.error('Error updating cart:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const {
     id,
     thumbnail,
@@ -103,10 +139,43 @@ export default function ProductCard({
           <span className="product-price">${parseFloat(price).toFixed(2)}</span>
         </div>
         <div className="product-action">
-          <a href="element-products.html#" className="btn-icon btn-add-cart product-type-simple">
-            <i className="icon-shopping-cart" />
-            <span>ADD TO CART</span>
-          </a>
+          {cartQuantity > 0 ? (
+            <div className="product-single-qty">
+              <div className="input-group bootstrap-touchspin bootstrap-touchspin-injected">
+                <span className="input-group-btn input-group-prepend">
+                  <button
+                    className="btn btn-outline btn-down-icon bootstrap-touchspin-down"
+                    type="button"
+                    onClick={() => handleUpdateQuantity(cartQuantity - 1)}
+                    disabled={loading}
+                  />
+                </span>
+                <input 
+                  className="horizontal-quantity form-control" 
+                  type="text"
+                  value={cartQuantity}
+                  readOnly
+                />
+                <span className="input-group-btn input-group-append">
+                  <button
+                    className="btn btn-outline btn-up-icon bootstrap-touchspin-up"
+                    type="button"
+                    onClick={() => handleUpdateQuantity(cartQuantity + 1)}
+                    disabled={loading}
+                  />
+                </span>
+              </div>
+            </div>
+          ) : (
+            <button 
+              className="btn-icon btn-add-cart product-type-simple"
+              onClick={handleAddToCart}
+              disabled={loading}
+            >
+              <i className="icon-shopping-cart" />
+              <span>{loading ? 'ADDING...' : 'ADD TO CART'}</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

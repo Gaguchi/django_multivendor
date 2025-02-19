@@ -77,7 +77,7 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
-    'x-master-token', 
+    'x-master-token',  # Ensure this is lowercase
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -180,7 +180,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'vendors.authentication.MasterTokenAuthentication',
     ],
+    # Remove the default permission class to allow public access by default
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
@@ -202,7 +204,7 @@ SIMPLE_JWT = {
 }
 
 # Master token for frontend access
-MASTER_ACCESS_TOKEN = 'your-super-secret-token'  # In production, get this from env variables
+MASTER_ACCESS_TOKEN = 'your-super-secret-token'  # Must match exactly what you're sending
 
 LOGGING = {
     'version': 1,
@@ -324,3 +326,21 @@ SSL_PRIVATE_KEY = BASE_DIR / 'certificates' / 'localhost.key'
 
 # Update OAuth settings to include both localhost and 127.0.0.1
 SOCIAL_AUTH_ALLOWED_REDIRECT_HOSTS = ['localhost:5173', '127.0.0.1:5173']
+
+# Base URLs should use HTTPS
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = [
+    'https://localhost:8000',
+    'https://127.0.0.1:8000',
+]
+
+# Update CORS settings for HTTPS
+CORS_ALLOWED_ORIGINS = [
+    'https://localhost:5173',
+    'https://127.0.0.1:5173',
+]
+
+CORS_ORIGIN_WHITELIST = [
+    'https://localhost:5173',
+    'https://127.0.0.1:5173',
+]

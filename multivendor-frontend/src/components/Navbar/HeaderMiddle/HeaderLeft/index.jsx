@@ -9,7 +9,7 @@ export default function HeaderLeft() {
             >
               <i className="fas fa-bars" />
             </button>
-            <a href="demo35.html" className="logo">
+            <a href="/" className="logo">
               <img
                 src="/src/assets/images/logo-black.png"
                 className="w-100"
@@ -19,10 +19,10 @@ export default function HeaderLeft() {
               />
             </a>
             <div className="header-icon header-search header-search-inline header-search-category d-lg-block d-none text-right mt-0">
-              <a href="demo35.html#" className="search-toggle" role="button">
+              <a href="/" className="search-toggle" role="button">
                 <i className="icon-magnifier" />
               </a>
-              <form action="demo35.html#" method="get">
+              <form action="/" method="get">
                 <div className="header-search-wrapper">
                   <input
                     type="search"

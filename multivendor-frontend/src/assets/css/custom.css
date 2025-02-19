@@ -106,3 +106,29 @@
     transition: none !important; 
     transform: translateZ(0); 
 }
+
+span.input-group-btn.input-group-prepend {
+    display: flex;
+}
+
+span.input-group-btn.input-group-append {
+    display: flex;
+}
+
+.header-bottom.sticky-header.d-none.d-lg-flex.fixed .info-boxes {
+    display: flex;
+}
+
+.header-bottom.sticky-header.d-none.d-lg-flex .info-boxes {
+    display: none;
+}
+
+.header-bottom.sticky-header.d-none.d-lg-flex .header-center {
+    margin-left: 0;
+    justify-content: space-between;
+}
+
+.header-bottom.sticky-header.d-none.d-lg-flex .badge-circle {
+    right: 31px;
+    top: 11px;
+}

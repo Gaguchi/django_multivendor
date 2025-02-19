@@ -42,7 +42,7 @@ export default function Product() {
       <div className="container py-4">
         <div className="row g-4">
           {/* Image Gallery */}
-          <div className="col-12 col-lg-5">
+          <div className="col-12 col-lg-4">
             <div className="row g-3">
               {/* Only show thumbnails column if we have multiple images */}
               {allImages.length > 1 && (
@@ -58,7 +58,7 @@ export default function Product() {
                         <img 
                           src={img}
                           alt="" 
-                          className="img-fluid rounded"
+                          className="img-fluid rounded-percentage"
                         />
                       </div>
                     ))}
@@ -71,7 +71,7 @@ export default function Product() {
                 <img 
                   src={allImages[selectedImage]}
                   alt={product.name}
-                  className="img-fluid rounded"
+                  className="img-fluid rounded-percentage"
                   style={{ width: '100%', height: 'auto' }}
                 />
               </div>
@@ -79,7 +79,7 @@ export default function Product() {
           </div>
 
           {/* Info + Purchase Section */}
-          <div className="col-12 col-lg-7">
+          <div className="col-12 col-lg-8">
             <div className="row g-4">
               {/* Product Info Section */}
               <div className="col-12 col-md-6">
@@ -131,7 +131,7 @@ export default function Product() {
                             {product.old_price} ₾
                           </span>
                           {product.discount_percentage && (
-                            <span className="badge text-bg-danger rounded-pill px-2">
+                            <span className="badge text-bg-danger rounded-percentage-pill px-2">
                               -{product.discount_percentage}%
                             </span>
                           )}
@@ -140,7 +140,7 @@ export default function Product() {
                     </div>
 
                     {/* Rest of purchase section remains unchanged */}
-                    <div className="d-flex justify-content-between align-items-center p-3 bg-transparent rounded mb-1">
+                    <div className="d-flex justify-content-between align-items-center p-3 bg-transparent rounded-percentage mb-1">
                       <div className="d-flex align-items-center gap-2">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-primary">
                           <path d="M11.7 7.9C11.7 11 9.2 13.5 6.1 13.5C3 13.5 0.4 11 0.4 7.9C0.4 4.7 2.9 2.2 6.1 2.2V7.9H11.7Z"/>
@@ -149,14 +149,14 @@ export default function Product() {
                         <span>Monthly from: <strong>16₾</strong></span>
                       </div>
                       <div className="d-flex align-items-center gap-2">
-                        <img src="https://placehold.co/32x16?text=TBC" alt="TBC" className="rounded"/>
-                        <img src="https://placehold.co/32x16?text=BOG" alt="BOG" className="rounded"/>
-                        <img src="https://placehold.co/32x16?text=Credo" alt="Credo" className="rounded"/>
+                        <img src="https://placehold.co/32x16?text=TBC" alt="TBC" className="rounded-percentage"/>
+                        <img src="https://placehold.co/32x16?text=BOG" alt="BOG" className="rounded-percentage"/>
+                        <img src="https://placehold.co/32x16?text=Credo" alt="Credo" className="rounded-percentage"/>
                       </div>
                     </div>
 
                     {/* Delivery Row */}
-                    <div className="d-flex align-items-center gap-3 p-3 bg-transparent rounded mb-1">
+                    <div className="d-flex align-items-center gap-3 p-3 bg-transparent rounded-percentage mb-1">
                       <svg width="24" height="24" fill="currentColor" className="text-success flex-shrink-0">
                         <path d="M3.4 12c.4.4 1 .4 1.4 0L10 6.8V20c0 .6.4 1 1 1s1-.4 1-1V6.8l5.2 5.2c.4.4 1 .4 1.4 0 .4-.4.4-1 0-1.4l-7-7c-.4-.4-1-.4-1.4 0l-7 7c-.4.4-.4 1 0 1.4z"/>
                       </svg>
@@ -168,14 +168,14 @@ export default function Product() {
 
                     {/* Action Buttons */}
                     <div className="d-flex flex-column gap-2">
-                      <button className="btn btn-primary py-2 rounded-3 d-flex align-items-center justify-content-center gap-2 card-button">
+                      <button className="btn btn-primary py-2 rounded-percentage-3 d-flex align-items-center justify-content-center gap-2 card-button">
                         <svg width="20" height="20" fill="currentColor">
                           <path d="M6.3 16c.9 0 1.6.7 1.6 1.6S7.2 19.2 6.3 19.2s-1.6-.7-1.6-1.6.7-1.6 1.6-1.6zM16.5 16c.9 0 1.6.7 1.6 1.6s-.7 1.6-1.6 1.6-1.6-.7-1.6-1.6.7-1.6 1.6-1.6zM3.8 3l1.7.7.7 7.5h12.2l1.6-6c.1-.4-.1-.8-.5-.9L8.2 3H3.8zm2.3 6.2l-.4-4h10.6l-1.1 4H6.1z"/>
                         </svg>
                         <span>Add to Cart</span>
                       </button>
-                      <button className="btn btn-dark py-2 rounded-3 card-button">Buy Now</button>
-                      <button className="btn btn-outline-primary py-2 rounded-3 card-button">Installment</button>
+                      <button className="btn btn-dark py-2 rounded-percentage-3 card-button">Buy Now</button>
+                      <button className="btn btn-outline-primary py-2 rounded-percentage-3 card-button">Installment</button>
                     </div>
                   </div>
                 </div>

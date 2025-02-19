@@ -7021,7 +7021,8 @@ figure .porto-loading-icon {
     position: relative;
     margin-bottom: 1.5rem;
     color: #333;
-    text-align: center
+    text-align: center;
+    width: 100%;
 }
 
 .product-default .btn-add-cart,
@@ -7874,7 +7875,7 @@ figure .porto-loading-icon {
 .left-details .btn-quickview {
     background-color: #f4f4f4;
     border-color: #f4f4f4;
-    color: black
+    color: black;
 }
 
 .left-details .btn-icon-wish,
@@ -7884,7 +7885,8 @@ figure .porto-loading-icon {
 
 .left-details .btn-add-cart {
     margin-left: 0;
-    padding: 0 1.5rem
+    padding: 0 1.5rem;
+    width: 100%;
 }
 
 .hidden-description {
@@ -11557,7 +11559,7 @@ header p {
 }
 
 .header-bottom.fixed .header-center {
-    margin-left: 4.7rem;
+    /* margin-left: 4.7rem; */
     width: auto
 }
 
@@ -13844,7 +13846,8 @@ footer .contact-info-label {
 
 .menu-depart>a i {
     margin-top: 1px;
-    font-size: 2rem
+    font-size: 2rem;
+    margin-right: 15px
 }
 
 .menu-depart>a:hover {
@@ -18704,6 +18707,10 @@ aside .widget-info i {
 
 .rounded {
     border-radius: 5px !important
+}
+
+.rounded-percentage {
+    border-radius: 5% !important
 }
 
 .rotate-text {
