@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import axios from 'axios'
 import { useAuth } from './AuthContext'
+import api from '../services/api'
 
 const CartContext = createContext()
 
@@ -25,12 +26,7 @@ export function CartProvider({ children }) {
         }
 
         try {
-            const response = await axios.get(
-                `${import.meta.env.VITE_API_BASE_URL}/api/cart/carts/current/`,
-                {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-                }
-            )
+            const response = await api.get('/api/cart/carts/current/')
             setCart(response.data)
         } catch (error) {
             console.error('Error fetching cart:', error)
@@ -46,13 +42,10 @@ export function CartProvider({ children }) {
 
     const addToCart = async (productId, quantity = 1) => {
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/api/cart/carts/add_item/`,
-                { product_id: productId, quantity },
-                {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-                }
-            )
+            const response = await api.post('/api/cart/carts/add_item/', {
+                product_id: productId,
+                quantity
+            })
             await fetchCart() // Refresh cart after adding
             return response.data
         } catch (error) {
