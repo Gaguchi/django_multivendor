@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import api from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -8,18 +9,43 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          // Verify token and get user data
+          const response = await api.get('/api/users/profile/');
+          setUser(response.data);
+        } catch (error) {
+          // Token validation failed - clear everything
+          localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('user');
+          setUser(null);
+        }
+      }
+      setLoading(false);
+    };
+
+    initializeAuth();
+  }, []);
+
   const login = async (authData) => {
     try {
-      // Ensure we have the user data in the expected format
       const userData = authData.user || authData;
       
-      // Update state
-      setUser(userData);
-      
-      // Store in localStorage if not already stored
-      if (!localStorage.getItem('user')) {
-        localStorage.setItem('user', JSON.stringify(userData));
+      // Set token in localStorage and axios defaults
+      if (authData.token) {
+        localStorage.setItem('token', authData.token);
+        localStorage.setItem('refreshToken', authData.refresh);
+        api.defaults.headers.common.Authorization = `Bearer ${authData.token}`;
       }
+      
+      setUser(userData);
+      localStorage.setItem('user', JSON.stringify(userData));
       
       return true;
     } catch (error) {
@@ -33,12 +59,19 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
+    delete api.defaults.headers.common.Authorization;
   };
 
   const isAuthenticated = Boolean(user);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      login, 
+      logout, 
+      isAuthenticated,
+      loading 
+    }}>
       {children}
     </AuthContext.Provider>
   );

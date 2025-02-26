@@ -82,7 +82,8 @@ export default function ProductCard({
           <a
             href="#"
             className="btn-icon btn-add-cart product-type-simple"
-            onClick={(e) => e.preventDefault()}
+            onClick={handleAddToCart}
+            disabled={loading}
           >
             <i className="icon-shopping-cart" />
           </a>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 
 export default function LoginPage() {
   const { user, logout } = useAuth();
@@ -37,12 +37,12 @@ export default function LoginPage() {
     
     try {
       const endpoint = type === 'signin'
-        ? `${baseURL}/api/users/login/`
-        : `${baseURL}/api/users/register/`;
+        ? `/api/users/login/`
+        : `/api/users/register/`;
         
       const payload = type === 'signin'
         ? { 
-            username: formData.email, // Using email as username
+            username: formData.email,
             password: formData.password 
           }
         : {
@@ -56,15 +56,12 @@ export default function LoginPage() {
             }
           };
 
-      const response = await axios.post(endpoint, payload);
+      const response = await api.post(endpoint, payload);
       const data = response.data;
       
-      // Save tokens
-      localStorage.setItem('token', data.access);
-      localStorage.setItem('refreshToken', data.refresh);
-      localStorage.setItem('user', JSON.stringify(data));
+      // Login will handle token storage
+      await login(data);
       
-      // Redirect
       navigate('/');
       
     } catch (error) {
