@@ -9,8 +9,8 @@ export default defineConfig({
   ],
   server: {
     https: {
-      key: fs.readFileSync('../django_multivendor/certificates/localhost.key'),
-      cert: fs.readFileSync('../django_multivendor/certificates/localhost.crt'),
+      key: fs.readFileSync('../backend/certificates/localhost.key'),
+      cert: fs.readFileSync('../backend/certificates/localhost.crt'),
     },
     port: 5173,
     host: 'localhost',

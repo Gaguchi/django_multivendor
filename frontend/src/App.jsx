@@ -9,6 +9,7 @@ import Products from './pages/Shop'
 import Product from './pages/Product'
 import ProductTemplate from './pages/Product_template'
 import Account from './pages/Account'
+import Cart from './pages/Cart'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/product/:id" element={<Product />} /> 
             <Route path="/product_template" element={<ProductTemplate />} />
             <Route path="/account" element={<Account />} />
+            <Route path="/cart" element={<Cart />} />
           </Route>
         </Routes>
       </CartProvider>
