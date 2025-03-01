@@ -1,5 +1,4 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import axios from 'axios'
 import { useAuth } from './AuthContext'
 import api from '../services/api'
 
@@ -57,19 +56,11 @@ export function CartProvider({ children }) {
     const updateCartItem = async (productId, quantity) => {
         try {
             if (quantity === 0) {
-                await axios.delete(
-                    `${import.meta.env.VITE_API_BASE_URL}/api/cart/items/${productId}/`,
-                    {
-                        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-                    }
-                )
+                await api.delete(`/api/cart/items/${productId}/`)
             } else {
-                await axios.patch(
-                    `${import.meta.env.VITE_API_BASE_URL}/api/cart/items/${productId}/`,
-                    { quantity },
-                    {
-                        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-                    }
+                await api.patch(
+                    `/api/cart/items/${productId}/`,
+                    { quantity }
                 )
             }
             await fetchCart() // Refresh cart after update
@@ -81,12 +72,7 @@ export function CartProvider({ children }) {
 
     const removeFromCart = async (productId) => {
         try {
-            await axios.delete(
-                `${import.meta.env.VITE_API_BASE_URL}/api/cart/items/${productId}/`,
-                {
-                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-                }
-            )
+            await api.delete(`/api/cart/items/${productId}/`)
             await fetchCart() // Refresh cart after removal
         } catch (error) {
             console.error('Error removing from cart:', error)

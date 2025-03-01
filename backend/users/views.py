@@ -2,10 +2,10 @@ from django.shortcuts import render, redirect
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer, UserProfileSerializer
+from .serializers import UserSerializer, UserProfileSerializer, AddressSerializer
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
-from .models import UserProfile
+from .models import UserProfile, Address
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.backends import TokenBackend
@@ -149,10 +149,36 @@ class ProfileView(APIView):
         """Get current user's profile"""
         user = request.user
         try:
+            # Get default addresses if they exist
+            default_shipping = None
+            default_billing = None
+            
+            try:
+                default_shipping = Address.objects.get(
+                    user=user, 
+                    address_type__in=['shipping', 'both'], 
+                    is_default=True
+                )
+            except Address.DoesNotExist:
+                pass
+                
+            try:
+                default_billing = Address.objects.get(
+                    user=user,
+                    address_type__in=['billing', 'both'],
+                    is_default=True
+                )
+            except Address.DoesNotExist:
+                pass
+                
             user_data = {
                 'username': user.username,
                 'email': user.email,
-                'profile': UserProfileSerializer(user.userprofile).data
+                'profile': UserProfileSerializer(user.userprofile).data,
+                'addresses': {
+                    'shipping': AddressSerializer(default_shipping).data if default_shipping else None,
+                    'billing': AddressSerializer(default_billing).data if default_billing else None
+                }
             }
             return Response(user_data)
         except UserProfile.DoesNotExist:
@@ -161,7 +187,11 @@ class ProfileView(APIView):
             user_data = {
                 'username': user.username,
                 'email': user.email,
-                'profile': UserProfileSerializer(profile).data
+                'profile': UserProfileSerializer(profile).data,
+                'addresses': {
+                    'shipping': None,
+                    'billing': None
+                }
             }
             return Response(user_data)
 
@@ -391,3 +421,68 @@ class FacebookCallbackView(APIView):
         except Exception as e:
             logger.exception("Facebook callback error")
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class AddressListCreateView(generics.ListCreateAPIView):
+    serializer_class = AddressSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+class AddressRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = AddressSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return Address.objects.filter(user=self.request.user)
+
+
+class DefaultAddressView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, address_type):
+        if address_type not in ['shipping', 'billing', 'both']:
+            return Response(
+                {"error": "Invalid address type. Must be 'shipping', 'billing', or 'both'"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        try:
+            address = Address.objects.get(
+                user=request.user,
+                address_type=address_type,
+                is_default=True
+            )
+            serializer = AddressSerializer(address)
+            return Response(serializer.data)
+        except Address.DoesNotExist:
+            return Response(
+                {"detail": f"No default {address_type} address found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    
+    def post(self, request, address_type):
+        if address_type not in ['shipping', 'billing', 'both']:
+            return Response(
+                {"error": "Invalid address type. Must be 'shipping', 'billing', or 'both'"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        address_id = request.data.get('address_id')
+        try:
+            address = Address.objects.get(id=address_id, user=request.user)
+            address.address_type = address_type
+            address.is_default = True
+            address.save()  # This will trigger the save method that handles default logic
+            
+            serializer = AddressSerializer(address)
+            return Response(serializer.data)
+        except Address.DoesNotExist:
+            return Response(
+                {"detail": "Address not found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )

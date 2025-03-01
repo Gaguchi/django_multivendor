@@ -10,7 +10,7 @@ export default function Footer() {
 
   return (
     <>    
-    <main className="main bg-gray">
+    <main className="bg-gray">
     <Hero />
       <section className="popular-section">
         <div className="container">

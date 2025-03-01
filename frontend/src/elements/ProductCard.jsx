@@ -18,7 +18,8 @@ export default function ProductCard({
   const cartItem = cart?.items?.find(item => item.product.id === product.id)
   const cartQuantity = cartItem?.quantity || 0
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e) => {
+    e.preventDefault()
     if (!user) return
     try {
       setLoading(true)
@@ -83,7 +84,8 @@ export default function ProductCard({
             href="#"
             className="btn-icon btn-add-cart product-type-simple"
             onClick={handleAddToCart}
-            disabled={loading}
+            role="button"
+            aria-disabled={loading}
           >
             <i className="icon-shopping-cart" />
           </a>
@@ -168,14 +170,16 @@ export default function ProductCard({
               </div>
             </div>
           ) : (
-            <button 
+            <a 
+              href="#"
               className="btn-icon btn-add-cart product-type-simple"
               onClick={handleAddToCart}
-              disabled={loading}
+              role="button"
+              aria-disabled={loading}
             >
               <i className="icon-shopping-cart" />
               <span>{loading ? 'ADDING...' : 'ADD TO CART'}</span>
-            </button>
+            </a>
           )}
         </div>
       </div>
