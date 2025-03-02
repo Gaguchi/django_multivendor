@@ -1,0 +1,150 @@
+/* Account sidebar styles */
+.sidebar.widget-dashboard {
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.sidebar.widget-dashboard h2 {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #222529;
+    border-bottom: 1px solid #e7e7e7;
+    padding-bottom: 10px;
+}
+
+.sidebar.widget-dashboard .nav-link {
+    color: #777;
+    font-size: 14px;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: all 0.25s;
+}
+
+.sidebar.widget-dashboard .nav-link:hover {
+    background-color: #f1f1f1;
+    color: #222;
+}
+
+.sidebar.widget-dashboard .nav-link.active {
+    color: #fff;
+    background-color: #08c;
+    font-weight: 600;
+}
+
+.sidebar.widget-dashboard .nav-link.smaller {
+    font-size: 13px;
+    padding: 6px 10px 6px 30px;
+}
+
+/* Account content area */
+.tab-content {
+    padding: 20px;
+}
+
+.tab-content h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #222529;
+}
+
+.card {
+    margin-bottom: 20px;
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+    color: #222529;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* Order styles */
+.order-item {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-number {
+    font-weight: 600;
+    color: #222529;
+}
+
+.order-status {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 3px;
+}
+
+.order-status.completed {
+    background-color: #a3e2b8;
+    color: #2a6a41;
+}
+
+.order-status.processing {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.order-status.cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Address styles */
+.address-box {
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 10px;
+    background-color: #fff;
+}
+
+.address-box h5 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.address-box p {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.address-actions {
+    margin-top: 10px;
+}
+
+/* Form styles */
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.btn-primary {
+    background-color: #08c;
+    border-color: #08c;
+}
+
+.btn-primary:hover {
+    background-color: #0077b3;
+    border-color: #0077b3;
+}
+
+/* Responsive styles */
+@media (max-width: 991px) {
+    .sidebar.widget-dashboard {
+        margin-bottom: 20px;
+    }
+}

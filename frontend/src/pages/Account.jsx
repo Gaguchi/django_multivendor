@@ -1,610 +1,422 @@
+import { useState, useEffect } from 'react';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import '../assets/css/account.css';
+
+// Import Dashboard Components
+import DashboardSummary from '../components/Dashboard/DashboardSummary';
+import OrdersList from '../components/Dashboard/OrdersList';
+import AddressesList from '../components/Dashboard/AddressesList';
+
 export default function Account() {
+    const { user, logout } = useAuth();
+    const [searchParams] = useSearchParams();
+    const [activeSection, setActiveSection] = useState('dashboard');
+    const location = useLocation();
+    const navigate = useNavigate();
+    
+    // Handle section from hash or query params
+    useEffect(() => {
+        // Check for section in hash (e.g. #addresses)
+        if (location.hash) {
+            const section = location.hash.substring(1);
+            setActiveSection(section);
+            return;
+        }
+        
+        // Check for section in query params (e.g. ?section=addresses)
+        const sectionParam = searchParams.get('section');
+        if (sectionParam) {
+            setActiveSection(sectionParam);
+            return;
+        }
+    }, [location.hash, searchParams]);
+    
+    // Handle section navigation
+    const handleSectionChange = (section) => {
+        setActiveSection(section);
+        // Update URL hash for better navigation
+        window.history.pushState(null, '', `#${section}`);
+    };
+    
+    // Handle logout
+    const handleLogout = (e) => {
+        e.preventDefault();
+        logout();
+        navigate('/');
+    };
+
+    // If not authenticated, redirect to login page
+    useEffect(() => {
+        if (!user) {
+            navigate('/login', { state: { redirect: location.pathname } });
+        }
+    }, [user, navigate, location]);
+
+    // Show loading state when checking auth
+    if (!user) {
+        return (
+            <div className="container py-5 text-center">
+                <div className="spinner-border" role="status">
+                    <span className="sr-only">Loading...</span>
+                </div>
+                <p className="mt-2">Checking authentication...</p>
+            </div>
+        );
+    }
 
     return (
-        <>
-  <div className="container account-container custom-account-container">
-    <div className="row">
-      <div className="sidebar widget widget-dashboard mb-lg-0 mb-3 col-lg-3 order-0">
-        <h2 className="text-uppercase">My Account</h2>
-        <ul className="nav nav-tabs list flex-column mb-0" role="tablist">
-          <li className="nav-item">
-            <a
-              className="nav-link active"
-              id="dashboard-tab"
-              data-toggle="tab"
-              href="dashboard.html#dashboard"
-              role="tab"
-              aria-controls="dashboard"
-              aria-selected="true"
-            >
-              Dashboard
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              id="order-tab"
-              data-toggle="tab"
-              href="dashboard.html#order"
-              role="tab"
-              aria-controls="order"
-              aria-selected="true"
-            >
-              Orders
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              id="download-tab"
-              data-toggle="tab"
-              href="dashboard.html#download"
-              role="tab"
-              aria-controls="download"
-              aria-selected="false"
-            >
-              Downloads
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              id="address-tab"
-              data-toggle="tab"
-              href="dashboard.html#address"
-              role="tab"
-              aria-controls="address"
-              aria-selected="false"
-            >
-              Addresses
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              id="edit-tab"
-              data-toggle="tab"
-              href="dashboard.html#edit"
-              role="tab"
-              aria-controls="edit"
-              aria-selected="false"
-            >
-              Account details
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              id="shop-address-tab"
-              data-toggle="tab"
-              href="dashboard.html#shipping"
-              role="tab"
-              aria-controls="edit"
-              aria-selected="false"
-            >
-              Shopping Addres
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="wishlist.html">
-              Wishlist
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link" href="login.html">
-              Logout
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div className="col-lg-9 order-lg-last order-1 tab-content">
-        <div
-          className="tab-pane fade show active"
-          id="dashboard"
-          role="tabpanel"
-        >
-          <div className="dashboard-content">
-            <p>
-              Hello <strong className="text-dark">Editor</strong> (not
-              <strong className="text-dark">Editor</strong>?
-              <a href="login.html" className="btn btn-link ">
-                Log out
-              </a>
-              )
-            </p>
-            <p>
-              From your account dashboard you can view your
-              <a
-                className="btn btn-link link-to-tab"
-                href="dashboard.html#order"
-              >
-                recent orders
-              </a>
-              , manage your
-              <a
-                className="btn btn-link link-to-tab"
-                href="dashboard.html#address"
-              >
-                shipping and billing addresses
-              </a>
-              , and
-              <a
-                className="btn btn-link link-to-tab"
-                href="dashboard.html#edit"
-              >
-                edit your password and account details.
-              </a>
-            </p>
-            <div className="mb-4" />
-            <div className="row row-lg">
-              <div className="col-6 col-md-4">
-                <div className="feature-box text-center pb-4">
-                  <a href="dashboard.html#order" className="link-to-tab">
-                    <i className="sicon-social-dropbox" />
-                  </a>
-                  <div className="feature-box-content">
-                    <h3>ORDERS</h3>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                <div className="feature-box text-center pb-4">
-                  <a href="dashboard.html#download" className="link-to-tab">
-                    <i className="sicon-cloud-download" />
-                  </a>
-                  <div className=" feature-box-content">
-                    <h3>DOWNLOADS</h3>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                <div className="feature-box text-center pb-4">
-                  <a href="dashboard.html#address" className="link-to-tab">
-                    <i className="sicon-location-pin" />
-                  </a>
-                  <div className="feature-box-content">
-                    <h3>ADDRESSES</h3>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                <div className="feature-box text-center pb-4">
-                  <a href="dashboard.html#edit" className="link-to-tab">
-                    <i className="icon-user-2" />
-                  </a>
-                  <div className="feature-box-content p-0">
-                    <h3>ACCOUNT DETAILS</h3>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                <div className="feature-box text-center pb-4">
-                  <a href="wishlist.html">
-                    <i className="sicon-heart" />
-                  </a>
-                  <div className="feature-box-content">
-                    <h3>WISHLIST</h3>
-                  </div>
-                </div>
-              </div>
-              <div className="col-6 col-md-4">
-                <div className="feature-box text-center pb-4">
-                  <a href="login.html">
-                    <i className="sicon-logout" />
-                  </a>
-                  <div className="feature-box-content">
-                    <h3>LOGOUT</h3>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* End .row */}
-          </div>
-        </div>
-        {/* End .tab-pane */}
-        <div className="tab-pane fade" id="order" role="tabpanel">
-          <div className="order-content">
-            <h3 className="account-sub-title d-none d-md-block">
-              <i className="sicon-social-dropbox align-middle mr-3" />
-              Orders
-            </h3>
-            <div className="order-table-container text-center">
-              <table className="table table-order text-left">
-                <thead>
-                  <tr>
-                    <th className="order-id">ORDER</th>
-                    <th className="order-date">DATE</th>
-                    <th className="order-status">STATUS</th>
-                    <th className="order-price">TOTAL</th>
-                    <th className="order-action">ACTIONS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="text-center p-0" colSpan={5}>
-                      <p className="mb-5 mt-5">No Order has been made yet.</p>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <hr className="mt-0 mb-3 pb-2" />
-              <a href="category.html" className="btn btn-dark">
-                Go Shop
-              </a>
-            </div>
-          </div>
-        </div>
-        {/* End .tab-pane */}
-        <div className="tab-pane fade" id="download" role="tabpanel">
-          <div className="download-content">
-            <h3 className="account-sub-title d-none d-md-block">
-              <i className="sicon-cloud-download align-middle mr-3" />
-              Downloads
-            </h3>
-            <div className="download-table-container">
-              <p>No downloads available yet.</p>{" "}
-              <a
-                href="category.html"
-                className="btn btn-primary text-transform-none mb-2"
-              >
-                GO SHOP
-              </a>
-            </div>
-          </div>
-        </div>
-        {/* End .tab-pane */}
-        <div className="tab-pane fade" id="address" role="tabpanel">
-          <h3 className="account-sub-title d-none d-md-block mb-1">
-            <i className="sicon-location-pin align-middle mr-3" />
-            Addresses
-          </h3>
-          <div className="addresses-content">
-            <p className="mb-4">
-              The following addresses will be used on the checkout page by
-              default.
-            </p>
+        <div className="container account-container custom-account-container py-5">
             <div className="row">
-              <div className="address col-md-6">
-                <div className="heading d-flex">
-                  <h4 className="text-dark mb-0">Billing address</h4>
-                </div>
-                <div className="address-box">
-                  You have not set up this type of address yet.
-                </div>
-                <a
-                  href="dashboard.html#billing"
-                  className="btn btn-default address-action link-to-tab"
-                >
-                  Add Address
-                </a>
-              </div>
-              <div className="address col-md-6 mt-5 mt-md-0">
-                <div className="heading d-flex">
-                  <h4 className="text-dark mb-0">Shipping address</h4>
-                </div>
-                <div className="address-box">
-                  You have not set up this type of address yet.
-                </div>
-                <a
-                  href="dashboard.html#shipping"
-                  className="btn btn-default address-action link-to-tab"
-                >
-                  Add Address
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* End .tab-pane */}
-        <div className="tab-pane fade" id="edit" role="tabpanel">
-          <h3 className="account-sub-title d-none d-md-block mt-0 pt-1 ml-1">
-            <i className="icon-user-2 align-middle mr-3 pr-1" />
-            Account Details
-          </h3>
-          <div className="account-content">
-            <form action="dashboard.html#">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="acc-name">
-                      First name <span className="required">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Editor"
-                      id="acc-name"
-                      name="acc-name"
-                      required=""
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label htmlFor="acc-lastname">
-                      Last name <span className="required">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="acc-lastname"
-                      name="acc-lastname"
-                      required=""
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="form-group mb-2">
-                <label htmlFor="acc-text">
-                  Display name <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="acc-text"
-                  name="acc-text"
-                  placeholder="Editor"
-                  required=""
-                />
-                <p>
-                  This will be how your name will be displayed in the account
-                  section and in reviews
-                </p>
-              </div>
-              <div className="form-group mb-4">
-                <label htmlFor="acc-email">
-                  Email address <span className="required">*</span>
-                </label>
-                <input
-                  type="email"
-                  className="form-control"
-                  id="acc-email"
-                  name="acc-email"
-                  placeholder="editor@gmail.com"
-                  required=""
-                />
-              </div>
-              <div className="change-password">
-                <h3 className="text-uppercase mb-2">Password Change</h3>
-                <div className="form-group">
-                  <label htmlFor="acc-password">
-                    Current Password (leave blank to leave unchanged)
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="acc-password"
-                    name="acc-password"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="acc-password">
-                    New Password (leave blank to leave unchanged)
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="acc-new-password"
-                    name="acc-new-password"
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="acc-password">Confirm New Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="acc-confirm-password"
-                    name="acc-confirm-password"
-                  />
-                </div>
-              </div>
-              <div className="form-footer mt-3 mb-0">
-                <button type="submit" className="btn btn-dark mr-0">
-                  Save changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-        {/* End .tab-pane */}
-        <div className="tab-pane fade" id="billing" role="tabpanel">
-          <div className="address account-content mt-0 pt-2">
-            <h4 className="title">Billing address</h4>
-            <form className="mb-2" action="dashboard.html#">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label>
-                      First name <span className="required">*</span>
-                    </label>
-                    <input type="text" className="form-control" required="" />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label>
-                      Last name <span className="required">*</span>
-                    </label>
-                    <input type="text" className="form-control" required="" />
-                  </div>
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Company </label>
-                <input type="text" className="form-control" />
-              </div>
-              <div className="select-custom">
-                <label>
-                  Country / Region <span className="required">*</span>
-                </label>
-                <select name="orderby" className="form-control">
-                  <option value="" selected="selected">
-                    British Indian Ocean Territory
-                  </option>
-                  <option value={1}>Brunei</option>
-                  <option value={2}>Bulgaria</option>
-                  <option value={3}>Burkina Faso</option>
-                  <option value={4}>Burundi</option>
-                  <option value={5}>Cameroon</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>
-                  Street address <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="House number and street name"
-                  required=""
-                />
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Apartment, suite, unit, etc. (optional)"
-                  required=""
-                />
-              </div>
-              <div className="form-group">
-                <label>
-                  Town / City <span className="required">*</span>
-                </label>
-                <input type="text" className="form-control" required="" />
-              </div>
-              <div className="form-group">
-                <label>
-                  State / Country <span className="required">*</span>
-                </label>
-                <input type="text" className="form-control" required="" />
-              </div>
-              <div className="form-group">
-                <label>
-                  Postcode / ZIP <span className="required">*</span>
-                </label>
-                <input type="text" className="form-control" required="" />
-              </div>
-              <div className="form-group mb-3">
-                <label>
-                  Phone <span className="required">*</span>
-                </label>
-                <input type="number" className="form-control" required="" />
-              </div>
-              <div className="form-group mb-3">
-                <label>
-                  Email address <span className="required">*</span>
-                </label>
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="editor@gmail.com"
-                  required=""
-                />
-              </div>
-              <div className="form-footer mb-0">
-                <div className="form-footer-right">
-                  <button type="submit" className="btn btn-dark py-4">
-                    Save Address
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        {/* End .tab-pane */}
-        <div className="tab-pane fade" id="shipping" role="tabpanel">
-          <div className="address account-content mt-0 pt-2">
-            <h4 className="title mb-3">Shipping Address</h4>
-            <form className="mb-2" action="dashboard.html#">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label>
-                      First name <span className="required">*</span>
-                    </label>
-                    <input type="text" className="form-control" required="" />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="form-group">
-                    <label>
-                      Last name <span className="required">*</span>
-                    </label>
-                    <input type="text" className="form-control" required="" />
-                  </div>
-                </div>
-              </div>
-              <div className="form-group">
-                <label>Company </label>
-                <input type="text" className="form-control" />
-              </div>
-              <div className="select-custom">
-                <label>
-                  Country / Region <span className="required">*</span>
-                </label>
-                <select name="orderby" className="form-control">
-                  <option value="" selected="selected">
-                    British Indian Ocean Territory
-                  </option>
-                  <option value={1}>Brunei</option>
-                  <option value={2}>Bulgaria</option>
-                  <option value={3}>Burkina Faso</option>
-                  <option value={4}>Burundi</option>
-                  <option value={5}>Cameroon</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label>
-                  Street address <span className="required">*</span>
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="House number and street name"
-                  required=""
-                />
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Apartment, suite, unit, etc. (optional)"
-                  required=""
-                />
-              </div>
-              <div className="form-group">
-                <label>
-                  Town / City <span className="required">*</span>
-                </label>
-                <input type="text" className="form-control" required="" />
-              </div>
-              <div className="form-group">
-                <label>
-                  State / Country <span className="required">*</span>
-                </label>
-                <input type="text" className="form-control" required="" />
-              </div>
-              <div className="form-group">
-                <label>
-                  Postcode / ZIP <span className="required">*</span>
-                </label>
-                <input type="text" className="form-control" required="" />
-              </div>
-              <div className="form-footer mb-0">
-                <div className="form-footer-right">
-                  <button type="submit" className="btn btn-dark py-4">
-                    Save Address
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-        {/* End .tab-pane */}
-      </div>
-      {/* End .tab-content */}
-    </div>
-    {/* End .row */}
-  </div>
-  {/* End .container */}
-</>
+                {/* Account Sidebar */}
+                <div className="sidebar widget widget-dashboard mb-lg-0 mb-3 col-lg-3 order-0">
+                    <h2 className="text-uppercase mb-3">My Account</h2>
+                    <ul className="nav nav-tabs list flex-column mb-0" role="tablist">
+                        {/* Dashboard */}
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeSection === 'dashboard' ? 'active' : ''}`}
+                                onClick={() => handleSectionChange('dashboard')}
+                                href="#dashboard"
+                                role="tab"
+                                aria-selected={activeSection === 'dashboard'}
+                            >
+                                Dashboard
+                            </a>
+                        </li>
+                        
+                        {/* Orders Section with Sublinks */}
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeSection.startsWith('order') ? 'active' : ''}`}
+                                onClick={() => handleSectionChange('orders')}
+                                href="#orders"
+                                role="tab"
+                                aria-selected={activeSection.startsWith('order')}
+                            >
+                                Orders
+                            </a>
+                            {activeSection.startsWith('order') && (
+                                <ul className="nav flex-column ml-3 mb-1">
+                                    <li className="nav-item">
+                                        <a 
+                                            className={`nav-link smaller ${activeSection === 'orders' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('orders')}
+                                            href="#orders"
+                                        >
+                                            All Orders
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a 
+                                            className={`nav-link smaller ${activeSection === 'orders-recent' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('orders-recent')}
+                                            href="#orders-recent"
+                                        >
+                                            Recent Orders
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a 
+                                            className={`nav-link smaller ${activeSection === 'orders-returns' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('orders-returns')}
+                                            href="#orders-returns"
+                                        >
+                                            Returns
+                                        </a>
+                                    </li>
+                                </ul>
+                            )}
+                        </li>
+                        
+                        {/* Addresses with Sublinks */}
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeSection.startsWith('address') ? 'active' : ''}`}
+                                onClick={() => handleSectionChange('addresses')}
+                                href="#addresses"
+                                role="tab"
+                                aria-selected={activeSection.startsWith('address')}
+                            >
+                                Addresses
+                            </a>
+                            {activeSection.startsWith('address') && (
+                                <ul className="nav flex-column ml-3 mb-1">
+                                    <li className="nav-item">
+                                        <a 
+                                            className={`nav-link smaller ${activeSection === 'addresses' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('addresses')}
+                                            href="#addresses"
+                                        >
+                                            All Addresses
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a 
+                                            className={`nav-link smaller ${activeSection === 'address-shipping' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('address-shipping')}
+                                            href="#address-shipping"
+                                        >
+                                            Shipping Addresses
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a 
+                                            className={`nav-link smaller ${activeSection === 'address-billing' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('address-billing')}
+                                            href="#address-billing"
+                                        >
+                                            Billing Addresses
+                                        </a>
+                                    </li>
+                                </ul>
+                            )}
+                        </li>
 
-    )
+                        {/* Account Settings with Sublinks */}
+                        <li className="nav-item">
+                            <a
+                                className={`nav-link ${activeSection.startsWith('account') ? 'active' : ''}`}
+                                onClick={() => handleSectionChange('account-details')}
+                                href="#account-details"
+                                role="tab"
+                                aria-selected={activeSection.startsWith('account')}
+                            >
+                                Account Settings
+                            </a>
+                            {activeSection.startsWith('account') && (
+                                <ul className="nav flex-column ml-3 mb-1">
+                                    <li className="nav-item">
+                                        <a 
+                                            className={`nav-link smaller ${activeSection === 'account-details' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('account-details')}
+                                            href="#account-details"
+                                        >
+                                            Personal Information
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a 
+                                            className={`nav-link smaller ${activeSection === 'account-security' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('account-security')}
+                                            href="#account-security"
+                                        >
+                                            Password & Security
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a 
+                                            className={`nav-link smaller ${activeSection === 'account-preferences' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('account-preferences')}
+                                            href="#account-preferences"
+                                        >
+                                            Preferences
+                                        </a>
+                                    </li>
+                                </ul>
+                            )}
+                        </li>
+                        
+                        {/* Other menu items */}
+                        <li className="nav-item">
+                            <Link to="/wishlist" className="nav-link">
+                                Wishlist
+                            </Link>
+                        </li>
+                        
+                        {/* Logout */}
+                        <li className="nav-item">
+                            <a className="nav-link" href="#" onClick={handleLogout}>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                
+                {/* Account Content */}
+                <div className="col-lg-9 order-lg-last order-1 tab-content">
+                    {/* Dashboard Section */}
+                    {activeSection === 'dashboard' && (
+                        <DashboardSummary />
+                    )}
+
+                    {/* Orders Section */}
+                    {activeSection === 'orders' && (
+                        <div className="orders-content">
+                            <h2>My Orders</h2>
+                            <OrdersList />
+                        </div>
+                    )}
+                    
+                    {/* Recent Orders Section */}
+                    {activeSection === 'orders-recent' && (
+                        <div className="orders-content">
+                            <h2>Recent Orders</h2>
+                            <OrdersList filter="recent" />
+                        </div>
+                    )}
+                    
+                    {/* Order Returns Section */}
+                    {activeSection === 'orders-returns' && (
+                        <div className="orders-content">
+                            <h2>Returns & Refunds</h2>
+                            <OrdersList filter="returns" />
+                        </div>
+                    )}
+                    
+                    {/* Addresses Section */}
+                    {activeSection === 'addresses' && (
+                        <div className="addresses-content">
+                            <h2>My Addresses</h2>
+                            <AddressesList />
+                        </div>
+                    )}
+                    
+                    {/* Shipping Addresses Section */}
+                    {activeSection === 'address-shipping' && (
+                        <div className="addresses-content">
+                            <h2>Shipping Addresses</h2>
+                            <AddressesList filter="shipping" />
+                        </div>
+                    )}
+                    
+                    {/* Billing Addresses Section */}
+                    {activeSection === 'address-billing' && (
+                        <div className="addresses-content">
+                            <h2>Billing Addresses</h2>
+                            <AddressesList filter="billing" />
+                        </div>
+                    )}
+                    
+                    {/* Account Details Section */}
+                    {activeSection === 'account-details' && (
+                        <div className="account-details-content">
+                            <h2>Personal Information</h2>
+                            <div className="card">
+                                <div className="card-body">
+                                    <form>
+                                        <div className="row">
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="firstName">First Name</label>
+                                                    <input 
+                                                        type="text" 
+                                                        className="form-control" 
+                                                        id="firstName" 
+                                                        defaultValue={user?.profile?.first_name || ''}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="form-group">
+                                                    <label htmlFor="lastName">Last Name</label>
+                                                    <input 
+                                                        type="text" 
+                                                        className="form-control" 
+                                                        id="lastName" 
+                                                        defaultValue={user?.profile?.last_name || ''}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="email">Email</label>
+                                            <input 
+                                                type="email" 
+                                                className="form-control" 
+                                                id="email" 
+                                                defaultValue={user?.email || ''}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="phone">Phone Number</label>
+                                            <input 
+                                                type="tel" 
+                                                className="form-control" 
+                                                id="phone" 
+                                                defaultValue={user?.profile?.phone || ''}
+                                            />
+                                        </div>
+                                        <button type="submit" className="btn btn-primary">Save Changes</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Security Section */}
+                    {activeSection === 'account-security' && (
+                        <div className="security-content">
+                            <h2>Password & Security</h2>
+                            <div className="card">
+                                <div className="card-body">
+                                    <form>
+                                        <div className="form-group">
+                                            <label htmlFor="currentPassword">Current Password</label>
+                                            <input type="password" className="form-control" id="currentPassword" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="newPassword">New Password</label>
+                                            <input type="password" className="form-control" id="newPassword" />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="confirmPassword">Confirm New Password</label>
+                                            <input type="password" className="form-control" id="confirmPassword" />
+                                        </div>
+                                        <button type="submit" className="btn btn-primary">Update Password</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Preferences Section */}
+                    {activeSection === 'account-preferences' && (
+                        <div className="preferences-content">
+                            <h2>Communication Preferences</h2>
+                            <div className="card">
+                                <div className="card-body">
+                                    <form>
+                                        <div className="form-group">
+                                            <div className="custom-control custom-checkbox">
+                                                <input type="checkbox" className="custom-control-input" id="emailOrders" defaultChecked />
+                                                <label className="custom-control-label" htmlFor="emailOrders">
+                                                    Email me about my orders and account
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <div className="custom-control custom-checkbox">
+                                                <input type="checkbox" className="custom-control-input" id="emailPromotions" />
+                                                <label className="custom-control-label" htmlFor="emailPromotions">
+                                                    Email me about promotions and new products
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <div className="custom-control custom-checkbox">
+                                                <input type="checkbox" className="custom-control-input" id="smsOrders" />
+                                                <label className="custom-control-label" htmlFor="smsOrders">
+                                                    Text me about my orders
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <div className="custom-control custom-checkbox">
+                                                <input type="checkbox" className="custom-control-input" id="smsPromotions" />
+                                                <label className="custom-control-label" htmlFor="smsPromotions">
+                                                    Text me about promotions
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <button type="submit" className="btn btn-primary">Save Preferences</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
 }
