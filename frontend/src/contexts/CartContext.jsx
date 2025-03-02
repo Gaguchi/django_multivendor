@@ -25,6 +25,7 @@ export function CartProvider({ children }) {
         }
 
         try {
+            setLoading(true);
             const response = await api.get('/api/cart/carts/current/')
             setCart(response.data)
         } catch (error) {
@@ -80,12 +81,42 @@ export function CartProvider({ children }) {
         }
     }
 
+    // Add a function to clear the entire cart
+    const clearCart = async () => {
+        if (!cart || !cart.items || cart.items.length === 0) {
+            return; // Nothing to clear
+        }
+        
+        try {
+            setLoading(true);
+            
+            // Option 1: If the API has a clear cart endpoint
+            // await api.post('/api/cart/carts/clear/');
+            
+            // Option 2: Remove each item individually
+            const removePromises = cart.items.map(item => 
+                api.delete(`/api/cart/items/${item.product.id}/`)
+            );
+            
+            await Promise.all(removePromises);
+            
+            // Finally, refresh the cart to show it's empty
+            await fetchCart();
+        } catch (error) {
+            console.error('Error clearing cart:', error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const value = {
         cart,
         loading,
         addToCart,
         updateCartItem,
         removeFromCart,
+        clearCart,
         refreshCart: fetchCart
     }
 

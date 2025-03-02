@@ -372,9 +372,32 @@ Example Response (HTTP 200): Returns the updated address object.
 #### Delete Address
 
 • **DELETE /addresses/{id}/**  
-Deletes an address.
+Deletes an address. This endpoint permanently removes an address from the user's account.
+
+Example Request:
+
+```
+DELETE /api/users/addresses/1/
+Authorization: Bearer <jwt-token>
+```
 
 Example Response (HTTP 204): No content
+
+Error Response (HTTP 404):
+
+```json
+{
+  "detail": "Not found."
+}
+```
+
+Error Response (HTTP 403):
+
+```json
+{
+  "detail": "You do not have permission to perform this action."
+}
+```
 
 #### Get Default Address by Type
 

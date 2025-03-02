@@ -11,6 +11,7 @@ import ProductTemplate from './pages/Product_template'
 import Account from './pages/Account'
 import Cart from './pages/Cart'
 import Checkout from './pages/Checkout'
+import OrderConfirmation from './pages/OrderConfirmation';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/account" element={<Account />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-confirmation" element={<OrderConfirmation />} />
           </Route>
         </Routes>
       </CartProvider>
