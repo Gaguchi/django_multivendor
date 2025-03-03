@@ -56,8 +56,6 @@ export default function AddressForm({ onSubmit, initialData, loading, addressTyp
     e.preventDefault();
     onSubmit(formData);
   };
-  
-  // ... existing code for form fields ...
 
   return (
     <form onSubmit={handleSubmit}>
@@ -96,6 +94,7 @@ export default function AddressForm({ onSubmit, initialData, loading, addressTyp
         </div>
       </div>
 
+      {/* ... email field */}
       <div className="form-group">
         <label>Email address</label>
         <input 
@@ -107,6 +106,7 @@ export default function AddressForm({ onSubmit, initialData, loading, addressTyp
         />
       </div>
 
+      {/* ... address fields */}
       <div className="form-group">
         <label>
           Street Address Line 1
@@ -135,6 +135,7 @@ export default function AddressForm({ onSubmit, initialData, loading, addressTyp
         />
       </div>
 
+      {/* ... apartment details */}
       <div className="row">
         <div className="col-md-4">
           <div className="form-group">
@@ -186,6 +187,7 @@ export default function AddressForm({ onSubmit, initialData, loading, addressTyp
         />
       </div>
 
+      {/* ... city, state, postal code */}
       <div className="row">
         <div className="col-md-6">
           <div className="form-group">
@@ -257,7 +259,6 @@ export default function AddressForm({ onSubmit, initialData, loading, addressTyp
               <option value="AU">Australia</option>
               <option value="DE">Germany</option>
               <option value="FR">France</option>
-              {/* Add more countries as needed */}
             </select>
           </div>
         </div>
@@ -275,6 +276,7 @@ export default function AddressForm({ onSubmit, initialData, loading, addressTyp
         />
       </div>
 
+      {/* ... address type selection if not specified */}
       {!addressType && (
         <div className="form-group">
           <label>Address Type</label>
@@ -323,6 +325,7 @@ export default function AddressForm({ onSubmit, initialData, loading, addressTyp
         </div>
       )}
 
+      {/* ... default address option */}
       <div className="form-group">
         <div className="custom-control custom-checkbox">
           <input 

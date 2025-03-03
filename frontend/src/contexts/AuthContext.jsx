@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }) => {
       setUser(userData);
       localStorage.setItem('user', JSON.stringify(userData));
       
+      // Instead of redirecting immediately, return true so the calling component can handle redirection
       return true;
     } catch (error) {
       console.error('Login error:', error);
@@ -55,11 +56,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    // Perform logout actions without redirecting
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     delete api.defaults.headers.common.Authorization;
+    
+    // Return true to indicate success (calling component will handle redirect)
+    return true;
   };
 
   const isAuthenticated = Boolean(user);
