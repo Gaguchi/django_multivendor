@@ -7,7 +7,7 @@ Welcome to the Orders API! Below you'll find how to interact with order endpoint
 ## ➡️ Base URL
 
 All endpoints are available under:  
-`/api/v1/orders/`
+`/api/orders/`
 
 ---
 
@@ -59,7 +59,61 @@ Example response (HTTP 200):
 }
 ```
 
-### 2. Create Order
+### 2. Get Order Details
+
+• **GET /{order_number}/**  
+Returns a specific order by its order_number.  
+Example request:
+
+```
+GET /api/orders/abcd1234/
+```
+
+Example response (HTTP 200):
+
+```json
+{
+  "id": 1,
+  "order_number": "abcd1234",
+  "status": "Pending",
+  "total_amount": "299.95",
+  "payment_method": "Credit Card",
+  "shipping_address": "123 Main St",
+  "billing_address": "123 Main St",
+  "created_at": "2023-05-05T12:00:00Z",
+  "updated_at": "2023-05-05T12:00:00Z",
+  "items": [
+    {
+      "id": 1,
+      "product": {
+        "id": 42,
+        "name": "Wireless Headphones",
+        "description": "High-quality wireless headphones with noise cancellation",
+        "price": "129.99",
+        "thumbnail": "/media/products/headphones.jpg"
+      },
+      "quantity": 2,
+      "unit_price": "129.99",
+      "total_price": "259.98"
+    },
+    {
+      "id": 2,
+      "product": {
+        "id": 56,
+        "name": "USB Cable",
+        "description": "USB-C charging cable",
+        "price": "19.99",
+        "thumbnail": "/media/products/cable.jpg"
+      },
+      "quantity": 2,
+      "unit_price": "19.99",
+      "total_price": "39.98"
+    }
+  ]
+}
+```
+
+### 3. Create Order
 
 • **POST /**  
 Create a new order.  
@@ -69,11 +123,15 @@ Example body:
 {
   "payment_method": "Credit Card",
   "shipping_address": "123 Main St",
-  # ...existing fields...
+  "billing_address": "123 Main St",
   "order_items": [
     {
       "product_id": 1,
       "quantity": 2
+    },
+    {
+      "product_id": 2,
+      "quantity": 1
     }
   ]
 }
@@ -84,16 +142,28 @@ Example response (HTTP 201):
 ```json
 {
   "id": 1,
+  "order_number": "abcd1234",
   "status": "Pending",
-  # ...existing fields...
+  "total_amount": "299.95",
+  "payment_method": "Credit Card",
+  "shipping_address": "123 Main St",
+  "billing_address": "123 Main St",
+  "created_at": "2023-05-05T12:00:00Z",
+  "updated_at": "2023-05-05T12:00:00Z",
   "items": [...]
 }
 ```
 
-### 3. Cancel Order
+### 4. Cancel Order
 
-• **POST /{id}/cancel/**  
+• **POST /{order_number}/cancel/**  
 Cancels an order if its status is "Pending."  
+Example request:
+
+```
+POST /api/orders/abcd1234/cancel/
+```
+
 Example response (HTTP 200):
 
 ```json
@@ -102,30 +172,15 @@ Example response (HTTP 200):
 }
 ```
 
-### 4. Process Pending Orders
+### 5. List Orders By Status
 
-• **POST /process-pending/** (Vendor only)  
-Processes pending orders for payouts.  
-Example response (HTTP 200):
-
-```json
-{
-  "status": "success",
-  "processed_orders": 5,
-  # ...existing fields...
-  "total_amount": "299.95"
-}
-```
-
-### 5. List Pending Orders
-
-You can fetch all pending orders (or limit them to a specific vendor if applicable).
+You can fetch orders filtered by status.
 
 • **GET /** with query parameter `status=Pending`  
-Example request (all pending orders):
+Example request:
 
 ```
-GET /api/v1/orders/?status=Pending
+GET /api/orders/?status=Pending
 ```
 
 Example response (HTTP 200):
@@ -134,7 +189,6 @@ Example response (HTTP 200):
 {
   "count": 2,
   "results": [
-    # ...existing fields...
     {
       "id": 3,
       "order_number": "xyz789",
@@ -149,11 +203,62 @@ Example response (HTTP 200):
 }
 ```
 
-If you want pending orders for a specific vendor (if your API supports it), include an additional query parameter like `vendor_id` or similar.  
+### 6. Track Order
+
+• **GET /track/{order_number}/**  
+Track an order by its order number. This endpoint can be used by anyone with the order number but provides limited information for non-owners.
+
 Example request:
 
 ```
-GET /api/v1/orders/?status=Pending&vendor_id=2
+GET /api/orders/track/abcd1234/
+```
+
+Example response for order owners (HTTP 200):
+
+```json
+{
+  "data": {
+    "id": 1,
+    "order_number": "abcd1234",
+    "status": "Shipped",
+    "total_amount": "299.95",
+    "payment_method": "Credit Card",
+    "shipping_address": "123 Main St",
+    "billing_address": "123 Main St",
+    "created_at": "2023-05-05T12:00:00Z",
+    "updated_at": "2023-05-06T09:00:00Z",
+    "items": [
+      // Full item details...
+    ]
+  },
+  "is_owner": true
+}
+```
+
+Example response for non-owners (HTTP 200):
+
+```json
+{
+  "data": {
+    "order_number": "abcd1234",
+    "status": "Shipped",
+    "created_at": "2023-05-05T12:00:00Z",
+    "updated_at": "2023-05-06T09:00:00Z",
+    "item_count": 3,
+    "shipping_address": "123 Main St",
+    "delivered_at": null
+  },
+  "is_owner": false
+}
+```
+
+Example error response (HTTP 404):
+
+```json
+{
+  "detail": "Order not found"
+}
 ```
 
 ---
@@ -162,7 +267,11 @@ GET /api/v1/orders/?status=Pending&vendor_id=2
 
 1. Payment is held for 7 days after delivery before clearing.
 2. Disputed orders have payments on hold.
-3. Only “Pending” orders can be cancelled.
+3. Only "Pending" orders can be cancelled.
+4. Orders can be looked up by both ID and order_number.
+5. Order numbers are generated automatically and are unique.
+6. Anyone with an order number can track basic order information.
+7. Only the order owner can view complete order details including items and payment information.
 
 ---
 
@@ -170,22 +279,28 @@ GET /api/v1/orders/?status=Pending&vendor_id=2
 
 • **401 Unauthorized**
 
-````json
-{"detail": "Authentication credentials were not provided."}```
+```json
+{ "detail": "Authentication credentials were not provided." }
+```
 
 • **403 Forbidden**
+
 ```json
-{"detail": "You do not have permission to perform this action."}```
+{ "detail": "You do not have permission to perform this action." }
+```
 
 • **404 Not Found**
+
 ```json
-{"detail": "Not found."}```
+{ "detail": "Not found." }
+```
 
 • **400 Bad Request**
+
 ```json
-{"field_name": ["Error message"]}```
+{ "field_name": ["Error message"] }
+```
 
 ---
 
 Happy ordering! 🎉
-````

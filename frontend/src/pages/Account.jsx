@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import '../assets/css/account.css';
+import api from '../services/api';
 
 // Import Dashboard Components
 import DashboardSummary from '../components/Dashboard/DashboardSummary';
@@ -14,6 +15,8 @@ export default function Account() {
     const [activeSection, setActiveSection] = useState('dashboard');
     const location = useLocation();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
     
     // Handle section from hash or query params
     useEffect(() => {
@@ -46,6 +49,22 @@ export default function Account() {
         navigate('/');
     };
 
+    // Handle user profile update
+    const handleProfileUpdate = async (formData) => {
+        try {
+            setLoading(true);
+            setError('');
+            await api.patch('/api/users/profile/update/', {
+                profile: formData
+            });
+            // Success handling
+        } catch (error) {
+            setError('Failed to update profile');
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     // If not authenticated, redirect to login page
     useEffect(() => {
         if (!user) {

@@ -87,3 +87,17 @@ class OrderSerializer(serializers.ModelSerializer):
         validated_data['user'] = request.user
         order = super().create(validated_data)
         return order
+
+class OrderTrackingSerializer(serializers.ModelSerializer):
+    """A serializer that provides limited tracking information for any user"""
+    item_count = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Order
+        fields = [
+            'order_number', 'status', 'created_at', 'item_count',
+            'updated_at', 'shipping_address', 'delivered_at'
+        ]
+    
+    def get_item_count(self, obj):
+        return obj.items.count()
