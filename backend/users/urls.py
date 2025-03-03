@@ -1,9 +1,15 @@
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import (
     UserRegisterView, TokenInfoView, RegisterOrLoginView,
     UpdateProfileView, ProfileView, UserLoginView, GoogleCallbackView, FacebookCallbackView,
-    AddressListCreateView, AddressRetrieveUpdateDestroyView, DefaultAddressView
+    AddressListCreateView, AddressRetrieveUpdateDestroyView, DefaultAddressView,
+    WishlistViewSet
 )
+
+# Create a router for wishlist viewset
+router = DefaultRouter()
+router.register(r'wishlist', WishlistViewSet, basename='wishlist')
 
 urlpatterns = [
     path('register/', UserRegisterView.as_view(), name='register'),
@@ -15,10 +21,13 @@ urlpatterns = [
     path('token-info/', TokenInfoView.as_view(), name='token-info'),
     path('login-or-register/', RegisterOrLoginView.as_view(), name='login-or-register'),
     
-    # Address endpoints - reordered to fix routing issues
+    # Address endpoints
     path('addresses/', AddressListCreateView.as_view(), name='address-list-create'),
     path('addresses/default/<str:address_type>/', DefaultAddressView.as_view(), name='default-address'),
     path('addresses/<int:pk>/', AddressRetrieveUpdateDestroyView.as_view(), name='address-detail'),
+    
+    # Include the wishlist routes
+    path('', include(router.urls)),
     
     path('', include('social_django.urls', namespace='social')),
 ]

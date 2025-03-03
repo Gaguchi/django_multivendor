@@ -441,6 +441,131 @@ Example Error (HTTP 404):
 }
 ```
 
+### 9. Wishlist Management
+
+#### List Wishlist Items
+
+• **GET /wishlist/**  
+Lists all items in the user's wishlist.
+
+Example Response (HTTP 200):
+
+```json
+[
+  {
+    "id": 1,
+    "product": {
+      "id": 42,
+      "name": "Wireless Headphones",
+      "description": "High-quality wireless headphones with noise cancellation",
+      "price": "129.99",
+      "thumbnail": "https://example.com/images/headphones.jpg",
+      "category": "Electronics",
+      "rating": 4.8,
+      "is_hot": true
+    },
+    "added_at": "2023-12-01T12:00:00Z"
+  },
+  {
+    "id": 2,
+    "product": {
+      "id": 56,
+      "name": "Cotton T-Shirt",
+      "description": "Comfortable cotton t-shirt",
+      "price": "24.99",
+      "thumbnail": "https://example.com/images/tshirt.jpg",
+      "category": "Clothing",
+      "rating": 4.5,
+      "is_hot": false
+    },
+    "added_at": "2023-12-02T14:30:00Z"
+  }
+]
+```
+
+#### Add Item to Wishlist
+
+• **POST /wishlist/**  
+Adds a product to the user's wishlist.
+
+Example Body:
+
+```json
+{
+  "product_id": 42
+}
+```
+
+Example Response (HTTP 201):
+
+```json
+{
+  "id": 1,
+  "product": {
+    "id": 42,
+    "name": "Wireless Headphones",
+    "description": "High-quality wireless headphones with noise cancellation",
+    "price": "129.99",
+    "thumbnail": "https://example.com/images/headphones.jpg",
+    "category": "Electronics",
+    "rating": 4.8,
+    "is_hot": true
+  },
+  "added_at": "2023-12-01T12:00:00Z"
+}
+```
+
+#### Remove Item from Wishlist
+
+• **DELETE /wishlist/{id}/**  
+Removes a specific item from the wishlist.
+
+Example Response (HTTP 204): No content
+
+#### Toggle Wishlist Item
+
+• **POST /wishlist/toggle/**  
+Toggles a product in the wishlist (adds if not present, removes if present).
+
+Example Body:
+
+```json
+{
+  "product_id": 42
+}
+```
+
+Example Response when added (HTTP 201):
+
+```json
+{
+  "message": "Product added to wishlist",
+  "in_wishlist": true
+}
+```
+
+Example Response when removed (HTTP 200):
+
+```json
+{
+  "message": "Product removed from wishlist",
+  "in_wishlist": false
+}
+```
+
+#### Check if Product is in Wishlist
+
+• **GET /wishlist/check/?product_id=42**  
+Checks if a specific product is in the user's wishlist.
+
+Example Response (HTTP 200):
+
+```json
+{
+  "in_wishlist": true
+}
+```
+
 ## 📜 Business Rules
 
 1. Username and email must be unique.
@@ -450,6 +575,8 @@ Example Error (HTTP 404):
 5. Setting an address as default will unset other addresses of the same type.
 6. When setting an address type as "both", it unsets defaults for both shipping and billing.
 7. Addresses can only be accessed by their owner.
+8. Wishlists are user-specific and can only be accessed by their owner.
+9. A product can only appear once in a user's wishlist.
 
 ## 🚨 Error Codes
 

@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from rest_framework import generics, status
+from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer, UserProfileSerializer, AddressSerializer
+from .serializers import UserSerializer, UserProfileSerializer, AddressSerializer, WishlistSerializer
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
-from .models import UserProfile, Address
+from .models import UserProfile, Address, Wishlist
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.backends import TokenBackend
@@ -19,6 +19,9 @@ from social_core.backends.google import GoogleOAuth2
 from social_core.exceptions import AuthForbidden
 import requests
 import logging
+from rest_framework.decorators import action
+from vendors.models import VendorProduct  # Changed from products.models import Product
+from django.shortcuts import get_object_or_404
 
 logger = logging.getLogger(__name__)
 
@@ -486,3 +489,70 @@ class DefaultAddressView(APIView):
                 {"detail": "Address not found"}, 
                 status=status.HTTP_404_NOT_FOUND
             )
+
+class WishlistViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing wishlist items
+    """
+    serializer_class = WishlistSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        return Wishlist.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+    
+    @action(detail=False, methods=['post'])
+    def toggle(self, request):
+        """
+        Toggle a product in the wishlist (add if not present, remove if present)
+        """
+        product_id = request.data.get('product_id')
+        if not product_id:
+            return Response(
+                {"error": "product_id is required"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        # Ensure the product exists
+        product = get_object_or_404(VendorProduct, id=product_id)
+        
+        # Try to find an existing wishlist item
+        try:
+            wishlist_item = Wishlist.objects.get(
+                user=request.user,
+                product=product
+            )
+            # Item exists, so remove it
+            wishlist_item.delete()
+            return Response(
+                {"message": "Product removed from wishlist", "in_wishlist": False},
+                status=status.HTTP_200_OK
+            )
+        except Wishlist.DoesNotExist:
+            # Item doesn't exist, so add it
+            Wishlist.objects.create(user=request.user, product=product)
+            return Response(
+                {"message": "Product added to wishlist", "in_wishlist": True},
+                status=status.HTTP_201_CREATED
+            )
+    
+    @action(detail=False, methods=['get'])
+    def check(self, request):
+        """
+        Check if a product is in the wishlist
+        """
+        product_id = request.query_params.get('product_id')
+        if not product_id:
+            return Response(
+                {"error": "product_id query parameter is required"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        is_in_wishlist = Wishlist.objects.filter(
+            user=request.user,
+            product_id=product_id
+        ).exists()
+        
+        return Response({"in_wishlist": is_in_wishlist})

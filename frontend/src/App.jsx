@@ -2,11 +2,13 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { AuthProvider } from './contexts/AuthContext'
 import { CartProvider } from './contexts/CartContext'
+import { WishlistProvider } from './contexts/WishlistContext'
 import Layout from './components/Layout'
 import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
 import AuthCallback from './pages/AuthCallback'
 import Products from './pages/Shop'
+import Wishlist from './pages/Wishlist'
 import Product from './pages/Product'
 import ProductTemplate from './pages/Product_template'
 import Account from './pages/Account'
@@ -39,6 +41,7 @@ function AppContent() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/wishlist" element={<Wishlist />} />
       </Route>
     </Routes>
   );
@@ -48,7 +51,9 @@ function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <AppContent />
+        <WishlistProvider>
+          <AppContent />
+        </WishlistProvider>
       </CartProvider>
     </AuthProvider>
   )

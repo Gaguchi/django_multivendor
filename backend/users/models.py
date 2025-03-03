@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from vendors.models import VendorProduct  # Changed from products.models import Product
 
 class UserProfile(models.Model):
     USER_TYPE_CHOICES = (
@@ -84,3 +85,18 @@ class Address(models.Model):
                 ).exclude(pk=self.pk).update(is_default=False)
             
         super().save(*args, **kwargs)
+
+class Wishlist(models.Model):
+    """
+    Model to store a user's wishlist items
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlists')
+    product = models.ForeignKey(VendorProduct, on_delete=models.CASCADE, related_name='in_wishlists')  # Changed from Product to VendorProduct
+    added_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'product')
+        ordering = ['-added_at']
+    
+    def __str__(self):
+        return f"{self.user.username}'s wishlist item: {self.product.name}"

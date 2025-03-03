@@ -72,7 +72,7 @@ export default function Cart() {
                         <figure className="product-image-container">
                           <Link to={`/product/${item.product.id}`} className="product-image">
                             <img
-                              src={item.product.image || "src/assets/images/products/placeholder.jpg"}
+                              src={item.product.thumbnail || "src/assets/images/products/placeholder.jpg"}
                               alt={item.product.name}
                             />
                           </Link>

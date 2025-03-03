@@ -6636,3 +6636,123 @@ django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has 
 [2025-03-03 13:54:46,914] ERROR views Facebook token exchange failed: {"error":{"message":"This authorization code has been used.","type":"OAuthException","code":100,"error_subcode":36009,"fbtrace_id":"AWKMs5PQOjjCUJTphTbemzX"}}
 [2025-03-03 13:54:46,916] WARNING log Bad Request: /api/users/auth/facebook/callback/
 [2025-03-03 13:54:46,916] WARNING log Bad Request: /api/users/auth/facebook/callback/
+[2025-03-03 14:09:20,496] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:09:20,496] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:24:24,515] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:24:24,515] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:24:24,520] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 14:24:24,520] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 14:24:24,525] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 14:24:24,525] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 14:24:24,531] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 14:24:24,531] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 14:24:24,533] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:24:24,533] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:24:24,535] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 14:24:24,535] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 14:24:24,540] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 14:24:24,540] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 14:24:24,545] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 14:24:24,545] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 14:29:54,394] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:29:54,394] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:29:54,403] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:29:54,403] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:30:00,067] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:30:00,067] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:30:00,093] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:30:00,093] WARNING log Not Found: /api/products/featured/
+[2025-03-03 14:39:36,182] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 14:39:36,182] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 14:39:36,183] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 14:39:36,183] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 14:39:36,188] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 14:39:36,188] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 15:09:41,161] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:09:41,161] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:09:41,162] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:09:41,162] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:09:52,490] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:09:52,490] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:09:52,490] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:09:52,490] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:10:02,719] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:10:02,719] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:10:02,720] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:10:02,720] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:10:07,210] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:10:07,210] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:10:07,211] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:10:07,211] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:10:08,085] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:10:08,085] INFO urls === Registering Vendor URLs ===
+[2025-03-03 15:10:08,086] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:10:08,086] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 15:10:11,507] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 15:10:11,509] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 15:10:11,509] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 15:10:11,510] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:10:11,507] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 15:10:11,511] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 15:10:11,509] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 15:10:11,509] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 15:10:11,510] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:10:11,511] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 15:10:11,570] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 15:10:11,570] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 15:10:11,572] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:10:11,572] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:10:11,576] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:10:11,576] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:10:11,578] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:10:11,578] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:10:11,582] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:10:11,582] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:10:11,585] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:10:11,585] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:41:44,585] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:41:44,585] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:41:44,589] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 15:41:44,589] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 15:41:44,592] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:41:44,592] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:41:44,594] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:41:44,595] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 15:41:44,594] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:41:44,595] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 15:41:44,694] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:41:44,694] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:41:44,697] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:41:44,697] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:41:44,700] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:41:44,700] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:41:44,703] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:41:44,703] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 15:41:44,705] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 15:41:44,705] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 16:08:57,210] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 16:08:57,210] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 16:08:57,212] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 16:08:57,212] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 16:08:57,215] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 16:08:57,215] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 16:08:57,217] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 16:08:57,218] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 16:08:57,217] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 16:08:57,218] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 16:08:57,221] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 16:08:57,221] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 16:08:57,224] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 16:08:57,224] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 16:08:57,227] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 16:08:57,227] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 16:08:57,230] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 16:08:57,230] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 16:08:57,234] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 16:08:57,234] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 16:08:57,239] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 16:08:57,239] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 16:26:29,553] WARNING log Unauthorized: /api/orders/
+[2025-03-03 16:26:29,553] WARNING log Unauthorized: /api/orders/
+[2025-03-03 16:26:29,558] WARNING log Unauthorized: /api/orders/
+[2025-03-03 16:26:29,558] WARNING log Unauthorized: /api/orders/

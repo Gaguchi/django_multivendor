@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useAuth } from '../contexts/AuthContext'
 import { useCart } from '../contexts/CartContext'
+import { useWishlist } from '../contexts/WishlistContext'
 
 export default function ProductCard({ 
   product, 
@@ -12,7 +13,15 @@ export default function ProductCard({
 }) {
   const { cart, addToCart, updateCartItem } = useCart()
   const { user } = useAuth()
+  const { isInWishlist, toggleWishlistItem } = useWishlist()
   const [loading, setLoading] = useState(false)
+  const [inWishlist, setInWishlist] = useState(false)
+  
+  useEffect(() => {
+    if (product && product.id) {
+      setInWishlist(isInWishlist(product.id))
+    }
+  }, [product, isInWishlist])
 
   // Get current quantity from cart context instead of making a separate request
   const cartItem = cart?.items?.find(item => item.product.id === product.id)
@@ -38,6 +47,21 @@ export default function ProductCard({
       await updateCartItem(product.id, newQuantity)
     } catch (error) {
       console.error('Error updating cart:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+  const handleToggleWishlist = async (e) => {
+    e.preventDefault()
+    if (!user) return
+    
+    try {
+      setLoading(true)
+      await toggleWishlistItem(product.id)
+      setInWishlist(!inWishlist)
+    } catch (error) {
+      console.error('Error toggling wishlist:', error)
     } finally {
       setLoading(false)
     }
@@ -91,9 +115,10 @@ export default function ProductCard({
           </a>
           <a
             href="#"
-            className="btn-icon btn-icon-wish product-type-simple"
-            title="wishlist"
-            onClick={(e) => e.preventDefault()}
+            className={`btn-icon btn-icon-wish product-type-simple ${inWishlist ? 'added-wishlist' : ''}`}
+            title={inWishlist ? "Go to Wishlist" : "Add to Wishlist"}
+            onClick={handleToggleWishlist}
+            aria-disabled={loading}
           >
             <i className="icon-heart" />
           </a>

@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from users.models import UserProfile, Address
+from users.models import UserProfile, Address, Wishlist
+# Remove the circular import from vendors.serializers
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,3 +37,31 @@ class AddressSerializer(serializers.ModelSerializer):
             'floor', 'door_code', 'delivery_instructions', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
+
+class WishlistSerializer(serializers.ModelSerializer):
+    # Use a different approach to avoid circular imports
+    product = serializers.SerializerMethodField()
+    product_id = serializers.IntegerField(write_only=True)
+    
+    class Meta:
+        model = Wishlist
+        fields = ['id', 'product', 'product_id', 'added_at']
+        read_only_fields = ['id', 'added_at']
+    
+    def get_product(self, obj):
+        # Dynamically import to avoid circular dependency
+        from vendors.serializers import ProductSerializer
+        return ProductSerializer(obj.product).data
+    
+    def create(self, validated_data):
+        # Extract user from the context, not from validated_data
+        user = self.context['request'].user
+        product_id = validated_data.pop('product_id')
+        
+        # Check if the item is already in the wishlist
+        wishlist_item, created = Wishlist.objects.get_or_create(
+            user=user,
+            product_id=product_id
+        )
+        
+        return wishlist_item

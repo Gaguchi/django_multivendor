@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Vendor, VendorProduct, ProductImage
-from users.serializers import UserSerializer
+
+# Import UserSerializer carefully to avoid circular import
+from users.serializers import UserSerializer 
 from users.models import UserProfile
 
 class VendorSerializer(serializers.ModelSerializer):
