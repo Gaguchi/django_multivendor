@@ -164,14 +164,15 @@ export default function Products() {
                 xl: 4
               }}
               defaultLimit={{
-                xs: 6,
-                sm: 6,
-                md: 9,
+                xs: 12,
+                sm: 12,
+                md: 12,
                 lg: 12,
                 xl: 12
               }}
               className="row product-ajax-grid scroll-load"
             />
+            
 
           </div>
           <Sidebar />

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import ProductCard from './ProductCard'
+import '../assets/css/uniform-product-card.css'
 
 export default function ProductGrid({ 
   products, 
@@ -12,7 +13,7 @@ export default function ProductGrid({
     sm: 2, // tablet small
     md: 3, // tablet
     lg: 4, // desktop
-    xl: 4, // desktop large
+    xl: 4  // desktop large
   },
   defaultLimit = {
     xs: 4,
@@ -23,52 +24,86 @@ export default function ProductGrid({
   }
 }) {
   const [displayCount, setDisplayCount] = useState(defaultLimit.xs)
-  const [columns, setColumns] = useState(defaultColumns.xs)
-
+  const [gridTemplateColumns, setGridTemplateColumns] = useState('')
+  
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth
+      let columns
+      let limit
+      
       if (width >= 1200) {
-        setDisplayCount(defaultLimit.xl)
-        setColumns(defaultColumns.xl)
+        columns = defaultColumns.xl
+        limit = defaultLimit.xl
       } else if (width >= 992) {
-        setDisplayCount(defaultLimit.lg)
-        setColumns(defaultColumns.lg) 
+        columns = defaultColumns.lg
+        limit = defaultLimit.lg 
       } else if (width >= 768) {
-        setDisplayCount(defaultLimit.md)
-        setColumns(defaultColumns.md)
+        columns = defaultColumns.md
+        limit = defaultLimit.md
       } else if (width >= 576) {
-        setDisplayCount(defaultLimit.sm)
-        setColumns(defaultColumns.sm)
+        columns = defaultColumns.sm
+        limit = defaultLimit.sm
       } else {
-        setDisplayCount(defaultLimit.xs)
-        setColumns(defaultColumns.xs)
+        columns = defaultColumns.xs
+        limit = defaultLimit.xs
       }
+      
+      setDisplayCount(limit)
+      setGridTemplateColumns(`repeat(${columns}, 1fr)`)
     }
 
-    handleResize()
+    handleResize() // Initialize on component mount
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [defaultColumns, defaultLimit])
 
-  if (loading) return <div>Loading products...</div>
-  if (error) return <div>Error loading products: {error.message}</div>
-  if (!products?.length) return <div>No products found</div>
+  if (loading) {
+    return (
+      <div className="uniform-product-grid-loading">
+        <div className="spinner-border" role="status">
+          <span className="sr-only">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+  
+  if (error) {
+    return (
+      <div className="uniform-product-grid-error">
+        <div className="alert alert-danger">
+          Error loading products: {error.message || 'Please try again later'}
+        </div>
+      </div>
+    )
+  }
+  
+  if (!products?.length) {
+    return (
+      <div className="uniform-product-grid-empty">
+        <p>No products found</p>
+      </div>
+    )
+  }
 
   const displayProducts = products.slice(0, displayCount)
 
   return (
-    <div className={`products-grid ${className}`} style={{
-      display: 'grid',
-      gridTemplateColumns: `repeat(${columns}, 1fr)`,
-      gap: '2rem'
-    }}>
+    <div 
+      className={`uniform-product-grid ${className}`}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: gridTemplateColumns,
+        gap: '20px',
+      }}
+    >
       {displayProducts.map(product => (
-        <ProductCard 
-          key={product.id}
-          product={product}
-          isHot={product.stock < 50}
-        />
+        <div className="uniform-product-cell" key={product.id}>
+          <ProductCard 
+            product={product}
+            isHot={product.stock < 50}
+          />
+        </div>
       ))}
     </div>
   )

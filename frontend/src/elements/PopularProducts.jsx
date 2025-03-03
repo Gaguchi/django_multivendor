@@ -30,16 +30,17 @@ export default function PopularProducts() {
             xs: 2,
             sm: 2, 
             md: 3,
-            lg: 6,
-            xl: 7
+            lg: 4,
+            xl: 6
           }}
           defaultLimit={{
             xs: 6,
             sm: 6,
             md: 6,
-            lg: 6,
-            xl: 7
+            lg: 8,
+            xl: 6
           }}
+          className="popular-products-grid"
         />
       </div>
     </div>

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import { useAuth } from '../contexts/AuthContext'
 import { useCart } from '../contexts/CartContext'
 import { useWishlist } from '../contexts/WishlistContext'
@@ -71,11 +70,10 @@ export default function ProductCard({
     id,
     thumbnail,
     name,
-    category,  // Changed from category_name to match what we're passing
+    category,
     price,
     old_price,
-    vendor_name,
-    is_hot = false // Use the server-provided is_hot value if available
+    is_hot = false 
   } = product;
 
   // Convert rating to number or default to 0
@@ -85,127 +83,117 @@ export default function ProductCard({
   const salePercentage = old_price ? 
     Math.round(((old_price - price) / old_price) * 100) : null;
 
+  // Handle image URL format
+  const imageUrl = thumbnail?.startsWith('http') 
+    ? thumbnail 
+    : `${import.meta.env.VITE_API_BASE_URL}/${thumbnail}`;
+
   return (
-    <div className="product-default inner-btn inner-icon inner-icon-inline left-details">
-      <figure>
-        <Link to={`/product/${id}`}>
-          <img
-            src={thumbnail}
-            width={280}
-            height={280}
-            alt={name}
-            className='rounded'
-          />
-        </Link>
-        <div className="label-group">
-          {(isHot || is_hot) && <div className="product-label label-hot">HOT</div>}
-          {salePercentage && (
-            <div className="product-label label-sale">-{salePercentage}%</div>
-          )}
-        </div>
-        <div className="btn-icon-group">
-          <a
-            href="#"
-            className="btn-icon btn-add-cart product-type-simple"
-            onClick={handleAddToCart}
-            role="button"
-            aria-disabled={loading}
-          >
-            <i className="icon-shopping-cart" />
-          </a>
-          <a
-            href="#"
-            className={`btn-icon btn-icon-wish product-type-simple ${inWishlist ? 'added-wishlist' : ''}`}
-            title={inWishlist ? "Go to Wishlist" : "Add to Wishlist"}
-            onClick={handleToggleWishlist}
-            aria-disabled={loading}
-          >
-            <i className="icon-heart" />
-          </a>
-          {showQuickView && (
-            <a
-              href="#"
-              className="btn-icon btn-quickview"
-              title="Quick View"
-              onClick={(e) => {
-                e.preventDefault();
-                // Handle quick view logic here
-              }}
-            >
-              <i className="fas fa-external-link-alt" />
-            </a>
-          )}
-        </div>
-      </figure>
-      <div className="product-details">
-        <div className="category-wrap">
-          <div className="category-list">
-            <Link
-              to={`/category/${category}`}
-              className="product-category"
-            >
-              {category}  {/* Using the category prop directly */}
-            </Link>
-          </div>
-        </div>
-        <h3 className="product-title">
-          <Link to={`/product/${id}`}>{name}</Link>
-        </h3>
-        <div className="ratings-container">
-          <div className="product-ratings">
-            <span 
-              className="ratings" 
-              style={{ width: `${rating * 20}%` }} 
-            />
-            <span className="tooltiptext tooltip-top" />
-          </div>
-        </div>
-        <div className="price-box">
-          {old_price && (
-            <span className="old-price">${parseFloat(old_price).toFixed(2)}</span>
-          )}
-          <span className="product-price">${parseFloat(price).toFixed(2)}</span>
-        </div>
-        <div className="product-action">
-          {cartQuantity > 0 ? (
-            <div className="product-single-qty">
-              <div className="input-group bootstrap-touchspin bootstrap-touchspin-injected">
-                <span className="input-group-btn input-group-prepend">
-                  <button
-                    className="btn btn-outline btn-down-icon bootstrap-touchspin-down"
-                    type="button"
-                    onClick={() => handleUpdateQuantity(cartQuantity - 1)}
-                    disabled={loading}
-                  />
-                </span>
-                <input 
-                  className="horizontal-quantity form-control" 
-                  type="text"
-                  value={cartQuantity}
-                  readOnly
-                />
-                <span className="input-group-btn input-group-append">
-                  <button
-                    className="btn btn-outline btn-up-icon bootstrap-touchspin-up"
-                    type="button"
-                    onClick={() => handleUpdateQuantity(cartQuantity + 1)}
-                    disabled={loading}
-                  />
-                </span>
-              </div>
+    <div className="uniform-product-card">
+      <div className="product-card-inner">
+        {/* Image section */}
+        <div className="uniform-product-image-container">
+          <Link to={`/product/${id}`}>
+            <div 
+              className="uniform-product-image"
+              style={{ backgroundImage: `url(${imageUrl})` }}
+            ></div>
+            
+            {/* Labels for hot items and sales */}
+            <div className="uniform-product-labels">
+              {(isHot || is_hot) && <span className="product-label uniform-hot-label">HOT</span>}
+              {salePercentage && <span className="product-label uniform-sale-label">-{salePercentage}%</span>}
             </div>
-          ) : (
-            <a 
-              href="#"
-              className="btn-icon btn-add-cart product-type-simple"
+          </Link>
+          
+          {/* Quick action buttons */}
+          <div className="uniform-btn-group">
+            <button 
+              className="uniform-btn uniform-cart-btn" 
               onClick={handleAddToCart}
-              role="button"
-              aria-disabled={loading}
+              disabled={loading}
+              title="Add to Cart"
             >
-              <i className="icon-shopping-cart" />
-              <span>{loading ? 'ADDING...' : 'ADD TO CART'}</span>
-            </a>
+              <i className="icon-shopping-cart"></i>
+            </button>
+            <button 
+              className={`uniform-btn uniform-wishlist-btn ${inWishlist ? 'active' : ''}`}
+              onClick={handleToggleWishlist}
+              disabled={loading}
+              title={inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+            >
+              <i className="icon-heart"></i>
+            </button>
+            {showQuickView && (
+              <button 
+                className="uniform-btn uniform-quickview-btn"
+                title="Quick View"
+              >
+                <i className="fas fa-external-link-alt"></i>
+              </button>
+            )}
+          </div>
+        </div>
+        
+        {/* Product details section */}
+        <div className="uniform-product-details">
+          {/* Category */}
+          {category && (
+            <div className="uniform-product-category">
+              <Link to={`/category/${category}`}>{category}</Link>
+            </div>
           )}
+          
+          {/* Product title with tooltip for full name */}
+          <h3 className="uniform-product-title" title={name}>
+            <Link to={`/product/${id}`}>{name}</Link>
+          </h3>
+          
+          {/* Ratings */}
+          <div className="uniform-ratings">
+            <div className="uniform-stars-container">
+              <div className="uniform-stars-fill" style={{ width: `${rating * 20}%` }}></div>
+            </div>
+          </div>
+          
+          {/* Price */}
+          <div className="uniform-price-container">
+            {old_price && (
+              <span className="uniform-old-price">${parseFloat(old_price).toFixed(2)}</span>
+            )}
+            <span className="uniform-price">${parseFloat(price).toFixed(2)}</span>
+          </div>
+          
+          {/* Add to cart or quantity adjustment */}
+          <div className="uniform-product-action">
+            {cartQuantity > 0 ? (
+              <div className="uniform-quantity-adjuster">
+                <button 
+                  className="uniform-quantity-btn uniform-quantity-minus" 
+                  onClick={() => handleUpdateQuantity(cartQuantity - 1)}
+                  disabled={loading}
+                >
+                  -
+                </button>
+                <span className="uniform-quantity">{cartQuantity}</span>
+                <button 
+                  className="uniform-quantity-btn uniform-quantity-plus" 
+                  onClick={() => handleUpdateQuantity(cartQuantity + 1)}
+                  disabled={loading}
+                >
+                  +
+                </button>
+              </div>
+            ) : (
+              <button 
+                className="uniform-add-cart-btn"
+                onClick={handleAddToCart}
+                disabled={loading}
+              >
+                {loading ? 'Adding...' : 'დამატება'}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
@@ -217,8 +205,7 @@ ProductCard.propTypes = {
     id: PropTypes.number.isRequired,
     thumbnail: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    category: PropTypes.string,  // Changed from category_name to match what we're passing
-    vendor_name: PropTypes.string,
+    category: PropTypes.string,
     price: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string
@@ -229,7 +216,7 @@ ProductCard.propTypes = {
     ]),
     rating: PropTypes.oneOfType([
       PropTypes.number,
-      PropTypes.string // Allow string since it gets converted
+      PropTypes.string
     ]),
     is_hot: PropTypes.bool
   }).isRequired,

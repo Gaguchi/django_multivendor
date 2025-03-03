@@ -1,0 +1,71 @@
+/* Base styling for product grid container - these are fallbacks */
+.uniform-product-grid {
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* We're now setting grid-template-columns dynamically in the component */
+
+.uniform-product-cell {
+  height: 100%;
+  display: flex;
+}
+
+/* Loading state */
+.uniform-product-grid-loading {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.uniform-product-grid-loading .spinner-border {
+  width: 3rem;
+  height: 3rem;
+  color: #4dae65;
+}
+
+/* Error state */
+.uniform-product-grid-error {
+  width: 100%;
+  padding: 20px 0;
+}
+
+/* Empty state */
+.uniform-product-grid-empty {
+  width: 100%;
+  text-align: center;
+  padding: 40px 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Special styling for popular products grid */
+.popular-products-grid {
+  padding: 1rem 0;
+}
+
+/* Gap adjustments for different screen sizes */
+@media (max-width: 1199px) {
+  .uniform-product-grid {
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .uniform-product-grid {
+    gap: 15px !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .uniform-product-grid {
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 575px) {
+  .uniform-product-grid {
+    gap: 10px !important;
+  }
+}

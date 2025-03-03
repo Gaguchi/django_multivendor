@@ -6860,3 +6860,105 @@ django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has 
 [2025-03-03 19:20:18,304] INFO urls === Registering Vendor URLs ===
 [2025-03-03 19:20:18,305] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
 [2025-03-03 19:20:18,305] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-03 19:22:06,523] WARNING log Not Found: /https://127.0.0.1:8000/media/vendor_products/default_thumbnail.png
+[2025-03-03 19:22:06,523] WARNING log Not Found: /https://127.0.0.1:8000/media/vendor_products/default_thumbnail.png
+[2025-03-03 21:43:24,822] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 21:43:24,822] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 21:43:24,825] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 21:43:24,825] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 21:43:24,826] WARNING log Unauthorized: /api/orders/
+[2025-03-03 21:43:24,826] WARNING log Unauthorized: /api/orders/
+[2025-03-03 21:43:24,829] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 21:43:24,829] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 21:43:24,838] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 21:43:24,838] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 21:43:24,841] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 21:43:24,841] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 21:43:24,844] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 21:43:24,845] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 21:43:24,844] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 21:43:24,845] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 21:43:24,847] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 21:43:24,847] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 21:43:24,849] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 21:43:24,849] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 21:43:24,852] WARNING log Unauthorized: /api/orders/
+[2025-03-03 21:43:24,852] WARNING log Unauthorized: /api/orders/
+[2025-03-03 21:43:24,854] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 21:43:24,854] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 21:43:24,858] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 21:43:24,858] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:06:51,221] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 22:06:51,221] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 22:06:51,227] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 22:06:51,227] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 22:06:51,229] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:06:51,229] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:06:51,231] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 22:06:51,231] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 22:06:51,233] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 22:06:51,233] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-03 22:06:51,236] WARNING log Unauthorized: /api/orders/
+[2025-03-03 22:06:51,236] WARNING log Unauthorized: /api/orders/
+[2025-03-03 22:06:51,237] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 22:06:51,237] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 22:06:51,255] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 22:06:51,255] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 22:06:51,258] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:06:51,258] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:06:51,261] WARNING log Unauthorized: /api/orders/
+[2025-03-03 22:06:51,261] WARNING log Unauthorized: /api/orders/
+[2025-03-03 22:06:51,265] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 22:06:51,265] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 22:06:51,270] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:06:51,270] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:06:51,275] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:06:51,275] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:07:48,648] INFO views Read-only action list - allowing public access
+[2025-03-03 22:07:48,670] WARNING log Not Found: /api/products/
+[2025-03-03 22:07:48,670] WARNING log Not Found: /api/products/
+[2025-03-03 22:07:48,681] INFO views Read-only action list - allowing public access
+[2025-03-03 22:07:48,709] WARNING log Not Found: /api/products/
+[2025-03-03 22:07:48,709] WARNING log Not Found: /api/products/
+[2025-03-03 22:07:50,602] INFO views Read-only action list - allowing public access
+[2025-03-03 22:07:50,622] WARNING log Not Found: /api/products/
+[2025-03-03 22:07:50,622] WARNING log Not Found: /api/products/
+[2025-03-03 22:07:50,628] INFO views Read-only action list - allowing public access
+[2025-03-03 22:07:50,650] WARNING log Not Found: /api/products/
+[2025-03-03 22:07:50,650] WARNING log Not Found: /api/products/
+[2025-03-03 22:10:18,949] INFO views Read-only action list - allowing public access
+[2025-03-03 22:10:18,975] WARNING log Not Found: /api/products/
+[2025-03-03 22:10:18,975] WARNING log Not Found: /api/products/
+[2025-03-03 22:10:18,982] INFO views Read-only action list - allowing public access
+[2025-03-03 22:10:19,006] WARNING log Not Found: /api/products/
+[2025-03-03 22:10:19,006] WARNING log Not Found: /api/products/
+[2025-03-03 22:10:35,610] WARNING log Not Found: /api/products/
+[2025-03-03 22:10:35,610] WARNING log Not Found: /api/products/
+[2025-03-03 22:11:24,240] INFO views Read-only action list - allowing public access
+[2025-03-03 22:11:24,270] INFO views Read-only action list - allowing public access
+[2025-03-03 22:18:56,301] INFO views Read-only action list - allowing public access
+[2025-03-03 22:56:20,405] WARNING log Unauthorized: /api/categories/
+[2025-03-03 22:56:20,405] WARNING log Unauthorized: /api/categories/
+[2025-03-03 22:56:20,409] WARNING log Unauthorized: /api/orders/
+[2025-03-03 22:56:20,409] WARNING log Unauthorized: /api/orders/
+[2025-03-03 22:56:20,412] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 22:56:20,412] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-03 22:56:20,415] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 22:56:20,416] WARNING log Not Found: /api/products/
+[2025-03-03 22:56:20,415] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-03 22:56:20,417] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:56:20,416] WARNING log Not Found: /api/products/
+[2025-03-03 22:56:20,417] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:56:20,424] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:56:20,424] WARNING log Unauthorized: /api/users/profile/
+[2025-03-03 22:56:20,447] INFO views Read-only action list - allowing public access
+[2025-03-03 22:56:23,734] INFO views Read-only action list - allowing public access
+[2025-03-03 22:56:23,757] WARNING log Not Found: /api/products/
+[2025-03-03 22:56:23,757] WARNING log Not Found: /api/products/
+[2025-03-03 22:56:23,762] INFO views Read-only action list - allowing public access
+[2025-03-03 22:56:23,789] WARNING log Not Found: /api/products/
+[2025-03-03 22:56:23,789] WARNING log Not Found: /api/products/
+[2025-03-03 22:56:38,870] WARNING log Not Found: /api/vendor/products/
+[2025-03-03 22:56:38,870] WARNING log Not Found: /api/vendor/products/
+[2025-03-03 23:15:01,358] WARNING log Unauthorized: /api/cart/items/4/
+[2025-03-03 23:15:01,358] WARNING log Unauthorized: /api/cart/items/4/

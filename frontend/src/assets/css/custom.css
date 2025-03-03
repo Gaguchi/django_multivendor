@@ -142,3 +142,95 @@ span.input-group-btn.input-group-append {
     width: 100%;
     max-width: 100%;
 }
+
+/* New styles for product card */
+.product-image-bg {
+    transition: transform 0.3s ease;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* This creates a perfect 1:1 aspect ratio */
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-color: #f8f8f8;
+    border-radius: 4px;
+    margin: 0 auto;
+}
+
+.product-default:hover .product-image-bg {
+    transform: scale(1.05);
+}
+
+.product-title {
+    font-family: Poppins, sans-serif;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.4rem;
+    line-height: 1.35;
+    font-weight: 500;
+    max-width: 100%;
+}
+
+/* Adjust product title sizes based on screen width */
+@media (min-width: 1200px) {
+    .product-title {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .product-title {
+        font-size: 0.95rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .product-title {
+        font-size: 0.9rem;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .product-title {
+        font-size: 1rem; /* Larger on smaller screens with fewer columns */
+    }
+}
+
+@media (max-width: 575px) {
+    .product-title {
+        font-size: 0.9rem;
+    }
+}
+
+.product-default figure {
+    display: block; /* Changed from flex to block for better aspect ratio control */
+    position: relative;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+/* Make sure inner buttons are visible */
+.inner-btn .btn-icon-group {
+    z-index: 2;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+/* Make sure product details section has proper spacing */
+.product-details {
+    padding: 0 10px;
+}
+
+/* Style for consistent category display */
+.category-wrap {
+    margin-bottom: 5px;
+}
+
+.category-list {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
