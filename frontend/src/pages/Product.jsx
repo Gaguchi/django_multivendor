@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
-import ProductReviews from '../components/Reviews/ProductReviews';
 
 export default function Product() {
   const [selectedImage, setSelectedImage] = useState(0)
@@ -181,57 +180,6 @@ export default function Product() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="container">
-        <div className="product-single-tabs">
-          <ul className="nav nav-tabs" role="tablist">
-            <li className="nav-item">
-              <a 
-                className="nav-link active" 
-                id="product-tab-desc" 
-                data-toggle="tab" 
-                href="#product-desc-content" 
-                role="tab"
-              >
-                Description
-              </a>
-            </li>
-            <li className="nav-item">
-              <a 
-                className="nav-link" 
-                id="product-tab-reviews" 
-                data-toggle="tab" 
-                href="#product-reviews-content" 
-                role="tab"
-              >
-                Reviews
-              </a>
-            </li>
-          </ul>
-          <div className="tab-content">
-            <div 
-              className="tab-pane fade show active" 
-              id="product-desc-content" 
-              role="tabpanel"
-            >
-              <div dangerouslySetInnerHTML={{ __html: product.description }} />
-            </div>
-            <div 
-              className="tab-pane fade" 
-              id="product-reviews-content" 
-              role="tabpanel"
-            >
-              {/* Debug output */}
-              <div className="d-none">
-                <p>Debug - Product ID: {product?.id || 'Not available'}</p>
-                <p>Debug - Product Type: {typeof product?.id}</p>
-              </div>
-              
-              {/* Make sure to pass an actual number, not a string or undefined */}
-              <ProductReviews productId={Number(product?.id) || null} />
             </div>
           </div>
         </div>

@@ -95,7 +95,7 @@ export default function ForYou() {
         </div>
         
         <div className="col-md-8">
-          <div className="custom-products rounded">
+          <div className="custom-products bg-white rounded">
             <ProductGrid 
               products={products} // Skip first product as it's in countdown section
               loading={isLoading}
