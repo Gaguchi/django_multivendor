@@ -6,7 +6,18 @@ from django.utils import timezone
 def product_media_path(instance, filename):
     """Helper function to determine the path for product media uploads"""
     media_type = 'thumbnails' if hasattr(instance, 'is_thumbnail') else 'images'
-    return f'vendor_products/{instance.product.vendor.store_name}/{instance.product.name}/{media_type}/{filename}'
+    
+    # Check if instance is a VendorProduct or a related model like ProductImage
+    if hasattr(instance, 'product'):
+        # This is a ProductImage or similar model that has a 'product' attribute
+        vendor = instance.product.vendor
+        product_name = instance.product.name
+    else:
+        # This is a VendorProduct itself
+        vendor = instance.vendor
+        product_name = instance.name
+        
+    return f'vendor_products/{vendor.store_name}/{product_name}/{media_type}/{filename}'
 
 def product_video_path(instance, filename):
     """Helper function for video uploads"""
