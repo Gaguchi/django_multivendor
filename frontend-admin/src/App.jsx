@@ -20,14 +20,22 @@ function App() {
         return new Promise((resolve, reject) => {
           // Skip if script is already loaded
           if (isScriptLoaded(src)) {
+            console.log(`Script ${src} already loaded, skipping...`);
             resolve();
             return;
           }
           
+          console.log(`Loading script: ${src}`);
           const script = document.createElement('script');
           script.src = src;
-          script.onload = resolve;
-          script.onerror = reject;
+          script.onload = () => {
+            console.log(`Script loaded successfully: ${src}`);
+            resolve();
+          };
+          script.onerror = (error) => {
+            console.error(`Error loading script ${src}:`, error);
+            reject(error);
+          };
           document.body.appendChild(script);
         });
       };
@@ -46,13 +54,6 @@ function App() {
         "../js/jvectormap-data.js",
         "../js/jvectormap.js",
         "../js/apexcharts/apexcharts.js",
-        "../js/apexcharts/line-chart-1.js",
-        "../js/apexcharts/line-chart-2.js",
-        "../js/apexcharts/line-chart-3.js",
-        "../js/apexcharts/line-chart-4.js",
-        "../js/apexcharts/line-chart-5.js",
-        "../js/apexcharts/line-chart-6.js",
-        "../js/apexcharts/line-chart-7.js",
         "../js/switcher.js",
         "../js/theme-settings.js",
         "../js/main.js"
@@ -60,6 +61,7 @@ function App() {
       
       // Load scripts sequentially
       async function loadScriptsSequentially() {
+        console.log("Starting to load scripts sequentially...");
         for (const scriptSrc of scripts) {
           try {
             await loadScript(scriptSrc);
@@ -67,6 +69,7 @@ function App() {
             console.error(`Error loading script ${scriptSrc}:`, error);
           }
         }
+        console.log("All scripts loaded!");
         setScriptsLoaded(true);
       }
       
