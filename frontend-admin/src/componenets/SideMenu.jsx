@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Home from './Svgs/Home';
 import Attributes from './Svgs/Attributes';
 import Faq from './Svgs/Faq';
@@ -8,6 +8,17 @@ import Order from './Svgs/Order';
 import Setting from './Svgs/Setting';
 
 export default function SideMenu() {
+    // Get current location
+    const location = useLocation();
+    const currentPath = location.pathname;
+    
+    // Function to check if route is active
+    const isActive = (path) => currentPath === path;
+    
+    // Function to check if any child route is active
+    const hasActiveChild = (paths) => {
+        return paths.some(path => currentPath.startsWith(path));
+    };
 
     return (
         <>
@@ -32,13 +43,13 @@ export default function SideMenu() {
             <div className="center">
               <div className="center-item">
                 <ul className="">
-                  <li className="menu-item active">
-                    <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>
+                  <li className={`menu-item ${isActive('/') ? 'active' : ''}`}>
+                    <Link to="/">
                       <Home />
                       <div className="text">Home</div>
-                    </NavLink>
+                    </Link>
                   </li>
-                  <li className="menu-item has-children">
+                  <li className={`menu-item has-children ${hasActiveChild(['/products', '/addproduct']) ? 'active' : ''}`}>
                     <a href="javascript:void(0);" className="menu-item-button">
                       <div className="icon">
                         <i className="icon-file-plus" />
@@ -46,15 +57,15 @@ export default function SideMenu() {
                       <div className="text">Product</div>
                     </a>
                     <ul className="sub-menu">
-                      <li className="sub-menu-item">
-                        <NavLink to="/products" className={({ isActive }) => isActive ? "active" : ""}>
+                      <li className={`sub-menu-item ${isActive('/products') ? 'active' : ''}`}>
+                        <Link to="/products">
                           <div className="text">All Products</div>
-                        </NavLink>
+                        </Link>
                       </li>
-                      <li className="sub-menu-item">
-                        <NavLink to="/addproduct" className={({ isActive }) => isActive ? "active" : ""}>
+                      <li className={`sub-menu-item ${isActive('/addproduct') ? 'active' : ''}`}>
+                        <Link to="/addproduct">
                           <div className="text">Add Product</div>
-                        </NavLink>
+                        </Link>
                       </li>
                     </ul>
                   </li>
