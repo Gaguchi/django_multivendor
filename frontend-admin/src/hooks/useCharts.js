@@ -198,6 +198,11 @@ const getLineChart1Options = () => ({
     show: false
   },
   xaxis: {
+    labels: {
+      style: {
+        colors: '#95989D',
+      },
+    },
     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
     axisBorder: {
       show: false
@@ -235,6 +240,11 @@ const getLineChart2Options = () => ({
     show: false
   },
   xaxis: {
+    labels: {
+      style: {
+        colors: '#95989D',
+      },
+    },
     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
     axisBorder: {
       show: false
@@ -272,6 +282,11 @@ const getLineChart3Options = () => ({
     show: false
   },
   xaxis: {
+    labels: {
+      style: {
+        colors: '#95989D',
+      },
+    },
     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
     axisBorder: {
       show: false
@@ -309,6 +324,11 @@ const getLineChart4Options = () => ({
     show: false
   },
   xaxis: {
+    labels: {
+      style: {
+        colors: '#95989D',
+      },
+    },
     categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
     axisBorder: {
       show: false

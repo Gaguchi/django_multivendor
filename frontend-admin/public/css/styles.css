@@ -4628,7 +4628,7 @@ select option {
 }
 .dark-theme form textarea,
 .dark-theme form input {
-  background: rgba(48, 48, 48, 0.5019607843);
+  background: rgb(105 105 105 / 50%);
   color: var(--Surface);
 }
 .dark-theme form textarea::placeholder,

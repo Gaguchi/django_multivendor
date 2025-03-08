@@ -52,9 +52,9 @@ export default function SideMenu() {
                         </NavLink>
                       </li>
                       <li className="sub-menu-item">
-                        <a href="add-product.html" className="">
+                        <NavLink to="/addproduct" className={({ isActive }) => isActive ? "active" : ""}>
                           <div className="text">Add Product</div>
-                        </a>
+                        </NavLink>
                       </li>
                     </ul>
                   </li>

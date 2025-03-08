@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import Default from "../pages/Default";
 import All from "../pages/products/All";
+import Add from '../pages/products/Add';
 
 export default function MainContent() {
     return (
@@ -14,6 +15,7 @@ export default function MainContent() {
                 <Routes>
                   <Route path="/" element={<Default />} />
                   <Route path="/products" element={<All />} />
+                  <Route path="/addproduct" element={<Add />} />
                 </Routes>
               </div>
               {/* /main-content-wrap */}
