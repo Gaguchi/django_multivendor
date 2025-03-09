@@ -54,7 +54,7 @@ export default function SideMenu() {
                       <div className="icon">
                         <i className="icon-file-plus" />
                       </div>
-                      <div className="text">Product</div>
+                      <div className="text">Products</div>
                     </a>
                     <ul className="sub-menu">
                       <li className={`sub-menu-item ${isActive('/products') ? 'active' : ''}`}>
@@ -72,27 +72,29 @@ export default function SideMenu() {
                   <li className="menu-item has-children">
                     <a href="javascript:void(0);" className="menu-item-button">
                       <div className="icon">
-                        <i className="icon-layers" />
+                        <i className="icon-package" />
                       </div>
-                      <div className="text">Category</div>
+                      <div className="text">Warehouses</div>
                     </a>
                     <ul className="sub-menu">
                       <li className="sub-menu-item">
                         <a href="category-list.html" className="">
-                          <div className="text">Category list</div>
+                          <div className="text">Warehouses list</div>
                         </a>
                       </li>
                       <li className="sub-menu-item">
                         <a href="new-category.html" className="">
-                          <div className="text">New category</div>
+                          <div className="text">New Warehouse</div>
                         </a>
                       </li>
                     </ul>
                   </li>
                   <li className="menu-item has-children">
                     <a href="javascript:void(0);" className="menu-item-button">
-                      <Attributes />
-                      <div className="text">Attributes</div>
+                      <div className="icon">
+                        <i className="icon-message-square" />
+                      </div>
+                      <div className="text">Messages</div>
                     </a>
                     <ul className="sub-menu">
                       <li className="sub-menu-item">
@@ -110,7 +112,7 @@ export default function SideMenu() {
                   <li className="menu-item has-children">
                     <a href="javascript:void(0);" className="menu-item-button">
                       <Order />
-                      <div className="text">Order</div>
+                      <div className="text">Orders</div>
                     </a>
                     <ul className="sub-menu">
                       <li className="sub-menu-item">
@@ -135,7 +137,7 @@ export default function SideMenu() {
                       <div className="icon">
                         <i className="icon-user" />
                       </div>
-                      <div className="text">Users</div>
+                      <div className="text">Account</div>
                     </a>
                     <ul className="sub-menu">
                       <li className="sub-menu-item">
@@ -162,8 +164,10 @@ export default function SideMenu() {
                   </li>
                   <li className="menu-item has-children">
                     <a href="javascript:void(0);" className="menu-item-button">
-                      <Online />
-                      <div className="text">Online Store</div>
+                      <div className="icon">
+                        <i className="icon-bell" />
+                      </div>
+                      <div className="text">Notifications</div>
                     </a>
                     <ul className="sub-menu">
                       <li className="sub-menu-item">
@@ -183,19 +187,19 @@ export default function SideMenu() {
                       <div className="icon">
                         <i className="icon-pie-chart" />
                       </div>
-                      <div className="text">Report</div>
+                      <div className="text">Reports</div>
                     </a>
                   </li>
                   <li className="menu-item">
                     <a href="setting.html" className="">
                       <Setting />
-                      <div className="text">Setting</div>
+                      <div className="text">Settings</div>
                     </a>
                   </li>
                   <li className="menu-item">
                     <a href="faq.html" className="">
                       <Faq />
-                      <div className="text">FAQ</div>
+                      <div className="text">FAQs</div>
                     </a>
                   </li>
                   <li className="menu-item">
