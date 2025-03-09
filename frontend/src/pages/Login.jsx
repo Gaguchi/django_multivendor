@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 export default function LoginPage() {
-  const { user, logout } = useAuth();
+  const { user, login, logout } = useAuth(); // Added login from context
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('signin');
@@ -49,6 +49,9 @@ export default function LoginPage() {
             username: formData.email,
             email: formData.email,
             password: formData.password,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phone: formData.phone,
             userprofile: {
               first_name: formData.firstName,
               last_name: formData.lastName,
@@ -59,13 +62,18 @@ export default function LoginPage() {
       const response = await api.post(endpoint, payload);
       const data = response.data;
       
-      // Login will handle token storage
+      // Login with received tokens and user data
       await login(data);
       
-      navigate('/');
+      // Redirect to homepage or intended destination
+      const redirectPath = location.state?.from?.pathname || '/';
+      navigate(redirectPath);
       
     } catch (error) {
-      setError(error.response?.data?.detail || 'Authentication failed');
+      setError(error.response?.data?.detail || 
+               error.response?.data?.email?.[0] || 
+               error.response?.data?.password?.[0] ||
+               'Authentication failed');
     }
   };
 

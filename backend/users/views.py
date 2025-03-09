@@ -39,12 +39,41 @@ class UserRegisterView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         self.user = serializer.save()
+        # Ensure we have the latest user object with profile
+        self.user = User.objects.get(pk=self.user.pk)
 
     def post(self, request, *args, **kwargs):
+        # Check if we need to extract profile data from a nested structure
+        data = request.data.copy()
+        
+        # Handle nested userprofile structure if present
+        if 'userprofile' in data and isinstance(data['userprofile'], dict):
+            for key, value in data['userprofile'].items():
+                if key not in data:
+                    data[key] = value
+        
+        # If username isn't provided but email is, use email as username
+        if not data.get('username') and data.get('email'):
+            data['username'] = data['email']
+            
+        # Override request data with our processed data
+        request._full_data = data
+        
         response = super().post(request, *args, **kwargs)
         if response.status_code == status.HTTP_201_CREATED:
             tokens = self.create_token_for_user(self.user)
-            response.data.update(tokens)
+            profile_data = UserProfileSerializer(self.user.userprofile).data
+            
+            # Include user profile in response
+            response.data.update({
+                **tokens,
+                'userprofile': profile_data,
+                'username': self.user.username,
+                'email': self.user.email,
+                'id': self.user.id,
+                'firstName': self.user.userprofile.first_name,
+                'lastName': self.user.userprofile.last_name
+            })
         return response
 
 class RegisterOrLoginView(APIView):
@@ -81,10 +110,18 @@ class UserLoginView(APIView):
         user = authenticate(username=username, password=password)
         if user:
             refresh = RefreshToken.for_user(user)
+            # Get or create profile if it doesn't exist
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            
             return Response({
                 'refresh': str(refresh),
                 'access': str(refresh.access_token),
                 'username': user.username,
+                'email': user.email,
+                'id': user.id,
+                'firstName': profile.first_name or user.first_name,
+                'lastName': profile.last_name or user.last_name,
+                'userprofile': UserProfileSerializer(profile).data
             })
         return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 

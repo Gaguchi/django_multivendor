@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import api from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function CheckoutAuth({ onAuthenticated }) {
+  const { login } = useAuth(); // Import login function from AuthContext
   const [activeTab, setActiveTab] = useState('signin');
   const [authError, setAuthError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,6 +46,9 @@ export default function CheckoutAuth({ onAuthenticated }) {
             username: authForm.email,
             email: authForm.email,
             password: authForm.password,
+            firstName: authForm.firstName,
+            lastName: authForm.lastName,
+            phone: authForm.phone,
             userprofile: {
               first_name: authForm.firstName,
               last_name: authForm.lastName,
@@ -66,11 +71,17 @@ export default function CheckoutAuth({ onAuthenticated }) {
       setLoading(true);
       const response = await api.post(endpoint, payload);
       
+      // Login the user with the received tokens
+      await login(response.data);
+      
       // Notify parent component about successful authentication
       onAuthenticated(response.data);
       
     } catch (error) {
-      setAuthError(error.response?.data?.detail || 'Authentication failed');
+      setAuthError(error.response?.data?.detail || 
+                  error.response?.data?.email?.[0] || 
+                  error.response?.data?.password?.[0] ||
+                  'Authentication failed');
     } finally {
       setLoading(false);
     }
