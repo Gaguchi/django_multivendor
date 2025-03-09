@@ -25,6 +25,24 @@ from django.shortcuts import get_object_or_404
 
 logger = logging.getLogger(__name__)
 
+# Add this new class for custom token refresh
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+
+class CustomTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        try:
+            # Call the parent class's post method
+            response = super().post(request, *args, **kwargs)
+            # Log the successful token refresh
+            logger.info(f"Token refreshed successfully for user")
+            return response
+        except TokenError as e:
+            # Log the token error
+            logger.error(f"Token refresh failed: {str(e)}")
+            # Pass the exception up
+            raise InvalidToken(str(e))
+
 # Create your views here.
 
 class UserRegisterView(generics.CreateAPIView):
@@ -109,20 +127,72 @@ class UserLoginView(APIView):
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
         if user:
-            refresh = RefreshToken.for_user(user)
-            # Get or create profile if it doesn't exist
-            profile, _ = UserProfile.objects.get_or_create(user=user)
-            
-            return Response({
-                'refresh': str(refresh),
-                'access': str(refresh.access_token),
-                'username': user.username,
-                'email': user.email,
-                'id': user.id,
-                'firstName': profile.first_name or user.first_name,
-                'lastName': profile.last_name or user.last_name,
-                'userprofile': UserProfileSerializer(profile).data
-            })
+            try:
+                refresh = RefreshToken.for_user(user)
+                # Get or create profile if it doesn't exist
+                profile, _ = UserProfile.objects.get_or_create(user=user)
+                
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'username': user.username,
+                    'email': user.email,
+                    'id': user.id,
+                    'firstName': profile.first_name or user.first_name,
+                    'lastName': profile.last_name or user.last_name,
+                    'userprofile': UserProfileSerializer(profile).data
+                })
+            except Exception as e:
+                # If token blacklist tables don't exist yet, fall back to manual token creation
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Token generation error: {str(e)}")
+                
+                # Manual token creation without using blacklist
+                from rest_framework_simplejwt.tokens import Token
+                from datetime import datetime, timedelta
+                import jwt
+                from django.conf import settings
+                
+                # Create payload manually
+                now = datetime.utcnow()
+                access_payload = {
+                    'token_type': 'access',
+                    'exp': now + timedelta(minutes=15),
+                    'iat': now,
+                    'jti': Token._get_token_id(),
+                    'user_id': user.id,
+                }
+                refresh_payload = {
+                    'token_type': 'refresh',
+                    'exp': now + timedelta(days=1),
+                    'iat': now,
+                    'jti': Token._get_token_id(),
+                    'user_id': user.id,
+                }
+                
+                # Encode tokens
+                access = jwt.encode(
+                    access_payload,
+                    settings.SIMPLE_JWT['SIGNING_KEY'],
+                    algorithm=settings.SIMPLE_JWT['ALGORITHM']
+                )
+                refresh = jwt.encode(
+                    refresh_payload,
+                    settings.SIMPLE_JWT['SIGNING_KEY'],
+                    algorithm=settings.SIMPLE_JWT['ALGORITHM']
+                )
+                
+                return Response({
+                    'refresh': refresh,
+                    'access': access,
+                    'username': user.username,
+                    'email': user.email,
+                    'id': user.id,
+                    'firstName': profile.first_name or user.first_name,
+                    'lastName': profile.last_name or user.last_name,
+                    'userprofile': UserProfileSerializer(profile).data
+                })
         return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 class TokenInfoView(APIView):

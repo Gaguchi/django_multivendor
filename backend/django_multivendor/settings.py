@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta  # Ensure timedelta is imported
 import os
+import importlib.util
+
+# Helper function to check if a package is installed
+def is_package_installed(package_name):
+    return importlib.util.find_spec(package_name) is not None
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,6 +37,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
+# Core Django apps
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,7 +46,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'corsheaders',
+]
+
+# Project-specific apps
+PROJECT_APPS = [
     'users',
     'vendors',  # This now handles all product functionality
     'cart',
@@ -50,14 +59,36 @@ INSTALLED_APPS = [
     'categories',
     'reviews',
     'shipping',
-    'social_django',
-    'django_extensions',  # Add this line
 ]
 
+# Optional third-party apps, only added if installed
+THIRD_PARTY_APPS = []
+
+if is_package_installed('corsheaders'):
+    THIRD_PARTY_APPS.append('corsheaders')
+
+if is_package_installed('social_django'):
+    THIRD_PARTY_APPS.append('social_django')
+
+if is_package_installed('django_extensions'):
+    THIRD_PARTY_APPS.append('django_extensions')
+
+if is_package_installed('rest_framework_simplejwt.token_blacklist'):
+    THIRD_PARTY_APPS.append('rest_framework_simplejwt.token_blacklist')
+
+# Combine all apps
+INSTALLED_APPS = INSTALLED_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+
+# Middleware configuration with conditional CORS
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware', 
-    'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+]
+
+if is_package_installed('corsheaders'):
+    MIDDLEWARE.append('corsheaders.middleware.CorsMiddleware')
+
+MIDDLEWARE += [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -66,32 +97,34 @@ MIDDLEWARE = [
     'django_multivendor.middleware.RequestResponseLoggingMiddleware',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-    'x-master-token',  # Ensure this is lowercase
-]
+# CORS settings if corsheaders is available
+if is_package_installed('corsheaders'):
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_HEADERS = [
+        'accept',
+        'accept-encoding',
+        'authorization',
+        'content-type',
+        'dnt',
+        'origin',
+        'user-agent',
+        'x-csrftoken',
+        'x-requested-with',
+        'x-master-token',  # Ensure this is lowercase
+    ]
 
-CORS_ALLOW_CREDENTIALS = True
-CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+    CORS_ALLOW_CREDENTIALS = True
+    CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
 
-CORS_ALLOWED_ORIGINS = [
-    'https://localhost:5173',
-    'https://127.0.0.1:5173',
-]
+    CORS_ALLOWED_ORIGINS = [
+        'https://localhost:5173',
+        'https://127.0.0.1:5173',
+    ]
 
-CORS_ORIGIN_WHITELIST = [
-    'https://localhost:5173',
-    'https://127.0.0.1:5173',
-]
+    CORS_ORIGIN_WHITELIST = [
+        'https://localhost:5173',
+        'https://127.0.0.1:5173',
+    ]
 
 ROOT_URLCONF = 'django_multivendor.urls'
 
@@ -192,7 +225,7 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_AFTER_ROTATION': is_package_installed('rest_framework_simplejwt.token_blacklist'),
     'UPDATE_LAST_LOGIN': True,
     
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -201,6 +234,9 @@ SIMPLE_JWT = {
     # Custom settings for better error handling
     'AUTH_TOKEN_EXTEND_WHEN_CLOSE': True,  # Extend token lifetime if close to expiry
     'TOKEN_REFRESH_GRACE_PERIOD': 60,  # 60 second grace period for refresh
+    
+    # Update blacklist settings with error handling
+    'USE_BLACKLIST': is_package_installed('rest_framework_simplejwt.token_blacklist'),
 }
 
 # Master token for frontend access
@@ -249,11 +285,16 @@ LOGGING = {
     },
 }
 
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.facebook.FacebookOAuth2',  # Add this line
+# Authentication backends with conditional social auth
+AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-)
+]
+
+if is_package_installed('social_core.backends.google'):
+    AUTHENTICATION_BACKENDS.insert(0, 'social_core.backends.google.GoogleOAuth2')
+
+if is_package_installed('social_core.backends.facebook'):
+    AUTHENTICATION_BACKENDS.insert(0, 'social_core.backends.facebook.FacebookOAuth2')
 
 # Google OAuth2 settings
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '13306343475-jfr7948k9qrtsohfbpukkrmsgcvf6kiu.apps.googleusercontent.com'

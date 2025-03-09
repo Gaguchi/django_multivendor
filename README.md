@@ -60,4 +60,35 @@ For additional customization, refer to specific configuration files for logs, so
 
 ---
 
+## Database Setup
+
+Before running the application for the first time, you need to initialize the database:
+
+### Option 1: Using the initialization script
+
+Run the `init_database.bat` script:
+
+```bash
+./init_database.bat
+```
+
+### Option 2: Using Django management commands
+
+```bash
+cd backend
+python manage.py makemigrations token_blacklist
+python manage.py migrate token_blacklist
+python manage.py migrate
+```
+
+## First-time Error Resolution
+
+If you encounter the error: `sqlite3.OperationalError: no such table: token_blacklist_outstandingtoken`, follow these steps:
+
+1. Stop the Django server
+2. Run the database initialization as described above
+3. Restart the Django server
+
+---
+
 Happy developing! 🎉
