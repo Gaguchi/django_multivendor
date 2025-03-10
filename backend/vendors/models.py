@@ -2,15 +2,26 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-# Define helper functions first
+# Define helper functions for media file paths
 def product_media_path(instance, filename):
     """Helper function to determine the path for product media uploads"""
+    product = instance.product if hasattr(instance, 'product') else instance
+    vendor_name = product.vendor.store_name.replace(' ', '_')
+    product_name = product.name.replace(' ', '_')
     media_type = 'thumbnails' if hasattr(instance, 'is_thumbnail') else 'images'
-    return f'vendor_products/{instance.product.vendor.store_name}/{instance.product.name}/{media_type}/{filename}'
+    return f'vendor_products/{vendor_name}/{product_name}/{media_type}/{filename}'
+
+def product_thumbnail_path(instance, filename):
+    """Helper function for thumbnail uploads"""
+    vendor_name = instance.vendor.store_name.replace(' ', '_')
+    product_name = instance.name.replace(' ', '_')
+    return f'vendor_products/{vendor_name}/{product_name}/thumbnails/{filename}'
 
 def product_video_path(instance, filename):
     """Helper function for video uploads"""
-    return f'vendor_products/{instance.vendor.store_name}/{instance.name}/videos/{filename}'
+    vendor_name = instance.vendor.store_name.replace(' ', '_')
+    product_name = instance.name.replace(' ', '_')
+    return f'vendor_products/{vendor_name}/{product_name}/videos/{filename}'
 
 class Vendor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=None)
@@ -36,12 +47,12 @@ class VendorProduct(models.Model):
     stock = models.PositiveIntegerField(default=0)
     description = models.TextField(blank=True)
     thumbnail = models.ImageField(
-        upload_to=product_media_path, 
-        blank=True, 
+        upload_to=product_thumbnail_path, 
+        blank=True,
         default='vendor_products/default_thumbnail.png'
     )
     secondaryImage = models.ImageField(
-        upload_to=product_media_path,
+        upload_to=product_thumbnail_path,
         blank=True,
         null=True
     )
