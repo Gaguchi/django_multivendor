@@ -1,30 +1,84 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useCart } from "../contexts/CartContext"
 import Total from "../components/Cart/Total"
 
 export default function Cart() {
   const { cart, loading, updateCartItem, removeFromCart, refreshCart } = useCart()
+  const [localQuantities, setLocalQuantities] = useState({})
+  const [processingItems, setProcessingItems] = useState({})
 
   useEffect(() => {
     refreshCart()
   }, [])
 
+  // Initialize local quantities when cart loads or changes
+  useEffect(() => {
+    if (cart?.items) {
+      const quantities = {}
+      cart.items.forEach(item => {
+        quantities[item.product.id] = item.quantity
+      })
+      setLocalQuantities(quantities)
+    }
+  }, [cart?.items])
+
   const handleQuantityChange = async (itemId, newQuantity) => {
     if (newQuantity < 1) return
     
+    // Update local state immediately for responsive UI
+    setLocalQuantities(prev => ({
+      ...prev,
+      [itemId]: newQuantity
+    }))
+    
+    // Mark this item as processing
+    setProcessingItems(prev => ({
+      ...prev,
+      [itemId]: true
+    }))
+    
     try {
+      // Make API call in the background
       await updateCartItem(itemId, newQuantity)
     } catch (error) {
       console.error("Failed to update quantity:", error)
+      
+      // Revert to original quantity on error
+      if (cart?.items) {
+        const originalItem = cart.items.find(item => item.product.id === itemId)
+        if (originalItem) {
+          setLocalQuantities(prev => ({
+            ...prev,
+            [itemId]: originalItem.quantity
+          }))
+        }
+      }
+    } finally {
+      // Clear processing state
+      setProcessingItems(prev => ({
+        ...prev,
+        [itemId]: false
+      }))
     }
   }
 
   const handleRemoveItem = async (itemId) => {
+    // Mark item as being removed
+    setProcessingItems(prev => ({
+      ...prev,
+      [itemId]: true
+    }))
+    
     try {
       await removeFromCart(itemId)
     } catch (error) {
       console.error("Failed to remove item:", error)
+    } finally {
+      setProcessingItems(prev => ({
+        ...prev,
+        [itemId]: false
+      }))
     }
   }
 
@@ -67,7 +121,10 @@ export default function Cart() {
                 </thead>
                 <tbody>
                   {cart.items.map(item => (
-                    <tr className="product-row" key={item.id}>
+                    <tr 
+                      className={`product-row ${processingItems[item.product.id] ? 'opacity-50' : ''}`}
+                      key={item.id}
+                    >
                       <td>
                         <figure className="product-image-container">
                           <Link to={`/product/${item.product.id}`} className="product-image">
@@ -84,6 +141,7 @@ export default function Cart() {
                             }}
                             className="btn-remove icon-cancel"
                             title="Remove Product"
+                            style={{ pointerEvents: processingItems[item.product.id] ? 'none' : 'auto' }}
                           />
                         </figure>
                       </td>
@@ -98,29 +156,37 @@ export default function Cart() {
                           <div className="input-group bootstrap-touchspin bootstrap-touchspin-injected">
                             <span className="input-group-btn input-group-prepend">
                               <button
-                                className="btn btn-outline btn-down-icon bootstrap-touchspin-down"
+                                className={`btn btn-outline btn-down-icon bootstrap-touchspin-down ${
+                                  (localQuantities[item.product.id] || item.quantity) <= 1 ? 'inactive' : ''
+                                }`}
                                 type="button"
-                                onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
+                                onClick={() => handleQuantityChange(item.product.id, (localQuantities[item.product.id] || item.quantity) - 1)}
+                                disabled={processingItems[item.product.id] || (localQuantities[item.product.id] || item.quantity) <= 1}
                               />
                             </span>
                             <input 
                               className="horizontal-quantity form-control" 
                               type="text"
-                              value={item.quantity}
+                              value={localQuantities[item.product.id] || item.quantity}
                               readOnly
                             />
                             <span className="input-group-btn input-group-append">
                               <button
-                                className="btn btn-outline btn-up-icon bootstrap-touchspin-up"
+                                className={`btn btn-outline btn-up-icon bootstrap-touchspin-up ${
+                                  (localQuantities[item.product.id] || item.quantity) >= item.product.stock ? 'inactive' : ''
+                                }`}
                                 type="button"
-                                onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
+                                onClick={() => handleQuantityChange(item.product.id, (localQuantities[item.product.id] || item.quantity) + 1)}
+                                disabled={processingItems[item.product.id] || (localQuantities[item.product.id] || item.quantity) >= item.product.stock}
                               />
                             </span>
                           </div>
                         </div>
                       </td>
                       <td className="text-right">
-                        <span className="subtotal-price">${(parseFloat(item.unit_price) * item.quantity).toFixed(2)}</span>
+                        <span className="subtotal-price">
+                          ${(parseFloat(item.unit_price) * (localQuantities[item.product.id] || item.quantity)).toFixed(2)}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -156,6 +222,18 @@ export default function Cart() {
           <Total />
         </div>
       </div>
+
+      <style jsx>{`
+        .opacity-50 {
+          opacity: 0.5 ;
+          pointer-events: none;
+        }
+        
+        .inactive {
+          opacity: 0 !important;
+          cursor: not-allowed;
+        }
+      `}</style>
     </>
   )
 }

@@ -176,31 +176,31 @@ span.input-group-btn.input-group-append {
 /* Adjust product title sizes based on screen width */
 @media (min-width: 1200px) {
     .product-title {
-        font-size: 1rem;
+        font-size: 2rem;
     }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
     .product-title {
-        font-size: 0.95rem;
+        font-size: 1.95rem;
     }
 }
 
 @media (min-width: 768px) and (max-width: 991px) {
     .product-title {
-        font-size: 0.9rem;
+        font-size: 1.9rem;
     }
 }
 
 @media (min-width: 576px) and (max-width: 767px) {
     .product-title {
-        font-size: 1rem; /* Larger on smaller screens with fewer columns */
+        font-size: 2rem; /* Larger on smaller screens with fewer columns */
     }
 }
 
 @media (max-width: 575px) {
     .product-title {
-        font-size: 0.9rem;
+        font-size: 1.9rem;
     }
 }
 
