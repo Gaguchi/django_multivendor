@@ -1,0 +1,21 @@
+# Replace <TUNNEL_ID> with your actual tunnel ID after creation
+tunnel: f52cce30-c217-4260-9d7d-186a81b1e72c
+credentials-file: C:/Users/Boris/.cloudflared/f52cce30-c217-4260-9d7d-186a81b1e72c.json
+
+# Configure tunnel ingress rules
+ingress:
+  # Route backend API traffic
+  - hostname: api.bazro.ge
+    service: http://localhost:8000
+
+  # Route frontend traffic
+  - hostname: shop.bazro.ge
+    service: http://localhost:5173
+
+  # Catch-all rule
+  - service: http_status:404
+
+# Optional origin request settings
+originRequest:
+  connectTimeout: 30s
+  noTLSVerify: true

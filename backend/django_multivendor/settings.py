@@ -22,7 +22,7 @@ def is_package_installed(package_name):
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-FRONTEND_URL = 'https://localhost:5173'  # Update frontend URL to use HTTPS
+FRONTEND_URL = 'http://shop.bazro.ge'  # Update for Cloudflare tunnel
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-!%mrkjmzu^xalr!*(_1#bo7z)8^gl=nzqip9d3)f)mq$-8e1ac
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'api.bazro.ge', 'shop.bazro.ge']
 
 # Application definition
 
@@ -118,12 +118,24 @@ if is_package_installed('corsheaders'):
 
     CORS_ALLOWED_ORIGINS = [
         'https://localhost:5173',
+        'http://localhost:5173',
         'https://127.0.0.1:5173',
+        'http://127.0.0.1:5173',
+        'https://api.bazro.ge',
+        'http://api.bazro.ge',
+        'https://shop.bazro.ge',
+        'http://shop.bazro.ge',
     ]
 
     CORS_ORIGIN_WHITELIST = [
         'https://localhost:5173',
+        'http://localhost:5173',
         'https://127.0.0.1:5173',
+        'http://127.0.0.1:5173',
+        'https://api.bazro.ge',
+        'http://api.bazro.ge',
+        'https://shop.bazro.ge',
+        'http://shop.bazro.ge',
     ]
 
 ROOT_URLCONF = 'django_multivendor.urls'
@@ -305,7 +317,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 ]
 
 # Update this line to match Google Cloud Console configuration exactly
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://localhost:5173/auth/callback'
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://shop.bazro.ge/auth/callback'
 
 # JWT token creation after successful social auth
 SOCIAL_AUTH_PIPELINE = (
@@ -323,7 +335,7 @@ SOCIAL_AUTH_PIPELINE = (
 
 # Add this setting to force the redirect URI
 SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
-    'redirect_uri': 'https://localhost:5173/auth/callback'
+    'redirect_uri': 'http://shop.bazro.ge/auth/callback'
 }
 
 # Override the default callback URL
@@ -345,7 +357,7 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
     ('first_name', 'first_name'),
     ('last_name', 'last_name'),
 ]
-SOCIAL_AUTH_FACEBOOK_REDIRECT_URI = 'https://localhost:5173/auth/callback'
+SOCIAL_AUTH_FACEBOOK_REDIRECT_URI = 'http://shop.bazro.ge/auth/callback'
 SOCIAL_AUTH_FACEBOOK_AUTH_EXTRA_ARGUMENTS = {
     'redirect_uri': SOCIAL_AUTH_FACEBOOK_REDIRECT_URI
 }
@@ -362,26 +374,45 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SSL_CERTIFICATE = BASE_DIR / 'certificates' / 'localhost.crt'
-SSL_PRIVATE_KEY = BASE_DIR / 'certificates' / 'localhost.key'
+# Update for Cloudflare tunnels - no need for SSL certificates
+# Comment out or remove SSL certificate configuration
+# SSL_CERTIFICATE = BASE_DIR / 'certificates' / 'localhost.crt'
+# SSL_PRIVATE_KEY = BASE_DIR / 'certificates' / 'localhost.key'
 
-# Update OAuth settings to include both localhost and 127.0.0.1
-SOCIAL_AUTH_ALLOWED_REDIRECT_HOSTS = ['localhost:5173', '127.0.0.1:5173']
+# Update OAuth settings to include Cloudflare domain
+SOCIAL_AUTH_ALLOWED_REDIRECT_HOSTS = ['localhost:5173', '127.0.0.1:5173', 'shop.bazro.ge']
 
-# Base URLs should use HTTPS
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# Add Cloudflare domains to trusted origins
 CSRF_TRUSTED_ORIGINS = [
     'https://localhost:8000',
+    'http://localhost:8000',
     'https://127.0.0.1:8000',
+    'http://127.0.0.1:8000',
+    'https://api.bazro.ge',
+    'http://api.bazro.ge',
+    'https://shop.bazro.ge',
+    'http://shop.bazro.ge',
 ]
 
 # Update CORS settings for HTTPS
 CORS_ALLOWED_ORIGINS = [
     'https://localhost:5173',
+    'http://localhost:5173',
     'https://127.0.0.1:5173',
+    'http://127.0.0.1:5173',
+    'https://api.bazro.ge',
+    'http://api.bazro.ge',
+    'https://shop.bazro.ge',
+    'http://shop.bazro.ge',
 ]
 
 CORS_ORIGIN_WHITELIST = [
     'https://localhost:5173',
+    'http://localhost:5173',
     'https://127.0.0.1:5173',
+    'http://127.0.0.1:5173',
+    'https://api.bazro.ge',
+    'http://api.bazro.ge',
+    'https://shop.bazro.ge',
+    'http://shop.bazro.ge',
 ]

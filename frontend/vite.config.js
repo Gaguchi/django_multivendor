@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import fs from 'fs'
 import path from 'path'
 
 export default defineConfig({
@@ -8,12 +7,10 @@ export default defineConfig({
     react(),
   ],
   server: {
-    https: {
-      key: fs.readFileSync('../backend/certificates/localhost.key'),
-      cert: fs.readFileSync('../backend/certificates/localhost.crt'),
-    },
     port: 5173,
     host: 'localhost',
+    // Add allowedHosts configuration to allow Cloudflare tunnel access
+    allowedHosts: ['shop.bazro.ge', 'api.bazro.ge', 'localhost', '127.0.0.1'],
     proxy: {
       '/api': {
         target: 'https://127.0.0.1:8000',
@@ -40,5 +37,11 @@ export default defineConfig({
   },
   css: {
     devSourcemap: true,
+  },
+  // Add preview configuration for production builds
+  preview: {
+    port: 5173,
+    host: true, // Listen on all addresses
+    allowedHosts: ['shop.bazro.ge', 'api.bazro.ge', 'localhost', '127.0.0.1'],
   }
 })
