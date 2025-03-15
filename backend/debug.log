@@ -8200,3 +8200,75 @@ django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has 
 [2025-03-15 17:24:05,933] INFO urls === Registering Vendor URLs ===
 [2025-03-15 17:24:05,934] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
 [2025-03-15 17:24:05,934] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-15 19:59:02,765] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 19:59:02,765] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 19:59:02,768] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 19:59:02,768] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 19:59:02,782] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 19:59:02,782] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:12,901] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:12,901] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:12,917] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:12,917] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:12,921] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:12,921] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:49,790] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:49,790] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:49,794] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:49,794] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:49,796] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:00:49,796] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:01:04,988] WARNING log Unauthorized: /api/users/login/
+[2025-03-15 20:01:04,988] WARNING log Unauthorized: /api/users/login/
+[2025-03-15 20:01:14,363] WARNING log Unauthorized: /api/users/login/
+[2025-03-15 20:01:14,363] WARNING log Unauthorized: /api/users/login/
+[2025-03-15 20:01:40,281] WARNING log Not Found: /
+[2025-03-15 20:01:40,281] WARNING log Not Found: /
+[2025-03-15 20:02:16,072] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:02:16,072] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 20:02:17,801] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:02:17,802] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:02:17,801] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:02:17,803] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:02:17,802] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:02:17,803] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:02:17,891] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:02:17,891] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:02:17,892] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:02:17,891] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:02:17,891] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:02:17,892] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:05:46,480] INFO views Processing Facebook callback with code: AQDokYLarG... and redirect_uri: https://shop.bazro.ge/auth/callback
+[2025-03-15 20:05:46,480] INFO views Processing Facebook callback with code: AQDokYLarG... and redirect_uri: https://shop.bazro.ge/auth/callback
+[2025-03-15 20:05:46,482] INFO views Processing Facebook callback with code: AQDokYLarG... and redirect_uri: https://shop.bazro.ge/auth/callback
+[2025-03-15 20:05:47,549] INFO views Successfully obtained Facebook access token
+[2025-03-15 20:05:47,559] INFO views Successfully obtained Facebook access token
+[2025-03-15 20:05:47,575] INFO views Successfully obtained Facebook access token
+[2025-03-15 20:05:48,448] INFO views Retrieved Facebook user info: {'id': '10235822747893509', 'name': 'Boris Karaya', 'email': 'gaga9393@gmail.com', 'first_name': 'Boris', 'last_name': 'Karaya'}
+[2025-03-15 20:05:48,450] INFO views Found existing user: gaga9393@gmail.com
+[2025-03-15 20:05:48,525] INFO views Retrieved Facebook user info: {'id': '10235822747893509', 'name': 'Boris Karaya', 'email': 'gaga9393@gmail.com', 'first_name': 'Boris', 'last_name': 'Karaya'}
+[2025-03-15 20:05:48,528] INFO views Found existing user: gaga9393@gmail.com
+[2025-03-15 20:05:48,543] INFO views Retrieved Facebook user info: {'id': '10235822747893509', 'name': 'Boris Karaya', 'email': 'gaga9393@gmail.com', 'first_name': 'Boris', 'last_name': 'Karaya'}
+[2025-03-15 20:05:48,576] INFO views Found existing user: gaga9393@gmail.com
+[2025-03-15 20:05:48,622] INFO views Processing Facebook callback with code: AQDokYLarG... and redirect_uri: https://shop.bazro.ge/auth/callback
+[2025-03-15 20:05:48,623] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:05:48,623] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:05:48,626] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:05:48,628] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:05:48,626] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:05:48,628] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:05:48,827] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:05:48,827] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:05:48,848] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:05:48,849] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:05:48,848] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:05:48,849] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:05:48,936] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:05:48,936] WARNING log Unauthorized: /api/orders/
+[2025-03-15 20:05:48,954] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:05:48,954] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 20:05:48,961] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:05:48,961] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 20:05:49,128] ERROR views Facebook token exchange failed: {"error":{"message":"This authorization code has been used.","type":"OAuthException","code":100,"error_subcode":36009,"fbtrace_id":"AFB4ea8ToAA1TWgSGCldcKp"}}
+[2025-03-15 20:05:49,130] WARNING log Bad Request: /api/users/auth/facebook/callback/
+[2025-03-15 20:05:49,130] WARNING log Bad Request: /api/users/auth/facebook/callback/

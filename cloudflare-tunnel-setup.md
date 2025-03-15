@@ -85,6 +85,10 @@ Run the tunnel:
 cloudflared tunnel run django-multivendor
 ```
 
+```
+cloudflared tunnel --config cloudflared-config.yml run django-multivendor
+```
+
 ## 7. Update Project Settings
 
 Update your Django settings to accept requests from the new Cloudflare domains and to properly handle the proxied requests.
