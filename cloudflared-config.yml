@@ -12,6 +12,10 @@ ingress:
   - hostname: shop.bazro.ge
     service: http://localhost:5173
 
+  # Route frontend-admin traffic
+  - hostname: seller.bazro.ge
+    service: http://localhost:5174
+
   # Catch-all rule
   - service: http_status:404
 

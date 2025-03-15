@@ -80,7 +80,7 @@ const retryOriginalRequest = async (originalRequest) => {
     return api(originalRequest);
   } catch (error) {
     // If refresh fails, redirect to login and reject
-    window.location.href = '/login';
+    window.location.href = '/';
     return Promise.reject(error);
   }
 };
@@ -174,7 +174,7 @@ api.interceptors.response.use(
         processQueue(refreshError, null);
         
         // Redirect to login
-        window.location.href = '/login';
+        window.location.href = '/';
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

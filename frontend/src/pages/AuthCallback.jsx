@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,6 +7,7 @@ export default function AuthCallback() {
   const navigate = useNavigate();
   const location = useLocation();
   const { login } = useAuth();
+  const [error, setError] = useState(null);
   
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -14,6 +15,19 @@ export default function AuthCallback() {
         const searchParams = new URLSearchParams(location.search);
         const code = searchParams.get('code');
         const state = searchParams.get('state');
+        
+        // Check for redirect from Facebook with no code (error case)
+        if (location.hash === '#_=_' && !code) {
+          // Go to homepage with error state
+          navigate('/', { 
+            replace: true,
+            state: { 
+              authSuccess: false,
+              error: 'Authentication failed. Please try again.' 
+            }
+          });
+          return;
+        }
         
         // Detect Facebook login by checking state or URL parameters
         const isFacebookLogin = state?.includes('facebook') || 
@@ -31,7 +45,15 @@ export default function AuthCallback() {
         });
 
         if (!code) {
-          throw new Error('No authorization code received');
+          // Go to homepage with error state, no redirect loop
+          navigate('/', { 
+            replace: true,
+            state: { 
+              authSuccess: false,
+              error: 'No authorization code received' 
+            }
+          });
+          return;
         }
 
         const baseURL = import.meta.env.VITE_API_BASE_URL;
@@ -43,27 +65,41 @@ export default function AuthCallback() {
           state
         });
 
-        // Store auth data
+        // Store auth data correctly in localStorage to match what's expected in the app
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('refreshToken', response.data.refresh);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
+        
+        if (response.data.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
 
         // Update auth context
-        await login(response.data);
+        await login({
+          token: response.data.token,
+          access: response.data.token, // Include both formats to ensure compatibility
+          refresh: response.data.refresh,
+          user: response.data.user
+        });
         
         // Navigate home
-        navigate('/', { replace: true });
+        navigate('/', { 
+          replace: true,
+          state: { 
+            authSuccess: true,
+            message: 'Successfully logged in!' 
+          }
+        });
 
       } catch (error) {
         console.error('Auth callback error:', error);
-        console.error('Error details:', {
-          message: error.message,
-          response: error.response?.data,
-          status: error.response?.status
-        });
-        navigate('/login', { 
+        
+        // Always go to homepage, not login page
+        navigate('/', { 
           replace: true,
-          state: { error: 'Authentication failed. Please try again.' } 
+          state: { 
+            authSuccess: false,
+            error: 'Authentication failed. Please try again.' 
+          }
         });
       }
     };

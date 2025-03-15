@@ -124,6 +124,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (data) => {
     try {
+      console.log('Login data received:', data);
+      
       // Handle both token formats (string or object)
       const tokens = {
         access: data.access || data.token,
@@ -136,24 +138,29 @@ export const AuthProvider = ({ children }) => {
         throw new Error('No access token provided');
       }
       
+      console.log('Storing tokens:', tokens);
+      
+      // Store tokens first to ensure they're available
       localStorage.setItem('authTokens', JSON.stringify(tokens));
       setAuthTokens(tokens);
   
-      // Set the user data
+      // Set the user data with a more robust approach to handle different formats
       const userData = {
-        username: data.username || data.user?.username,
-        email: data.email || data.user?.email,
-        firstName: data.firstName || data.user?.firstName || data.userprofile?.first_name,
-        lastName: data.lastName || data.user?.lastName || data.userprofile?.last_name,
-        id: data.id || data.user?.id,
-        profile: data.userprofile || data.user?.profile,
+        username: data.username || data.user?.username || '',
+        email: data.email || data.user?.email || '',
+        firstName: data.firstName || data.user?.firstName || data.userprofile?.first_name || data.user?.profile?.first_name || '',
+        lastName: data.lastName || data.user?.lastName || data.userprofile?.last_name || data.user?.profile?.last_name || '',
+        id: data.id || data.user?.id || '',
+        profile: data.userprofile || data.user?.profile || {},
       };
+      
+      console.log('Setting user data:', userData);
       setUser(userData);
   
       return userData;
     } catch (error) {
       console.error('Error during login:', error);
-      logout(); // Clear any partial state
+      // Don't automatically logout on error, just report the error
       throw error;
     }
   };
