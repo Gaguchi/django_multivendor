@@ -78,20 +78,32 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    const redirectUri = import.meta.env.VITE_REDIRECT_URI;
+    // IMPORTANT: Always use HTTPS for the redirect URI
+    const redirectUri = `https://${window.location.host}/auth/callback`;
     const state = 'google-oauth2';
-    window.location.href = `${baseURL}/auth/login/google-oauth2/?redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+    
+    // Log the redirect URI we're using
+    console.log('Google login using redirect URI:', redirectUri);
+    
+    // Ensure consistent protocol (https) is used in the OAuth flow
+    const googleAuthUrl = `${baseURL}/auth/login/google-oauth2/?` +
+      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+      `state=${state}`;
+    
+    console.log('Redirecting to:', googleAuthUrl);
+    window.location.href = googleAuthUrl;
   };
 
   const handleFacebookLogin = () => {
-    const redirectUri = encodeURIComponent(`${window.location.origin}/auth/callback`);
-    const state = encodeURIComponent('facebook-oauth2');
-    const scope = encodeURIComponent('email,public_profile');
+    // IMPORTANT: Always use HTTPS for the redirect URI
+    const redirectUri = `https://${window.location.host}/auth/callback`;
+    const state = 'facebook-oauth2';
+    const scope = 'email,public_profile';
     
     window.location.href = `${baseURL}/auth/login/facebook/?` +
-      `redirect_uri=${redirectUri}&` +
+      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
       `state=${state}&` +
-      `scope=${scope}&` +
+      `scope=${encodeURIComponent(scope)}&` +
       `auth_type=reauthenticate`;
   };
 

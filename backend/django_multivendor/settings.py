@@ -234,7 +234,7 @@ REST_FRAMEWORK = {
 
 # Add Simple JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Increased from 2 minutes to 30 minutes
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': is_package_installed('rest_framework_simplejwt.token_blacklist'),
@@ -316,8 +316,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
-# Update this line to match Google Cloud Console configuration exactly
-SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'http://shop.bazro.ge/auth/callback'
+# IMPORTANT: Update this line to use HTTPS since Google enforces HTTPS for OAuth redirect URIs
+SOCIAL_AUTH_GOOGLE_OAUTH2_REDIRECT_URI = 'https://shop.bazro.ge/auth/callback'
 
 # JWT token creation after successful social auth
 SOCIAL_AUTH_PIPELINE = (
@@ -335,7 +335,7 @@ SOCIAL_AUTH_PIPELINE = (
 
 # Add this setting to force the redirect URI
 SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
-    'redirect_uri': 'http://shop.bazro.ge/auth/callback'
+    'redirect_uri': 'https://shop.bazro.ge/auth/callback'
 }
 
 # Override the default callback URL

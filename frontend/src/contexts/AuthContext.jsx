@@ -13,93 +13,7 @@ export const AuthProvider = ({ children }) => {
     return tokens ? JSON.parse(tokens) : null;
   });
 
-  // Set up axios interceptor for authentication
-  useEffect(() => {
-    // Request interceptor - set token on every request
-    const requestInterceptor = api.interceptors.request.use(
-      (config) => {
-        if (authTokens?.access) {
-          config.headers.Authorization = `Bearer ${authTokens.access}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-
-    // Response interceptor - handle token expired errors
-    const responseInterceptor = api.interceptors.response.use(
-      (response) => response, 
-      async (error) => {
-        const originalRequest = error.config;
-        
-        // If error is 401 Unauthorized and we have a refresh token and haven't tried refreshing yet
-        if (error.response?.status === 401 && authTokens?.refresh && !originalRequest._retry) {
-          // Prevent multiple simultaneous refresh attempts
-          if (tokenRefreshing) {
-            // Wait for the refresh to complete
-            await new Promise(resolve => {
-              const checkComplete = () => {
-                if (!tokenRefreshing) {
-                  resolve();
-                } else {
-                  setTimeout(checkComplete, 100);
-                }
-              };
-              checkComplete();
-            });
-            // Add the new token to the request
-            if (authTokens?.access) {
-              originalRequest.headers.Authorization = `Bearer ${authTokens.access}`;
-              return api(originalRequest);
-            }
-          }
-
-          originalRequest._retry = true;
-          setTokenRefreshing(true);
-          
-          try {
-            // Try to refresh token
-            const response = await api.post('/api/token/refresh/', {
-              refresh: authTokens.refresh,
-            }, {
-              headers: { 'Authorization': '' } // Don't send current token for refresh
-            });
-
-            const newTokens = {
-              access: response.data.access,
-              refresh: authTokens.refresh, // Keep existing refresh token
-            };
-            
-            // Update tokens in localStorage and state
-            localStorage.setItem('authTokens', JSON.stringify(newTokens));
-            setAuthTokens(newTokens);
-            
-            // Retry the original request with new token
-            originalRequest.headers.Authorization = `Bearer ${newTokens.access}`;
-            setTokenRefreshing(false);
-            return api(originalRequest);
-          } catch (refreshError) {
-            console.error('Error refreshing token:', refreshError);
-            // If refresh fails, logout
-            setTokenRefreshing(false);
-            logout();
-            return Promise.reject(refreshError);
-          }
-        }
-        
-        // If it's another error or refresh token doesn't exist, reject
-        return Promise.reject(error);
-      }
-    );
-
-    // Clean up interceptors when component unmounts
-    return () => {
-      api.interceptors.request.eject(requestInterceptor);
-      api.interceptors.response.eject(responseInterceptor);
-    };
-  }, [authTokens, tokenRefreshing]);
-
-  // Check if user is authenticated on initial load
+  // This effect only runs once during initial load
   useEffect(() => {
     const loadUser = async () => {
       if (authTokens) {
@@ -113,14 +27,13 @@ export const AuthProvider = ({ children }) => {
           setUser(userData);
         } catch (error) {
           console.error('Error loading user:', error);
-          // Don't logout here - the interceptor will handle token refresh if needed
         }
       }
       setLoading(false);
     };
 
     loadUser();
-  }, [authTokens]);
+  }, [authTokens]); // Only depend on authTokens, not user
 
   const login = async (data) => {
     try {
@@ -160,7 +73,6 @@ export const AuthProvider = ({ children }) => {
       return userData;
     } catch (error) {
       console.error('Error during login:', error);
-      // Don't automatically logout on error, just report the error
       throw error;
     }
   };
@@ -174,6 +86,8 @@ export const AuthProvider = ({ children }) => {
 
   const refreshToken = async () => {
     if (!authTokens?.refresh) return false;
+    if (tokenRefreshing) return false;
+    
     setTokenRefreshing(true);
 
     try {
@@ -190,32 +104,42 @@ export const AuthProvider = ({ children }) => {
       
       localStorage.setItem('authTokens', JSON.stringify(newTokens));
       setAuthTokens(newTokens);
-      setTokenRefreshing(false);
       return true;
     } catch (error) {
       console.error('Error refreshing token manually:', error);
       logout();
-      setTokenRefreshing(false);
       return false;
+    } finally {
+      setTokenRefreshing(false);
     }
   };
 
-  // Check if token is about to expire and refresh it preemptively
+  // Check token expiration only once per 10 minutes, not continuously
   useEffect(() => {
     if (!authTokens?.access) return;
 
-    const checkTokenExpiration = async () => {
+    // Helper function to decode token and get expiration time
+    const getTokenExpiration = (token) => {
       try {
-        // Get the expiration from the JWT (without using a library)
-        const tokenParts = authTokens.access.split('.');
-        if (tokenParts.length !== 3) throw new Error('Invalid token format');
+        const tokenParts = token.split('.');
+        if (tokenParts.length !== 3) return 0;
         
         const payload = JSON.parse(atob(tokenParts[1]));
-        const exp = payload.exp * 1000; // Convert to milliseconds
+        return payload.exp * 1000; // Convert to milliseconds
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return 0;
+      }
+    };
+    
+    const checkTokenExpiration = async () => {
+      try {
+        const exp = getTokenExpiration(authTokens.access);
         const now = Date.now();
         
         // If token expires in less than 5 minutes, refresh it
         if (exp - now < 5 * 60 * 1000) {
+          console.log('Token expiring soon, refreshing...');
           await refreshToken();
         }
       } catch (error) {
@@ -223,11 +147,11 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    // Check token expiration every minute
-    const interval = setInterval(checkTokenExpiration, 60000);
-    
-    // Run once immediately
+    // Run once on mount and then every 10 minutes
     checkTokenExpiration();
+    
+    // Much longer interval to prevent constant checking
+    const interval = setInterval(checkTokenExpiration, 10 * 60 * 1000); // 10 minutes
     
     return () => clearInterval(interval);
   }, [authTokens]);

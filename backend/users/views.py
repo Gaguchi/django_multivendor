@@ -11,16 +11,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.backends import TokenBackend
 from datetime import timedelta
 from rest_framework_simplejwt.settings import api_settings
-from django.conf import settings  # Add this import
+from django.conf import settings
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.exceptions import TokenError
 import jwt
-from social_core.backends.google import GoogleOAuth2
-from social_core.exceptions import AuthForbidden
 import requests
 import logging
 from rest_framework.decorators import action
-from vendors.models import VendorProduct  # Changed from products.models import Product
+from vendors.models import VendorProduct
 from django.shortcuts import get_object_or_404
 
 logger = logging.getLogger(__name__)
@@ -324,48 +322,76 @@ class GoogleCallbackView(APIView):
             code = request.data.get('code')
             redirect_uri = request.data.get('redirect_uri')
             state = request.data.get('state', '')
-
+            
+            # Enhanced logging for debugging
+            logger.info(f"OAuth Callback Request: provider={state}, code_length={len(code) if code else 0}")
+            logger.info(f"Redirect URI: {redirect_uri}")
+            
             # Determine provider from state
             provider = 'facebook' if 'facebook' in state else 'google'
             
-            # Prepare provider-specific parameters
+            # Always use HTTPS for oauth redirect URIs
+            if redirect_uri and redirect_uri.startswith('http:'):
+                redirect_uri = redirect_uri.replace('http:', 'https:')
+            
+            logger.info(f"Exchanging code for token using {provider} provider")
+            
+            # Provider-specific configuration 
             if provider == 'facebook':
                 token_url = 'https://graph.facebook.com/v16.0/oauth/access_token'
                 client_id = settings.SOCIAL_AUTH_FACEBOOK_KEY
                 client_secret = settings.SOCIAL_AUTH_FACEBOOK_SECRET
                 userinfo_url = 'https://graph.facebook.com/v16.0/me'
-                userinfo_params = {
-                    'fields': 'id,name,email,first_name,last_name',
-                    'access_token': None  # Will be set after token exchange
-                }
             else:
-                # Existing Google configuration
                 token_url = 'https://oauth2.googleapis.com/token'
                 client_id = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
                 client_secret = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET
                 userinfo_url = 'https://www.googleapis.com/oauth2/v3/userinfo'
-
-            # Exchange code for token
-            token_response = requests.post(token_url, params={
+            
+            # IMPORTANT: Add unique nonce to prevent "token already used" errors
+            import uuid
+            token_data = {
                 'client_id': client_id,
                 'client_secret': client_secret,
                 'code': code,
                 'redirect_uri': redirect_uri,
-                'grant_type': 'authorization_code'
-            })
-
-            if token_response.status_code != 200:
-                return Response({
-                    'error': f'Token exchange failed: {token_response.text}'
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            access_token = token_response.json().get('access_token')
+                'grant_type': 'authorization_code',
+                'nonce': str(uuid.uuid4())  # Adding nonce for uniqueness
+            }
             
+            # Exchange code for token - with added error handling
+            try:
+                logger.info(f"Making token exchange request to: {token_url}")
+                token_response = requests.post(
+                    token_url, 
+                    data=token_data,
+                    timeout=10,  # Add timeout
+                    headers={'Content-Type': 'application/x-www-form-urlencoded'}
+                )
+                
+                if token_response.status_code != 200:
+                    logger.error(f"Token exchange failed: {token_response.status_code} {token_response.text}")
+                    return Response({
+                        'error': f'Token exchange failed: {token_response.text}',
+                    }, status=status.HTTP_400_BAD_REQUEST)
+                
+                token_data = token_response.json()
+                access_token = token_data.get('access_token')
+                id_token = token_data.get('id_token')
+                
+                logger.info(f"Successfully obtained tokens from {provider}")
+            except requests.RequestException as e:
+                logger.error(f"Request error during token exchange: {str(e)}")
+                return Response({'error': f'Error during token exchange: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            # Get user info
             if provider == 'facebook':
-                userinfo_params['access_token'] = access_token
+                userinfo_params = {
+                    'fields': 'id,name,email,first_name,last_name',
+                    'access_token': access_token
+                }
                 user_response = requests.get(userinfo_url, params=userinfo_params)
             else:
-                # Existing Google user info fetch
                 user_response = requests.get(
                     userinfo_url,
                     headers={'Authorization': f'Bearer {access_token}'}
@@ -421,12 +447,12 @@ class GoogleCallbackView(APIView):
                     'profile': {
                         'id': profile.id,
                         'user_type': profile.user_type,
-                        # Add any other profile fields you need
                     }
                 }
             })
 
         except Exception as e:
+            logger.exception(f"OAuth callback error: {str(e)}")
             return Response(
                 {'error': str(e)}, 
                 status=status.HTTP_400_BAD_REQUEST
