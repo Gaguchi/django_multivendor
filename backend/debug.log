@@ -10629,3 +10629,158 @@ django.contrib.auth.models.User.userprofile.RelatedObjectDoesNotExist: User has 
 [2025-03-15 23:23:22,546] WARNING log Unauthorized: /api/cart/carts/current/
 [2025-03-15 23:23:22,555] WARNING log Unauthorized: /api/orders/
 [2025-03-15 23:23:22,555] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:24:29,870] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:24:29,871] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:24:29,870] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:24:29,871] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:24:29,899] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:24:29,899] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:24:30,037] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:24:30,037] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:24:30,045] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:24:30,045] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:24:30,146] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:24:30,146] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:24:30,166] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:24:30,166] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:24:30,174] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:24:30,174] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:24:30,271] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:24:30,271] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:24:30,324] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:24:30,324] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:26:54,812] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:26:54,813] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:26:54,812] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:26:54,813] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:26:54,844] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:26:54,844] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:26:54,972] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:26:54,972] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:26:54,976] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:26:54,976] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:26:54,994] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:26:54,994] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:26:55,134] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:26:55,134] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:26:55,162] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:26:55,162] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:26:55,195] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:26:55,195] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:26:55,289] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:26:55,289] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:28:04,447] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:04,448] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:04,447] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:04,448] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:04,452] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:04,452] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:04,565] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:04,566] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:04,565] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:04,566] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:04,571] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:04,571] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:04,682] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:04,682] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:04,692] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:04,692] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:04,694] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:04,694] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:04,761] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:28:04,761] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:28:36,295] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:36,296] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:36,295] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:36,301] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:36,296] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:36,301] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:36,511] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:36,511] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:36,512] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:36,511] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:28:36,511] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:28:36,512] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:28:36,844] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:28:36,844] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:29:21,999] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:29:21,999] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:29:22,002] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:29:22,006] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:29:22,002] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:29:22,006] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:29:22,095] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:29:22,095] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:29:22,095] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:29:22,095] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:29:22,101] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:29:22,101] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:29:22,200] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:29:22,200] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-15 23:29:22,202] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:29:22,203] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:29:22,202] WARNING log Unauthorized: /api/orders/
+[2025-03-15 23:29:22,203] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-15 23:29:22,450] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:29:22,450] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-15 23:39:47,161] INFO views Token refreshed successfully for user
+[2025-03-15 23:39:47,169] INFO views Token refreshed successfully for user
+[2025-03-16 11:01:09,722] INFO autoreload Watching for file changes with StatReloader
+[2025-03-16 11:01:10,029] INFO urls === Registering Vendor URLs ===
+[2025-03-16 11:01:10,029] INFO urls === Registering Vendor URLs ===
+[2025-03-16 11:01:10,030] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-16 11:01:10,030] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-16 11:02:35,338] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:35,338] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:35,431] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:35,431] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:35,523] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:35,523] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:35,563] INFO views Token refreshed successfully for user
+[2025-03-16 11:02:35,568] INFO views Token refreshed successfully for user
+[2025-03-16 11:02:35,583] INFO views Token refreshed successfully for user
+[2025-03-16 11:02:35,599] INFO views Token refreshed successfully for user
+[2025-03-16 11:02:36,435] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:36,436] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:36,435] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:36,436] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:36,441] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-16 11:02:36,441] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-16 11:02:36,444] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-16 11:02:36,445] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-16 11:02:36,445] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-16 11:02:36,444] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-16 11:02:36,445] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-16 11:02:36,445] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-16 11:02:36,526] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:36,526] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:36,629] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:02:36,629] WARNING log Unauthorized: /api/users/profile/
+[2025-03-16 11:07:16,117] WARNING log Unauthorized: /api/orders/
+[2025-03-16 11:07:16,117] WARNING log Unauthorized: /api/orders/
+[2025-03-16 11:07:16,119] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-16 11:07:16,119] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-16 11:07:16,121] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-16 11:07:16,121] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-16 11:07:16,226] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-16 11:07:16,227] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-16 11:07:16,226] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-16 11:07:16,228] WARNING log Unauthorized: /api/orders/
+[2025-03-16 11:07:16,227] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-16 11:07:16,228] WARNING log Unauthorized: /api/orders/
+[2025-03-16 11:07:16,316] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-16 11:07:16,319] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-16 11:07:16,320] WARNING log Unauthorized: /api/orders/
+[2025-03-16 11:07:16,316] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-16 11:07:16,319] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-16 11:07:16,320] WARNING log Unauthorized: /api/orders/
+[2025-03-16 11:07:16,566] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-16 11:07:16,566] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-16 11:17:47,674] INFO views Token refreshed successfully for user
+[2025-03-16 11:17:47,682] INFO views Token refreshed successfully for user
+[2025-03-16 11:27:59,622] INFO views Token refreshed successfully for user
+[2025-03-16 11:27:59,733] INFO views Token refreshed successfully for user
+[2025-03-16 11:51:01,361] WARNING log Not Found: /
+[2025-03-16 11:51:01,361] WARNING log Not Found: /
+[2025-03-16 11:51:02,697] WARNING log Not Found: /favicon.ico
+[2025-03-16 11:51:02,697] WARNING log Not Found: /favicon.ico

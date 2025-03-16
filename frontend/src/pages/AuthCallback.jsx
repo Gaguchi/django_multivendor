@@ -81,14 +81,14 @@ export default function AuthCallback() {
           user: response.data.user
         });
         
-        // Navigate home
-        navigate('/', { 
-          replace: true,
-          state: { 
-            authSuccess: true,
-            message: 'Successfully logged in!' 
-          }
-        });
+        // // Navigate home
+        // navigate('/', { 
+        //   replace: true,
+        //   state: { 
+        //     authSuccess: true,
+        //     message: 'Successfully logged in!' 
+        //   }
+        // });
 
       } catch (error) {
         console.error('Auth callback error:', error);
