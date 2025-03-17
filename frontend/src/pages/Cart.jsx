@@ -82,6 +82,13 @@ export default function Cart() {
     }
   }
 
+  
+  // Function to truncate product name
+  const truncateName = (name, maxLength = 15) => {
+      if (!name) return '';
+      return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
+  }
+
   if (loading) {
     return <div className="container py-5 text-center">Loading cart...</div>
   }
@@ -147,7 +154,7 @@ export default function Cart() {
                       </td>
                       <td className="product-col">
                         <h5 className="product-title">
-                          <Link to={`/product/${item.product.id}`}>{item.product.name}</Link>
+                          <Link to={`/product/${item.product.id}`}>{truncateName(item.product.name)}</Link>
                         </h5>
                       </td>
                       <td>${parseFloat(item.unit_price).toFixed(2)}</td>

@@ -17,6 +17,12 @@ export default function Total() {
         );
     }
     
+    // Function to truncate product name
+    const truncateName = (name, maxLength = 15) => {
+        if (!name) return '';
+        return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
+    }
+
     // Calculate totals from cart items directly
     const itemsTotal = cart.items.reduce((sum, item) => sum + (item.quantity * parseFloat(item.unit_price)), 0);
     const discount = parseFloat(cart.discount || 0);
@@ -41,7 +47,7 @@ export default function Total() {
                             <tr key={item.id}>
                                 <td className="product-col">
                                     <h3 className="product-title">
-                                        {item.product.name} ×
+                                        {truncateName(item.product.name)} ×
                                         <span className="product-qty">{item.quantity}</span>
                                     </h3>
                                 </td>

@@ -12767,3 +12767,38 @@ django.db.utils.OperationalError: database is locked
 [2025-03-16 17:43:20,986] INFO urls === Registering Vendor URLs ===
 [2025-03-16 17:43:20,987] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
 [2025-03-16 17:43:20,987] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-16 17:43:33,813] INFO views OAuth Callback Request: provider=yIyBSg1tKodW4CPsKN81BogqL1qYe4Jv, code_length=73
+[2025-03-16 17:43:33,814] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-03-16 17:43:33,814] INFO views OAuth Callback Request: provider=yIyBSg1tKodW4CPsKN81BogqL1qYe4Jv, code_length=73
+[2025-03-16 17:43:33,814] INFO views Exchanging code for token using google provider
+[2025-03-16 17:43:33,814] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-03-16 17:43:33,815] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-03-16 17:43:33,815] INFO views Exchanging code for token using google provider
+[2025-03-16 17:43:33,815] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-03-16 17:43:34,375] INFO views Successfully obtained tokens from google
+[2025-03-16 17:43:34,435] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-03-16 17:43:34,437] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-16 17:43:34,437] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-17 17:49:55,680] INFO autoreload Watching for file changes with StatReloader
+[2025-03-17 17:49:56,054] INFO urls === Registering Vendor URLs ===
+[2025-03-17 17:49:56,054] INFO urls === Registering Vendor URLs ===
+[2025-03-17 17:49:56,056] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-17 17:49:56,056] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-17 18:32:42,180] INFO views OAuth Callback Request: provider=yIyBSg1tKodW4CPsKN81BogqL1qYe4Jv, code_length=73
+[2025-03-17 18:32:42,180] INFO views OAuth Callback Request: provider=yIyBSg1tKodW4CPsKN81BogqL1qYe4Jv, code_length=73
+[2025-03-17 18:32:42,180] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-03-17 18:32:42,180] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-03-17 18:32:42,181] INFO views Exchanging code for token using google provider
+[2025-03-17 18:32:42,181] INFO views Exchanging code for token using google provider
+[2025-03-17 18:32:42,181] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-03-17 18:32:42,181] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-03-17 18:32:42,737] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-03-17 18:32:42,737] INFO views Successfully obtained tokens from google
+[2025-03-17 18:32:42,739] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-17 18:32:42,739] WARNING log Bad Request: /api/users/auth/google/callback/
