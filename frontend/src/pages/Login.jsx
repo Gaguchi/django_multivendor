@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import Main from '../components/Main';
 
 export default function LoginPage() {
   const { user, login, logout } = useAuth(); // Added login from context
@@ -110,16 +111,18 @@ export default function LoginPage() {
   // Handle logged in state
   if (user) {
     return (
-      <div className="logged-in-view">
-        <h1>Welcome, {user.firstName || user.username}!</h1>
-        <p>You are already logged in.</p>
-        <button onClick={() => {
-          logout();
-          window.location.reload(); // Force page refresh after logout
-        }} className="btn btn-danger">
-          Logout
-        </button>
-      </div>
+      <Main />
+      
+      // <div className="logged-in-view">
+      //   <h1>Welcome, {user.firstName || user.username}!</h1>
+      //   <p>You are already logged in.</p>
+      //   <button onClick={() => {
+      //     logout();
+      //     window.location.reload(); // Force page refresh after logout
+      //   }} className="btn btn-danger">
+      //     Logout
+      //   </button>
+      // </div>
     );
   }
 
