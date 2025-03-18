@@ -1,10 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../../contexts/CartContext";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 export default function Total() {
     const { cart, loading } = useCart();
     const navigate = useNavigate();
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+    
+    // Update screen width on resize
+    useEffect(() => {
+        const handleResize = () => {
+            setScreenWidth(window.innerWidth);
+        };
+        
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
     
     if (loading || !cart) {
         return (
@@ -17,11 +29,27 @@ export default function Total() {
         );
     }
     
-    // Function to truncate product name
-    const truncateName = (name, maxLength = 15) => {
+    // Function to truncate product name based on screen size
+    const truncateName = (name) => {
         if (!name) return '';
+        
+        // Set max length based on screen width
+        let maxLength = 10; // Default max length
+        
+        if (screenWidth < 576) {
+            maxLength = 16; // Mobile
+        } else if (screenWidth < 768) {
+            maxLength = 20; // Small tablets
+        } else if (screenWidth < 992) {
+            maxLength = 20; // Tablets
+        } else if (screenWidth < 1200) {
+            maxLength = 12; // Small desktop
+        } else {
+            maxLength = 20; // Desktop
+        }
+        
         return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
-    }
+    };
 
     // Calculate totals from cart items directly
     const itemsTotal = cart.items.reduce((sum, item) => sum + (item.quantity * parseFloat(item.unit_price)), 0);
@@ -46,7 +74,7 @@ export default function Total() {
                         {cart.items.map(item => (
                             <tr key={item.id}>
                                 <td className="product-col">
-                                    <h3 className="product-title">
+                                    <h3 className="product-title" title={item.product.name}>
                                         {truncateName(item.product.name)} ×
                                         <span className="product-qty">{item.quantity}</span>
                                     </h3>

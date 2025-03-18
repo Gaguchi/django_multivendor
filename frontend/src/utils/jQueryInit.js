@@ -1,180 +1,87 @@
-/**
- * This utility provides functions to initialize jQuery plugins globally
- * without modifying individual components
- */
+import { 
+  waitForJQuery, 
+  safeJQuery, 
+  reinitializeJQuery 
+} from './jQueryHandler';
+
+// Track initialization status
+let jQueryInitialized = false;
 
 /**
- * Initialize all jQuery plugins needed across the application
+ * Initialize jQuery plugins globally
  */
-export function initializeJQueryPlugins() {
-  if (typeof $ === 'undefined') {
-    console.error('jQuery is not available');
+export const initializeJQueryPlugins = (attempt = 1) => {
+  if (attempt > 5) {
+    console.warn('Max initialization attempts reached');
     return;
   }
 
-  $(document).ready(function() {
-    // Initialize owl carousels
-    initOwlCarousels();
-    
-    // Initialize tooltips
-    initTooltips();
-    
-    // Initialize popovers
-    initPopovers();
-    
-    // Initialize touch spin
-    initTouchSpin();
-    
-    // Initialize appearance animations
-    initAppearAnimations();
-    
-    // Initialize superfish menus
-    initSuperfish();
+  // Skip if already initialized successfully
+  if (jQueryInitialized) {
+    console.log('jQuery already initialized, skipping');
+    return;
+  }
+
+  waitForJQuery(($) => {
+    safeJQuery(($) => {
+      console.log(`Initializing jQuery plugins (attempt ${attempt})`);
+      
+      // Try initializing all components
+      reinitializeJQuery(null, { delay: 100 });
+      
+      // Mark as initialized so we don't unnecessarily reinitialize
+      jQueryInitialized = true;
+    }, 100);
   });
-}
+};
 
 /**
- * Initialize owl carousels across the site
+ * Check jQuery status and reinitialize if needed
  */
-function initOwlCarousels() {
-  if (!$.fn.owlCarousel) return;
-  
-  $('.owl-carousel:not(.owl-loaded)').each(function() {
-    const $this = $(this);
-    let options = {
-      loop: true,
-      margin: 0,
-      nav: true,
-      navText: ['<i class="icon-angle-left">', '<i class="icon-angle-right">'],
-      dots: true,
-      autoplay: false,
-      autoplayTimeout: 15000,
-      items: 1
-    };
-    
-    // Get custom options from data attribute
-    const dataOptions = $this.data('owl-options');
-    if (dataOptions) {
-      try {
-        const parsedOptions = JSON.parse(dataOptions.replace(/'/g, '"').replace(';', ''));
-        options = { ...options, ...parsedOptions };
-      } catch (e) {
-        console.error("Error parsing owl carousel options", e);
-      }
-    }
-    
-    // Apply special options for specific carousel types
-    if ($this.hasClass('home-slider')) {
-      options = {
-        ...options,
-        autoplay: true,
-        autoplayTimeout: 12000,
-        animateOut: 'fadeOut',
-        lazyLoad: true,
-        navText: ['<i class="icon-left-open-big">', '<i class="icon-right-open-big">']
-      };
-    }
-    
+export const checkAndReinitializeJQuery = () => {
+  // Skip if already successfully initialized
+  if (jQueryInitialized) {
+    console.log('jQuery already initialized, skipping check');
+    return;
+  }
+
+  safeJQuery(($) => {
+    // Test if jQuery functionality is working properly
     try {
-      $this.owlCarousel(options);
+      // Test DOM manipulation
+      const $testDiv = $('<div id="jquery-test"></div>');
+      $('body').append($testDiv);
+      $testDiv.remove();
       
-      // Special handlers for specific carousels
-      if ($this.hasClass('home-slider')) {
-        $this.on('loaded.owl.lazy', function(e) {
-          $(e.element).closest('.home-slide').addClass('loaded');
-          $(e.element).closest('.home-slider').addClass('loaded');
-        });
+      // If we got here, basic jQuery is working
+      console.log('jQuery functional check passed');
+      
+      // Only reinitialize if not already marked as initialized
+      if (!jQueryInitialized) {
+        reinitializeJQuery();
+        jQueryInitialized = true;
       }
     } catch (error) {
-      console.error("Error initializing owl carousel", error);
-    }
-  });
-}
-
-/**
- * Initialize tooltips
- */
-function initTooltips() {
-  if ($.fn.tooltip) {
-    $('[data-toggle="tooltip"]').tooltip({
-      trigger: 'hover focus'
-    });
-  }
-}
-
-/**
- * Initialize popovers
- */
-function initPopovers() {
-  if ($.fn.popover) {
-    $('[data-toggle="popover"]').popover({
-      trigger: 'focus'
-    });
-  }
-}
-
-/**
- * Initialize TouchSpin inputs
- */
-function initTouchSpin() {
-  if ($.fn.TouchSpin) {
-    $('.horizontal-quantity').TouchSpin({
-      verticalbuttons: false,
-      buttonup_txt: '',
-      buttondown_txt: '',
-      buttondown_class: 'btn btn-outline btn-down-icon',
-      buttonup_class: 'btn btn-outline btn-up-icon',
-      initval: 1,
-      min: 1
-    });
-    
-    $('.vertical-quantity').TouchSpin({
-      verticalbuttons: true,
-      verticalup: '',
-      verticaldown: '',
-      verticalupclass: 'icon-up-dir',
-      verticaldownclass: 'icon-down-dir',
-      buttondown_class: 'btn btn-outline',
-      buttonup_class: 'btn btn-outline',
-      initval: 1,
-      min: 1
-    });
-  }
-}
-
-/**
- * Initialize animations for appearing elements
- */
-function initAppearAnimations() {
-  $('.appear-animate').each(function() {
-    const $this = $(this);
-    if (!$this.hasClass('animated')) {
-      const animationName = $this.data('animation-name') || 'fadeIn';
-      const animationDuration = $this.data('animation-duration') || 1000;
-      const animationDelay = $this.data('animation-delay') || 0;
+      console.error('jQuery functionality test failed:', error);
+      console.log('Attempting to reinitialize jQuery');
       
-      $this.addClass('animated');
+      // Try harder to reinitialize
       setTimeout(() => {
-        $this.addClass(animationName);
-        $this.css('animationDuration', animationDuration + 'ms');
-        $this.addClass('appear-animation-visible');
-      }, parseInt(animationDelay));
+        initializeJQueryPlugins(2);
+      }, 500);
     }
   });
-}
+};
 
 /**
- * Initialize superfish menus
+ * Reset initialization state (useful for manual reinitializations)
  */
-function initSuperfish() {
-  if ($.fn.superfish) {
-    $('.menu:not(.menu-vertical):not(.no-superfish)').superfish({
-      popUpSelector: 'ul, .megamenu',
-      hoverClass: 'show',
-      delay: 0,
-      speed: 80,
-      speedOut: 80,
-      autoArrows: true
-    });
-  }
-}
+export const resetJQueryInitStatus = () => {
+  jQueryInitialized = false;
+};
+
+export default {
+  initializeJQueryPlugins,
+  checkAndReinitializeJQuery,
+  resetJQueryInitStatus
+};

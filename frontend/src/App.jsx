@@ -18,18 +18,18 @@ import Checkout from './pages/Checkout'
 import OrderConfirmation from './pages/OrderConfirmation'
 import Orders from './pages/Orders'
 import OrderDetail from './pages/OrderDetail'
-import OrderTracking from './pages/OrderTracking'  // Add import
-import { initializeJQueryPlugins } from './utils/jQueryInit'
+import OrderTracking from './pages/OrderTracking'
+import { initializePage } from './utils/jQuerySimple'
 
 function AppContent() {
   const location = useLocation();
   
-  // Initialize jQuery plugins on route changes
+  // Initialize jQuery plugins once on route changes with minimal approach
   useEffect(() => {
-    // Initialize jQuery plugins
-    setTimeout(() => {
-      initializeJQueryPlugins();
-    }, 0);
+    // Simple initialization with a reasonable delay
+    initializePage();
+    
+    // No need for multiple checks or reinitializations
   }, [location.pathname]);
   
   return (
@@ -48,8 +48,8 @@ function AppContent() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/track" element={<OrderTracking />} />  {/* Add route */}
-        <Route path="/track/:orderNumber" element={<OrderTracking />} />  {/* Add route with parameter */}
+        <Route path="/track" element={<OrderTracking />} />
+        <Route path="/track/:orderNumber" element={<OrderTracking />} />
       </Route>
     </Routes>
   );
