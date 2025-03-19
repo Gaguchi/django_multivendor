@@ -84,14 +84,19 @@
   right: 10px;
   display: flex;
   flex-direction: column;
-  opacity: 0;
-  transform: translateX(10px);
+  /* Remove the opacity: 0 to make buttons always visible */
+  opacity: 1;
+  /* Remove the transform to keep buttons in position */
+  transform: translateX(0);
   transition: all 0.3s ease;
+  z-index: 3; /* Ensure buttons are above the image */
 }
 
+/* Remove the hover effect that shows the buttons since they're always visible now */
 .uniform-product-card:hover .uniform-btn-group {
-  opacity: 1;
-  transform: translateX(0);
+  /* This is no longer needed as buttons are always visible */
+  /* opacity: 1;
+  transform: translateX(0); */
 }
 
 .uniform-btn {
@@ -106,13 +111,15 @@
   justify-content: center;
   cursor: pointer;
   margin-bottom: 6px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Slightly enhanced shadow for better visibility */
   transition: all 0.2s ease;
 }
 
+/* Make hover effect more noticeable since buttons are always visible */
 .uniform-btn:hover {
   background-color: #4dae65;
   color: white;
+  transform: scale(1.1); /* Add slight scale effect on hover */
 }
 
 .uniform-btn.active {
@@ -218,7 +225,7 @@
   width: 100%;
   padding: 10px 15px;
   background-color: #f4f4f4;
-  color: #6f6e6b;
+  color: #222529;
   border: none;
   border-radius: 4px;
   font-weight: 600;

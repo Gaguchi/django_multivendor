@@ -109,14 +109,6 @@ export default function ProductCard({
           {/* Quick action buttons */}
           <div className="uniform-btn-group">
             <button 
-              className="uniform-btn uniform-cart-btn" 
-              onClick={handleAddToCart}
-              disabled={loading}
-              title="Add to Cart"
-            >
-              <i className="icon-shopping-cart"></i>
-            </button>
-            <button 
               className={`uniform-btn uniform-wishlist-btn ${inWishlist ? 'active' : ''}`}
               onClick={handleToggleWishlist}
               disabled={loading}
@@ -190,7 +182,7 @@ export default function ProductCard({
                 onClick={handleAddToCart}
                 disabled={loading}
               >
-                {loading ? 'Adding...' : 'დამატება'}
+                {loading ? 'Adding...' : <><i className="fa fa-shopping-cart"></i> დამატება</>}
               </button>
             )}
           </div>
