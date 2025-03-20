@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from categories.models import Attribute, AttributeOption
 
 # Define helper functions for media file paths
 def product_media_path(instance, filename):
@@ -86,3 +87,50 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return f"Image {self.position} for {self.product.name}"
+
+class ProductAttributeValue(models.Model):
+    """
+    Stores the attribute values for products
+    """
+    product = models.ForeignKey(
+        'VendorProduct', 
+        on_delete=models.CASCADE, 
+        related_name='attribute_values'
+    )
+    attribute = models.ForeignKey(
+        Attribute, 
+        on_delete=models.CASCADE, 
+        related_name='product_values'
+    )
+    text_value = models.TextField(blank=True, null=True)
+    number_value = models.DecimalField(max_digits=15, decimal_places=6, blank=True, null=True)
+    boolean_value = models.BooleanField(blank=True, null=True)
+    
+    # For select/multi-select options
+    option_values = models.ManyToManyField(
+        AttributeOption, 
+        blank=True, 
+        related_name='product_values'
+    )
+    
+    def __str__(self):
+        value = self.get_value()
+        return f"{self.product.name} - {self.attribute.name}: {value}"
+    
+    def get_value(self):
+        """Return the appropriate value based on attribute type"""
+        attr_type = self.attribute.attribute_type
+        
+        if attr_type == 'text':
+            return self.text_value
+        elif attr_type == 'number':
+            return self.number_value
+        elif attr_type == 'boolean':
+            return 'Yes' if self.boolean_value else 'No'
+        elif attr_type in ['select', 'multi_select']:
+            return ', '.join([opt.value for opt in self.option_values.all()])
+        
+        return None
+    
+    class Meta:
+        unique_together = ['product', 'attribute']

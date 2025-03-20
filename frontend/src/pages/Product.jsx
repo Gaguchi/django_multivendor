@@ -169,9 +169,7 @@ export default function Product() {
                     {/* Action Buttons */}
                     <div className="d-flex flex-column gap-2">
                       <button className="btn btn-primary py-2 rounded-percentage-3 d-flex align-items-center justify-content-center gap-2 card-button">
-                        <svg width="20" height="20" fill="currentColor">
-                          <path d="M6.3 16c.9 0 1.6.7 1.6 1.6S7.2 19.2 6.3 19.2s-1.6-.7-1.6-1.6.7-1.6 1.6-1.6zM16.5 16c.9 0 1.6.7 1.6 1.6s-.7 1.6-1.6 1.6-1.6-.7-1.6-1.6.7-1.6 1.6-1.6zM3.8 3l1.7.7.7 7.5h12.2l1.6-6c.1-.4-.1-.8-.5-.9L8.2 3H3.8zm2.3 6.2l-.4-4h10.6l-1.1 4H6.1z"/>
-                        </svg>
+                        <i className="fa fa-shopping-cart"></i>
                         <span>Add to Cart</span>
                       </button>
                       <button className="btn btn-dark py-2 rounded-percentage-3 card-button">Buy Now</button>
