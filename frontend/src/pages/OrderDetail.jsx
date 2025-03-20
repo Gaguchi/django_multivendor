@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useOrder } from '../contexts/OrderContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -8,17 +8,46 @@ export default function OrderDetail() {
   const { currentOrder, loading, error, fetchOrderById, cancelOrder, getStatusColor } = useOrder();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
+  // Update screen width on resize
   useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
     if (user && orderNumber) {
       fetchOrderById(orderNumber);
     }
     
-    // Clear current order when component unmounts
     return () => {
-      // Ideally would call clearCurrentOrder, but this causes issues with the component unmounting
+      window.removeEventListener('resize', handleResize);
     };
   }, [orderNumber, user]);
+
+  // Function to truncate product name based on screen size
+  const truncateName = (name) => {
+    if (!name) return '';
+    
+    // Set max length based on screen width
+    let maxLength = 10; // Default max length
+    
+    if (screenWidth < 576) {
+      maxLength = 16; // Mobile
+    } else if (screenWidth < 768) {
+      maxLength = 20; // Small tablets
+    } else if (screenWidth < 992) {
+      maxLength = 25; // Tablets
+    } else if (screenWidth < 1200) {
+      maxLength = 30; // Small desktop
+    } else {
+      maxLength = 40; // Desktop
+    }
+    
+    return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
+  };
 
   // Format date helper using native JavaScript
   const formatDate = (dateString) => {
@@ -99,11 +128,24 @@ export default function OrderDetail() {
     );
   }
 
+  // Get font size classes based on screen width
+  const getFontSizeClass = () => {
+    if (screenWidth < 576) {
+      return 'font-size-mobile';
+    } else if (screenWidth < 992) {
+      return 'font-size-tablet';
+    } else {
+      return 'font-size-desktop';
+    }
+  };
+
+  const fontSizeClass = getFontSizeClass();
+
   return (
-    <div className="container py-5">
+    <div className={`container py-5 ${fontSizeClass}`}>
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Order #{currentOrder.order_number}</h1>
-        <Link to="/account/orders" className="btn btn-outline-primary">
+        <h1 className="page-title">Order #{currentOrder.order_number}</h1>
+        <Link to="/account/orders" className="btn btn-outline-primary btn-back">
           Back to Orders
         </Link>
       </div>
@@ -112,7 +154,7 @@ export default function OrderDetail() {
         <div className="card-header">
           <div className="row">
             <div className="col-md-6">
-              <h5 className="mb-0">Order Summary</h5>
+              <h5 className="section-title mb-0">Order Summary</h5>
             </div>
             <div className="col-md-6 text-md-right">
               <span className={`badge badge-${getStatusColor(currentOrder.status)}`}>
@@ -124,14 +166,14 @@ export default function OrderDetail() {
         <div className="card-body">
           <div className="row mb-3">
             <div className="col-md-6">
-              <p className="mb-1"><strong>Order Date:</strong> {formatDate(currentOrder.created_at)}</p>
-              <p className="mb-1"><strong>Payment Method:</strong> {currentOrder.payment_method}</p>
+              <p className="detail-label mb-1"><strong>Order Date:</strong> {formatDate(currentOrder.created_at)}</p>
+              <p className="detail-label mb-1"><strong>Payment Method:</strong> {currentOrder.payment_method}</p>
               {currentOrder.status === 'Delivered' && (
-                <p className="mb-1"><strong>Delivered Date:</strong> {formatDate(currentOrder.delivered_at)}</p>
+                <p className="detail-label mb-1"><strong>Delivered Date:</strong> {formatDate(currentOrder.delivered_at)}</p>
               )}
             </div>
             <div className="col-md-6">
-              <p className="mb-1"><strong>Total Amount:</strong> ${parseFloat(currentOrder.total_amount).toFixed(2)}</p>
+              <p className="detail-label mb-1"><strong>Total Amount:</strong> ${parseFloat(currentOrder.total_amount).toFixed(2)}</p>
               {currentOrder.status === 'Pending' && (
                 <button 
                   onClick={handleCancelOrder} 
@@ -149,10 +191,10 @@ export default function OrderDetail() {
         <div className="col-md-6 mb-4">
           <div className="card h-100">
             <div className="card-header">
-              <h5 className="mb-0">Shipping Address</h5>
+              <h5 className="section-title mb-0">Shipping Address</h5>
             </div>
             <div className="card-body">
-              <address>
+              <address className="address-text">
                 {currentOrder.shipping_address}
               </address>
             </div>
@@ -161,10 +203,10 @@ export default function OrderDetail() {
         <div className="col-md-6 mb-4">
           <div className="card h-100">
             <div className="card-header">
-              <h5 className="mb-0">Billing Address</h5>
+              <h5 className="section-title mb-0">Billing Address</h5>
             </div>
             <div className="card-body">
-              <address>
+              <address className="address-text">
                 {currentOrder.billing_address}
               </address>
             </div>
@@ -174,83 +216,280 @@ export default function OrderDetail() {
 
       <div className="card">
         <div className="card-header">
-          <h5 className="mb-0">Order Items</h5>
+          <h5 className="section-title mb-0">Order Items</h5>
         </div>
         <div className="card-body">
-          <div className="table-responsive">
-            <table className="table table-bordered">
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentOrder.items && currentOrder.items.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        {item.product.thumbnail && (
-                          <img 
-                            src={`${import.meta.env.VITE_API_BASE_URL}/${item.product.thumbnail}`} 
-                            alt={item.product.name}
-                            className="product-thumbnail mr-3" 
-                          />
-                        )}
-                        <div>
-                          <h6 className="mb-0">{item.product.name}</h6>
-                          {item.product.vendor && (
-                            <small className="text-muted">Sold by: {item.product.vendor.store_name}</small>
-                          )}
-                        </div>
-                      </div>
-                    </td>
-                    <td>${parseFloat(item.unit_price).toFixed(2)}</td>
-                    <td>{item.quantity}</td>
-                    <td>${parseFloat(item.total_price).toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan="3" className="text-right"><strong>Subtotal:</strong></td>
-                  <td>${parseFloat(currentOrder.total_amount).toFixed(2)}</td>
-                </tr>
-                <tr>
-                  <td colSpan="3" className="text-right"><strong>Shipping:</strong></td>
-                  <td>$0.00</td>
-                </tr>
-                <tr>
-                  <td colSpan="3" className="text-right"><strong>Total:</strong></td>
-                  <td><strong>${parseFloat(currentOrder.total_amount).toFixed(2)}</strong></td>
-                </tr>
-              </tfoot>
-            </table>
+          <div className="order-items">
+            {currentOrder.items && currentOrder.items.map((item) => (
+              <div className="order-item-card" key={item.id}>
+                <div className="order-item-content">
+                  <div className="product-image">
+                    {item.product.thumbnail && (
+                      <img 
+                        src={`${item.product.thumbnail}`} 
+                        alt={item.product.name}
+                        className="product-thumbnail" 
+                      />
+                    )}
+                  </div>
+                  <div className="product-details">
+                    <h6 className="product-name" title={item.product.name}>
+                      {truncateName(item.product.name)}
+                    </h6>
+                    {item.product.vendor && (
+                      <div className="vendor-name">Sold by: {item.product.vendor.store_name}</div>
+                    )}
+                    <div className="product-price-mobile">
+                      ${parseFloat(item.unit_price).toFixed(2)} × {item.quantity}
+                    </div>
+                  </div>
+                  <div className="product-price-desktop">
+                    ${parseFloat(item.unit_price).toFixed(2)}
+                  </div>
+                  <div className="product-quantity">
+                    {item.quantity}
+                  </div>
+                  <div className="product-total">
+                    ${parseFloat(item.total_price).toFixed(2)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="order-totals">
+            <div className="order-total-row">
+              <div className="order-total-label">Subtotal:</div>
+              <div className="order-total-value">${parseFloat(currentOrder.total_amount).toFixed(2)}</div>
+            </div>
+            <div className="order-total-row">
+              <div className="order-total-label">Shipping:</div>
+              <div className="order-total-value">$0.00</div>
+            </div>
+            <div className="order-total-row grand-total">
+              <div className="order-total-label">Total:</div>
+              <div className="order-total-value">${parseFloat(currentOrder.total_amount).toFixed(2)}</div>
+            </div>
           </div>
         </div>
       </div>
 
       <style jsx>{`
+        /* Responsive typography classes */
+        .font-size-mobile {
+          --page-title-size: 3rem;
+          --section-title-size: 2.4rem;
+          --detail-label-size: 1.5rem;
+          --address-text-size: 1.5rem;
+          --product-name-size: 1.6rem;
+          --vendor-name-size: 1.35rem;
+          --price-text-size: 1.5rem;
+          --total-text-size: 1.6rem;
+          --grand-total-size: 1.7rem;
+        }
+        
+        .font-size-tablet {
+          --page-title-size: 3rem;
+          --section-title-size: 2.4rem;
+          --detail-label-size: 1.5rem;
+          --address-text-size: 1.5rem;
+          --product-name-size: 1.6rem;
+          --vendor-name-size: 1.35rem;
+          --price-text-size: 1.5rem;
+          --total-text-size: 1.6rem;
+          --grand-total-size: 1.7rem;
+        }
+        
+        .font-size-desktop {
+          --page-title-size: 3rem;
+          --section-title-size: 2.4rem;
+          --detail-label-size: 1.5rem;
+          --address-text-size: 1.5rem;
+          --product-name-size: 1.6rem;
+          --vendor-name-size: 1.35rem;
+          --price-text-size: 1.5rem;
+          --total-text-size: 1.6rem;
+          --grand-total-size: 1.7rem;
+        }
+        
+        /* Apply the responsive font sizes */
+        .page-title {
+          font-size: var(--page-title-size);
+        }
+        
+        .section-title {
+          font-size: var(--section-title-size);
+          font-weight: 600;
+        }
+        
+        .detail-label {
+          font-size: var(--detail-label-size);
+        }
+        
+        .address-text {
+          font-size: var(--address-text-size);
+        }
+        
+        .product-name {
+          font-size: var(--product-name-size);
+          margin: 0 0 0.25rem;
+          font-weight: 500;
+        }
+        
+        .vendor-name {
+          font-size: var(--vendor-name-size);
+          color: #6c757d;
+          margin-bottom: 0.25rem;
+        }
+        
+        .product-price-mobile,
+        .product-price-desktop,
+        .product-quantity {
+          font-size: var(--price-text-size);
+        }
+        
+        .product-total,
+        .order-total-value,
+        .order-total-label {
+          font-size: var(--total-text-size);
+        }
+        
+        .grand-total {
+          font-size: var(--grand-total-size);
+        }
+        
+        /* Adjust button size for mobile */
+        .btn-back {
+          font-size: var(--detail-label-size);
+          padding: 0.25rem 0.5rem;
+        }
+        
+        @media (min-width: 576px) {
+          .btn-back {
+            padding: 0.375rem 0.75rem;
+          }
+        }
+        
+        /* Rest of existing styles */
         .badge {
           padding: 0.5em 0.75em;
           font-size: 0.85em;
         }
         
-        .product-thumbnail {
-          width: 50px;
-          height: 50px;
-          object-fit: cover;
-        }
-        
         .card {
           box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+          margin-bottom: 1rem;
         }
         
         address {
           margin-bottom: 0;
           font-style: normal;
+        }
+        
+        /* Responsive order items styling */
+        .order-items {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          margin-bottom: 1.5rem;
+        }
+        
+        .order-item-card {
+          padding: 1rem;
+          border: 1px solid #e9ecef;
+          border-radius: 0.25rem;
+          background-color: #f8f9fa;
+        }
+        
+        .order-item-content {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          gap: 1rem;
+          align-items: center;
+        }
+        
+        .product-image {
+          width: 70px;
+          height: 70px;
+          flex-shrink: 0;
+        }
+        
+        .product-thumbnail {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 0.25rem;
+        }
+        
+        .product-details {
+          min-width: 0;
+        }
+        
+        .product-price-desktop, .product-quantity {
+          display: none;
+        }
+        
+        .product-price-mobile {
+          color: #495057;
+        }
+        
+        .product-total {
+          font-weight: 600;
+        }
+        
+        /* Order totals styling */
+        .order-totals {
+          margin-top: 1.5rem;
+          padding-top: 1.5rem;
+          border-top: 1px solid #dee2e6;
+        }
+        
+        .order-total-row {
+          display: flex;
+          justify-content: space-between;
+          padding: 0.5rem 0;
+        }
+        
+        .grand-total {
+          font-weight: 700;
+          border-top: 1px solid #dee2e6;
+          margin-top: 0.5rem;
+          padding-top: 0.5rem;
+        }
+        
+        /* Responsive styles */
+        @media (min-width: 768px) {
+          .order-item-content {
+            grid-template-columns: auto 1fr auto auto auto;
+          }
+          
+          .product-price-mobile {
+            display: none;
+          }
+          
+          .product-price-desktop, .product-quantity {
+            display: block;
+          }
+          
+          /* Add headers for tablet and desktop view */
+          .order-items::before {
+            content: "";
+            display: block;
+            padding: 0.75rem 1rem;
+            font-weight: 600;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 0.25rem;
+            margin-bottom: 0.5rem;
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto;
+            gap: 1rem;
+          }
+          
+          .order-items::before {
+            content: "Product Image Product Price Quantity Total";
+            font-size: var(--detail-label-size);
+          }
         }
       `}</style>
     </div>
