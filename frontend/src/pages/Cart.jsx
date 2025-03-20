@@ -7,6 +7,17 @@ export default function Cart() {
   const { cart, loading, updateCartItem, removeFromCart, refreshCart } = useCart()
   const [localQuantities, setLocalQuantities] = useState({})
   const [processingItems, setProcessingItems] = useState({})
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+
+  // Update screen width on resize
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth)
+    }
+    
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     refreshCart()
@@ -82,11 +93,26 @@ export default function Cart() {
     }
   }
 
-  
-  // Function to truncate product name
-  const truncateName = (name, maxLength = 15) => {
-      if (!name) return '';
-      return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
+  // Function to truncate product name based on screen size
+  const truncateName = (name) => {
+    if (!name) return '';
+    
+    // Set max length based on screen width
+    let maxLength = 25; // Default max length
+    
+    if (screenWidth < 576) {
+      maxLength = 15; // Mobile
+    } else if (screenWidth < 768) {
+      maxLength = 20; // Small tablets
+    } else if (screenWidth < 992) {
+      maxLength = 25; // Tablets
+    } else if (screenWidth < 1200) {
+      maxLength = 18; // Small desktop
+    } else {
+      maxLength = 25; // Large desktop
+    }
+    
+    return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
   }
 
   if (loading) {
@@ -154,40 +180,34 @@ export default function Cart() {
                       </td>
                       <td className="product-col">
                         <h5 className="product-title">
-                          <Link to={`/product/${item.product.id}`}>{truncateName(item.product.name)}</Link>
+                          <Link to={`/product/${item.product.id}`} title={item.product.name}>
+                            {truncateName(item.product.name)}
+                          </Link>
                         </h5>
                       </td>
                       <td>${parseFloat(item.unit_price).toFixed(2)}</td>
                       <td>
-                        <div className="product-single-qty">
-                          <div className="input-group bootstrap-touchspin bootstrap-touchspin-injected">
-                            <span className="input-group-btn input-group-prepend">
-                              <button
-                                className={`btn btn-outline btn-down-icon bootstrap-touchspin-down ${
-                                  (localQuantities[item.product.id] || item.quantity) <= 1 ? 'inactive' : ''
-                                }`}
-                                type="button"
-                                onClick={() => handleQuantityChange(item.product.id, (localQuantities[item.product.id] || item.quantity) - 1)}
-                                disabled={processingItems[item.product.id] || (localQuantities[item.product.id] || item.quantity) <= 1}
-                              />
-                            </span>
-                            <input 
-                              className="horizontal-quantity form-control" 
-                              type="text"
-                              value={localQuantities[item.product.id] || item.quantity}
-                              readOnly
-                            />
-                            <span className="input-group-btn input-group-append">
-                              <button
-                                className={`btn btn-outline btn-up-icon bootstrap-touchspin-up ${
-                                  (localQuantities[item.product.id] || item.quantity) >= item.product.stock ? 'inactive' : ''
-                                }`}
-                                type="button"
-                                onClick={() => handleQuantityChange(item.product.id, (localQuantities[item.product.id] || item.quantity) + 1)}
-                                disabled={processingItems[item.product.id] || (localQuantities[item.product.id] || item.quantity) >= item.product.stock}
-                              />
-                            </span>
-                          </div>
+                        <div className="quantity-controls">
+                          <button
+                            className={`btn-quantity-decrement ${(localQuantities[item.product.id] || item.quantity) <= 1 ? 'disabled' : ''}`}
+                            onClick={() => handleQuantityChange(item.product.id, (localQuantities[item.product.id] || item.quantity) - 1)}
+                            disabled={processingItems[item.product.id] || (localQuantities[item.product.id] || item.quantity) <= 1}
+                          >
+                            -
+                          </button>
+                          <input 
+                            className="quantity-input" 
+                            type="text"
+                            value={localQuantities[item.product.id] || item.quantity}
+                            readOnly
+                          />
+                          <button
+                            className={`btn-quantity-increment ${(localQuantities[item.product.id] || item.quantity) >= item.product.stock ? 'disabled' : ''}`}
+                            onClick={() => handleQuantityChange(item.product.id, (localQuantities[item.product.id] || item.quantity) + 1)}
+                            disabled={processingItems[item.product.id] || (localQuantities[item.product.id] || item.quantity) >= item.product.stock}
+                          >
+                            +
+                          </button>
                         </div>
                       </td>
                       <td className="text-right">
@@ -230,15 +250,52 @@ export default function Cart() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .opacity-50 {
-          opacity: 0.5 ;
+          opacity: 0.5;
           pointer-events: none;
         }
         
-        .inactive {
-          opacity: 0 !important;
+        .disabled {
+          opacity: 0.5;
           cursor: not-allowed;
+        }
+        
+        .quantity-controls {
+          display: flex;
+          align-items: center;
+          max-width: 120px;
+        }
+        
+        .quantity-input {
+          width: 40px;
+          text-align: center;
+          border: 1px solid #dae2e6;
+          padding: 4px;
+          border-radius: 0;
+          height: 36px;
+        }
+        
+        .btn-quantity-decrement,
+        .btn-quantity-increment {
+          width: 36px;
+          height: 36px;
+          border: 1px solid #dae2e6;
+          background-color: #f4f4f4;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-weight: bold;
+          font-size: 16px;
+        }
+        
+        .btn-quantity-decrement {
+          border-radius: 3px 0 0 3px;
+        }
+        
+        .btn-quantity-increment {
+          border-radius: 0 3px 3px 0;
         }
       `}</style>
     </>

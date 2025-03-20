@@ -13049,3 +13049,9 @@ django.db.utils.OperationalError: database is locked
 [2025-03-20 10:11:10,514] WARNING log Unauthorized: /api/users/profile/
 [2025-03-20 10:11:10,605] WARNING log Unauthorized: /api/users/profile/
 [2025-03-20 10:11:10,605] WARNING log Unauthorized: /api/users/profile/
+[2025-03-20 10:38:34,756] INFO views Token refreshed successfully for user
+[2025-03-20 10:38:34,767] INFO views Token refreshed successfully for user
+[2025-03-20 11:03:39,736] INFO views Token refreshed successfully for user
+[2025-03-20 11:03:39,745] INFO views Token refreshed successfully for user
+[2025-03-20 11:03:39,773] INFO views Token refreshed successfully for user
+[2025-03-20 11:03:39,789] INFO views Token refreshed successfully for user

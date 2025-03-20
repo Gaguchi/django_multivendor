@@ -2,17 +2,11 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
 import Header from '../Header';
 import Footer from '../Footer';
-import useJQueryInitializer from '../../hooks/useJQueryInitializer';
 
 export default function Layout() {
   const location = useLocation();
   
-  // Initialize jQuery plugins needed for the layout
-  useJQueryInitializer({
-    plugins: ['superfish', 'tooltip', 'popover']
-  });
-  
-  // Additional effect to handle specific layout interactions
+  // Layout-specific event handlers without jQuery initialization
   useEffect(() => {
     // Make sure jQuery is available
     if (typeof $ === 'undefined') {
@@ -20,7 +14,7 @@ export default function Layout() {
     }
     
     // Handle layout-specific jQuery interactions
-    $(document).ready(function() {
+    const setupEventHandlers = () => {
       // Mobile menu toggle
       $('.mobile-menu-toggler').on('click', function() {
         $('body').toggleClass('mmenu-active');
@@ -47,18 +41,25 @@ export default function Layout() {
         }, 1200);
         return false;
       });
-    });
+    };
+    
+    // Run setup once the DOM is ready
+    if (document.readyState === 'complete') {
+      setupEventHandlers();
+    } else {
+      window.addEventListener('load', setupEventHandlers);
+    }
     
     // Cleanup function
     return () => {
       if (typeof $ !== 'undefined') {
         $('.mobile-menu-toggler').off('click');
         $('.mobile-menu-overlay, .mobile-menu-close').off('click');
-        $(window).off('scroll');
         $('#scroll-top').off('click');
+        window.removeEventListener('load', setupEventHandlers);
       }
     };
-  }, [location.pathname]);
+  }, []);
   
   return (
     <>

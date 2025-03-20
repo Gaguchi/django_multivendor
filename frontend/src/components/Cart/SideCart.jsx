@@ -109,7 +109,7 @@ export default function SideCart() {
                                 ${cart.total}
                             </span>
                         </div>
-                        <div class="dropdown-cart-action">
+                        <div className="dropdown-cart-action">
                             <Link to="/cart" className="btn btn-gray btn-block view-cart">
                                 View Cart
                             </Link>

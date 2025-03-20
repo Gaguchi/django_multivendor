@@ -24,12 +24,14 @@ import { initializePage } from './utils/jQuerySimple'
 function AppContent() {
   const location = useLocation();
   
-  // Initialize jQuery plugins once on route changes with minimal approach
+  // Initialize jQuery plugins once on route changes using only jQuerySimple
   useEffect(() => {
-    // Simple initialization with a reasonable delay
-    initializePage();
+    // Delay initialization to ensure DOM is ready
+    const timeoutId = setTimeout(() => {
+      initializePage();
+    }, 300);
     
-    // No need for multiple checks or reinitializations
+    return () => clearTimeout(timeoutId);
   }, [location.pathname]);
   
   return (
