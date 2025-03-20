@@ -12981,3 +12981,71 @@ django.db.utils.OperationalError: database is locked
 [2025-03-19 19:11:50,953] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
 [2025-03-19 19:11:51,539] INFO views Successfully obtained tokens from google
 [2025-03-19 19:11:51,551] INFO views Successfully obtained tokens from google
+[2025-03-19 19:42:54,982] INFO views Token refreshed successfully for user
+[2025-03-19 19:42:54,998] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-19 19:42:54,998] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-19 20:12:55,580] INFO views Token refreshed successfully for user
+[2025-03-19 20:39:48,834] INFO views Token refreshed successfully for user
+[2025-03-19 20:39:48,836] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-19 20:39:48,837] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-19 20:39:48,836] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-19 20:39:48,837] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-19 20:39:48,866] INFO views Token refreshed successfully for user
+[2025-03-19 20:39:51,221] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-19 20:39:51,221] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-19 20:39:51,315] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-19 20:39:51,316] WARNING log Unauthorized: /api/orders/
+[2025-03-19 20:39:51,315] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-19 20:39:51,316] WARNING log Unauthorized: /api/orders/
+[2025-03-19 20:39:52,699] WARNING log Unauthorized: /api/orders/
+[2025-03-19 20:39:52,700] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-19 20:39:52,700] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-19 20:39:52,699] WARNING log Unauthorized: /api/orders/
+[2025-03-19 20:39:52,700] WARNING log Unauthorized: /api/users/wishlist/
+[2025-03-19 20:39:52,700] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-03-19 21:40:14,752] INFO views OAuth Callback Request: provider=yIyBSg1tKodW4CPsKN81BogqL1qYe4Jv, code_length=73
+[2025-03-19 21:40:14,753] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-03-19 21:40:14,753] INFO views Exchanging code for token using google provider
+[2025-03-19 21:40:14,753] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-03-19 21:40:14,757] INFO views OAuth Callback Request: provider=yIyBSg1tKodW4CPsKN81BogqL1qYe4Jv, code_length=73
+[2025-03-19 21:40:14,757] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-03-19 21:40:14,757] INFO views Exchanging code for token using google provider
+[2025-03-19 21:40:14,758] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-03-19 21:40:15,698] INFO views Successfully obtained tokens from google
+[2025-03-19 21:40:15,700] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-03-19 21:40:15,701] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-19 21:40:15,701] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-03-19 22:13:37,662] INFO views Token refreshed successfully for user
+[2025-03-19 22:13:37,666] INFO views Token refreshed successfully for user
+[2025-03-19 22:46:11,975] INFO views Token refreshed successfully for user
+[2025-03-19 22:46:11,980] INFO views Token refreshed successfully for user
+[2025-03-19 23:16:15,842] INFO views Token refreshed successfully for user
+[2025-03-19 23:16:15,921] INFO views Token refreshed successfully for user
+[2025-03-20 10:09:55,431] INFO autoreload Watching for file changes with StatReloader
+[2025-03-20 10:09:55,802] INFO urls === Registering Vendor URLs ===
+[2025-03-20 10:09:55,802] INFO urls === Registering Vendor URLs ===
+[2025-03-20 10:09:55,803] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-20 10:09:55,803] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-20 10:11:10,336] WARNING log Unauthorized: /api/users/profile/
+[2025-03-20 10:11:10,337] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-20 10:11:10,337] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-20 10:11:10,338] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-20 10:11:10,336] WARNING log Unauthorized: /api/users/profile/
+[2025-03-20 10:11:10,337] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-20 10:11:10,337] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-20 10:11:10,338] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-20 10:11:10,428] WARNING log Unauthorized: /api/users/profile/
+[2025-03-20 10:11:10,428] WARNING log Unauthorized: /api/users/profile/
+[2025-03-20 10:11:10,482] INFO views Token refreshed successfully for user
+[2025-03-20 10:11:10,483] INFO views Token refreshed successfully for user
+[2025-03-20 10:11:10,498] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-20 10:11:10,498] INFO views Token refreshed successfully for user
+[2025-03-20 10:11:10,498] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-20 10:11:10,514] INFO views Token refreshed successfully for user
+[2025-03-20 10:11:10,514] WARNING log Unauthorized: /api/users/profile/
+[2025-03-20 10:11:10,514] WARNING log Unauthorized: /api/users/profile/
+[2025-03-20 10:11:10,605] WARNING log Unauthorized: /api/users/profile/
+[2025-03-20 10:11:10,605] WARNING log Unauthorized: /api/users/profile/

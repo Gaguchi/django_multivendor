@@ -107,27 +107,31 @@ export default function ProductCard({
           </Link>
           
           {/* Quick action buttons */}
-          <div className="uniform-btn-group">
-            <button 
-              className={`uniform-btn uniform-wishlist-btn ${inWishlist ? 'active' : ''}`}
-              onClick={handleToggleWishlist}
-              disabled={loading}
-              title={inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
-            >
-              <i className="icon-heart"></i>
-            </button>
-            {showQuickView && (
-              <button 
-                className="uniform-btn uniform-quickview-btn"
-                title="Quick View"
-              >
-                <i className="fas fa-external-link-alt"></i>
-              </button>
-            )}
-          </div>
-        </div>
-        
-        {/* Product details section */}
+                <div className="uniform-btn-group">
+                <button 
+                  className={`uniform-btn uniform-wishlist-btn`}
+                  onClick={handleToggleWishlist}
+                  disabled={loading}
+                  title={inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+                >
+                  {inWishlist ? (
+                  <img src="src/assets/images/svgs/heart-filled.svg" alt="Remove from Wishlist" />
+                  ) : (
+                  <img src="src/assets/images/svgs/heart.svg" alt="Add to Wishlist" />
+                  )}
+                </button>
+                {showQuickView && (
+                  <button 
+                  className="uniform-btn uniform-quickview-btn"
+                  title="Quick View"
+                  >
+                  <i className="fas fa-external-link-alt"></i>
+                  </button>
+                )}
+                </div>
+              </div>
+              
+              {/* Product details section */}
         <div className="uniform-product-details">
           {/* Category */}
           {category && (
