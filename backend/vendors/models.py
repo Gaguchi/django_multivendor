@@ -4,24 +4,32 @@ from django.utils import timezone
 from categories.models import Attribute, AttributeOption
 
 # Define helper functions for media file paths
+def sanitize_filename(s):
+    """Remove or replace characters that are problematic in file paths"""
+    # Replace quotes, commas and other problematic characters
+    invalid_chars = ['<', '>', ':', '"', '/', '\\', '|', '?', '*', ',']
+    for char in invalid_chars:
+        s = s.replace(char, '_')
+    return s
+
 def product_media_path(instance, filename):
     """Helper function to determine the path for product media uploads"""
     product = instance.product if hasattr(instance, 'product') else instance
-    vendor_name = product.vendor.store_name.replace(' ', '_')
-    product_name = product.name.replace(' ', '_')
+    vendor_name = sanitize_filename(product.vendor.store_name.replace(' ', '_'))
+    product_name = sanitize_filename(product.name.replace(' ', '_'))
     media_type = 'thumbnails' if hasattr(instance, 'is_thumbnail') else 'images'
     return f'vendor_products/{vendor_name}/{product_name}/{media_type}/{filename}'
 
 def product_thumbnail_path(instance, filename):
     """Helper function for thumbnail uploads"""
-    vendor_name = instance.vendor.store_name.replace(' ', '_')
-    product_name = instance.name.replace(' ', '_')
+    vendor_name = sanitize_filename(instance.vendor.store_name.replace(' ', '_'))
+    product_name = sanitize_filename(instance.name.replace(' ', '_'))
     return f'vendor_products/{vendor_name}/{product_name}/thumbnails/{filename}'
 
 def product_video_path(instance, filename):
     """Helper function for video uploads"""
-    vendor_name = instance.vendor.store_name.replace(' ', '_')
-    product_name = instance.name.replace(' ', '_')
+    vendor_name = sanitize_filename(instance.vendor.store_name.replace(' ', '_'))
+    product_name = sanitize_filename(instance.name.replace(' ', '_'))
     return f'vendor_products/{vendor_name}/{product_name}/videos/{filename}'
 
 class Vendor(models.Model):
@@ -66,6 +74,11 @@ class VendorProduct(models.Model):
         null=True,
         help_text='Upload product video file (MP4 recommended)'
     )
+    # Add display order for manual sorting in the admin
+    display_order = models.PositiveIntegerField(default=0, blank=False, null=False)
+
+    class Meta:
+        ordering = ['display_order', 'name']
 
     def __str__(self):
         return f"{self.vendor.store_name} - {self.name}"
@@ -80,10 +93,10 @@ class ProductImage(models.Model):
         upload_to=product_media_path
     )
     position = models.PositiveIntegerField(default=0, blank=False, null=False)
-
+    alt_text = models.CharField(max_length=255, blank=True, help_text="Alternative text for accessibility")
+    
     class Meta:
         ordering = ['position']
-        # Add sortable ordering if necessary, e.g., using adminsortable2's proxy
 
     def __str__(self):
         return f"Image {self.position} for {self.product.name}"

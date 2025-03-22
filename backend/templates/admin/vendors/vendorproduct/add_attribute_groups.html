@@ -1,0 +1,80 @@
+{% extends "admin/base_site.html" %} {% load i18n admin_urls %} {% block
+extrahead %}{{ block.super }}
+<style>
+  .attribute-groups-container {
+    margin-top: 20px;
+  }
+  .attribute-group-list {
+    margin-bottom: 30px;
+  }
+  .attribute-group-item {
+    margin-bottom: 5px;
+  }
+  .existing-groups {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+  }
+  .existing-groups h3 {
+    margin-top: 0;
+  }
+  .existing-group-item {
+    margin-bottom: 5px;
+  }
+  .submit-row {
+    margin-top: 30px;
+  }
+</style>
+{% endblock %} {% block content %}
+<div id="content-main">
+  <h1>{{ title }}</h1>
+
+  <div class="module">
+    <p>
+      Select attribute groups to add to <strong>{{ product.name }}</strong>. All
+      attributes from the selected groups will be added to the product.
+    </p>
+
+    {% if product.category %}
+    <p>
+      Showing attribute groups for category:
+      <strong>{{ product.category.name }}</strong>
+    </p>
+    {% else %}
+    <p class="warning">
+      This product doesn't have a category assigned. Please assign a category
+      first.
+    </p>
+    {% endif %} {% if existing_groups %}
+    <div class="existing-groups">
+      <h3>Currently Added Attribute Groups</h3>
+      <ul class="existing-group-list">
+        {% for group in existing_groups %}
+        <li class="existing-group-item">{{ group.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="attribute-groups-container">{{ form.as_p }}</div>
+
+      <div class="submit-row">
+        <input
+          type="submit"
+          value="Add Selected Groups"
+          class="default"
+          name="_save"
+        />
+        <a
+          href="{% url 'admin:vendors_vendorproduct_change' product.pk %}"
+          class="button cancel-link"
+          >Cancel</a
+        >
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

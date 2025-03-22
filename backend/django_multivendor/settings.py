@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'adminsortable2',  # Make sure this is included
 ]
 
 # Project-specific apps
@@ -143,7 +144,7 @@ ROOT_URLCONF = 'django_multivendor.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],  # Make sure this is updated
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

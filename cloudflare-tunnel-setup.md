@@ -102,4 +102,4 @@ In separate terminals:
 
 ## 9. Testing
 
-Visit your application at `https://shop.bazro.ge` for the frontend and `https://api.bazro.ge` for the API.
+Visit your application at `https://shop.bazro.ge` for the frontend and `https://api.bazro.ge` for the API and `https://seller.bazro.ge` fot the sellers admin panel.

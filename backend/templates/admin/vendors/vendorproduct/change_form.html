@@ -1,0 +1,11 @@
+{% extends "admin/change_form.html" %} {% load i18n admin_urls %} {% block
+submit_buttons_bottom %} {{ block.super }} {% if show_attribute_groups_button %}
+<div class="submit-row attribute-groups-row">
+  <a
+    href="{% url 'admin:vendors_vendorproduct_add_attribute_groups' original.pk %}"
+    class="button"
+  >
+    Add Attribute Groups
+  </a>
+</div>
+{% endif %} {% endblock %}

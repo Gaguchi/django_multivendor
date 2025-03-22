@@ -10,6 +10,7 @@ class Category(models.Model):
     )
     created_at = models.DateTimeField(null=True, blank=True)
     updated_at = models.DateTimeField(null=True, blank=True)
+    display_order = models.PositiveIntegerField(default=0)
     
     def __str__(self):
         return self.name
@@ -26,6 +27,7 @@ class Category(models.Model):
     
     class Meta:
         verbose_name_plural = "Categories"
+        ordering = ['display_order', 'name']
 
 
 class AttributeGroup(models.Model):
@@ -72,7 +74,9 @@ class Attribute(models.Model):
         return f"{self.name} ({self.group.name})"
     
     class Meta:
-        ordering = ['group__display_order', 'display_order', 'name']
+        # Fix: adminsortable2 doesn't support relations in ordering
+        # Change from ['group__display_order', 'display_order', 'name'] to:
+        ordering = ['display_order', 'name']
 
 
 class AttributeOption(models.Model):
