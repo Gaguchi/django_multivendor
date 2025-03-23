@@ -1,0 +1,14 @@
+{% extends "admin/change_form.html" %} {% load i18n admin_urls %} {% block
+submit_buttons_bottom %} {{ block.super }} {% if show_save_and_add_attributes %}
+<input
+  type="submit"
+  value="{% trans 'Save and add attributes' %}"
+  name="_addattributes"
+/>
+{% elif show_update_attributes %}
+<input
+  type="submit"
+  value="{% trans 'Update attributes' %}"
+  name="_addattributes"
+/>
+{% endif %} {% endblock %}

@@ -73,6 +73,16 @@ class Attribute(models.Model):
     def __str__(self):
         return f"{self.name} ({self.group.name})"
     
+    def get_json_data(self):
+        """Return attribute data for JavaScript usage"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'group': self.group.name,
+            'type': self.attribute_type,
+            'required': self.is_required,
+        }
+    
     class Meta:
         # Fix: adminsortable2 doesn't support relations in ordering
         # Change from ['group__display_order', 'display_order', 'name'] to:
