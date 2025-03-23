@@ -74,14 +74,29 @@ class VendorProduct(models.Model):
         null=True,
         help_text='Upload product video file (MP4 recommended)'
     )
-    # Add display order for manual sorting in the admin
     display_order = models.PositiveIntegerField(default=0, blank=False, null=False)
+    
+    # Add frequently bought together relationship
+    frequently_bought_together = models.ManyToManyField(
+        'self',
+        blank=True,
+        symmetrical=False,
+        related_name='bought_with_products',
+        help_text='Products that are frequently bought together with this product'
+    )
 
     class Meta:
         ordering = ['display_order', 'name']
 
     def __str__(self):
         return f"{self.vendor.store_name} - {self.name}"
+    
+    def get_combo_total_price(self):
+        """Calculate the total price of this product plus its combos"""
+        total = self.price
+        for product in self.frequently_bought_together.all():
+            total += product.price
+        return total
 
 class ProductImage(models.Model):
     product = models.ForeignKey(

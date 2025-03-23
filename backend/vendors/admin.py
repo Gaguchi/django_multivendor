@@ -52,10 +52,29 @@ class ProductAttributeValueInline(admin.TabularInline):
             kwargs['widget'] = forms.Select(attrs={'class': 'attribute-select'})
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+class ProductComboInline(admin.TabularInline):
+    model = VendorProduct.frequently_bought_together.through
+    fk_name = 'from_vendorproduct'
+    verbose_name = "Frequently Bought Together Product"
+    verbose_name_plural = "Frequently Bought Together Products"
+    extra = 1
+    
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+        if db_field.name == 'to_vendorproduct':
+            if hasattr(request, '_obj_') and request._obj_:
+                # Only show products from the same vendor
+                kwargs['queryset'] = VendorProduct.objects.filter(
+                    vendor=request._obj_.vendor
+                ).exclude(id=request._obj_.id)
+            else:
+                kwargs['queryset'] = VendorProduct.objects.none()
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
 class VendorProductAdminForm(forms.ModelForm):
     class Meta:
         model = VendorProduct
         fields = '__all__'
+        exclude = ('frequently_bought_together',)
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -65,12 +84,13 @@ class VendorProductAdminForm(forms.ModelForm):
 @admin.register(VendorProduct)
 class VendorProductAdmin(SortableAdminBase, admin.ModelAdmin):
     form = VendorProductAdminForm
-    inlines = [ProductImageInline, ProductAttributeValueInline]
-    list_display = ['name', 'vendor', 'price', 'stock', 'category', 'is_hot', 'display_order']
+    inlines = [ProductImageInline, ProductAttributeValueInline, ProductComboInline]
+    list_display = ['name', 'vendor', 'price', 'stock', 'category', 'is_hot', 'display_order', 'has_combos']
     list_filter = ['vendor', 'category', 'is_hot']
     search_fields = ['name', 'sku', 'description']
     readonly_fields = ['created_at']
     list_editable = ['display_order']
+    filter_horizontal = ['frequently_bought_together']
     
     fieldsets = (
         (None, {
@@ -85,11 +105,17 @@ class VendorProductAdmin(SortableAdminBase, admin.ModelAdmin):
     )
     
     class Media:
-        js = ('js/vendor_product_admin.js',)
+        js = ('js/vendor_product_admin.js', 'js/product_combo_admin.js')
     
     def get_form(self, request, obj=None, **kwargs):
         request._obj_ = obj
         return super().get_form(request, obj, **kwargs)
+    
+    def has_combos(self, obj):
+        """Return True if this product has frequently bought together products"""
+        return obj.frequently_bought_together.exists()
+    has_combos.boolean = True
+    has_combos.short_description = 'Has Combos'
     
     def add_view(self, request, form_url='', extra_context=None):
         extra_context = extra_context or {}

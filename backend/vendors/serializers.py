@@ -71,12 +71,30 @@ class ProductAttributeValueSerializer(serializers.ModelSerializer):
     def get_display_value(self, obj):
         return obj.get_value()
 
+# Fix: Define the ComboProductSerializer before it's used
+class ComboProductSerializer(serializers.ModelSerializer):
+    """Simple serializer for products in combos/frequently bought together"""
+    vendor_name = serializers.CharField(source='vendor.store_name', read_only=True)
+    
+    class Meta:
+        model = VendorProduct
+        fields = [
+            'id',
+            'name',
+            'price',
+            'thumbnail',
+            'vendor_name',
+            'rating',
+        ]
+
 class ProductSerializer(serializers.ModelSerializer):
     vendor = SimpleVendorSerializer(read_only=True)
     images = ProductImageSerializer(many=True, read_only=True, source='product_images')
     category = serializers.CharField(source='category.name', read_only=True)
     attribute_values = ProductAttributeValueSerializer(many=True, read_only=True)
     attribute_groups = serializers.SerializerMethodField()
+    frequently_bought_together = ComboProductSerializer(many=True, read_only=True)
+    combo_total_price = serializers.SerializerMethodField()
 
     class Meta:
         model = VendorProduct
@@ -97,7 +115,9 @@ class ProductSerializer(serializers.ModelSerializer):
             'is_hot',
             'created_at',
             'attribute_values',
-            'attribute_groups'
+            'attribute_groups',
+            'frequently_bought_together',
+            'combo_total_price'
         ]
         read_only_fields = ['vendor', 'rating']
 
@@ -153,6 +173,10 @@ class ProductSerializer(serializers.ModelSerializer):
                 result.append(group_data)
                 
         return result
+
+    def get_combo_total_price(self, obj):
+        """Calculate total price of this product plus all frequently bought together products"""
+        return obj.get_combo_total_price()
 
 class ProductListSerializer(serializers.ModelSerializer):
     """Ultra lightweight serializer for product listings"""
