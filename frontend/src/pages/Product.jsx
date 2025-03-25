@@ -34,11 +34,14 @@ export default function Product() {
   if (error) return <div>Error: {error}</div>
   if (!product) return <div>Product not found</div>
 
+  // Extract image URLs from the product.images array
+  const imageUrls = product.images ? product.images.map(img => img.file) : []
+  
   // Combine thumbnail with additional images
-  const allImages = [product.thumbnail, ...(product.images || [])]
+  const allImages = [product.thumbnail, ...imageUrls]
 
   return (
-    <main className="main bg-gray">
+    <main className="main">
       <div className="container py-4">
         <div className="row g-4">
           {/* Image Gallery */}
@@ -84,7 +87,7 @@ export default function Product() {
               {/* Product Info Section */}
               <div className="col-12 col-md-6">
                 <div className="card h-100 border-0">
-                  <div className="card-body bg-gray">
+                  <div className="card-body">
                     <h1 className="h4 mb-3">{product.name}</h1>
                     
                     <div className="d-flex align-items-center gap-2 mb-4">
@@ -97,28 +100,33 @@ export default function Product() {
 
                     {/* Product Specifications */}
                     <div className="specifications">
+                      <h6 className="mb-2">Key Specifications</h6>
                       <table className="table table-sm">
                         <tbody>
-                          {product.specifications && Object.entries(product.specifications).map(([key, value]) => (
-                            <tr key={key}>
-                              <th className="text-secondary fw-normal" style={{width: '40%'}}>{key}</th>
-                              <td>{value}</td>
-                            </tr>
-                          ))}
+                          {product.attribute_values && 
+                            product.attribute_values
+                              .slice(0, 5) // Take only the first 5 attributes
+                              .map(attr => (
+                                <tr key={attr.id}>
+                                  <th className="text-secondary fw-normal" style={{width: '40%'}}>
+                                    {attr.attribute_name}
+                                  </th>
+                                  <td>
+                                    {attr.display_value || attr.text_value || 
+                                      (attr.boolean_value !== null ? (attr.boolean_value ? 'Yes' : 'No') : 
+                                      (attr.number_value !== null ? attr.number_value : ''))}
+                                  </td>
+                                </tr>
+                              ))
+                          }
                         </tbody>
                       </table>
                     </div>
-
-                    {/* Product Description */}
-                    <div className="mt-4">
-                      <h6>Description</h6>
-                      <p>{product.description}</p>
                     </div>
-                  </div>
-                </div>
-              </div>
+                    </div>
+                    </div>
 
-              {/* Purchase Section */}
+                    {/* Purchase Section */}
               <div className="col-12 col-md-6">
                 <div className="card h-100 border-0 purchase-card">
                   <div className="card-body">
@@ -177,6 +185,83 @@ export default function Product() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Product Description Section - Always Visible */}
+        <div className="row mt-5">
+          <div className="col-12">
+            <div className="card border mb-4">
+              <div className="card-header bg-white py-3">
+                <h4 className="mb-0">Product Description</h4>
+              </div>
+              <div className="card-body p-4">
+                <div className="rich-text-content">
+                  <div dangerouslySetInnerHTML={{ __html: product.description_html || product.description }}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Specifications Section - Always Visible */}
+        <div className="row mb-5">
+          <div className="col-12">
+            <div className="card border">
+              <div className="card-header bg-white py-3">
+                <h4 className="mb-0">Full Specifications</h4>
+              </div>
+              <div className="card-body p-4">
+                {product.attribute_values && product.attribute_values.length > 0 ? (
+                  <div className="specifications-content">
+                    {product.attribute_groups && product.attribute_groups.length > 0 ? (
+                      // Group specifications by attribute groups if available
+                      product.attribute_groups.map(group => (
+                        <div key={group.id} className="mb-4">
+                          <h5 className="mb-3">{group.name}</h5>
+                          <div className="table-responsive">
+                            <table className="table table-striped">
+                              <tbody>
+                                {group.attributes.map(attr => (
+                                  <tr key={attr.id}>
+                                    <th className="text-secondary" style={{width: '30%'}}>
+                                      {attr.name}
+                                    </th>
+                                    <td>{attr.value || '-'}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      // Display all attributes if no groups are defined
+                      <div className="table-responsive">
+                        <table className="table table-striped">
+                          <tbody>
+                            {product.attribute_values.map(attr => (
+                              <tr key={attr.id}>
+                                <th className="text-secondary" style={{width: '30%'}}>
+                                  {attr.attribute_name}
+                                </th>
+                                <td>
+                                  {attr.display_value || attr.text_value || 
+                                    (attr.boolean_value !== null ? (attr.boolean_value ? 'Yes' : 'No') : 
+                                    (attr.number_value !== null ? attr.number_value : ''))}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <p>No specifications available for this product.</p>
+                )}
               </div>
             </div>
           </div>
