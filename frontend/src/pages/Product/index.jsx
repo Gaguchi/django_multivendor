@@ -38,7 +38,7 @@ export default function Product() {
   return (
     <main className="main">
       <div className="container py-4">
-        <div className="row g-4">
+        <div className="row g-4 position-relative" style={{ zIndex: 1 }}>
           {/* Pass product data and state to the Images component */}
           <Images 
             product={product} 
@@ -46,8 +46,8 @@ export default function Product() {
             setSelectedImage={setSelectedImage} 
           />
           
-          {/* Info + Purchase Section */}
-          <div className="col-12 col-lg-8">
+          {/* Info + Purchase Section with lower z-index */}
+          <div className="col-12 col-lg-8" style={{ position: 'relative', zIndex: 1 }}>
             <div className="row g-4">
               {/* Product Info Section */}
               <div className="col-12 col-md-6">
@@ -87,11 +87,11 @@ export default function Product() {
                         </tbody>
                       </table>
                     </div>
-                    </div>
-                    </div>
-                    </div>
+                  </div>
+                </div>
+              </div>
 
-                    {/* Purchase Section */}
+              {/* Purchase Section */}
               <div className="col-12 col-md-6">
                 <div className="card h-100 border-0 purchase-card">
                   <div className="card-body">
@@ -156,7 +156,7 @@ export default function Product() {
         </div>
 
         {/* Product Description Section - Always Visible */}
-        <div className="row mt-5">
+        <div className="row mt-5" style={{ position: 'relative', zIndex: 1 }}>
           <div className="col-12">
             <div className="card border mb-4">
               <div className="card-header bg-white py-3">
@@ -172,7 +172,7 @@ export default function Product() {
         </div>
         
         {/* Specifications Section - Always Visible */}
-        <div className="row mb-5">
+        <div className="row mb-5" style={{ position: 'relative', zIndex: 1 }}>
           <div className="col-12">
             <div className="card border">
               <div className="card-header bg-white py-3">
@@ -232,6 +232,33 @@ export default function Product() {
           </div>
         </div>
       </div>
+
+      {/* Global CSS for zoom elements to appear above content */}
+      <style jsx>{`
+        .product-zoom-container {
+          position: relative;
+        }
+        
+        .img-zoom-result {
+          z-index: 10000 !important;
+          position: absolute !important;
+        }
+        
+        /* Force the zoom result above all other elements */
+        body .container .img-zoom-result {
+          z-index: 10000 !important;
+        }
+        
+        /* Override any Bootstrap z-index values */
+        .card, .dropdown-menu, .modal, .popover, .tooltip {
+          z-index: 1 !important;
+        }
+        
+        /* Set all rows and content to lower z-index */
+        main .container .row {
+          z-index: 1;
+        }
+      `}</style>
     </main>
   )
 }

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
+import { setupImageZoom } from '../../utils/imageZoom'
 
 export default function Images({ product, selectedImage, setSelectedImage }) {
   // Extract image URLs from the product.images array
@@ -13,9 +14,13 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
   const thumbsWrapRef = useRef(null)
   const thumbUpRef = useRef(null)
   const thumbDownRef = useRef(null)
+  const zoomContainerRef = useRef(null)
   
   // Use fixed height instead of dynamic state to prevent recursive updates
   const fixedHeightRef = useRef(null)
+  
+  // Debug mode toggle for zoom functionality
+  const DEBUG_ZOOM = true
   
   // Function to adjust thumbnails wrapper height
   const adjustThumbsHeight = () => {
@@ -36,9 +41,10 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
       }
     }
   };
-  
+
   useEffect(() => {
     let owlCarousel = null;
+    let zoomCleanup = null;
     
     // Initialize main carousel
     if (carouselRef.current) {
@@ -55,15 +61,28 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
         startPosition: selectedImage,
         onInitialized: () => {
           // Adjust heights after carousel is fully initialized with a slight delay
-          setTimeout(adjustThumbsHeight, 200);
-        }
-      }).on('changed.owl.carousel', (e) => {
-        setSelectedImage(e.item.index)
-        
-        // Update active thumbnail
-        if (thumbsRef.current) {
-          $(thumbsRef.current).find('.owl-dot').removeClass('active')
-          $(thumbsRef.current).find(`.owl-dot:eq(${e.item.index})`).addClass('active')
+          setTimeout(() => {
+            adjustThumbsHeight();
+            
+            // Setup zoom with debugging enabled
+            if (zoomCleanup) zoomCleanup(); // Clean up previous zoom
+            zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
+          }, 200);
+        },
+        onChanged: (e) => {
+          setSelectedImage(e.item.index);
+          
+          // Update active thumbnail
+          if (thumbsRef.current) {
+            $(thumbsRef.current).find('.owl-dot').removeClass('active');
+            $(thumbsRef.current).find(`.owl-dot:eq(${e.item.index})`).addClass('active');
+          }
+          
+          // Update zoom for new image
+          setTimeout(() => {
+            if (zoomCleanup) zoomCleanup(); // Clean up previous zoom
+            zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
+          }, 100);
         }
       });
       
@@ -85,6 +104,12 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
         if (owlCarousel) {
           owlCarousel.trigger('to.owl.carousel', [index, 300, true]);
         }
+        
+        // Update zoom for selected image
+        setTimeout(() => {
+          if (zoomCleanup) zoomCleanup(); // Clean up previous zoom
+          zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
+        }, 100);
       });
     }
     
@@ -166,13 +191,23 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
       window.resizeTimer = setTimeout(() => {
         adjustThumbsHeight();
         updateNavButtonState();
+        
+        // Re-initialize zoom on resize
+        if (zoomCleanup) zoomCleanup();
+        zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
       }, 250);
     };
     
     window.addEventListener('resize', handleResize);
     
     // Handle image load events
-    const imageLoadHandler = () => adjustThumbsHeight();
+    const imageLoadHandler = () => {
+      adjustThumbsHeight();
+      
+      // Re-initialize zoom when images load
+      if (zoomCleanup) zoomCleanup();
+      zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
+    };
     
     const carouselImages = document.querySelectorAll('.product-single-image');
     carouselImages.forEach(img => {
@@ -182,11 +217,19 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
     // Run the height adjustment once initially
     adjustThumbsHeight();
     
+    // Setup zoom initially
+    zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
+    
     // Clean up function
     return () => {
       // Destroy carousel instances
       if (owlCarousel) {
         owlCarousel.trigger('destroy.owl.carousel');
+      }
+      
+      // Clean up zoom
+      if (zoomCleanup) {
+        zoomCleanup();
       }
       
       // Remove event listeners
@@ -211,7 +254,7 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
       // Clear any pending resize timers
       clearTimeout(window.resizeTimer);
     };
-  }, [allImages, selectedImage, setSelectedImage]);
+  }, [allImages, selectedImage, setSelectedImage, DEBUG_ZOOM]);
   
   // Get height from ref instead of state
   const getThumbsWrapStyles = () => {
@@ -223,7 +266,8 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
   
   const productThumbsStyles = {
     position: 'relative',
-    top: 0
+    top: 0,
+    transition: 'top 0.3s ease'
   };
   
   const thumbStyles = {
@@ -252,13 +296,17 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
                 <div key={idx} className="product-item">
                   <img 
                     className="product-single-image" 
-                    src={img} 
-                    data-zoom-image={img}
+                    src={img}
                     alt={`${product.name}-${idx}`} 
+                    style={{ width: '100%', height: 'auto' }}
                   />
                 </div>
               ))}
             </div>
+
+            {/* Custom zoom container - now with explicit positioning context */}
+            <div ref={zoomContainerRef} className="product-zoom-container"></div>
+            
             <span className="prod-full-screen">
               <i className="icon-plus"></i>
             </span>
@@ -289,6 +337,7 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
                       src={img} 
                       alt={`${product.name}-thumbnail-${idx}`}
                       style={{width: '100%', height: 'auto'}}
+                      draggable="false"
                     />
                   </div>
                 ))}
@@ -305,35 +354,99 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
         </div>
       </div>
 
-      {/* Add custom CSS for responsive gallery */}
+      {/* Add custom CSS for responsive gallery and zoom functionality */}
       <style jsx>{`
         .pg-vertical .product-slider-container {
           max-width: calc(100% - 52px);
+          position: relative;
+          z-index: 20;
         }
 
-        .pg-vertical .vertical-thumbs {
-          position: relative;
-          padding-top: 3px;
-          margin: auto 1rem auto 0;
-          order: -1;
-          max-width: 42px;
+        /* Create a new stacking context */
+        .product-slider-container {
+          isolation: isolate; /* Modern browsers */
+          transform: translateZ(0); /* Fallback for older browsers */
+        }
+
+        /* Force position and z-index */
+        .product-zoom-container {
+          position: absolute !important;
+          top: 0;
+          left: 0;
           width: 100%;
+          height: 100%;
+          z-index: 2000 !important;
+          pointer-events: none;
+          transform: translateZ(0);
         }
         
-        .product-thumbs-wrap {
-          transition: height 0.3s;
+        .img-zoom-lens {
+          position: absolute !important;
+          border: 1px solid #d4d4d4;
+          background-color: rgba(0, 0, 0, 0.2);
+          width: 100px;
+          height: 100px;
+          display: none;
+          cursor: crosshair;
+          z-index: 3000 !important;
+          pointer-events: none;
         }
         
-        .responsive-gallery .product-thumbs .owl-dot {
-          margin-bottom: 12px;
+        .img-zoom-result {
+          position: absolute !important;
+          right: -320px;
+          top: 0;
+          border: 1px solid #d4d4d4;
+          width: 300px;
+          height: 300px;
+          background-repeat: no-repeat;
+          display: none;
+          z-index: 9999 !important;
+          pointer-events: none;
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+          transform: translateZ(0);
+        }
+        
+        /* Make sure the active image gets pointer events */
+        .product-single-carousel .active .product-single-image {
+          pointer-events: auto;
+          z-index: 10;
         }
         
         @media (max-width: 991px) {
           .responsive-gallery .product-thumbs .owl-dot {
             margin-bottom: 8px;
           }
+          
+          .img-zoom-result {
+            display: none !important;
+          }
+        }
+
+        .pg-vertical {
+          display: flex;
+          flex-wrap: nowrap;
+          margin-bottom: 1rem;
+          position: sticky;
         }
       `}</style>
+
+      {/* Additional styles to directly target the zoom elements */}
+      <style>
+        {`
+          /* Global styles to ensure zoom container is above all content */
+          #root .img-zoom-result {
+            z-index: 9999 !important;
+            position: absolute !important;
+          }
+          
+          /* Create global override */
+          body .img-zoom-result {
+            position: absolute !important;
+            z-index: 9999 !important;
+          }
+        `}
+      </style>
     </>
   )
 }

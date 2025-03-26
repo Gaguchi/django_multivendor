@@ -28,6 +28,8 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
 h1 {
@@ -65,4 +67,22 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* Add these styles to your global CSS */
+.img-zoom-result {
+  position: fixed !important;
+  z-index: 9999 !important;
+  pointer-events: none !important;
+}
+
+/* Set default z-index for all major components */
+.card, .modal-dialog, .dropdown-menu, .popover, .tooltip {
+  z-index: 1030;
+}
+
+/* Make zoom lens and result above all */
+.img-zoom-lens,
+.img-zoom-result {
+  z-index: 9999 !important;
 }
