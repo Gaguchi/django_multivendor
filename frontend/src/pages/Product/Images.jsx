@@ -429,24 +429,18 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
           margin-bottom: 1rem;
           position: sticky;
         }
+        /* Global styles to ensure zoom container is above all content */
+        #root .img-zoom-result {
+          z-index: 9999 !important;
+          position: absolute !important;
+        }
+        
+        /* Create global override */
+        body .img-zoom-result {
+          position: absolute !important;
+          z-index: 9999 !important;
+        }
       `}</style>
-
-      {/* Additional styles to directly target the zoom elements */}
-      <style>
-        {`
-          /* Global styles to ensure zoom container is above all content */
-          #root .img-zoom-result {
-            z-index: 9999 !important;
-            position: absolute !important;
-          }
-          
-          /* Create global override */
-          body .img-zoom-result {
-            position: absolute !important;
-            z-index: 9999 !important;
-          }
-        `}
-      </style>
     </>
   )
 }

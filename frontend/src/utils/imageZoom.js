@@ -20,181 +20,177 @@ export function setupImageZoom(zoomContainer, debug = false) {
     return;
   }
 
-  if (debug) console.log('Setting up zoom for image:', activeImage.src);
-
   // Create zoom lens element with explicit dimensions
   const lens = document.createElement('div');
   lens.className = 'img-zoom-lens';
-  lens.style.width = '100px';
-  lens.style.height = '100px';
+  lens.style.width = '180px';
+  lens.style.height = '180px';
+  
+  // Add lens to the container
+  zoomContainer.appendChild(lens);
   
   // Create zoom result element with explicit dimensions
   const result = document.createElement('div');
   result.className = 'img-zoom-result';
-  result.style.width = '300px';
-  result.style.height = '300px';
-  result.style.zIndex = '9999'; // Force high z-index directly
-  result.style.position = 'absolute'; // Force position
+  result.style.width = '600px';
+  result.style.height = '600px';
+  result.style.position = 'fixed';
+  result.style.zIndex = '9999';
+  result.style.background = '#fff';
+  result.style.border = '1px solid #ddd';
+  result.style.backgroundRepeat = 'no-repeat';
+  result.style.boxShadow = '0 5px 10px rgba(0,0,0,0.1)';
   
-  // Add elements to the container
-  zoomContainer.appendChild(lens);
-  
-  // Append the result to body instead to avoid z-index issues
+  // Append result to body for z-index control
   document.body.appendChild(result);
   
-  // Position the result relative to the image
+  // Position the result element beside the image
   const positionZoomResult = () => {
+    if (!activeImage) return;
+    
     const imageRect = activeImage.getBoundingClientRect();
-    result.style.position = 'fixed';
+    const windowWidth = window.innerWidth;
+    
+    // Default position to the right of the image
+    let left = imageRect.right + 20;
+    
+    // If showing to the right would push it off screen, show on the left instead
+    if (left + 300 > windowWidth) {
+      left = Math.max(0, imageRect.left - 320);
+    }
+    
     result.style.top = `${imageRect.top}px`;
-    result.style.right = `auto`;
-    result.style.left = `${imageRect.right + 20}px`;
+    result.style.left = `${left}px`;
   };
   
-  // Position immediately and on resize
+  // Position result initially and on window events
   positionZoomResult();
   window.addEventListener('resize', positionZoomResult);
   window.addEventListener('scroll', positionZoomResult);
   
-  // Wait for image to be fully loaded before calculating dimensions
-  const calculateZoomRatios = () => {
-    // Set the size of the lens and result
-    const cx = result.offsetWidth / lens.offsetWidth;
-    const cy = result.offsetHeight / lens.offsetHeight;
-    
-    if (debug) {
-      console.log('Zoom ratios - cx:', cx, 'cy:', cy);
-      console.log('Lens dimensions:', lens.offsetWidth, 'x', lens.offsetHeight);
-      console.log('Result dimensions:', result.offsetWidth, 'x', result.offsetHeight);
-    }
-    
-    // Set background properties of result
-    result.style.backgroundImage = `url('${activeImage.src}')`;
-    
-    // Wait for image to load before accessing width and height
-    const tempImg = new Image();
-    tempImg.onload = () => {
-      const imgWidth = tempImg.width;
-      const imgHeight = tempImg.height;
-      
-      result.style.backgroundSize = `${imgWidth * cx}px ${imgHeight * cy}px`;
-      
-      if (debug) {
-        console.log('Image dimensions:', imgWidth, 'x', imgHeight);
-        console.log('Zoom result background size:', `${imgWidth * cx}px ${imgHeight * cy}px`);
-      }
-    };
-    tempImg.src = activeImage.src;
+  // Load the full-size image to get accurate dimensions
+  const getImageDimensions = () => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        resolve({
+          width: img.width,
+          height: img.height
+        });
+      };
+      img.src = activeImage.src;
+    });
   };
   
-  // Run calculations once
-  calculateZoomRatios();
+  // Setup the image background
+  const setupBackground = async () => {
+    const dimensions = await getImageDimensions();
+    
+    // Set zoom result background image
+    result.style.backgroundImage = `url('${activeImage.src}')`;
+    
+    // Use a lower zoom ratio for better usability
+    const zoomRatio = 1.5;
+    result.style.backgroundSize = `${dimensions.width * zoomRatio}px ${dimensions.height * zoomRatio}px`;
+    
+    return { dimensions, zoomRatio };
+  };
   
-  // Mouse move handler for zoom effect
+  // Initialize setup and store zoom settings
+  let zoomSettings = {
+    dimensions: { width: 0, height: 0 },
+    zoomRatio: 1.5
+  };
+  
+  setupBackground().then(settings => {
+    zoomSettings = settings;
+  });
+  
+  // Handle mouse movement for zoom effect
   function moveLens(e) {
     e.preventDefault();
     
-    // Get cursor position
     const pos = getCursorPos(e);
+    const imageRect = activeImage.getBoundingClientRect();
     
-    if (debug) {
-      console.log('------ Mouse Move Event -------');
-      console.log('Raw event coordinates - pageX:', e.pageX, 'pageY:', e.pageY);
-      console.log('Cursor position relative to image - x:', pos.x, 'y:', pos.y);
-    }
-    
-    // Calculate position of lens
+    // Calculate lens position
     let x = pos.x - lens.offsetWidth / 2;
     let y = pos.y - lens.offsetHeight / 2;
     
-    if (debug) {
-      console.log('Initial lens position - x:', x, 'y:', y);
-    }
+    // Constrain lens to image boundaries
+    const maxX = imageRect.width - lens.offsetWidth;
+    const maxY = imageRect.height - lens.offsetHeight;
     
-    // Get image dimensions
-    const imgWidth = activeImage.width || activeImage.naturalWidth;
-    const imgHeight = activeImage.height || activeImage.naturalHeight;
+    x = x < 0 ? 0 : x > maxX ? maxX : x;
+    y = y < 0 ? 0 : y > maxY ? maxY : y;
     
-    // Prevent lens from being positioned outside the image
-    if (x > imgWidth - lens.offsetWidth) x = imgWidth - lens.offsetWidth;
-    if (x < 0) x = 0;
-    if (y > imgHeight - lens.offsetHeight) y = imgHeight - lens.offsetHeight;
-    if (y < 0) y = 0;
-    
-    if (debug) {
-      console.log('Adjusted lens position - x:', x, 'y:', y);
-      console.log('Image boundaries - width:', imgWidth, 'height:', imgHeight);
-      console.log('Image position - left:', activeImage.getBoundingClientRect().left, 'top:', activeImage.getBoundingClientRect().top);
-    }
-    
-    // Set the position of the lens
+    // Position the lens
     lens.style.left = x + "px";
     lens.style.top = y + "px";
     
-    // Calculate zoom ratios again to avoid NaN
-    const cx = result.offsetWidth / lens.offsetWidth;
-    const cy = result.offsetHeight / lens.offsetHeight;
+    // Calculate the relative position as a percentage of the image size
+    const lensPercentX = (x / (imageRect.width - lens.offsetWidth)) * 100;
+    const lensPercentY = (y / (imageRect.height - lens.offsetHeight)) * 100;
     
-    // Display what the lens "sees" in the result div
-    result.style.backgroundPosition = `-${x * cx}px -${y * cy}px`;
+    // Calculate zoom result's background position
+    const resultWidth = 600;
+    const resultHeight = 600;
+    const bgWidth = zoomSettings.dimensions.width * zoomSettings.zoomRatio;
+    const bgHeight = zoomSettings.dimensions.height * zoomSettings.zoomRatio;
+    
+    // The background image should shift in proportion to where the lens is
+    const bgX = (lensPercentX / 100) * (bgWidth - resultWidth);
+    const bgY = (lensPercentY / 100) * (bgHeight - resultHeight);
+    
+    // Apply the background position
+    result.style.backgroundPosition = `-${bgX}px -${bgY}px`;
+    
+    // Calculate what percentage into the background we're showing
+    const bgPercentX = (bgX / (bgWidth - resultWidth)) * 100;
+    const bgPercentY = (bgY / (bgHeight - resultHeight)) * 100;
     
     if (debug) {
-      console.log('Result background position:', `-${x * cx}px -${y * cy}px`);
+      // Compact debugging output showing lens position and background position as percentages
+      console.log(`Lens: ${lensPercentX.toFixed(1)}%, ${lensPercentY.toFixed(1)}% | BG: ${bgPercentX.toFixed(1)}%, ${bgPercentY.toFixed(1)}% | Diff: ${(bgPercentX - lensPercentX).toFixed(1)}%, ${(bgPercentY - lensPercentY).toFixed(1)}%`);
     }
   }
   
   // Get cursor position relative to the image
   function getCursorPos(e) {
-    let a, x = 0, y = 0;
-    e = e || window.event;
-    a = activeImage.getBoundingClientRect();
+    const imageRect = activeImage.getBoundingClientRect();
     
-    // Calculate cursor position relative to image
-    x = e.pageX - a.left - window.pageXOffset;
-    y = e.pageY - a.top - window.pageYOffset;
-    
-    if (debug) {
-      console.log('getBoundingClientRect:', a);
-      console.log('Window scroll - X:', window.pageXOffset, 'Y:', window.pageYOffset);
-    }
-    
-    return { x, y };
+    return { 
+      x: e.clientX - imageRect.left,
+      y: e.clientY - imageRect.top
+    };
   }
   
-  // Since we've positioned the zoom container absolutely over the image,
-  // we need to attach mousemove events to the zoom container too
+  // Attach event listeners
   activeImage.addEventListener("mousemove", moveLens);
   zoomContainer.addEventListener("mousemove", moveLens);
-  lens.addEventListener("mousemove", moveLens);
   
-  // Show/hide zoom on mouse enter/leave
+  // Show/hide zoom elements
   activeImage.addEventListener("mouseenter", () => {
     lens.style.display = "block";
     result.style.display = "block";
-    positionZoomResult(); // Reposition on show
-    if (debug) console.log('Mouse entered image - showing zoom');
+    positionZoomResult();
   });
   
   activeImage.addEventListener("mouseleave", () => {
     lens.style.display = "none";
     result.style.display = "none";
-    if (debug) console.log('Mouse left image - hiding zoom');
   });
   
-  // Return cleanup function to remove event listeners
+  // Return cleanup function
   return () => {
     activeImage.removeEventListener("mousemove", moveLens);
     zoomContainer.removeEventListener("mousemove", moveLens);
-    lens.removeEventListener("mousemove", moveLens);
     activeImage.removeEventListener("mouseenter", () => {});
     activeImage.removeEventListener("mouseleave", () => {});
     window.removeEventListener('resize', positionZoomResult);
     window.removeEventListener('scroll', positionZoomResult);
     
-    // Remove elements
     if (lens.parentNode) lens.parentNode.removeChild(lens);
     if (result.parentNode) result.parentNode.removeChild(result);
-    
-    if (debug) console.log('Zoom event listeners removed');
   };
 }
