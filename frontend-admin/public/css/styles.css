@@ -3179,7 +3179,7 @@ select option {
   margin: 0 auto;
 }
 .login-page .left .login-box h3 {
-  color: var(--White);
+  color: var(--Main-Dark);
   margin-bottom: 5px;
 }
 .login-page .left .login-box .bottom {
@@ -3196,6 +3196,9 @@ select option {
 .login-page .left .login-box .tf-button {
   font-size: 16px;
   font-weight: 400;
+  border: 1px solid rgba(255, 255, 255, 0.3019607843);
+    font-weight: 400;
+    font-size: 16px;
 }
 .login-page .left .login-box.type-signup {
   gap: 40px;

@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import SideMenu from './componenets/SideMenu';
 import Header from './componenets/Header';
 import MainContent from './componenets/MainContent';
+import Login from './pages/Login';
+import OAuthCallback from './components/OAuthCallback';
+import ProtectedRoute from './components/ProtectedRoute';
+import { isAuthenticated } from './utils/auth';
 
 function App() {
   const [scriptsLoaded, setScriptsLoaded] = useState(false);
@@ -23,7 +27,7 @@ function App() {
             console.log(`Script ${src} already loaded, skipping...`);
             resolve();
             return;
-          }
+          };
           
           console.log(`Loading script: ${src}`);
           const script = document.createElement('script');
@@ -82,26 +86,38 @@ function App() {
     };
   }, [scriptsLoaded]);
 
-  return (
-    <Router>
-      <div id="wrapper">
-        <div id="page" className="">
-          <div className="layout-wrap">
-            <div id="preload" className="preload-container">
-              <div className="preloading">
-                <span />
-              </div>
+  const MainLayout = () => (
+    <div id="wrapper">
+      <div id="page" className="">
+        <div className="layout-wrap">
+          <div id="preload" className="preload-container">
+            <div className="preloading">
+              <span />
             </div>
-            <SideMenu />
-            <div className="section-content-right">
-              <Header />
-              <MainContent />
-            </div>
+          </div>
+          <SideMenu />
+          <div className="section-content-right">
+            <Header />
+            <MainContent />
           </div>
         </div>
       </div>
+    </div>
+  );
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={isAuthenticated() ? <Navigate to="/" /> : <Login />} />
+        <Route path="/auth/callback" element={<OAuthCallback />} />
+        <Route path="/*" element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        } />
+      </Routes>
     </Router>
-  )
+  );
 }
 
-export default App
+export default App;

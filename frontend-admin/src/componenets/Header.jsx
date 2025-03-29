@@ -1,4 +1,14 @@
+import { useNavigate } from 'react-router-dom';
+import { clearToken, getUserData } from '../utils/auth';
+
 export default function Header() {
+    const navigate = useNavigate();
+    const userData = getUserData();
+    
+    const handleLogout = () => {
+        clearToken();
+        navigate('/login');
+    };
 
     return (
         <>
@@ -519,9 +529,9 @@ export default function Header() {
                         </span>
                         <span className="flex flex-column">
                           <span className="body-text text-main-dark">
-                            Kristin Watson
+                            {userData?.firstName || 'Vendor'} {userData?.lastName || ''}
                           </span>
-                          <span className="text-tiny">Sale Administrator</span>
+                          <span className="text-tiny">{userData?.email || 'Vendor Account'}</span>
                         </span>
                       </span>
                     </button>
@@ -571,12 +581,12 @@ export default function Header() {
                         </a>
                       </li>
                       <li>
-                        <a href="login.html" className="user-item">
+                        <button className="user-item" onClick={handleLogout}>
                           <div className="icon">
                             <i className="icon-log-out" />
                           </div>
                           <div className="body-title-2">Log out</div>
-                        </a>
+                        </button>
                       </li>
                     </ul>
                   </div>
