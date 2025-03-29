@@ -16365,3 +16365,14 @@ NameError: name 'Http404' is not defined
 [2025-03-29 19:57:54,925] INFO views Token refreshed successfully for user
 [2025-03-29 20:27:55,651] INFO views Token refreshed successfully for user
 [2025-03-29 20:27:55,765] INFO views Token refreshed successfully for user
+[2025-03-29 21:00:20,881] INFO views Token refreshed successfully for user
+[2025-03-29 21:00:20,891] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-29 21:00:20,891] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-29 21:30:21,806] INFO views Token refreshed successfully for user
+[2025-03-29 22:00:23,017] INFO views Token refreshed successfully for user
+[2025-03-29 22:30:24,160] INFO views Token refreshed successfully for user
+[2025-03-29 23:00:25,226] INFO views Token refreshed successfully for user
+[2025-03-29 23:30:25,855] INFO views Token refreshed successfully for user
+[2025-03-30 00:00:29,180] INFO views Token refreshed successfully for user
+[2025-03-30 00:09:59,871] WARNING log Not Found: /
+[2025-03-30 00:09:59,871] WARNING log Not Found: /
