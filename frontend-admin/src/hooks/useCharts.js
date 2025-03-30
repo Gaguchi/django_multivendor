@@ -146,32 +146,32 @@ const initializeMorrisCharts = (element) => {
 /**
  * Initialize Vector Map
  */
-const initializeVectorMap = (element) => {
-  if (typeof $ === 'undefined' || !$.fn.vectorMap) {
-    console.error("jQuery or jVectorMap not loaded");
-    return;
-  }
+// const initializeVectorMap = (element) => {
+//   if (typeof $ === 'undefined' || !$.fn.vectorMap) {
+//     console.error("jQuery or jVectorMap not loaded");
+//     return;
+//   }
   
-  try {
-    // Clear existing map
-    $(element).empty();
+//   try {
+//     // Clear existing map
+//     $(element).empty();
     
-    // Create new map
-    $(element).vectorMap({
-      map: 'us_lcc',
-      backgroundColor: 'transparent',
-      regionStyle: {
-        initial: {
-          fill: '#8F77F3'
-        }
-      }
-    });
+//     // Create new map
+//     $(element).vectorMap({
+//       map: 'us_lcc',
+//       backgroundColor: 'transparent',
+//       regionStyle: {
+//         initial: {
+//           fill: '#8F77F3'
+//         }
+//       }
+//     });
     
-    console.log("Vector map initialized successfully");
-  } catch (error) {
-    console.error("Error initializing vector map:", error);
-  }
-};
+//     console.log("Vector map initialized successfully");
+//   } catch (error) {
+//     console.error("Error initializing vector map:", error);
+//   }
+// };
 
 // Chart options functions
 const getLineChart1Options = () => ({

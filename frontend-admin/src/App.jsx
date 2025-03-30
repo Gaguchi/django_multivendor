@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import OAuthCallback from './components/OAuthCallback';
 import ProtectedRoute from './components/ProtectedRoute';
 import { isAuthenticated, isVendor } from './utils/auth';
+import './assets/css/custom.css'; // Import custom CSS for menu fixes
 
 function App() {
   const [scriptsLoaded, setScriptsLoaded] = useState(false);
@@ -83,10 +84,10 @@ function App() {
         "../js/morris.min.js",
         "../js/raphael.min.js",
         "../js/morris.js",
-        "../js/jvectormap.min.js",
-        "../js/jvectormap-us-lcc.js",
-        "../js/jvectormap-data.js",
-        "../js/jvectormap.js",
+        // "../js/jvectormap.min.js",
+        // "../js/jvectormap-us-lcc.js",
+        // "../js/jvectormap-data.js",
+        // "../js/jvectormap.js",
         "../js/apexcharts/apexcharts.js",
         "../js/switcher.js",
         "../js/theme-settings.js",

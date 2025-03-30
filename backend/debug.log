@@ -16493,3 +16493,26 @@ NameError: name 'Http404' is not defined
 [2025-03-30 13:16:10,784] INFO views Successfully obtained tokens from google
 [2025-03-30 13:17:13,702] INFO views Token refreshed successfully for user
 [2025-03-30 13:17:13,718] INFO views Token refreshed successfully for user
+[2025-03-30 13:47:34,833] INFO views Token refreshed successfully for user
+[2025-03-30 13:47:34,834] INFO views Token refreshed successfully for user
+[2025-03-30 14:17:35,618] INFO views Token refreshed successfully for user
+[2025-03-30 14:17:35,688] INFO views Token refreshed successfully for user
+[2025-03-30 14:36:38,078] WARNING log Unauthorized: /api/users/profile/
+[2025-03-30 14:36:38,078] WARNING log Unauthorized: /api/users/profile/
+[2025-03-30 14:36:38,168] WARNING log Unauthorized: /api/users/profile/
+[2025-03-30 14:36:38,168] WARNING log Unauthorized: /api/users/profile/
+[2025-03-30 14:36:38,322] INFO views Token refreshed successfully for user
+[2025-03-30 14:36:38,353] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-30 14:36:38,353] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-30 14:37:15,565] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-03-30 14:37:15,567] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-03-30 14:37:15,567] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-03-30 14:37:15,567] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-03-30 14:37:15,567] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-03-30 14:37:15,567] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-03-30 14:37:15,567] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-03-30 14:37:15,568] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-03-30 14:37:16,119] INFO views Successfully obtained tokens from google
+[2025-03-30 14:37:16,134] INFO views Successfully obtained tokens from google
+[2025-03-30 14:47:36,589] INFO views Token refreshed successfully for user
+[2025-03-30 14:47:36,670] INFO views Token refreshed successfully for user

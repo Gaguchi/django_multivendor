@@ -801,62 +801,6 @@ export default function Default() {
             </ul>
           </div>
         </div>
-        <div className="wg-box">
-          <div className="flex items-center justify-between">
-            <h5>User Location</h5>
-          </div>
-          <div className="wrap-usa-vectormap">
-            <div id="usa-vectormap" />
-            <div className="bot">
-              <div className="flex items-center justify-between gap20 mb-20">
-                <div className="block-legend">
-                  <div className="dot t6" />
-                  <div className="text-tiny text-surface-2">
-                    California{" "}
-                    <span className="fw-7 text-main-dark">40%</span>
-                  </div>
-                </div>
-                <div className="block-legend">
-                  <div className="dot t6" />
-                  <div className="text-tiny text-surface-2">
-                    Arizona{" "}
-                    <span className="fw-7 text-main-dark">15%</span>
-                  </div>
-                </div>
-                <div className="block-legend">
-                  <div className="dot t3" />
-                  <div className="text-tiny text-surface-2">
-                    Texas{" "}
-                    <span className="fw-7 text-main-dark">10%</span>
-                  </div>
-                </div>
-              </div>
-              <div className="flex items-center justify-between gap20">
-                <div className="block-legend">
-                  <div className="dot t3" />
-                  <div className="text-tiny text-surface-2">
-                    Georda{" "}
-                    <span className="fw-7 text-main-dark">3.5%</span>
-                  </div>
-                </div>
-                <div className="block-legend">
-                  <div className="dot t3" />
-                  <div className="text-tiny text-surface-2">
-                    North Carolina{" "}
-                    <span className="fw-7 text-main-dark">2%</span>
-                  </div>
-                </div>
-                <div className="block-legend">
-                  <div className="dot t3" />
-                  <div className="text-tiny text-surface-2">
-                    Florida{" "}
-                    <span className="fw-7 text-main-dark">1.5%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </>
   )

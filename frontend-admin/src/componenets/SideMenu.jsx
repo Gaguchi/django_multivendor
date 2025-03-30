@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import Home from './Svgs/Home';
 import Attributes from './Svgs/Attributes';
 import Faq from './Svgs/Faq';
@@ -12,12 +13,31 @@ export default function SideMenu() {
     const location = useLocation();
     const currentPath = location.pathname;
     
+    // State to track which menu items are expanded
+    const [expandedMenus, setExpandedMenus] = useState({});
+    
+    // Function to toggle menu expansion
+    const toggleMenu = (menuKey) => {
+        setExpandedMenus(prev => ({
+            ...prev,
+            [menuKey]: !prev[menuKey]
+        }));
+    };
+    
     // Function to check if route is active
     const isActive = (path) => currentPath === path;
     
     // Function to check if any child route is active
     const hasActiveChild = (paths) => {
         return paths.some(path => currentPath.startsWith(path));
+    };
+    
+    // Function to handle logout
+    const handleLogout = () => {
+        // Clear localStorage
+        localStorage.clear();
+        // Redirect to login page
+        window.location.href = '/login';
     };
 
     return (
@@ -49,14 +69,18 @@ export default function SideMenu() {
                       <div className="text">Home</div>
                     </Link>
                   </li>
-                  <li className={`menu-item has-children ${hasActiveChild(['/products', '/addproduct']) ? 'active' : ''}`}>
-                    <a href="javascript:void(0);" className="menu-item-button">
+                  <li className={`menu-item has-children ${expandedMenus['products'] ? 'active' : ''} ${hasActiveChild(['/products', '/addproduct']) ? 'active' : ''}`}>
+                    <a 
+                      href="#" 
+                      onClick={(e) => {e.preventDefault(); toggleMenu('products');}}
+                      className="menu-item-button"
+                    >
                       <div className="icon">
                         <i className="icon-file-plus" />
                       </div>
                       <div className="text">Products</div>
                     </a>
-                    <ul className="sub-menu">
+                    <ul className={`sub-menu ${expandedMenus['products'] ? 'show' : ''}`}>
                       <li className={`sub-menu-item ${isActive('/products') ? 'active' : ''}`}>
                         <Link to="/products">
                           <div className="text">All Products</div>
@@ -69,141 +93,161 @@ export default function SideMenu() {
                       </li>
                     </ul>
                   </li>
-                  <li className="menu-item has-children">
-                    <a href="javascript:void(0);" className="menu-item-button">
+                  <li className={`menu-item has-children ${expandedMenus['warehouses'] ? 'active' : ''}`}>
+                    <a 
+                      href="#" 
+                      onClick={(e) => {e.preventDefault(); toggleMenu('warehouses');}}
+                      className="menu-item-button"
+                    >
                       <div className="icon">
                         <i className="icon-package" />
                       </div>
                       <div className="text">Warehouses</div>
                     </a>
-                    <ul className="sub-menu">
+                    <ul className={`sub-menu ${expandedMenus['warehouses'] ? 'show' : ''}`}>
                       <li className="sub-menu-item">
-                        <a href="category-list.html" className="">
+                        <Link to="/warehouses">
                           <div className="text">Warehouses list</div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="sub-menu-item">
-                        <a href="new-category.html" className="">
+                        <Link to="/warehouses/new">
                           <div className="text">New Warehouse</div>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </li>
-                  <li className="menu-item has-children">
-                    <a href="javascript:void(0);" className="menu-item-button">
+                  <li className={`menu-item has-children ${expandedMenus['messages'] ? 'active' : ''}`}>
+                    <a 
+                      href="#" 
+                      onClick={(e) => {e.preventDefault(); toggleMenu('messages');}}
+                      className="menu-item-button"
+                    >
                       <div className="icon">
                         <i className="icon-message-square" />
                       </div>
                       <div className="text">Messages</div>
                     </a>
-                    <ul className="sub-menu">
+                    <ul className={`sub-menu ${expandedMenus['messages'] ? 'show' : ''}`}>
                       <li className="sub-menu-item">
-                        <a href="attributes.html" className="">
+                        <Link to="/attributes">
                           <div className="text">Attributes</div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="sub-menu-item">
-                        <a href="add-attributes.html" className="">
+                        <Link to="/attributes/add">
                           <div className="text">Add attributes</div>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </li>
-                  <li className="menu-item has-children">
-                    <a href="javascript:void(0);" className="menu-item-button">
+                  <li className={`menu-item has-children ${expandedMenus['orders'] ? 'active' : ''}`}>
+                    <a 
+                      href="#" 
+                      onClick={(e) => {e.preventDefault(); toggleMenu('orders');}}
+                      className="menu-item-button"
+                    >
                       <Order />
                       <div className="text">Orders</div>
                     </a>
-                    <ul className="sub-menu">
+                    <ul className={`sub-menu ${expandedMenus['orders'] ? 'show' : ''}`}>
                       <li className="sub-menu-item">
-                        <a href="oder-list.html" className="">
+                        <Link to="/orders">
                           <div className="text">Order list</div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="sub-menu-item">
-                        <a href="oder-detail.html" className="">
+                        <Link to="/orders/detail">
                           <div className="text">Order detail</div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="sub-menu-item">
-                        <a href="oder-tracking.html" className="">
+                        <Link to="/orders/tracking">
                           <div className="text">Order tracking</div>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </li>
-                  <li className="menu-item has-children">
-                    <a href="javascript:void(0);" className="menu-item-button">
+                  <li className={`menu-item has-children ${expandedMenus['account'] ? 'active' : ''}`}>
+                    <a 
+                      href="#" 
+                      onClick={(e) => {e.preventDefault(); toggleMenu('account');}}
+                      className="menu-item-button"
+                    >
                       <div className="icon">
                         <i className="icon-user" />
                       </div>
                       <div className="text">Account</div>
                     </a>
-                    <ul className="sub-menu">
+                    <ul className={`sub-menu ${expandedMenus['account'] ? 'show' : ''}`}>
                       <li className="sub-menu-item">
-                        <a href="all-user.html" className="">
+                        <Link to="/users">
                           <div className="text">All user</div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="sub-menu-item">
-                        <a href="add-new-user.html" className="">
+                        <Link to="/users/new">
                           <div className="text">Add new user</div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="sub-menu-item">
-                        <a href="login.html" className="">
+                        <Link to="/login">
                           <div className="text">Login</div>
-                        </a>
+                        </Link>
                       </li>
                       <li className="sub-menu-item">
-                        <a href="sign-up.html" className="">
+                        <Link to="/signup">
                           <div className="text">Sign up</div>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </li>
-                  <li className="menu-item has-children">
-                    <a href="javascript:void(0);" className="menu-item-button">
+                  <li className={`menu-item has-children ${expandedMenus['notifications'] ? 'active' : ''}`}>
+                    <a 
+                      href="#" 
+                      onClick={(e) => {e.preventDefault(); toggleMenu('notifications');}}
+                      className="menu-item-button"
+                    >
                       <div className="icon">
                         <i className="icon-bell" />
                       </div>
                       <div className="text">Notifications</div>
                     </a>
-                    <ul className="sub-menu">
+                    <ul className={`sub-menu ${expandedMenus['notifications'] ? 'show' : ''}`}>
                       <li className="sub-menu-item">
-                        <a href="../index.html" className="">
+                        <a href="http://shop.bazro.ge" target="_blank" rel="noopener noreferrer">
                           <div className="text">View Store</div>
                         </a>
                       </li>
                       <li className="sub-menu-item">
-                        <a href="store-setting.html" className="">
+                        <Link to="/store-settings">
                           <div className="text">Store Setting</div>
-                        </a>
+                        </Link>
                       </li>
                     </ul>
                   </li>
                   <li className="menu-item">
-                    <a href="report.html" className="">
+                    <Link to="/reports">
                       <div className="icon">
                         <i className="icon-pie-chart" />
                       </div>
                       <div className="text">Reports</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="menu-item">
-                    <a href="setting.html" className="">
+                    <Link to="/settings">
                       <Setting />
                       <div className="text">Settings</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="menu-item">
-                    <a href="faq.html" className="">
+                    <Link to="/faq">
                       <Faq />
                       <div className="text">FAQs</div>
-                    </a>
+                    </Link>
                   </li>
                   <li className="menu-item">
-                    <a href="login.html" className="">
+                    <a href="#" onClick={handleLogout}>
                       <LogOut />
                       <div className="text">Log out</div>
                     </a>

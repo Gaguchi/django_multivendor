@@ -1,0 +1,56 @@
+/* Custom styles for the sidebar menu */
+.sub-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.sub-menu.show {
+  max-height: 500px; /* Large enough to contain all items */
+}
+
+.menu-item.has-children.active > .sub-menu {
+  max-height: 500px; /* Also ensure active menus are shown */
+}
+
+/* Improve submenu hover and click states */
+.menu-item-button {
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.menu-item-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Make sure links inside the submenu items have proper styling */
+.sub-menu-item a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+}
+
+.sub-menu-item a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Fix layout issues */
+.section-menu-left-wrap {
+  overflow-y: auto;
+}
+
+/* Add a caret indicator for expandable menus */
+.menu-item.has-children > .menu-item-button::after {
+  content: '▾';
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.menu-item.has-children.active > .menu-item-button::after {
+  transform: rotate(180deg);
+}
