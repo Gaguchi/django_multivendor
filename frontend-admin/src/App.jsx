@@ -6,10 +6,25 @@ import MainContent from './componenets/MainContent';
 import Login from './pages/Login';
 import OAuthCallback from './components/OAuthCallback';
 import ProtectedRoute from './components/ProtectedRoute';
-import { isAuthenticated } from './utils/auth';
+import { isAuthenticated, isVendor } from './utils/auth';
 
 function App() {
   const [scriptsLoaded, setScriptsLoaded] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+
+  // Check if user is authenticated and is a vendor
+  useEffect(() => {
+    const checkAuth = async () => {
+      const authenticated = isAuthenticated();
+      const vendorStatus = isVendor();
+      
+      setIsAuthorized(authenticated && vendorStatus);
+      setCheckingAuth(false);
+    };
+    
+    checkAuth();
+  }, []);
 
   useEffect(() => {
     // Only load scripts if they haven't been loaded already
@@ -27,7 +42,7 @@ function App() {
             console.log(`Script ${src} already loaded, skipping...`);
             resolve();
             return;
-          };
+          }
           
           console.log(`Loading script: ${src}`);
           const script = document.createElement('script');
@@ -79,11 +94,6 @@ function App() {
       
       loadScriptsSequentially();
     }
-    
-    // Clean up function
-    return () => {
-      // No need to remove scripts on component unmount as they might be needed globally
-    };
   }, [scriptsLoaded]);
 
   const MainLayout = () => (
@@ -105,16 +115,47 @@ function App() {
     </div>
   );
 
+  // Show loading state while checking authentication
+  if (checkingAuth) {
+    return (
+      <div className="loading-screen">
+        <div className="preloading">
+          <span></span>
+        </div>
+        <div style={{ marginTop: '20px', color: '#555' }}>
+          Loading application...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={isAuthenticated() ? <Navigate to="/" /> : <Login />} />
-        <Route path="/auth/callback" element={<OAuthCallback />} />
-        <Route path="/*" element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        } />
+        <Route 
+          path="/login" 
+          element={isAuthorized ? <Navigate to="/" /> : <Login />} 
+        />
+        <Route 
+          path="/auth/callback" 
+          element={<OAuthCallback />} 
+        />
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/*" 
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
     </Router>
   );

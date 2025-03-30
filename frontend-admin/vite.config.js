@@ -6,7 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    open: true,
     allowedHosts: ['seller.bazro.ge','shop.bazro.ge', 'api.bazro.ge', 'localhost', '127.0.0.1'],
     proxy: {
       '/api': {

@@ -40,7 +40,7 @@ export const refreshToken = async () => {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
     if (!refreshToken) return false;
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/token/refresh/`, {
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/token/refresh/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

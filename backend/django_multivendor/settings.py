@@ -111,7 +111,7 @@ if is_package_installed('corsheaders'):
         'user-agent',
         'x-csrftoken',
         'x-requested-with',
-        'x-master-token',  # Ensure this is lowercase
+        'x-master-token',  # Add this header to allow master token authentication
     ]
 
     CORS_ALLOW_CREDENTIALS = True
@@ -126,17 +126,25 @@ if is_package_installed('corsheaders'):
         'http://api.bazro.ge',
         'https://shop.bazro.ge',
         'http://shop.bazro.ge',
+        'https://seller.bazro.ge',
+        'http://seller.bazro.ge',
+        'https://www.seller.bazro.ge',
+        'http://www.seller.bazro.ge',
+        'https://bazro.ge',
+        'https://www.bazro.ge',
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
     ]
 
-    CORS_ORIGIN_WHITELIST = [
-        'https://localhost:5173',
-        'http://localhost:5173',
-        'https://127.0.0.1:5173',
-        'http://127.0.0.1:5173',
-        'https://api.bazro.ge',
-        'http://api.bazro.ge',
-        'https://shop.bazro.ge',
-        'http://shop.bazro.ge',
+    CORS_ORIGIN_WHITELIST = CORS_ALLOWED_ORIGINS
+
+    CORS_ALLOW_METHODS = [
+        'DELETE',
+        'GET',
+        'OPTIONS',
+        'PATCH',
+        'POST',
+        'PUT',
     ]
 
 ROOT_URLCONF = 'django_multivendor.urls'
@@ -405,15 +413,36 @@ CORS_ALLOWED_ORIGINS = [
     'http://api.bazro.ge',
     'https://shop.bazro.ge',
     'http://shop.bazro.ge',
+    'https://seller.bazro.ge',
+    'http://seller.bazro.ge',
+    'https://www.seller.bazro.ge',
+    'http://www.seller.bazro.ge',
+    'https://bazro.ge',
+    'https://www.bazro.ge',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
 ]
 
-CORS_ORIGIN_WHITELIST = [
-    'https://localhost:5173',
-    'http://localhost:5173',
-    'https://127.0.0.1:5173',
-    'http://127.0.0.1:5173',
-    'https://api.bazro.ge',
-    'http://api.bazro.ge',
-    'https://shop.bazro.ge',
-    'http://shop.bazro.ge',
+CORS_ORIGIN_WHITELIST = CORS_ALLOWED_ORIGINS
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'x-master-token',  # Add this header to allow master token authentication
 ]

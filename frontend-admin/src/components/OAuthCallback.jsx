@@ -7,7 +7,7 @@ function OAuthCallback() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
-  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  const API_URL = import.meta.env.VITE_API_URL || 'https://api.bazro.ge'; // Update with production URL
 
   useEffect(() => {
     const processOAuthCallback = async () => {
@@ -16,15 +16,20 @@ function OAuthCallback() {
         const urlParams = new URLSearchParams(location.search);
         const authCode = urlParams.get('code');
         const state = urlParams.get('state');
-        const provider = location.pathname.includes('google') ? 'google' : 'facebook';
+        
+        // Determine provider from state parameter
+        const provider = state && state.includes('facebook') ? 'facebook' : 'google';
         
         if (!authCode) {
           throw new Error('No authorization code received');
         }
 
-        // Exchange the code for tokens
+        console.log(`Processing ${provider} OAuth callback with code: ${authCode.substring(0, 10)}...`);
+        
+        // Use the correct API URL and include credentials
         const response = await fetch(`${API_URL}/api/users/auth/${provider}/callback/`, {
           method: 'POST',
+          credentials: 'include', // Important for CORS
           headers: {
             'Content-Type': 'application/json',
           },
@@ -36,14 +41,21 @@ function OAuthCallback() {
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Failed to authenticate');
+          let errorMessage = 'Failed to authenticate';
+          try {
+            const errorData = await response.json();
+            errorMessage = errorData.detail || errorData.error || errorMessage;
+          } catch (e) {
+            console.error('Error parsing error response:', e);
+          }
+          throw new Error(errorMessage);
         }
 
         const data = await response.json();
+        console.log('OAuth authentication successful');
 
         // Check if user is a vendor
-        if (data.user?.profile?.user_type !== 'vendor') {
+        if (!data.user?.profile?.user_type || data.user.profile.user_type !== 'vendor') {
           throw new Error('Access denied. Only vendors can access the admin panel.');
         }
 

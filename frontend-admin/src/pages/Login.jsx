@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../services/api';
-import { setToken, isVendor } from '../utils/auth';
+import { setToken } from '../utils/auth';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -10,25 +10,35 @@ export default function Login() {
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
     
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    const API_URL = import.meta.env.VITE_API_URL || 'https://api.bazro.ge'; // Update with production URL
+
+    // Check for error message in location state (from redirect)
+    useEffect(() => {
+        if (location.state?.error) {
+            setError(location.state.error);
+        }
+    }, [location]);
 
     // Function to handle Google OAuth login
     const handleGoogleLogin = () => {
         const redirectUri = `${window.location.origin}/auth/callback`;
-        const googleAuthUrl = `${API_URL}/api/users/auth/google/`;
+        const state = `admin-google-auth`;
         
-        // Redirect to the Google OAuth URL, which will redirect back to our callback URL
-        window.location.href = `${googleAuthUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
+        // Use the right API URL
+        const authUrl = `${API_URL}/api/users/auth/google/?redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+        window.location.href = authUrl;
     };
     
     // Function to handle Facebook OAuth login
     const handleFacebookLogin = () => {
         const redirectUri = `${window.location.origin}/auth/callback`;
-        const facebookAuthUrl = `${API_URL}/api/users/auth/facebook/`;
+        const state = `admin-facebook-auth`;
         
-        // Redirect to the Facebook OAuth URL, which will redirect back to our callback URL
-        window.location.href = `${facebookAuthUrl}?redirect_uri=${encodeURIComponent(redirectUri)}`;
+        // Use the right API URL
+        const authUrl = `${API_URL}/api/users/auth/facebook/?redirect_uri=${encodeURIComponent(redirectUri)}&state=${state}`;
+        window.location.href = authUrl;
     };
     
     const handleSubmit = async (e) => {
