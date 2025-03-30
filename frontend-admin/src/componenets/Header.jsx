@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { clearToken, getUserData } from '../utils/auth';
+import { useEffect } from 'react';
 
 export default function Header() {
     const navigate = useNavigate();
@@ -9,6 +10,80 @@ export default function Header() {
         clearToken();
         navigate('/login');
     };
+
+    // Theme toggle functionality directly in the component
+    const toggleTheme = () => {
+        console.log("Direct theme toggle from Header component");
+        
+        // Get current theme state
+        const isDarkTheme = document.body.classList.contains('dark-theme');
+        console.log("Current theme is dark:", isDarkTheme);
+        
+        if (isDarkTheme) {
+            // Switch to light theme
+            document.body.classList.remove('dark-theme');
+            document.body.classList.add('light-theme');
+            localStorage.setItem('toggled', 'light-theme');
+            
+            // Update logo if available
+            const lightLogo = document.getElementById('logo_header')?.dataset?.light;
+            if (lightLogo) {
+                document.getElementById('logo_header').src = lightLogo;
+                document.getElementById('logo_header_mobile').src = lightLogo;
+            }
+            
+            console.log("Switched to light theme");
+        } else {
+            // Switch to dark theme
+            document.body.classList.remove('light-theme');
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('toggled', 'dark-theme');
+            
+            // Update logo if available
+            const darkLogo = document.getElementById('logo_header')?.dataset?.dark;
+            if (darkLogo) {
+                document.getElementById('logo_header').src = darkLogo;
+                document.getElementById('logo_header_mobile').src = darkLogo;
+            }
+            
+            console.log("Switched to dark theme");
+        }
+        
+        console.log("Body classes after toggle:", document.body.className);
+    };
+
+    // Add direct event listener to the theme button
+    useEffect(() => {
+        console.log("Setting up theme toggle button");
+        
+        const setupThemeToggle = () => {
+            const themeButton = document.querySelector('.button-dark-light');
+            if (themeButton) {
+                console.log("Theme button found, attaching direct click handler");
+                
+                // Remove any existing event listeners
+                const newButton = themeButton.cloneNode(true);
+                themeButton.parentNode.replaceChild(newButton, themeButton);
+                
+                // Add new click event
+                newButton.addEventListener('click', toggleTheme);
+            } else {
+                console.log("Theme button not found, will try again");
+                setTimeout(setupThemeToggle, 500);
+            }
+        };
+        
+        // Initial setup with delay to ensure DOM is ready
+        setTimeout(setupThemeToggle, 500);
+        
+        // Cleanup function
+        return () => {
+            const themeButton = document.querySelector('.button-dark-light');
+            if (themeButton) {
+                themeButton.removeEventListener('click', toggleTheme);
+            }
+        };
+    }, []);
 
     return (
         <>
@@ -202,7 +277,10 @@ export default function Header() {
                     <option data-thumbnail="images/country/9.png">VIE</option>
                   </select>
                 </div>
-                <div className="header-item button-dark-light">
+                <div 
+                  className="header-item button-dark-light" 
+                  onClick={toggleTheme} // Add direct click handler here
+                >
                   <i className="icon-moon" />
                 </div>
                 <div className="popup-wrap noti type-header">

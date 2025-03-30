@@ -13,6 +13,21 @@ function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
+  // Initialize theme from localStorage
+  useEffect(() => {
+    // Set initial theme based on localStorage
+    const storedTheme = localStorage.getItem('toggled');
+    if (storedTheme === 'dark-theme') {
+      document.body.classList.add('dark-theme');
+      document.body.classList.remove('light-theme');
+      console.log('App: Initialized with dark theme');
+    } else {
+      document.body.classList.add('light-theme');
+      document.body.classList.remove('dark-theme');
+      console.log('App: Initialized with light theme');
+    }
+  }, []);
+
   // Check if user is authenticated and is a vendor
   useEffect(() => {
     const checkAuth = async () => {
