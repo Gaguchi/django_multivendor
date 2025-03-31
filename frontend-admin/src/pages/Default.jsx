@@ -597,7 +597,7 @@ export default function Default() {
           {/* /top-countries */}
         </div>
       </div>
-      <div className="tf-section-5">
+      <div className="tf-section-1 mb-30">
         <div className="wg-box">
           <div className="flex items-center justify-between">
             <h5>Recent orders</h5>

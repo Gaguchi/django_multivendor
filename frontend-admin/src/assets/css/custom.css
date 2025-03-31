@@ -35,9 +35,9 @@
   padding: 8px 16px;
 }
 
-.sub-menu-item a:hover {
+/* .sub-menu-item a:hover {
   background-color: rgba(0, 0, 0, 0.05);
-}
+} */
 
 /* Fix layout issues */
 .section-menu-left-wrap {
@@ -45,7 +45,7 @@
 }
 
 /* Add a caret indicator for expandable menus */
-.menu-item.has-children > .menu-item-button::after {
+/* .menu-item.has-children > .menu-item-button::after {
   content: '▾';
   margin-left: auto;
   transition: transform 0.3s ease;
@@ -53,4 +53,4 @@
 
 .menu-item.has-children.active > .menu-item-button::after {
   transform: rotate(180deg);
-}
+} */

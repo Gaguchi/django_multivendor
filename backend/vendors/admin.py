@@ -201,7 +201,7 @@ class VendorAdmin(admin.ModelAdmin):
     list_display = ['store_name', 'user', 'created_at']
     search_fields = ['store_name', 'user__username', 'user__email']
     date_hierarchy = 'created_at'
-    readonly_fields = ['created_at']
+    readonly_fields = ['created_at', 'updated_at']  # Add updated_at as read-only
     
     fieldsets = (
         (None, {
@@ -211,7 +211,7 @@ class VendorAdmin(admin.ModelAdmin):
             'fields': ('description', 'contact_email', 'phone', 'address', 'logo')
         }),
         ('Metadata', {
-            'fields': ('created_at', 'updated_at'),
+            'fields': ('created_at', 'updated_at'),  # Keep this since we made it readonly
             'classes': ('collapse',)
         }),
     )
