@@ -6,7 +6,7 @@ import PricingInventorySection from './PricingInventorySection';
 import { getCategoriesApi } from '../../../services/api';
 
 export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState({ results: [] });
     const [formData, setFormData] = useState({
         images: [],
         name: '',
@@ -27,16 +27,22 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
     const [showAttributes, setShowAttributes] = useState(false);
     const [categoryAttributes, setCategoryAttributes] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
     
     // Fetch categories on component mount
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 setLoading(true);
+                setError(null);
                 const response = await getCategoriesApi();
+                console.log('Categories API response:', response);
+                
+                // Store the full response object which contains the results array
                 setCategories(response);
             } catch (error) {
                 console.error('Error fetching categories:', error);
+                setError('Failed to load categories');
             } finally {
                 setLoading(false);
             }
@@ -55,14 +61,66 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
                     // const response = await getCategoryAttributesApi(formData.category);
                     // setCategoryAttributes(response);
                     
-                    // Mock data for now
-                    setCategoryAttributes([
-                        { id: 1, name: 'Material', type: 'select', options: ['Cotton', 'Polyester', 'Wool'] },
-                        { id: 2, name: 'Weight', type: 'number' },
-                        { id: 3, name: 'Waterproof', type: 'boolean' }
-                    ]);
+                    // Look up the selected category in our categories data to get its attributes
+                    const allCategories = categories?.results || [];
+                    let selectedCategory = null;
                     
-                    setShowAttributes(true);
+                    // Search in root categories
+                    for (const cat of allCategories) {
+                        if (cat.id === parseInt(formData.category)) {
+                            selectedCategory = cat;
+                            break;
+                        }
+                        
+                        // Search in subcategories if not found
+                        if (cat.subcategories) {
+                            for (const subCat of cat.subcategories) {
+                                if (subCat.id === parseInt(formData.category)) {
+                                    selectedCategory = subCat;
+                                    break;
+                                }
+                                
+                                // Search in sub-subcategories if available
+                                if (subCat.subcategories) {
+                                    for (const subSubCat of subCat.subcategories) {
+                                        if (subSubCat.id === parseInt(formData.category)) {
+                                            selectedCategory = subSubCat;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    // If we found the category, get its attribute groups
+                    if (selectedCategory && selectedCategory.attribute_groups) {
+                        const attributes = [];
+                        
+                        // Flatten attributes from all attribute groups
+                        selectedCategory.attribute_groups.forEach(group => {
+                            group.attributes.forEach(attr => {
+                                attributes.push({
+                                    id: attr.id,
+                                    name: attr.name,
+                                    type: attr.attribute_type,
+                                    required: attr.is_required,
+                                    options: attr.options?.map(opt => opt.value) || []
+                                });
+                            });
+                        });
+                        
+                        setCategoryAttributes(attributes);
+                        setShowAttributes(attributes.length > 0);
+                    } else {
+                        // Mock data for development if no attributes found
+                        setCategoryAttributes([
+                            { id: 1, name: 'Material', type: 'select', options: ['Cotton', 'Polyester', 'Wool'] },
+                            { id: 2, name: 'Weight', type: 'number' },
+                            { id: 3, name: 'Waterproof', type: 'boolean' }
+                        ]);
+                        setShowAttributes(true);
+                    }
                 } catch (error) {
                     console.error('Error fetching category attributes:', error);
                 } finally {
@@ -75,7 +133,7 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
         };
         
         fetchCategoryAttributes();
-    }, [formData.category]);
+    }, [formData.category, categories]);
     
     const handleInputChange = (name, value) => {
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -92,6 +150,12 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
 
     return (
         <form className="form-add-product" onSubmit={handleSubmit}>
+            {error && (
+                <div className="alert alert-danger mb-20">
+                    <p>{error}</p>
+                </div>
+            )}
+            
             <ImageUploadSection 
                 images={formData.images} 
                 onImagesChange={handleImageUpload}

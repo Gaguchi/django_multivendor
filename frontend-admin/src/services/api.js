@@ -62,17 +62,17 @@ export async function fetchProfile() {
 
 // Example category APIs
 export async function getCategoriesApi() {
-  const response = await fetch(`${API_URL}/categories/`, {
-    headers: { 'Authorization': `Bearer ${getToken()}` }
-  });
-  return handleResponse(response);
-}
-
-export async function getCategoryBySlugApi(slug) {
-  const response = await fetch(`${API_URL}/categories/${slug}/`, {
-    headers: { 'Authorization': `Bearer ${getToken()}` }
-  });
-  return handleResponse(response);
+  try {
+    const response = await fetch(`${API_URL}/api/categories/`, {
+      headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    const data = await handleResponse(response);
+    console.log("Categories API raw response:", data);
+    return data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error;
+  }
 }
 
 // Example product APIs

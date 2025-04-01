@@ -14,6 +14,9 @@ export default function ProductDetailsSection({ formData, onChange, categories =
         onChange('size', size);
     };
 
+    // Get the actual categories array to render
+    const categoryItems = categories?.results || categories || [];
+
     return (
         <div className="wg-box mb-30">
             <fieldset className="name">
@@ -47,7 +50,7 @@ export default function ProductDetailsSection({ formData, onChange, categories =
                     disabled={loading}
                 >
                     <option value="">Choose category</option>
-                    {categories.map(category => (
+                    {Array.isArray(categoryItems) && categoryItems.map(category => (
                         <option key={category.id} value={category.id}>
                             {category.name}
                         </option>

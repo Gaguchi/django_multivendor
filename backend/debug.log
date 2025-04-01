@@ -16916,3 +16916,39 @@ django.core.exceptions.FieldError: 'updated_at' cannot be specified for Vendor m
 [2025-04-01 21:19:28,259] INFO views Successfully obtained tokens from google
 [2025-04-01 21:41:49,151] INFO views Read-only action list - allowing public access
 [2025-04-01 21:42:44,000] INFO views Read-only action root - allowing public access
+[2025-04-01 22:38:11,280] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 22:38:11,280] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 22:38:11,486] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 22:38:11,486] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 22:38:14,214] INFO views Token refreshed successfully for user
+[2025-04-01 22:38:14,215] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-01 22:38:14,215] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-01 22:42:12,114] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 22:42:12,114] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 22:42:12,116] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 22:42:12,116] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 22:42:12,116] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 22:42:12,117] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 22:42:12,117] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 22:42:12,118] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 22:42:13,560] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-04-01 22:42:13,562] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-01 22:42:13,562] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-01 22:42:13,572] INFO views Successfully obtained tokens from google
+[2025-04-01 22:42:34,748] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 22:42:34,749] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 22:42:34,749] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 22:42:34,750] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 22:42:34,750] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 22:42:34,750] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 22:42:34,751] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 22:42:34,751] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 22:42:35,584] INFO views Successfully obtained tokens from google
+[2025-04-01 22:42:35,585] INFO views Successfully obtained tokens from google
+[2025-04-01 22:42:51,823] WARNING log Not Found: /categories/
+[2025-04-01 22:42:51,823] WARNING log Not Found: /categories/
+[2025-04-01 22:42:51,927] WARNING log Not Found: /categories/
+[2025-04-01 22:42:51,927] WARNING log Not Found: /categories/
