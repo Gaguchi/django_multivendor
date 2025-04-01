@@ -16952,3 +16952,40 @@ django.core.exceptions.FieldError: 'updated_at' cannot be specified for Vendor m
 [2025-04-01 22:42:51,823] WARNING log Not Found: /categories/
 [2025-04-01 22:42:51,927] WARNING log Not Found: /categories/
 [2025-04-01 22:42:51,927] WARNING log Not Found: /categories/
+[2025-04-01 23:20:32,959] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 23:20:32,959] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 23:20:33,063] WARNING log Unauthorized: /api/categories/
+[2025-04-01 23:20:33,063] WARNING log Unauthorized: /api/categories/
+[2025-04-01 23:20:33,114] INFO views Token refreshed successfully for user
+[2025-04-01 23:20:33,159] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-01 23:20:33,159] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-01 23:21:00,311] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 23:21:00,312] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 23:21:00,312] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 23:21:00,312] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 23:21:00,313] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 23:21:00,313] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 23:21:00,316] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 23:21:00,316] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 23:21:00,871] INFO views Successfully obtained tokens from google
+[2025-04-01 23:21:00,902] INFO views Successfully obtained tokens from google
+[2025-04-01 23:21:18,814] INFO views Read-only action list - allowing public access
+[2025-04-01 23:21:19,487] INFO views Read-only action list - allowing public access
+[2025-04-01 23:21:39,373] INFO views Read-only action list - allowing public access
+[2025-04-01 23:21:39,556] INFO views Read-only action list - allowing public access
+[2025-04-01 23:21:55,483] INFO views Read-only action list - allowing public access
+[2025-04-01 23:21:55,669] INFO views Read-only action list - allowing public access
+[2025-04-01 23:22:37,382] INFO views Read-only action retrieve - allowing public access
+[2025-04-01 23:22:37,384] WARNING log Not Found: /api/categories/1/
+[2025-04-01 23:22:37,384] WARNING log Not Found: /api/categories/1/
+[2025-04-01 23:22:57,125] INFO views Read-only action list - allowing public access
+[2025-04-01 23:22:57,313] INFO views Read-only action list - allowing public access
+[2025-04-01 23:23:04,082] INFO views Read-only action list - allowing public access
+[2025-04-01 23:23:04,272] INFO views Read-only action list - allowing public access
+[2025-04-01 23:24:01,082] INFO views Read-only action list - allowing public access
+[2025-04-01 23:28:17,331] INFO views Read-only action list - allowing public access
+[2025-04-01 23:28:18,437] INFO views Read-only action list - allowing public access
+[2025-04-01 23:28:21,842] INFO views Read-only action list - allowing public access
+[2025-04-01 23:28:22,029] INFO views Read-only action list - allowing public access
+[2025-04-01 23:28:22,220] INFO views Read-only action list - allowing public access
+[2025-04-01 23:28:22,802] INFO views Read-only action list - allowing public access
