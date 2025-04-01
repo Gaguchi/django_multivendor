@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173,
+    port: 5174,
     allowedHosts: ['seller.bazro.ge','shop.bazro.ge', 'api.bazro.ge', 'localhost', '127.0.0.1'],
     proxy: {
       '/api': {

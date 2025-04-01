@@ -16789,3 +16789,130 @@ django.core.exceptions.FieldError: 'updated_at' cannot be specified for Vendor m
 [2025-03-31 14:07:04,959] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
 [2025-03-31 14:07:08,719] WARNING log Not Found: /favicon.ico
 [2025-03-31 14:07:08,719] WARNING log Not Found: /favicon.ico
+[2025-03-31 19:55:33,556] INFO autoreload Watching for file changes with StatReloader
+[2025-03-31 19:55:33,823] INFO urls === Registering Vendor URLs ===
+[2025-03-31 19:55:33,823] INFO urls === Registering Vendor URLs ===
+[2025-03-31 19:55:33,824] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-31 19:55:33,824] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-03-31 19:55:50,378] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-31 19:55:50,379] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-31 19:55:50,380] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-31 19:55:50,378] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-31 19:55:50,380] WARNING log Unauthorized: /api/users/profile/
+[2025-03-31 19:55:50,379] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-31 19:55:50,380] WARNING log Unauthorized: /api/vendors/products/
+[2025-03-31 19:55:50,380] WARNING log Unauthorized: /api/users/profile/
+[2025-03-31 19:55:50,477] INFO views Token refreshed successfully for user
+[2025-03-31 19:55:50,489] INFO views Token refreshed successfully for user
+[2025-03-31 19:55:50,494] WARNING log Unauthorized: /api/users/profile/
+[2025-03-31 19:55:50,494] WARNING log Unauthorized: /api/users/profile/
+[2025-03-31 19:55:50,496] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-31 19:55:50,496] WARNING log Unauthorized: /api/token/refresh/
+[2025-03-31 19:55:50,505] INFO views Token refreshed successfully for user
+[2025-03-31 19:55:50,520] INFO views Token refreshed successfully for user
+[2025-03-31 19:55:50,608] WARNING log Unauthorized: /api/users/profile/
+[2025-03-31 19:55:50,608] WARNING log Unauthorized: /api/users/profile/
+[2025-03-31 19:55:50,711] WARNING log Unauthorized: /api/users/profile/
+[2025-03-31 19:55:50,711] WARNING log Unauthorized: /api/users/profile/
+[2025-03-31 20:25:54,748] INFO views Token refreshed successfully for user
+[2025-03-31 20:25:54,760] INFO views Token refreshed successfully for user
+[2025-03-31 20:55:55,811] INFO views Token refreshed successfully for user
+[2025-03-31 20:55:55,845] INFO views Token refreshed successfully for user
+[2025-03-31 21:25:57,181] INFO views Token refreshed successfully for user
+[2025-03-31 21:25:57,372] INFO views Token refreshed successfully for user
+[2025-03-31 21:55:59,176] INFO views Token refreshed successfully for user
+[2025-03-31 21:55:59,257] INFO views Token refreshed successfully for user
+[2025-03-31 22:25:59,716] INFO views Token refreshed successfully for user
+[2025-03-31 22:25:59,786] INFO views Token refreshed successfully for user
+[2025-03-31 22:56:00,783] INFO views Token refreshed successfully for user
+[2025-03-31 22:56:00,851] INFO views Token refreshed successfully for user
+[2025-03-31 23:26:01,740] INFO views Token refreshed successfully for user
+[2025-03-31 23:26:01,809] INFO views Token refreshed successfully for user
+[2025-03-31 23:57:45,907] INFO views Token refreshed successfully for user
+[2025-03-31 23:57:45,915] INFO views Token refreshed successfully for user
+[2025-04-01 10:40:39,517] INFO autoreload Watching for file changes with StatReloader
+[2025-04-01 10:40:40,756] INFO urls === Registering Vendor URLs ===
+[2025-04-01 10:40:40,756] INFO urls === Registering Vendor URLs ===
+[2025-04-01 10:40:40,757] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-01 10:40:40,757] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-01 11:09:42,014] INFO autoreload Watching for file changes with StatReloader
+[2025-04-01 11:09:42,097] INFO urls === Registering Vendor URLs ===
+[2025-04-01 11:09:42,097] INFO urls === Registering Vendor URLs ===
+[2025-04-01 11:09:42,098] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-01 11:09:42,098] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-01 11:11:01,484] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 11:11:01,484] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-01 11:11:01,484] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-01 11:11:01,485] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 11:11:01,485] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-01 11:11:01,486] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 11:11:01,484] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 11:11:01,484] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-01 11:11:01,484] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-01 11:11:01,489] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 11:11:01,485] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 11:11:01,485] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-01 11:11:01,486] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 11:11:01,489] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 11:11:01,606] INFO views Token refreshed successfully for user
+[2025-04-01 11:11:01,613] INFO views Token refreshed successfully for user
+[2025-04-01 11:11:01,614] INFO views Token refreshed successfully for user
+[2025-04-01 11:11:01,629] INFO views Token refreshed successfully for user
+[2025-04-01 11:11:01,666] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-01 11:11:01,666] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-01 11:11:32,577] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-01 11:11:32,578] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-01 11:11:32,578] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-01 11:11:32,578] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-01 11:11:32,579] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-01 11:11:32,579] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-01 11:11:32,579] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 11:11:32,580] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 11:11:33,066] INFO views Successfully obtained tokens from google
+[2025-04-01 11:11:33,081] INFO views Successfully obtained tokens from google
+[2025-04-01 11:11:46,714] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 11:11:46,715] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 11:11:46,715] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 11:11:46,716] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 11:11:46,716] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 11:11:46,716] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 11:11:46,717] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 11:11:46,717] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 11:11:47,191] INFO views Successfully obtained tokens from google
+[2025-04-01 11:11:47,203] INFO views Successfully obtained tokens from google
+[2025-04-01 11:41:34,682] INFO views Token refreshed successfully for user
+[2025-04-01 12:11:35,637] INFO views Token refreshed successfully for user
+[2025-04-01 12:13:16,871] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 12:13:16,871] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 12:13:16,961] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 12:13:16,961] WARNING log Unauthorized: /api/users/profile/
+[2025-04-01 12:13:17,136] INFO views Token refreshed successfully for user
+[2025-04-01 12:13:17,159] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-01 12:13:17,159] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-01 12:43:30,574] INFO views Token refreshed successfully for user
+[2025-04-01 12:43:30,588] INFO views Token refreshed successfully for user
+[2025-04-01 13:13:31,619] INFO views Token refreshed successfully for user
+[2025-04-01 13:13:31,699] INFO views Token refreshed successfully for user
+[2025-04-01 13:40:49,571] INFO views Token refreshed successfully for user
+[2025-04-01 13:40:49,576] INFO views Token refreshed successfully for user
+[2025-04-01 13:40:49,591] INFO views Token refreshed successfully for user
+[2025-04-01 13:40:49,607] INFO views Token refreshed successfully for user
+[2025-04-01 14:10:51,322] INFO views Token refreshed successfully for user
+[2025-04-01 14:10:51,402] INFO views Token refreshed successfully for user
+[2025-04-01 21:17:02,097] INFO autoreload Watching for file changes with StatReloader
+[2025-04-01 21:17:02,735] INFO urls === Registering Vendor URLs ===
+[2025-04-01 21:17:02,735] INFO urls === Registering Vendor URLs ===
+[2025-04-01 21:17:02,737] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-01 21:17:02,737] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-01 21:19:27,673] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 21:19:27,673] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 21:19:27,674] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 21:19:27,675] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 21:19:27,690] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-01 21:19:27,690] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 21:19:27,690] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-01 21:19:27,691] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-01 21:19:28,249] INFO views Successfully obtained tokens from google
+[2025-04-01 21:19:28,259] INFO views Successfully obtained tokens from google
+[2025-04-01 21:41:49,151] INFO views Read-only action list - allowing public access
+[2025-04-01 21:42:44,000] INFO views Read-only action root - allowing public access

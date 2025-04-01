@@ -10,7 +10,7 @@ export default defineConfig({
     port: 5173,
     host: 'localhost',
     // Add allowedHosts configuration to allow Cloudflare tunnel access
-    allowedHosts: ['shop.bazro.ge', 'api.bazro.ge', 'localhost', '127.0.0.1'],
+    allowedHosts: ['seller.bazro.ge','shop.bazro.ge', 'api.bazro.ge', 'localhost', '127.0.0.1'],
     proxy: {
       '/api': {
         target: 'https://127.0.0.1:8000',

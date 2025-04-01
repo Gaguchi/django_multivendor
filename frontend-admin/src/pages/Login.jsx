@@ -89,7 +89,7 @@ export default function Login() {
               <div className="left">
                 <div className="login-box">
                   <div>
-                    <h3>Login to Admin Panel</h3>
+                    <h3 className="text-white">Login to Admin Panel</h3>
                     <div className="body-text text-white">
                       Enter your email & password to login
                     </div>
