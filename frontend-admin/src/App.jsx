@@ -75,23 +75,23 @@ function App() {
         });
       };
       
-      // List of scripts to load
+      // List of scripts to load in correct order with corrected paths
       const scripts = [
-        "../js/jquery.min.js",
-        "../js/bootstrap.min.js",
-        "../js/bootstrap-select.min.js",
-        "../js/zoom.js",
-        "../js/morris.min.js",
-        "../js/raphael.min.js",
-        "../js/morris.js",
-        // "../js/jvectormap.min.js",
-        // "../js/jvectormap-us-lcc.js",
-        // "../js/jvectormap-data.js",
-        // "../js/jvectormap.js",
-        "../js/apexcharts/apexcharts.js",
-        "../js/switcher.js",
-        "../js/theme-settings.js",
-        "../js/main.js"
+        "/js/jquery.min.js",          // jQuery first
+        "/js/raphael.min.js",         // Raphael (Morris dependency)
+        "/js/morris.min.js",          // Morris library (assuming this is the correct file)
+        "/js/bootstrap.min.js",       // Bootstrap
+        "/js/bootstrap-select.min.js",// Bootstrap Select
+        "/js/zoom.js",                // Zoom
+        "/js/morris.js",              // Morris initialization script
+        // "/js/jvectormap.min.js",
+        // "/js/jvectormap-us-lcc.js",
+        // "/js/jvectormap-data.js",
+        // "/js/jvectormap.js",
+        "/js/apexcharts/apexcharts.js", // ApexCharts
+        "/js/switcher.js",            // Switcher
+        "/js/theme-settings.js",      // Theme Settings
+        "/js/main.js"                 // Main custom script
       ];
       
       // Load scripts sequentially
@@ -112,15 +112,43 @@ function App() {
     }
   }, [scriptsLoaded]);
 
+  // Handle the global preloader hiding after scripts are loaded
+  useEffect(() => {
+    if (scriptsLoaded && !checkingAuth) {
+      console.log("Attempting to hide global preloader...");
+      
+      // Find the global preloader element
+      const globalPreloader = document.getElementById('global-preload');
+      
+      if (globalPreloader) {
+        // Use fadeOut effect similar to the original main.js logic
+        if (window.jQuery) { // Check if jQuery is loaded
+          window.jQuery(globalPreloader).fadeOut("slow", function() {
+            if (globalPreloader.parentNode) {
+              globalPreloader.parentNode.removeChild(globalPreloader);
+            }
+          });
+        } else { // Fallback if jQuery isn't loaded for some reason
+          globalPreloader.style.transition = 'opacity 0.5s ease-out';
+          globalPreloader.style.opacity = '0';
+          setTimeout(() => {
+            if (globalPreloader.parentNode) {
+              globalPreloader.parentNode.removeChild(globalPreloader);
+            }
+          }, 500);
+        }
+        console.log("Global preloader hiding initiated.");
+      } else {
+        console.warn("Global preloader element not found.");
+      }
+    }
+  }, [scriptsLoaded, checkingAuth]);
+
   const MainLayout = () => (
     <div id="wrapper">
       <div id="page" className="">
         <div className="layout-wrap">
-          <div id="preload" className="preload-container">
-            <div className="preloading">
-              <span />
-            </div>
-          </div>
+          {/* Removed the preloader from React component as we're using the global one */}
           <SideMenu />
           <div className="section-content-right">
             <Header />

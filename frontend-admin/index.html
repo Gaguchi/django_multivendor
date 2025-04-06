@@ -33,6 +33,13 @@
     <link rel="apple-touch-icon-precomposed" href="images/favicon.png">
 </head>
 <body>
+    <!-- Global preloader that exists outside React -->
+    <div id="global-preload" class="preload-container">
+      <div class="preloading">
+        <span></span>
+      </div>
+    </div>
+    
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 </body>

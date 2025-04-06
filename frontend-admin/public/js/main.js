@@ -144,6 +144,8 @@
    
   }
 
+  // Remove the preloader function as it's now handled in App.jsx
+  /*
   var preloader = function () {
     setTimeout(function () {
     $("#preload").fadeOut("slow", function () {
@@ -151,6 +153,7 @@
     });
     }, 300);
   };
+  */
 
   var variant_picker = function () {
     if ($(".variant-picker-item").length) {
@@ -225,7 +228,7 @@
     flatAccordion(".flat-accordion");
     flatAccordion(".flat-accordion1");
     uploadfile();
-    preloader();
+    // preloader(); // Removed this call
     
   });
 
