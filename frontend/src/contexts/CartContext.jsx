@@ -16,16 +16,50 @@ export function CartProvider({ children }) {
     const [cart, setCart] = useState(null)
     const [loading, setLoading] = useState(true)
     const { user } = useAuth()
+    const [guestSessionKey, setGuestSessionKey] = useState(
+        localStorage.getItem('guestSessionKey') || null
+    )
+    
+    // Initialize or retrieve sessionKey for guest users
+    useEffect(() => {
+        if (!user && !guestSessionKey) {
+            const newSessionKey = 'guest_' + Math.random().toString(36).substring(2, 15)
+            localStorage.setItem('guestSessionKey', newSessionKey)
+            setGuestSessionKey(newSessionKey)
+        }
+    }, [user, guestSessionKey])
+    
+    // Handle cart merging when user logs in
+    useEffect(() => {
+        const mergeGuestCart = async () => {
+            if (user && guestSessionKey) {
+                try {
+                    setLoading(true)
+                    // Call the backend API to merge guest cart into user cart
+                    await api.post('/api/cart/carts/merge_cart/', {
+                        session_key: guestSessionKey
+                    })
+                    
+                    // Clear guest session after successful merge
+                    localStorage.removeItem('guestSessionKey')
+                    setGuestSessionKey(null)
+                } catch (error) {
+                    console.error('Error merging cart:', error)
+                } finally {
+                    setLoading(false)
+                }
+            }
+        }
+        
+        mergeGuestCart()
+    }, [user])
 
     const fetchCart = async () => {
-        if (!user) {
-            setCart(null)
-            setLoading(false)
-            return
-        }
-
         try {
-            setLoading(true);
+            setLoading(true)
+            
+            // Always call the same endpoint - backend will determine
+            // whether to return a guest cart or user cart
             const response = await api.get('/api/cart/carts/current/')
             setCart(response.data)
         } catch (error) {
@@ -38,7 +72,7 @@ export function CartProvider({ children }) {
 
     useEffect(() => {
         fetchCart()
-    }, [user])
+    }, [user, guestSessionKey])
 
     const addToCart = async (productId, quantity = 1) => {
         try {
@@ -90,10 +124,7 @@ export function CartProvider({ children }) {
         try {
             setLoading(true);
             
-            // Option 1: If the API has a clear cart endpoint
-            // await api.post('/api/cart/carts/clear/');
-            
-            // Option 2: Remove each item individually
+            // Remove each item individually
             const removePromises = cart.items.map(item => 
                 api.delete(`/api/cart/items/${item.product.id}/`)
             );
@@ -117,7 +148,8 @@ export function CartProvider({ children }) {
         updateCartItem,
         removeFromCart,
         clearCart,
-        refreshCart: fetchCart
+        refreshCart: fetchCart,
+        isGuestCart: !user && cart !== null
     }
 
     return (

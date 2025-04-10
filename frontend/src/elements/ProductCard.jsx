@@ -28,7 +28,7 @@ export default function ProductCard({
 
   const handleAddToCart = async (e) => {
     e.preventDefault()
-    if (!user) return
+    // Remove the user check to allow guest users to add to cart
     try {
       setLoading(true)
       await addToCart(product.id, 1)
@@ -53,7 +53,7 @@ export default function ProductCard({
   
   const handleToggleWishlist = async (e) => {
     e.preventDefault()
-    if (!user) return
+    if (!user) return // Keep the user check for wishlist functionality
     
     try {
       setLoading(true)

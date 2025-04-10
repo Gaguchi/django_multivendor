@@ -9,7 +9,7 @@ import CheckoutAuth from '../components/Auth/CheckoutAuth';
 
 export default function Checkout() {
   const { user, login } = useAuth();
-  const { cart, loading: cartLoading, refreshCart } = useCart();
+  const { cart, loading: cartLoading, refreshCart, isGuestCart } = useCart();
   const navigate = useNavigate();
   
   const [addresses, setAddresses] = useState([]);
@@ -19,6 +19,7 @@ export default function Checkout() {
   const [addressError, setAddressError] = useState('');
   const [loading, setLoading] = useState(false);
   const [orderError, setOrderError] = useState('');
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Address form state
   const [addressForm, setAddressForm] = useState({
@@ -39,6 +40,15 @@ export default function Checkout() {
     address_type: 'shipping',
     is_default: true
   });
+
+  // Check if guest user has items in cart and show auth modal
+  useEffect(() => {
+    if (isGuestCart && cart?.items?.length > 0 && !user) {
+      setShowAuthModal(true);
+    } else {
+      setShowAuthModal(false);
+    }
+  }, [isGuestCart, cart, user]);
 
   // Fetch user addresses if logged in
   useEffect(() => {
@@ -93,6 +103,9 @@ export default function Checkout() {
     
     // After successful login/register, fetch addresses
     fetchAddresses();
+    
+    // Hide the auth modal
+    setShowAuthModal(false);
   };
 
   const handleAddressInputChange = (e) => {
@@ -181,6 +194,7 @@ export default function Checkout() {
     
     if (!user) {
       setAuthError("Please sign in or register to continue");
+      setShowAuthModal(true);
       return;
     }
     
@@ -285,6 +299,14 @@ export default function Checkout() {
           </li>
         </ul>
 
+        {/* Show info for guest users */}
+        {isGuestCart && !user && (
+          <div className="alert alert-info mb-4" role="alert">
+            <i className="fas fa-info-circle mr-2"></i>
+            You are currently shopping as a guest. Sign in or create an account to track your orders and save your shopping preferences.
+          </div>
+        )}
+
         {/* Display order error if any */}
         {orderError && (
           <div className="alert alert-danger mb-4" role="alert">
@@ -295,7 +317,7 @@ export default function Checkout() {
         <div className="row">
           <div className="col-lg-8">
             {/* Authentication section for non-logged-in users */}
-            {!user && (
+            {(!user || showAuthModal) && (
               <ul className="checkout-steps">
                 <li>
                   <CheckoutAuth onAuthenticated={handleAuthSuccess} />
@@ -304,24 +326,26 @@ export default function Checkout() {
             )}
             
             {/* Shipping details */}
-            <ul className="checkout-steps">
-              <li>
-                <AddressManager
-                  user={user}
-                  addresses={addresses}
-                  selectedAddress={selectedAddress}
-                  showNewAddressForm={showNewAddressForm}
-                  addressForm={addressForm}
-                  handleAddressInputChange={handleAddressInputChange}
-                  handleAddressSubmit={handleAddressSubmit}
-                  handleAddressSelection={handleAddressSelection}
-                  addressError={addressError}
-                  loading={loading}
-                  setShowNewAddressForm={setShowNewAddressForm}
-                  refreshAddresses={fetchAddresses}
-                />
-              </li>
-            </ul>
+            {user && (
+              <ul className="checkout-steps">
+                <li>
+                  <AddressManager
+                    user={user}
+                    addresses={addresses}
+                    selectedAddress={selectedAddress}
+                    showNewAddressForm={showNewAddressForm}
+                    addressForm={addressForm}
+                    handleAddressInputChange={handleAddressInputChange}
+                    handleAddressSubmit={handleAddressSubmit}
+                    handleAddressSelection={handleAddressSelection}
+                    addressError={addressError}
+                    loading={loading}
+                    setShowNewAddressForm={setShowNewAddressForm}
+                    refreshAddresses={fetchAddresses}
+                  />
+                </li>
+              </ul>
+            )}
           </div>
           
           {/* Order summary */}
