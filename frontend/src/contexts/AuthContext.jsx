@@ -8,17 +8,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [tokenRefreshing, setTokenRefreshing] = useState(false);
   const [authTokens, setAuthTokens] = useState(() => {
-    // Try to get tokens from localStorage on initial load
     const tokens = localStorage.getItem('authTokens');
     return tokens ? JSON.parse(tokens) : null;
   });
 
-  // This effect only runs once during initial load
   useEffect(() => {
     const loadUser = async () => {
       if (authTokens) {
         try {
-          const response = await api.get('/api/users/profile/');
+          const response = await api.get('/api/users/profile/', {
+            headers: { Authorization: `Bearer ${authTokens.access}` }
+          });
           const userData = {
             ...response.data,
             firstName: response.data.profile?.first_name,
@@ -26,59 +26,82 @@ export const AuthProvider = ({ children }) => {
           };
           setUser(userData);
         } catch (error) {
-          console.error('Error loading user:', error);
+          console.error('Error loading user initially:', error);
+          if (error.response?.status === 401) {
+            logout();
+          }
         }
       }
       setLoading(false);
     };
-
     loadUser();
-  }, [authTokens]); // Only depend on authTokens, not user
+  }, []);
 
   const login = async (data) => {
+    let loggedInUserData = null;
     try {
-      console.log('Login data received:', data);
-      
-      // Handle both token formats (string or object)
+      console.log('[AuthContext] Login data received:', data);
       const tokens = {
         access: data.access || data.token,
         refresh: data.refresh,
       };
-      
-      // Validate tokens before storing
+
       if (!tokens.access) {
-        console.error('Invalid token data received:', data);
+        console.error('[AuthContext] Invalid token data received:', data);
         throw new Error('No access token provided');
       }
-      
-      console.log('Storing tokens:', tokens);
-      
-      // Store tokens first to ensure they're available
+
+      console.log('[AuthContext] Storing tokens:', tokens);
       localStorage.setItem('authTokens', JSON.stringify(tokens));
       setAuthTokens(tokens);
-  
-      // Set the user data with a more robust approach to handle different formats
-      const userData = {
-        username: data.username || data.user?.username || '',
-        email: data.email || data.user?.email || '',
-        firstName: data.firstName || data.user?.firstName || data.userprofile?.first_name || data.user?.profile?.first_name || '',
-        lastName: data.lastName || data.user?.lastName || data.userprofile?.last_name || data.user?.profile?.last_name || '',
-        id: data.id || data.user?.id || '',
-        profile: data.userprofile || data.user?.profile || {},
-      };
-      
-      console.log('Setting user data:', userData);
-      setUser(userData);
-  
-      return userData;
+
+      try {
+        const profileResponse = await api.get('/api/users/profile/', {
+          headers: { Authorization: `Bearer ${tokens.access}` }
+        });
+        loggedInUserData = {
+          ...profileResponse.data,
+          firstName: profileResponse.data.profile?.first_name,
+          lastName: profileResponse.data.profile?.last_name,
+        };
+        console.log('[AuthContext] Setting user data after profile fetch:', loggedInUserData);
+        setUser(loggedInUserData);
+      } catch (profileError) {
+        console.error("[AuthContext] Failed to fetch user profile after login:", profileError);
+        logout();
+        throw new Error("Failed to verify user profile after login.");
+      }
+
+      const guestSessionKey = localStorage.getItem('guestSessionKey');
+      if (guestSessionKey) {
+        console.log('[AuthContext] Guest session key found, attempting merge:', guestSessionKey);
+        try {
+          await api.post('/api/cart/carts/merge_cart/', {
+            session_key: guestSessionKey
+          });
+          console.log('[AuthContext] Backend merge_cart called successfully.');
+          localStorage.removeItem('guestSessionKey');
+          console.log('[AuthContext] Guest session key removed from localStorage.');
+        } catch (mergeError) {
+          console.error('[AuthContext] Error calling merge_cart endpoint:', mergeError);
+          localStorage.removeItem('guestSessionKey');
+          console.warn('[AuthContext] Guest session key removed even after merge error to prevent retries.');
+        }
+      } else {
+        console.log('[AuthContext] No guest session key found, skipping merge.');
+      }
+
+      return loggedInUserData;
+
     } catch (error) {
-      console.error('Error during login:', error);
+      console.error('[AuthContext] Error during login process:', error);
+      logout();
       throw error;
     }
   };
 
   const logout = () => {
-    // Clear tokens and user data
+    console.log('[AuthContext] Logging out user.');
     localStorage.removeItem('authTokens');
     setAuthTokens(null);
     setUser(null);
@@ -87,21 +110,21 @@ export const AuthProvider = ({ children }) => {
   const refreshToken = async () => {
     if (!authTokens?.refresh) return false;
     if (tokenRefreshing) return false;
-    
+
     setTokenRefreshing(true);
 
     try {
       const response = await api.post('/api/token/refresh/', {
         refresh: authTokens.refresh,
       }, {
-        headers: { 'Authorization': '' } // Don't send current token for refresh
+        headers: { 'Authorization': '' }
       });
 
       const newTokens = {
         access: response.data.access,
         refresh: response.data.refresh || authTokens.refresh,
       };
-      
+
       localStorage.setItem('authTokens', JSON.stringify(newTokens));
       setAuthTokens(newTokens);
       return true;
@@ -114,30 +137,27 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Check token expiration only once per 10 minutes, not continuously
   useEffect(() => {
     if (!authTokens?.access) return;
 
-    // Helper function to decode token and get expiration time
     const getTokenExpiration = (token) => {
       try {
         const tokenParts = token.split('.');
         if (tokenParts.length !== 3) return 0;
-        
+
         const payload = JSON.parse(atob(tokenParts[1]));
-        return payload.exp * 1000; // Convert to milliseconds
+        return payload.exp * 1000;
       } catch (error) {
         console.error('Error decoding token:', error);
         return 0;
       }
     };
-    
+
     const checkTokenExpiration = async () => {
       try {
         const exp = getTokenExpiration(authTokens.access);
         const now = Date.now();
-        
-        // If token expires in less than 5 minutes, refresh it
+
         if (exp - now < 5 * 60 * 1000) {
           console.log('Token expiring soon, refreshing...');
           await refreshToken();
@@ -147,12 +167,10 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    // Run once on mount and then every 10 minutes
     checkTokenExpiration();
-    
-    // Much longer interval to prevent constant checking
-    const interval = setInterval(checkTokenExpiration, 10 * 60 * 1000); // 10 minutes
-    
+
+    const interval = setInterval(checkTokenExpiration, 10 * 60 * 1000);
+
     return () => clearInterval(interval);
   }, [authTokens]);
 

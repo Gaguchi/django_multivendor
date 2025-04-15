@@ -1,0 +1,112 @@
+/* Multi-select dropdown styling */
+.multi-select-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.multi-select-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 6px;
+  background-color: white;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown-arrow {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.multi-select-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  max-height: 250px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid var(--border-color, #ddd);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.multi-select-option {
+  padding: 8px 14px;
+}
+
+.multi-select-option:hover {
+  background-color: var(--hover-bg, #f5f5f5);
+}
+
+/* Checkbox styling improvements */
+.checkbox-container {
+  display: flex;
+  position: relative;
+  padding-left: 30px;
+  cursor: pointer;
+  user-select: none;
+  align-items: center;
+}
+
+.checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 3px;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+  background-color: #f5f5f5;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+  background-color: var(--primary-color, #5847eb);
+  border-color: var(--primary-color, #5847eb);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.checkbox-container .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Boolean attribute specific styling */
+.attribute-boolean {
+  margin-top: 8px;
+}
+
+.attribute-boolean .checkbox-container {
+  height: 20px;
+}

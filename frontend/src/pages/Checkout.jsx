@@ -5,12 +5,12 @@ import { useCart } from '../contexts/CartContext';
 import api from '../services/api';
 import AddressManager from '../components/Address/AddressManager';
 import CheckoutTotal from '../components/Cart/CheckoutTotal';
-import CheckoutAuth from '../components/Auth/CheckoutAuth';
 
 export default function Checkout() {
   const { user, login } = useAuth();
   const { cart, loading: cartLoading, refreshCart, isGuestCart } = useCart();
   const navigate = useNavigate();
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
   
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -20,6 +20,19 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [orderError, setOrderError] = useState('');
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [activeAuthTab, setActiveAuthTab] = useState('signin');
+
+  // Authentication form state
+  const [authForm, setAuthForm] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: '',
+    phone: '',
+    rememberMe: false,
+    agreePolicy: false
+  });
 
   // Address form state
   const [addressForm, setAddressForm] = useState({
@@ -97,15 +110,104 @@ export default function Checkout() {
     }
   };
 
-  const handleAuthSuccess = async (authData) => {
-    // Login will handle token storage
-    await login(authData);
+  // Handle form input changes for authentication
+  const handleAuthInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setAuthForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  // Handle authentication form submission
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setAuthError('');
     
-    // After successful login/register, fetch addresses
-    fetchAddresses();
+    try {
+      const endpoint = activeAuthTab === 'signin'
+        ? `/api/users/login/`
+        : `/api/users/register/`;
+        
+      const payload = activeAuthTab === 'signin'
+        ? { 
+            username: authForm.email,
+            password: authForm.password 
+          }
+        : {
+            username: authForm.email,
+            email: authForm.email,
+            password: authForm.password,
+            firstName: authForm.firstName,
+            lastName: authForm.lastName,
+            phone: authForm.phone,
+            userprofile: {
+              first_name: authForm.firstName,
+              last_name: authForm.lastName,
+              phone: authForm.phone
+            }
+          };
+
+      // Password validation for registration
+      if (activeAuthTab === 'register') {
+        if (authForm.password !== authForm.confirmPassword) {
+          setAuthError("Passwords don't match");
+          return;
+        }
+        if (authForm.password.length < 8) {
+          setAuthError("Password must be at least 8 characters");
+          return;
+        }
+      }
+
+      setLoading(true);
+      const response = await api.post(endpoint, payload);
+      
+      // Login the user with the received tokens
+      await login(response.data);
+      
+      // After successful login/register, fetch addresses
+      await fetchAddresses();
+      
+      // Hide the auth modal
+      setShowAuthModal(false);
+      
+    } catch (error) {
+      setAuthError(error.response?.data?.detail || 
+                  error.response?.data?.email?.[0] || 
+                  error.response?.data?.password?.[0] ||
+                  'Authentication failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle Google login
+  const handleGoogleLogin = () => {
+    // IMPORTANT: Always use HTTPS for the redirect URI
+    const redirectUri = `https://${window.location.host}/auth/callback`;
+    const state = 'google-oauth2-checkout';
     
-    // Hide the auth modal
-    setShowAuthModal(false);
+    // Ensure consistent protocol (https) is used in the OAuth flow
+    const googleAuthUrl = `${baseURL}/auth/login/google-oauth2/?` +
+      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+      `state=${state}`;
+    
+    window.location.href = googleAuthUrl;
+  };
+
+  // Handle Facebook login
+  const handleFacebookLogin = () => {
+    // IMPORTANT: Always use HTTPS for the redirect URI
+    const redirectUri = `https://${window.location.host}/auth/callback`;
+    const state = 'facebook-oauth2-checkout';
+    const scope = 'email,public_profile';
+    
+    window.location.href = `${baseURL}/auth/login/facebook/?` +
+      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+      `state=${state}&` +
+      `scope=${encodeURIComponent(scope)}&` +
+      `auth_type=reauthenticate`;
   };
 
   const handleAddressInputChange = (e) => {
@@ -287,6 +389,244 @@ export default function Checkout() {
     );
   }
 
+  // Authentication section component
+  const AuthenticationSection = () => (
+    <>
+      <h2 className="step-title">Sign In or Register</h2>
+      
+      {authError && (
+        <div className="alert alert-danger" role="alert">
+          {authError}
+        </div>
+      )}
+      
+      <div className="form-tab">
+        <ul className="nav nav-tabs">
+          <li className="nav-item">
+            <button 
+              className={`nav-link ${activeAuthTab === 'signin' ? 'active' : ''}`}
+              onClick={() => setActiveAuthTab('signin')}
+            >
+              Sign In
+            </button>
+          </li>
+          <li className="nav-item">
+            <button 
+              className={`nav-link ${activeAuthTab === 'register' ? 'active' : ''}`}
+              onClick={() => setActiveAuthTab('register')}
+            >
+              Register
+            </button>
+          </li>
+        </ul>
+
+        <div className="tab-content">
+          <div className={`tab-pane ${activeAuthTab === 'signin' ? 'active show' : 'fade'}`}>
+            <form onSubmit={handleAuthSubmit}>
+              <div className="form-group">
+                <label htmlFor="signin-email">Email address *</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="signin-email"
+                  name="email"
+                  required
+                  value={authForm.email}
+                  onChange={handleAuthInputChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="signin-password">Password *</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="signin-password"
+                  name="password"
+                  required
+                  value={authForm.password}
+                  onChange={handleAuthInputChange}
+                />
+              </div>
+
+              <div className="form-footer d-flex align-items-center justify-content-between">
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                  {loading ? 'Signing In...' : 'Sign In'}
+                </button>
+
+                <div className="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="signin-remember"
+                    name="rememberMe"
+                    checked={authForm.rememberMe}
+                    onChange={handleAuthInputChange}
+                  />
+                  <label className="custom-control-label" htmlFor="signin-remember">
+                    Remember Me
+                  </label>
+                </div>
+              </div>
+            </form>
+            
+            <div className="form-choice mt-3">
+              <div className="separator">
+                <span className="separator-text">or sign in with</span>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <button onClick={handleGoogleLogin} className="btn btn-login btn-g">
+                    <i className="icon-google"></i>
+                    Login With Google
+                  </button>
+                </div>
+                <div className="col-sm-6">
+                  <button onClick={handleFacebookLogin} className="btn btn-login btn-f">
+                    <i className="icon-facebook-f"></i>
+                    Login With Facebook
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className={`tab-pane ${activeAuthTab === 'register' ? 'active show' : 'fade'}`}>
+            <form onSubmit={handleAuthSubmit}>
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label htmlFor="register-fname">First Name *</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="register-fname"
+                      name="firstName"
+                      required
+                      value={authForm.firstName}
+                      onChange={handleAuthInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label htmlFor="register-lname">Last Name *</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="register-lname"
+                      name="lastName"
+                      required
+                      value={authForm.lastName}
+                      onChange={handleAuthInputChange}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="register-email">Email address *</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  id="register-email"
+                  name="email"
+                  required
+                  value={authForm.email}
+                  onChange={handleAuthInputChange}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="register-phone">Phone Number</label>
+                <input
+                  type="tel"
+                  className="form-control"
+                  id="register-phone"
+                  name="phone"
+                  value={authForm.phone}
+                  onChange={handleAuthInputChange}
+                />
+              </div>
+
+              <div className="row">
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label htmlFor="register-password">Password *</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="register-password"
+                      name="password"
+                      required
+                      value={authForm.password}
+                      onChange={handleAuthInputChange}
+                    />
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label htmlFor="register-confirm-password">Confirm Password *</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="register-confirm-password"
+                      name="confirmPassword"
+                      required
+                      value={authForm.confirmPassword}
+                      onChange={handleAuthInputChange}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-footer">
+                <button type="submit" className="btn btn-primary" disabled={loading}>
+                  {loading ? 'Registering...' : 'Register'}
+                </button>
+
+                <div className="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="register-policy"
+                    name="agreePolicy"
+                    required
+                    checked={authForm.agreePolicy}
+                    onChange={handleAuthInputChange}
+                  />
+                  <label className="custom-control-label" htmlFor="register-policy">
+                    I agree to the <a href="#">privacy policy</a> *
+                  </label>
+                </div>
+              </div>
+            </form>
+            
+            <div className="form-choice mt-3">
+              <div className="separator">
+                <span className="separator-text">or sign up with</span>
+              </div>
+              <div className="row">
+                <div className="col-sm-6">
+                  <button onClick={handleGoogleLogin} className="btn btn-login btn-g">
+                    <i className="icon-google"></i>
+                    Login With Google
+                  </button>
+                </div>
+                <div className="col-sm-6">
+                  <button onClick={handleFacebookLogin} className="btn btn-login btn-f">
+                    <i className="icon-facebook-f"></i>
+                    Login With Facebook
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <main className="main main-test">
       <div className="container checkout-container">
@@ -320,7 +660,7 @@ export default function Checkout() {
             {(!user || showAuthModal) && (
               <ul className="checkout-steps">
                 <li>
-                  <CheckoutAuth onAuthenticated={handleAuthSuccess} />
+                  <AuthenticationSection />
                 </li>
               </ul>
             )}
@@ -357,6 +697,57 @@ export default function Checkout() {
           />
         </div>
       </div>
+
+      <style>{`
+        .separator {
+          display: flex;
+          align-items: center;
+          text-align: center;
+          margin: 1.5rem 0;
+        }
+
+        .separator::before,
+        .separator::after {
+          content: '';
+          flex: 1;
+          border-bottom: 1px solid #dee2e6;
+        }
+
+        .separator-text {
+          padding: 0 1rem;
+          color: #777;
+          font-size: 1.2rem;
+        }
+        
+        .btn-login {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          width: 100%;
+          margin-bottom: 0.8rem;
+          padding: 0.8rem;
+          font-size: 1.4rem;
+          font-weight: 500;
+          border-radius: 3px;
+          transition: opacity 0.3s;
+        }
+
+        .btn-login:hover {
+          opacity: 0.9;
+          color: #fff;
+        }
+
+        .btn-g {
+          background: #dd4b39;
+          color: white;
+        }
+
+        .btn-f {
+          background: #3b5998;
+          color: white;
+        }
+      `}</style>
     </main>
   );
 }

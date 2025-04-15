@@ -1,6 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import './AttributesSection.css';
 
 export default function AttributesSection({ attributes = [], formData, onChange }) {
+    // Track open/closed state of multi-select dropdowns
+    const [openDropdowns, setOpenDropdowns] = useState({});
+    
     // When attributes change, initialize their values in formData
     useEffect(() => {
         attributes.forEach(attr => {
@@ -10,6 +14,9 @@ export default function AttributesSection({ attributes = [], formData, onChange 
                 switch (attr.type) {
                     case 'select':
                         initialValue = attr.options?.[0] || '';
+                        break;
+                    case 'multi_select':
+                        initialValue = [];
                         break;
                     case 'number':
                         initialValue = '';
@@ -29,6 +36,29 @@ export default function AttributesSection({ attributes = [], formData, onChange 
     const handleAttributeChange = (attrId, value) => {
         onChange(`attr_${attrId}`, value);
     };
+    
+    // Handle multi-select option toggle
+    const handleMultiSelectToggle = (attrId, option) => {
+        const currentValues = Array.isArray(formData[`attr_${attrId}`]) 
+            ? [...formData[`attr_${attrId}`]] 
+            : [];
+            
+        if (currentValues.includes(option)) {
+            // Remove option if already selected
+            onChange(`attr_${attrId}`, currentValues.filter(item => item !== option));
+        } else {
+            // Add option if not already selected
+            onChange(`attr_${attrId}`, [...currentValues, option]);
+        }
+    };
+    
+    // Toggle dropdown open/closed state
+    const toggleDropdown = (attrId) => {
+        setOpenDropdowns(prev => ({
+            ...prev,
+            [attrId]: !prev[attrId]
+        }));
+    };
 
     // Function to chunk attributes into pairs
     const chunkAttributes = (arr, size) => 
@@ -36,7 +66,7 @@ export default function AttributesSection({ attributes = [], formData, onChange 
             arr.slice(i * size, i * size + size)
         );
 
-    const attributeChunks = chunkAttributes(attributes, 3); // Group by 2
+    const attributeChunks = chunkAttributes(attributes, 3); // Group by 3
 
     if (!attributes || attributes.length === 0) {
         return null;
@@ -51,7 +81,7 @@ export default function AttributesSection({ attributes = [], formData, onChange 
             
             {/* Map over chunks to create rows */}
             {attributeChunks.map((chunk, index) => (
-                <div key={`chunk-${index}`} className="cols-lg gap22 mb-20"> {/* Add mb-20 for spacing between rows */}
+                <div key={`chunk-${index}`} className="cols-lg gap22 mb-20">
                     {chunk.map(attr => (
                         <fieldset key={attr.id} className="attribute-field">
                             <div className="body-title mb-10">
@@ -75,6 +105,42 @@ export default function AttributesSection({ attributes = [], formData, onChange 
                                 </select>
                             )}
                             
+                            {attr.type === 'multi_select' && (
+                                <div className="multi-select-dropdown">
+                                    <div 
+                                        className="multi-select-header"
+                                        onClick={() => toggleDropdown(attr.id)}
+                                    >
+                                        <span>
+                                            {Array.isArray(formData[`attr_${attr.id}`]) && formData[`attr_${attr.id}`].length > 0
+                                                ? `${formData[`attr_${attr.id}`].length} selected`
+                                                : `Select ${attr.name}`
+                                            }
+                                        </span>
+                                        <span className="dropdown-arrow">▼</span>
+                                    </div>
+                                    
+                                    {openDropdowns[attr.id] && (
+                                        <div className="multi-select-options">
+                                            {attr.options?.map((option, idx) => (
+                                                <div key={idx} className="multi-select-option">
+                                                    <label className="checkbox-container">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={Array.isArray(formData[`attr_${attr.id}`]) && 
+                                                                    formData[`attr_${attr.id}`].includes(option)}
+                                                            onChange={() => handleMultiSelectToggle(attr.id, option)}
+                                                        />
+                                                        <span className="checkmark"></span>
+                                                        {option}
+                                                    </label>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            
                             {attr.type === 'number' && (
                                 <input
                                     type="number"
@@ -88,15 +154,16 @@ export default function AttributesSection({ attributes = [], formData, onChange 
                             
                             {attr.type === 'boolean' && (
                                 <div className="flex items-center attribute-boolean">
-                                    <input
-                                        type="checkbox"
-                                        id={`attr_${attr.id}`}
-                                        name={`attr_${attr.id}`}
-                                        checked={formData[`attr_${attr.id}`] || false}
-                                        onChange={(e) => handleAttributeChange(attr.id, e.target.checked)}
-                                        required={attr.required}
-                                    />
-                                    <label htmlFor={`attr_${attr.id}`} className="ml-2">
+                                    <label className="checkbox-container">
+                                        <input
+                                            type="checkbox"
+                                            id={`attr_${attr.id}`}
+                                            name={`attr_${attr.id}`}
+                                            checked={formData[`attr_${attr.id}`] || false}
+                                            onChange={(e) => handleAttributeChange(attr.id, e.target.checked)}
+                                            required={attr.required}
+                                        />
+                                        <span className="checkmark"></span>
                                         {attr.name}
                                     </label>
                                 </div>

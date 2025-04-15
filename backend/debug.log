@@ -17489,3 +17489,283 @@ django.core.exceptions.FieldError: 'updated_at' cannot be specified for Vendor m
 [2025-04-10 17:27:53,885] INFO urls === Registering Vendor URLs ===
 [2025-04-10 17:27:53,887] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
 [2025-04-10 17:27:53,887] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-10 17:47:04,642] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 17:47:04,642] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 17:47:04,642] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 17:47:04,642] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 17:47:04,643] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 17:47:04,643] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 17:47:04,644] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 17:47:04,644] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 17:47:05,207] INFO views Successfully obtained tokens from google
+[2025-04-10 17:47:05,220] INFO views Successfully obtained tokens from google
+[2025-04-10 18:00:09,816] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 18:00:09,816] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 18:00:09,817] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 18:00:09,817] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 18:00:09,818] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 18:00:09,819] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 18:00:09,820] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 18:00:09,820] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 18:00:10,339] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-04-10 18:00:10,340] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-10 18:00:10,340] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-10 18:00:10,355] INFO views Successfully obtained tokens from google
+[2025-04-10 18:06:09,721] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 18:06:09,721] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 18:06:09,722] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 18:06:09,723] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 18:06:09,723] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 18:06:09,725] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 18:06:09,725] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 18:06:09,726] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 18:06:10,707] INFO views Successfully obtained tokens from google
+[2025-04-10 18:06:10,710] INFO views Successfully obtained tokens from google
+[2025-04-10 18:36:37,461] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-10 18:36:37,461] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-10 18:36:37,464] WARNING log Unauthorized: /api/users/wishlist/
+[2025-04-10 18:36:37,465] WARNING log Unauthorized: /api/orders/
+[2025-04-10 18:36:37,464] WARNING log Unauthorized: /api/users/wishlist/
+[2025-04-10 18:36:37,466] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-10 18:36:37,465] WARNING log Unauthorized: /api/orders/
+[2025-04-10 18:36:37,467] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-10 18:36:37,466] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-10 18:36:37,467] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-10 18:36:37,567] WARNING log Unauthorized: /api/users/wishlist/
+[2025-04-10 18:36:37,567] WARNING log Unauthorized: /api/orders/
+[2025-04-10 18:36:37,567] WARNING log Unauthorized: /api/users/wishlist/
+[2025-04-10 18:36:37,567] WARNING log Unauthorized: /api/orders/
+[2025-04-10 18:36:38,349] INFO views Token refreshed successfully for user
+[2025-04-10 19:00:59,607] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 19:00:59,608] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:00:59,609] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:00:59,609] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 19:00:59,610] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 19:00:59,610] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:00:59,612] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:00:59,613] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 19:01:00,621] INFO views Successfully obtained tokens from google
+[2025-04-10 19:01:01,241] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-04-10 19:01:01,242] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-10 19:01:01,242] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-10 19:11:43,854] WARNING log Unauthorized: /api/users/addresses/
+[2025-04-10 19:11:43,854] WARNING log Unauthorized: /api/users/addresses/
+[2025-04-10 19:12:17,729] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 19:12:17,729] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 19:12:17,730] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:12:17,730] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:12:17,730] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:12:17,730] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:12:17,731] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 19:12:17,731] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 19:12:18,930] INFO views Successfully obtained tokens from google
+[2025-04-10 19:12:20,120] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-04-10 19:12:20,121] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-10 19:12:20,121] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-10 19:13:13,772] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 19:13:13,773] INFO views OAuth Callback Request: provider=5hyTi8jX9VLNgJcbtTuOF85NeBG7yYXi, code_length=73
+[2025-04-10 19:13:13,773] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:13:13,773] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:13:13,774] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:13:13,774] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-10 19:13:13,774] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 19:13:13,775] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-10 19:13:14,242] INFO views Successfully obtained tokens from google
+[2025-04-10 19:13:14,253] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-04-10 19:13:14,254] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-10 19:13:14,254] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-10 19:14:04,227] WARNING log Unauthorized: /api/users/addresses/
+[2025-04-10 19:14:04,227] WARNING log Unauthorized: /api/users/addresses/
+[2025-04-13 10:04:02,614] INFO autoreload Watching for file changes with StatReloader
+[2025-04-13 10:04:03,191] INFO urls === Registering Vendor URLs ===
+[2025-04-13 10:04:03,191] INFO urls === Registering Vendor URLs ===
+[2025-04-13 10:04:03,193] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-13 10:04:03,193] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-14 20:08:45,515] INFO autoreload Watching for file changes with StatReloader
+[2025-04-14 20:08:45,776] INFO urls === Registering Vendor URLs ===
+[2025-04-14 20:08:45,776] INFO urls === Registering Vendor URLs ===
+[2025-04-14 20:08:45,778] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-14 20:08:45,778] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-14 20:09:16,428] INFO views OAuth Callback Request: provider=s3c36PWOs5HvykU0jKEcOCs2cflYT9KH, code_length=73
+[2025-04-14 20:09:16,428] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-14 20:09:16,429] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-14 20:09:16,430] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-14 20:09:16,430] INFO views OAuth Callback Request: provider=s3c36PWOs5HvykU0jKEcOCs2cflYT9KH, code_length=73
+[2025-04-14 20:09:16,430] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-14 20:09:16,430] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-04-14 20:09:16,431] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-14 20:09:16,934] INFO views Successfully obtained tokens from google
+[2025-04-14 20:09:16,939] INFO views Successfully obtained tokens from google
+[2025-04-14 20:10:31,398] WARNING log Not Found: /favicon.ico
+[2025-04-14 20:10:31,398] WARNING log Not Found: /favicon.ico
+[2025-04-14 20:15:18,000] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-14 20:15:18,001] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-14 20:15:18,001] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-14 20:15:18,001] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-14 20:15:18,001] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-14 20:15:18,002] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-14 20:15:18,002] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-14 20:15:18,002] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-14 20:15:18,503] INFO views Successfully obtained tokens from google
+[2025-04-14 20:15:18,513] INFO views Successfully obtained tokens from google
+[2025-04-14 20:15:28,033] INFO views Read-only action list - allowing public access
+[2025-04-14 20:15:28,215] INFO views Read-only action list - allowing public access
+[2025-04-14 20:21:30,942] INFO views Read-only action list - allowing public access
+[2025-04-14 20:21:31,124] INFO views Read-only action list - allowing public access
+[2025-04-14 23:47:37,594] WARNING log Not Found: /
+[2025-04-14 23:47:37,594] WARNING log Not Found: /
+[2025-04-15 17:50:21,301] INFO autoreload Watching for file changes with StatReloader
+[2025-04-15 17:50:21,604] INFO urls === Registering Vendor URLs ===
+[2025-04-15 17:50:21,604] INFO urls === Registering Vendor URLs ===
+[2025-04-15 17:50:21,606] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-15 17:50:21,606] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-04-15 17:50:51,659] WARNING log Not Found: /
+[2025-04-15 17:50:51,659] WARNING log Not Found: /
+[2025-04-15 17:50:52,830] WARNING log Not Found: /favicon.ico
+[2025-04-15 17:50:52,830] WARNING log Not Found: /favicon.ico
+[2025-04-15 17:54:34,447] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-15 17:54:34,448] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-04-15 17:54:34,448] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-15 17:54:34,449] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:34,449] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-15 17:54:34,447] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-15 17:54:34,448] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-04-15 17:54:34,448] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-15 17:54:34,449] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:34,449] WARNING log Unauthorized: /api/vendors/products/
+[2025-04-15 17:54:34,523] INFO views Token refreshed successfully for user
+[2025-04-15 17:54:34,531] INFO views Token refreshed successfully for user
+[2025-04-15 17:54:34,540] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:34,541] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-04-15 17:54:34,540] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:34,541] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-04-15 17:54:34,548] INFO views Token refreshed successfully for user
+[2025-04-15 17:54:34,550] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-15 17:54:34,550] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-15 17:54:34,561] INFO views Token refreshed successfully for user
+[2025-04-15 17:54:34,627] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:34,627] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:34,713] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:34,713] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:50,118] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:50,118] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:50,206] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:50,206] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 17:54:50,417] INFO views Token refreshed successfully for user
+[2025-04-15 17:54:50,427] INFO views Token refreshed successfully for user
+[2025-04-15 17:55:41,031] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 17:55:41,032] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 17:55:41,032] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 17:55:41,033] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 17:55:41,035] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 17:55:41,035] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 17:55:41,035] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 17:55:41,036] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 17:55:41,567] INFO views Successfully obtained tokens from google
+[2025-04-15 17:55:41,569] INFO views Successfully obtained tokens from google
+[2025-04-15 17:56:23,095] INFO views Read-only action list - allowing public access
+[2025-04-15 17:56:23,281] INFO views Read-only action list - allowing public access
+[2025-04-15 17:59:51,927] INFO views Read-only action list - allowing public access
+[2025-04-15 17:59:52,109] INFO views Read-only action list - allowing public access
+[2025-04-15 18:04:05,940] INFO views Read-only action list - allowing public access
+[2025-04-15 18:31:16,090] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 18:31:16,090] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 18:31:16,205] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 18:31:16,205] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 18:31:17,109] INFO views Token refreshed successfully for user
+[2025-04-15 18:31:17,115] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-15 18:31:17,115] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-15 21:31:40,256] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 21:31:40,257] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 21:31:40,257] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 21:31:40,257] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 21:31:40,257] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 21:31:40,258] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 21:31:40,258] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 21:31:40,258] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 21:31:40,716] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-04-15 21:31:40,717] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-15 21:31:40,717] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-15 21:31:40,732] INFO views Successfully obtained tokens from google
+[2025-04-15 21:31:53,499] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 21:31:53,500] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 21:31:53,500] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 21:31:53,501] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 21:31:53,501] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 21:31:53,501] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 21:31:53,501] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 21:31:53,502] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 21:31:53,975] INFO views Successfully obtained tokens from google
+[2025-04-15 21:31:53,979] INFO views Successfully obtained tokens from google
+[2025-04-15 21:31:58,273] INFO views Read-only action list - allowing public access
+[2025-04-15 21:31:58,459] INFO views Read-only action list - allowing public access
+[2025-04-15 22:02:13,155] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 22:02:13,155] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 22:02:13,245] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 22:02:13,245] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 22:02:13,383] INFO views Token refreshed successfully for user
+[2025-04-15 22:02:13,400] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-15 22:02:13,400] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-15 22:02:39,463] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 22:02:39,464] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 22:02:39,464] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 22:02:39,465] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 22:02:39,465] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 22:02:39,465] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 22:02:39,465] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 22:02:39,466] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 22:02:39,954] INFO views Successfully obtained tokens from google
+[2025-04-15 22:02:39,988] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-04-15 22:02:39,990] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-15 22:02:39,990] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-04-15 22:02:54,594] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 22:02:54,595] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 22:02:54,596] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 22:02:54,596] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 22:02:54,596] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 22:02:54,597] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 22:02:54,597] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 22:02:54,598] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 22:02:55,076] INFO views Successfully obtained tokens from google
+[2025-04-15 22:02:55,085] INFO views Successfully obtained tokens from google
+[2025-04-15 22:03:01,947] INFO views Read-only action list - allowing public access
+[2025-04-15 22:03:02,129] INFO views Read-only action list - allowing public access
+[2025-04-15 22:08:48,244] INFO views Read-only action list - allowing public access
+[2025-04-15 22:08:48,426] INFO views Read-only action list - allowing public access
+[2025-04-15 23:06:38,927] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 23:06:38,927] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 23:06:39,465] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 23:06:39,465] WARNING log Unauthorized: /api/users/profile/
+[2025-04-15 23:06:39,527] INFO views Token refreshed successfully for user
+[2025-04-15 23:06:40,008] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-15 23:06:40,008] WARNING log Unauthorized: /api/token/refresh/
+[2025-04-15 23:07:18,658] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 23:07:18,659] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 23:07:18,660] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 23:07:18,660] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 23:07:18,698] INFO views OAuth Callback Request: provider=admin-google-auth, code_length=73
+[2025-04-15 23:07:18,698] INFO views Redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 23:07:18,700] INFO views Using redirect URI: https://seller.bazro.ge/auth/callback
+[2025-04-15 23:07:18,700] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-04-15 23:07:19,174] INFO views Successfully obtained tokens from google
+[2025-04-15 23:07:19,188] INFO views Successfully obtained tokens from google
+[2025-04-15 23:07:23,314] INFO views Read-only action list - allowing public access
+[2025-04-15 23:07:23,500] INFO views Read-only action list - allowing public access
