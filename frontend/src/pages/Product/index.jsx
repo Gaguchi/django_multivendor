@@ -90,7 +90,7 @@ export default function Product() {
                   </div>
                 </div>
               </div>
-
+              
               {/* Purchase Section */}
               <div className="col-12 col-md-6">
                 <div className="card h-100 border-0 purchase-card">
@@ -111,7 +111,7 @@ export default function Product() {
                         </div>
                       )}
                     </div>
-
+                    
                     {/* Rest of purchase section remains unchanged */}
                     <div className="d-flex justify-content-between align-items-center p-3 bg-transparent rounded-percentage mb-1">
                       <div className="d-flex align-items-center gap-2">
@@ -127,7 +127,7 @@ export default function Product() {
                         <img src="https://placehold.co/32x16?text=Credo" alt="Credo" className="rounded-percentage"/>
                       </div>
                     </div>
-
+                    
                     {/* Delivery Row */}
                     <div className="d-flex align-items-center gap-3 p-3 bg-transparent rounded-percentage mb-1">
                       <svg width="24" height="24" fill="currentColor" className="text-success flex-shrink-0">
@@ -138,7 +138,7 @@ export default function Product() {
                         <small className="text-muted">in 3 hours</small>
                       </div>
                     </div>
-
+                    
                     {/* Action Buttons */}
                     <div className="d-flex flex-column gap-2">
                       <button className="btn btn-primary py-2 rounded-percentage-3 d-flex align-items-center justify-content-center gap-2 card-button">
@@ -154,7 +154,7 @@ export default function Product() {
             </div>
           </div>
         </div>
-
+        
         {/* Product Description Section - Always Visible */}
         <div className="row mt-5" style={{ position: 'relative', zIndex: 1 }}>
           <div className="col-12">
@@ -171,7 +171,7 @@ export default function Product() {
           </div>
         </div>
         
-        {/* Specifications Section - Always Visible */}
+        {/* Specifications Section - Temporarily commented out
         <div className="row mb-5" style={{ position: 'relative', zIndex: 1 }}>
           <div className="col-12">
             <div className="card border">
@@ -231,6 +231,7 @@ export default function Product() {
             </div>
           </div>
         </div>
+        */}
       </div>
 
       {/* Global CSS for zoom elements to appear above content */}
