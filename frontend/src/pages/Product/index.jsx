@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Images from './Images'
+import { useCart } from '../../contexts/CartContext'
 
 export default function Product() {
   const [selectedImage, setSelectedImage] = useState(0)
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [addingToCart, setAddingToCart] = useState(false)
+  const { addToCart } = useCart()
   const { id } = useParams()
+  const navigate = useNavigate()
+
+  // Store which combo products are checked in state
+  const [checkedProducts, setCheckedProducts] = useState({})
+  const [totalComboPrice, setTotalComboPrice] = useState(0)
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -21,6 +29,19 @@ export default function Product() {
         }
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/vendors/products/${id}/`, config)
         setProduct(response.data)
+        
+        // Initialize all companion products as checked
+        if (response.data.frequently_bought_together && response.data.frequently_bought_together.length > 0) {
+          const initialCheckedState = {}
+          // The main product is always checked
+          initialCheckedState[response.data.id] = true
+          
+          // All companion products start as checked
+          response.data.frequently_bought_together.forEach(item => {
+            initialCheckedState[item.id] = true
+          })
+          setCheckedProducts(initialCheckedState)
+        }
       } catch (err) {
         setError(err.message)
       } finally {
@@ -31,9 +52,108 @@ export default function Product() {
     fetchProduct()
   }, [id])
 
+  // Calculate total price whenever checked products change
+  useEffect(() => {
+    if (!product) return
+
+    let total = 0
+    // Add main product price if checked
+    if (checkedProducts[product.id]) {
+      total += parseFloat(product.price)
+    }
+
+    // Add companion product prices if checked
+    if (product.frequently_bought_together) {
+      product.frequently_bought_together.forEach(item => {
+        if (checkedProducts[item.id]) {
+          total += parseFloat(item.price)
+        }
+      })
+    }
+
+    setTotalComboPrice(total)
+  }, [checkedProducts, product])
+
+  const handleToggleProduct = (productId) => {
+    setCheckedProducts(prev => ({
+      ...prev,
+      [productId]: !prev[productId]
+    }))
+  }
+  
+  const handleAddToCart = async () => {
+    try {
+      setAddingToCart(true)
+      // Add main product if checked
+      if (checkedProducts[product.id]) {
+        await addToCart(product.id, 1)
+      }
+      
+      // Add each checked companion product
+      if (product.frequently_bought_together) {
+        for (const item of product.frequently_bought_together) {
+          if (checkedProducts[item.id]) {
+            await addToCart(item.id, 1)
+          }
+        }
+      }
+      
+      // Clean up any potential zoom elements before navigation
+      const zoomElements = document.querySelectorAll('.img-zoom-result');
+      if (zoomElements.length > 0) {
+        zoomElements.forEach(el => el.style.display = 'none');
+      }
+      
+      // Add a small delay to ensure cleanup happens before navigation
+      setTimeout(() => {
+        navigate('/cart');
+      }, 100);
+    } catch (err) {
+      console.error('Error adding products to cart:', err)
+    } finally {
+      setAddingToCart(false)
+    }
+  }
+
+  const handleAddMainProductToCart = async () => {
+    try {
+      setAddingToCart(true)
+      await addToCart(product.id, 1)
+      
+      // Clean up any potential zoom elements before navigation
+      const zoomElements = document.querySelectorAll('.img-zoom-result');
+      if (zoomElements.length > 0) {
+        zoomElements.forEach(el => el.style.display = 'none');
+      }
+      
+      // Add a small delay to ensure cleanup happens before navigation
+      setTimeout(() => {
+        navigate('/cart');
+      }, 100);
+    } catch (err) {
+      console.error('Error adding product to cart:', err)
+    } finally {
+      setAddingToCart(false)
+    }
+  }
+
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error: {error}</div>
   if (!product) return <div>Product not found</div>
+
+  // Check if there are any frequently bought together products
+  const hasFrequentlyBoughtTogether = product.frequently_bought_together && product.frequently_bought_together.length > 0
+
+  // Count how many items are selected
+  const selectedItemCount = Object.values(checkedProducts).filter(Boolean).length
+
+  // Get the appropriate button text
+  const getAddToCartText = () => {
+    if (selectedItemCount === 0) return "Choose items to buy together"
+    if (selectedItemCount === 1) return "Add to Cart"
+    if (selectedItemCount === 2) return `Add both to Cart`
+    return `Add all ${selectedItemCount} to Cart`
+  }
 
   return (
     <main className="main">
@@ -141,9 +261,13 @@ export default function Product() {
                     
                     {/* Action Buttons */}
                     <div className="d-flex flex-column gap-2">
-                      <button className="btn btn-primary py-2 rounded-percentage-3 d-flex align-items-center justify-content-center gap-2 card-button">
+                      <button 
+                        className="btn btn-primary py-2 rounded-percentage-3 d-flex align-items-center justify-content-center gap-2 card-button"
+                        onClick={handleAddMainProductToCart}
+                        disabled={addingToCart}
+                      >
                         <i className="fa fa-shopping-cart"></i>
-                        <span>Add to Cart</span>
+                        <span>{addingToCart ? 'Adding...' : 'Add to Cart'}</span>
                       </button>
                       <button className="btn btn-dark py-2 rounded-percentage-3 card-button">Buy Now</button>
                       <button className="btn btn-outline-primary py-2 rounded-percentage-3 card-button">Installment</button>
@@ -154,6 +278,100 @@ export default function Product() {
             </div>
           </div>
         </div>
+
+        {/* Frequently Bought Together Section */}
+        {hasFrequentlyBoughtTogether && (
+          <div className="row mt-5" style={{ position: 'relative', zIndex: 1 }}>
+            <div className="col-12">
+              <div className="card border mb-4">
+                <div className="card-header bg-white py-3">
+                  <h4 className="mb-0">Frequently Bought Together</h4>
+                </div>
+                <div className="card-body p-4">
+                  <div className="fbt-container">
+                    {/* Product Images Row */}
+                    <div className="d-flex align-items-center mb-4 flex-wrap">
+                      {/* Main Product */}
+                      <div className="fbt-product-item text-center me-3 mb-3">
+                        <div className="position-relative">
+                          <input 
+                            type="checkbox" 
+                            id={`fbt-check-${product.id}`}
+                            className="position-absolute top-0 start-0 m-2"
+                            checked={checkedProducts[product.id] || false}
+                            onChange={() => handleToggleProduct(product.id)}
+                          />
+                          <img 
+                            src={product.thumbnail} 
+                            alt={product.name}
+                            className="img-fluid" 
+                            style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                          />
+                        </div>
+                        <div className="mt-2" style={{ maxWidth: '120px' }}>
+                          <small className="d-block text-truncate">This item: {product.name}</small>
+                          <strong className="d-block">${parseFloat(product.price).toFixed(2)}</strong>
+                        </div>
+                      </div>
+                      
+                      {/* Plus sign */}
+                      {product.frequently_bought_together.map((item, index) => (
+                        <React.Fragment key={item.id}>
+                          <div className="fbt-plus fs-2 me-3 mb-3">+</div>
+                          <div className="fbt-product-item text-center me-3 mb-3">
+                            <div className="position-relative">
+                              <input 
+                                type="checkbox" 
+                                id={`fbt-check-${item.id}`}
+                                className="position-absolute top-0 start-0 m-2"
+                                checked={checkedProducts[item.id] || false}
+                                onChange={() => handleToggleProduct(item.id)}
+                              />
+                              <Link to={`/product/${item.id}`}>
+                                <img 
+                                  src={item.thumbnail} 
+                                  alt={item.name}
+                                  className="img-fluid" 
+                                  style={{ width: '100px', height: '100px', objectFit: 'cover' }}
+                                />
+                              </Link>
+                            </div>
+                            <div className="mt-2" style={{ maxWidth: '120px' }}>
+                              <Link to={`/product/${item.id}`} className="small d-block text-truncate text-decoration-none">{item.name}</Link>
+                              <strong className="d-block">${parseFloat(item.price).toFixed(2)}</strong>
+                            </div>
+                          </div>
+                        </React.Fragment>
+                      ))}
+                    </div>
+                    
+                    {/* Price and Add to Cart Section */}
+                    <div className="fbt-action-section p-3 bg-light rounded">
+                      <div className="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                          <strong>Total price:</strong> ${totalComboPrice.toFixed(2)}
+                        </div>
+                        <button 
+                          className="btn btn-primary"
+                          onClick={handleAddToCart}
+                          disabled={addingToCart || selectedItemCount === 0}
+                        >
+                          {addingToCart ? 'Adding...' : getAddToCartText()}
+                        </button>
+                      </div>
+                      <div className="fbt-items-info small text-muted">
+                        <div className="d-flex align-items-center gap-2">
+                          <i className="fa fa-info-circle"></i>
+                          <span>These items are shipped from and sold by different sellers.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         
         {/* Product Description Section - Always Visible */}
         <div className="row mt-5" style={{ position: 'relative', zIndex: 1 }}>
@@ -170,68 +388,6 @@ export default function Product() {
             </div>
           </div>
         </div>
-        
-        {/* Specifications Section - Temporarily commented out
-        <div className="row mb-5" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="col-12">
-            <div className="card border">
-              <div className="card-header bg-white py-3">
-                <h4 className="mb-0">Full Specifications</h4>
-              </div>
-              <div className="card-body p-4">
-                {product.attribute_values && product.attribute_values.length > 0 ? (
-                  <div className="specifications-content">
-                    {product.attribute_groups && product.attribute_groups.length > 0 ? (
-                      // Group specifications by attribute groups if available
-                      product.attribute_groups.map(group => (
-                        <div key={group.id} className="mb-4">
-                          <h5 className="mb-3">{group.name}</h5>
-                          <div className="table-responsive">
-                            <table className="table table-striped">
-                              <tbody>
-                                {group.attributes.map(attr => (
-                                  <tr key={attr.id}>
-                                    <th className="text-secondary" style={{width: '30%'}}>
-                                      {attr.name}
-                                    </th>
-                                    <td>{attr.value || '-'}</td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      // Display all attributes if no groups are defined
-                      <div className="table-responsive">
-                        <table className="table table-striped">
-                          <tbody>
-                            {product.attribute_values.map(attr => (
-                              <tr key={attr.id}>
-                                <th className="text-secondary" style={{width: '30%'}}>
-                                  {attr.attribute_name}
-                                </th>
-                                <td>
-                                  {attr.display_value || attr.text_value || 
-                                    (attr.boolean_value !== null ? (attr.boolean_value ? 'Yes' : 'No') : 
-                                    (attr.number_value !== null ? attr.number_value : ''))}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <p>No specifications available for this product.</p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-        */}
       </div>
 
       {/* Global CSS for zoom elements to appear above content */}
@@ -258,6 +414,16 @@ export default function Product() {
         /* Set all rows and content to lower z-index */
         main .container .row {
           z-index: 1;
+        }
+
+        /* Frequently Bought Together styles */
+        .fbt-product-item {
+          flex: 0 0 auto;
+        }
+        
+        .fbt-plus {
+          color: #aaa;
+          font-weight: 300;
         }
       `}</style>
     </main>

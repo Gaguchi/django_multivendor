@@ -11856,7 +11856,7 @@ header .separator {
     transform: translate(340px);
     transition: transform 0.2s ease-in-out 0s;
     background-color: #fff;
-    z-index: 1050;
+    z-index: 1050 !important;
     border: none;
     border-radius: 0;
     box-shadow: 0 5px 8px rgba(0, 0, 0, 0.15)
