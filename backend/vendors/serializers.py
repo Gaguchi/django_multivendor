@@ -5,10 +5,6 @@ from .models import Vendor, VendorProduct, ProductImage
 from users.serializers import UserSerializer 
 from users.models import UserProfile
 
-# Add these imports
-from categories.models import Attribute, AttributeGroup
-from .models import ProductAttributeValue
-
 class VendorSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)  # User will be set from the request
 
@@ -54,23 +50,6 @@ class ProductImageSerializer(serializers.ModelSerializer):
         model = ProductImage
         fields = ['id', 'file', 'position']
 
-class ProductAttributeValueSerializer(serializers.ModelSerializer):
-    attribute_name = serializers.CharField(source='attribute.name', read_only=True)
-    attribute_group = serializers.CharField(source='attribute.group.name', read_only=True)
-    attribute_type = serializers.CharField(source='attribute.attribute_type', read_only=True)
-    display_value = serializers.SerializerMethodField()
-    
-    class Meta:
-        model = ProductAttributeValue
-        fields = [
-            'id', 'attribute', 'attribute_name', 'attribute_group', 
-            'attribute_type', 'text_value', 'number_value', 
-            'boolean_value', 'option_values', 'display_value'
-        ]
-    
-    def get_display_value(self, obj):
-        return obj.get_value()
-
 # Fix: Define the ComboProductSerializer before it's used
 class ComboProductSerializer(serializers.ModelSerializer):
     """Simple serializer for products in combos/frequently bought together"""
@@ -91,10 +70,9 @@ class ProductSerializer(serializers.ModelSerializer):
     vendor = SimpleVendorSerializer(read_only=True)
     images = ProductImageSerializer(many=True, read_only=True, source='product_images')
     category = serializers.CharField(source='category.name', read_only=True)
-    attribute_values = ProductAttributeValueSerializer(many=True, read_only=True)
-    attribute_groups = serializers.SerializerMethodField()
     frequently_bought_together = ComboProductSerializer(many=True, read_only=True)
     combo_total_price = serializers.SerializerMethodField()
+    # Product attributes (attribute_values) are intentionally not included here
 
     class Meta:
         model = VendorProduct
@@ -114,65 +92,12 @@ class ProductSerializer(serializers.ModelSerializer):
             'rating',
             'is_hot',
             'created_at',
-            'attribute_values',
-            'attribute_groups',
             'frequently_bought_together',
             'combo_total_price'
+            # 'attribute_values' is not listed here to exclude it from the response
         ]
         read_only_fields = ['vendor', 'rating']
-
-    def get_attribute_groups(self, obj):
-        """
-        Group attribute values by their attribute groups for easy display
-        """
-        if not hasattr(obj, 'attribute_values'):
-            return []
-        
-        # Get all attribute values for this product
-        values = obj.attribute_values.all()
-        if not values:
-            return []
-            
-        # Get all groups used by this product's attributes
-        groups = AttributeGroup.objects.filter(
-            attributes__product_values__product=obj
-        ).distinct().order_by('display_order')
-        
-        result = []
-        for group in groups:
-            group_data = {
-                'id': group.id,
-                'name': group.name,
-                'attributes': []
-            }
-            
-            # Get attributes for this group that have values for this product
-            attributes = Attribute.objects.filter(
-                group=group,
-                product_values__product=obj
-            ).order_by('display_order')
-            
-            for attribute in attributes:
-                try:
-                    value = ProductAttributeValue.objects.get(
-                        product=obj,
-                        attribute=attribute
-                    )
-                    
-                    group_data['attributes'].append({
-                        'id': attribute.id,
-                        'name': attribute.name,
-                        'value': value.get_value(),
-                        'has_tooltip': attribute.has_tooltip,
-                        'tooltip_text': attribute.tooltip_text,
-                    })
-                except ProductAttributeValue.DoesNotExist:
-                    pass
-                    
-            if group_data['attributes']:
-                result.append(group_data)
-                
-        return result
+        # Ensure 'depth' in Meta is not causing inclusion if attributes are still present
 
     def get_combo_total_price(self, obj):
         """Calculate total price of this product plus all frequently bought together products"""

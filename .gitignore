@@ -4,3 +4,5 @@ __pycache__/
 node_modules/
 build/
 certificates/
+backend/db.sqlite3
+backend/debug.log
