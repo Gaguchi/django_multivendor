@@ -190,15 +190,96 @@ export async function getProductByIdApi(id) {
 }
 
 export async function createProductApi(productData) {
-  console.log("Attempting to create product with data:", productData); // Added log
+  // Log the productData, stringifying File objects to their names for readability
+  console.log("Attempting to create product with data (api.js):", JSON.stringify(productData, (key, value) => {
+    if (key === 'file' && value instanceof File) {
+      return value.name; // Show filename for File objects
+    }
+    return value;
+  }, 2));
+
+  const formData = new FormData();
+
+  // Append standard fields from productData
+  for (const key in productData) {
+    if (key === 'managedImages' || key === 'selectedThumbnailId') {
+      continue; // Skip image-specific fields, handle them separately
+    }
+    if (productData[key] !== null && productData[key] !== undefined) {
+      // If a field is an object (e.g., attributes), Django REST Framework might expect it JSON stringified
+      // or handled with dot notation in field names if using certain parsers.
+      // For now, append directly. If issues arise, this might need JSON.stringify for specific complex fields.
+      if (typeof productData[key] === 'object' && !(productData[key] instanceof File)) {
+        // Example: if attributes are { color: 'red', size: 'M' }
+        // formData.append(key, JSON.stringify(productData[key]));
+        // For now, let's assume flat or simple values are expected by the backend for non-file fields.
+        // This part might need adjustment based on backend expectations for complex/nested data.
+        // A common pattern is to flatten (e.g., attributes.color) or stringify.
+        // Given the current structure, most fields are primitive or arrays of primitives (like tags).
+        formData.append(key, productData[key]);
+      } else {
+        formData.append(key, productData[key]);
+      }
+    }
+  }
+
+  let thumbnailFilename = null;
+  if (productData.selectedThumbnailId && productData.managedImages) {
+    const thumbnailImageObject = productData.managedImages.find(img => img.id === productData.selectedThumbnailId);
+    if (thumbnailImageObject && thumbnailImageObject.file instanceof File) {
+      thumbnailFilename = thumbnailImageObject.file.name;
+    } else if (thumbnailImageObject && thumbnailImageObject.isExternal) {
+      // If the thumbnail is an existing external image, backend might need its URL or ID.
+      // For 'create' this is less common, but good to consider for 'update'.
+      // formData.append('existing_thumbnail_identifier', thumbnailImageObject.preview); // e.g. its URL
+    }
+  }
+
+  // Append image files
+  if (productData.managedImages) {
+    productData.managedImages.forEach((imgObject) => {
+      if (imgObject.file instanceof File) { // Only upload actual File objects
+        // The third argument to append (filename) is often useful for the server.
+        formData.append('images', imgObject.file, imgObject.file.name);
+      }
+      // Note: If initialImages contained URLs of already uploaded images (isExternal: true),
+      // and these need to be preserved or re-associated, the backend API must support this.
+      // For a 'create' operation, typically only new files are uploaded.
+    });
+  }
+
+  // Append the filename of the designated thumbnail
+  if (thumbnailFilename) {
+    formData.append('thumbnail_filename', thumbnailFilename);
+  } else if (productData.managedImages && productData.managedImages.some(img => img.file instanceof File) && !thumbnailFilename) {
+    // If images are being uploaded but no thumbnail was explicitly selected,
+    // the backend might default to the first one, or this could be an error/warning.
+    console.warn("Images are present, but no specific thumbnail filename could be determined. Backend might use a default.");
+  }
+  
+  // Log FormData entries for debugging (cannot directly log FormData object content easily)
+  console.log("Constructed FormData to send (entries will be logged below):");
+  for (let [key, value] of formData.entries()) {
+    if (value instanceof File) {
+      console.log(`FormData entry: ${key} -> Name: ${value.name}, Size: ${value.size}, Type: ${value.type}`);
+    } else {
+      console.log(`FormData entry: ${key} -> ${value}`);
+    }
+  }
+
   const response = await fetch(`${API_URL}/api/vendors/products/`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${getToken()}`,
-      'Content-Type': 'application/json'
+      // 'Accept': 'application/json', // Optional: Inform server we prefer JSON response
+      // Content-Type for FormData is set automatically by the browser, including the boundary.
+      // Explicitly setting 'Content-Type': 'multipart/form-data' can sometimes cause issues if the boundary is wrong.
     },
-    body: JSON.stringify(productData)
+    body: formData // Send the FormData object
   });
+
+  // handleResponse should ideally be robust enough to parse JSON errors,
+  // which DRF typically provides even for multipart requests.
   return handleResponse(response);
 }
 

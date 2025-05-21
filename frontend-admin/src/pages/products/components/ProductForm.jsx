@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ImageUploadSection from './ImageUploadSection';
 import ProductDetailsSection from './ProductDetailsSection';
 import AttributesSection from './AttributesSection';
@@ -8,7 +8,9 @@ import { getCategoriesApi } from '../../../services/api';
 export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
     const [categories, setCategories] = useState({ results: [] });
     const [formData, setFormData] = useState({
-        images: [],
+        // Initialize with an empty array for managedImages and null for selectedThumbnailId
+        managedImages: [],
+        selectedThumbnailId: null,
         name: '',
         category: '',
         price: '',
@@ -139,9 +141,13 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
     
-    const handleImageUpload = (images) => {
-        setFormData(prev => ({ ...prev, images }));
-    };
+    const handleImageUpload = useCallback(({ managedImages, selectedThumbnailId }) => {
+        setFormData(prev => ({ 
+            ...prev, 
+            managedImages, 
+            selectedThumbnailId 
+        }));
+    }, []); // Add useCallback with empty dependency array
     
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -157,7 +163,7 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
             )}
             
             <ImageUploadSection 
-                images={formData.images} 
+                initialImages={formData.managedImages} 
                 onImagesChange={handleImageUpload}
             />
             
