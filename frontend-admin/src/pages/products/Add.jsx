@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import ProductForm from './components/ProductForm';
 import Breadcrumb from '../../components/Breadcrumb';
+import * as api from '../../services/api';
 
 export default function Add() {
     const [loading, setLoading] = useState(false);
@@ -12,8 +13,8 @@ export default function Add() {
             setError(null);
             
             console.log("Submitting product data:", productData);
-            // Implement API call to create product
-            // const response = await api.createProduct(productData);
+            const response = await api.createProductApi(productData);
+            console.log("Product creation response:", response);
             
             // Show success notification
             alert("Product added successfully!");

@@ -18635,3 +18635,11 @@ django.db.utils.IntegrityError: UNIQUE constraint failed: cart_cart.session_key
 [2025-05-21 12:43:00,437] WARNING log Unauthorized: /api/users/login/
 [2025-05-21 12:43:30,824] WARNING log Unauthorized: /api/users/login/
 [2025-05-21 12:43:30,824] WARNING log Unauthorized: /api/users/login/
+[2025-05-21 12:47:49,055] INFO serializers User authenticated via email: beta@gmail.com
+[2025-05-21 13:07:16,473] WARNING log Unauthorized: /api/categories/
+[2025-05-21 13:07:16,473] WARNING log Unauthorized: /api/categories/
+[2025-05-21 13:07:16,793] INFO views Token refreshed successfully for user
+[2025-05-21 13:07:16,885] INFO views Read-only action list - allowing public access
+[2025-05-21 13:10:00,173] INFO serializers User authenticated via email: beta@gmail.com
+[2025-05-21 13:10:05,428] INFO views Read-only action list - allowing public access
+[2025-05-21 13:10:05,601] INFO views Read-only action list - allowing public access

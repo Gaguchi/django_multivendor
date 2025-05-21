@@ -176,21 +176,22 @@ export async function getCategoriesApi() {
 
 // Example product APIs
 export async function getProductsApi() {
-  const response = await fetch(`${API_URL}/vendors/products/`, {
+  const response = await fetch(`${API_URL}/api/vendors/products/`, {
     headers: { 'Authorization': `Bearer ${getToken()}` }
   });
   return handleResponse(response);
 }
 
 export async function getProductByIdApi(id) {
-  const response = await fetch(`${API_URL}/vendors/products/${id}/`, {
+  const response = await fetch(`${API_URL}/api/vendors/products/${id}/`, {
     headers: { 'Authorization': `Bearer ${getToken()}` }
   });
   return handleResponse(response);
 }
 
 export async function createProductApi(productData) {
-  const response = await fetch(`${API_URL}/vendors/products/`, {
+  console.log("Attempting to create product with data:", productData); // Added log
+  const response = await fetch(`${API_URL}/api/vendors/products/`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${getToken()}`,
@@ -202,7 +203,7 @@ export async function createProductApi(productData) {
 }
 
 export async function updateProductApi(id, productData) {
-  const response = await fetch(`${API_URL}/vendors/products/${id}/`, {
+  const response = await fetch(`${API_URL}/api/vendors/products/${id}/`, {
     method: 'PUT',
     headers: {
       'Authorization': `Bearer ${getToken()}`,
@@ -214,7 +215,7 @@ export async function updateProductApi(id, productData) {
 }
 
 export async function deleteProductApi(id) {
-  const response = await fetch(`${API_URL}/vendors/products/${id}/`, {
+  const response = await fetch(`${API_URL}/api/vendors/products/${id}/`, {
     method: 'DELETE',
     headers: { 'Authorization': `Bearer ${getToken()}` }
   });
