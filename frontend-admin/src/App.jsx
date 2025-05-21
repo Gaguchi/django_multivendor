@@ -28,12 +28,22 @@ function App() {
       console.log('App: Initialized with light theme');
     }
   }, []);
-
   // Check if user is authenticated and is a vendor
   useEffect(() => {
     const checkAuth = async () => {
+      // Import the debug function to check token status
+      const { debugTokenStatus } = await import('./utils/auth');
+      
+      // Debug token status before making auth decisions
+      console.log('Checking authentication status');
+      debugTokenStatus();
+      
       const authenticated = isAuthenticated();
       const vendorStatus = isVendor();
+      
+      console.log('Authentication check results:');
+      console.log('- Is authenticated:', authenticated);
+      console.log('- Is vendor:', vendorStatus);
       
       setIsAuthorized(authenticated && vendorStatus);
       setCheckingAuth(false);

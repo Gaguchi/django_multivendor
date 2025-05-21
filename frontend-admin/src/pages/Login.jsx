@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { login } from '../services/api';
-import { setToken } from '../utils/auth';
+import { setToken, debugTokenStatus } from '../utils/auth';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -9,6 +9,8 @@ export default function Login() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [apiEndpoint, setApiEndpoint] = useState('standard'); // 'standard' or 'token'
+    const [debugInfo, setDebugInfo] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
     
@@ -41,38 +43,91 @@ export default function Login() {
         window.location.href = authUrl;
     };
     
-    const handleSubmit = async (e) => {
+    // Add function to toggle API endpoint
+    const toggleApiEndpoint = () => {
+        const newEndpoint = apiEndpoint === 'standard' ? 'token' : 'standard';
+        setApiEndpoint(newEndpoint);
+        console.log(`Switched API endpoint to: ${newEndpoint}`);
+    };
+    
+    // Add debug check function
+    const checkDebugStatus = () => {
+        const status = debugTokenStatus();
+        setDebugInfo({
+            message: "Current token status",
+            tokenStatus: status
+        });
+    };
+      const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
+        setDebugInfo(null);
         
         try {
+            // Pass the API endpoint type to the login function via global variable
+            window.useTokenEndpoint = apiEndpoint === 'token';
+            console.log(`Using ${apiEndpoint} endpoint for login`);
+            
             const response = await login(email, password);
+            console.log('Login successful, response:', response);
+            
+            // Check if response has the expected tokens
+            if (!response.access || !response.refresh) {
+                console.error('Missing tokens in response:', response);
+                setError('Invalid response from server (missing tokens)');
+                setDebugInfo({
+                    message: "Login response format error",
+                    response: response
+                });
+                setLoading(false);
+                return;
+            }
             
             // Store user info and tokens
             setToken(
                 response.access, 
                 response.refresh, 
                 {
-                    username: response.username,
-                    email: response.email,
-                    firstName: response.firstName,
-                    lastName: response.lastName,
-                    profile: response.userprofile
+                    username: response.username || email,
+                    email: response.email || email,
+                    firstName: response.firstName || response.first_name || '',
+                    lastName: response.lastName || response.last_name || '',
+                    profile: response.userprofile || response.profile || {}
                 }
             );
             
-            // Check if user is a vendor
-            if (response.userprofile && response.userprofile.user_type === 'vendor') {
+            // Debug token info
+            const tokenStatus = debugTokenStatus();
+            setDebugInfo({
+                message: "Login successful!",
+                tokenStatus: tokenStatus,
+                response: response
+            });
+              // Check for vendor permissions
+            const profile = response.userprofile || response.profile || {};
+            const userType = profile.user_type || profile.userType;
+            
+            console.log('User profile:', profile);
+            console.log('User type:', userType);
+            
+            if (userType === 'vendor') {
                 // Redirect to dashboard
+                console.log('User is a vendor, redirecting to dashboard');
                 navigate('/');
             } else {
+                console.error('User is not a vendor, access denied');
                 setError('Access denied. Only vendors can access the admin panel.');
                 // Clear stored info since this user isn't authorized for admin
                 localStorage.clear();
             }
         } catch (err) {
+            console.error('Login error:', err);
             setError(err.message || 'Invalid email or password');
+            setDebugInfo({
+                message: "Login failed",
+                error: err.message || 'Unknown error'
+            });
         } finally {
             setLoading(false);
         }

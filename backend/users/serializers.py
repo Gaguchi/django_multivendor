@@ -1,11 +1,55 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from users.models import UserProfile, Address, Wishlist
+from django.contrib.auth import authenticate
+import logging
+
+logger = logging.getLogger(__name__)
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['user_type', 'first_name', 'last_name', 'phone']
+
+class EmailAuthSerializer(serializers.Serializer):
+    """
+    Serializer for authenticating users with either username or email
+    """
+    login = serializers.CharField(required=True)
+    password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, data):
+        login = data.get('login')
+        password = data.get('password')
+
+        if not login or not password:
+            raise serializers.ValidationError("Both login and password are required.")
+
+        # First try to authenticate with the provided value as username
+        user = authenticate(username=login, password=password)
+        
+        # If that fails and the login looks like an email, try with email
+        if user is None and '@' in login:
+            try:
+                # Find the user with this email
+                user_obj = User.objects.get(email=login)
+                # Then authenticate with their username
+                user = authenticate(username=user_obj.username, password=password)
+                logger.info(f"User authenticated via email: {login}")
+            except User.DoesNotExist:
+                logger.warning(f"Failed login attempt with email: {login}")
+                pass
+
+        if user is None:
+            logger.warning(f"Failed login attempt: {login}")
+            raise serializers.ValidationError("Unable to log in with provided credentials.")
+
+        if not user.is_active:
+            raise serializers.ValidationError("User account is disabled.")
+
+        return {
+            'user': user
+        }
 
 class UserSerializer(serializers.ModelSerializer):
     userprofile = UserProfileSerializer(required=False)

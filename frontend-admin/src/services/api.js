@@ -1,27 +1,52 @@
 import { getToken, refreshToken, clearToken } from '../utils/auth';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.bazro.ge';
+// API URL with fallback to local development server if not specified in env
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://127.0.0.1:8000';
+console.log('API URL configured as:', API_URL);
 
 async function handleResponse(response) {
-  if (response.ok) return response.json();
+  // If response is OK, simply return the parsed JSON
+  if (response.ok) {
+    try {
+      return await response.json();
+    } catch (error) {
+      console.error('Error parsing successful response:', error);
+      throw new Error('Invalid response format from server');
+    }
+  }
 
+  // Special handling for 401 Unauthorized errors
   if (response.status === 401) {
-    console.log('Token expired, attempting to refresh...');
-    const refreshed = await refreshToken();
-    if (refreshed) {
-      console.log('Token refreshed, retrying request');
-      const retryResponse = await fetch(response.url, {
-        method: response.type,
-        headers: {
-          'Authorization': `Bearer ${getToken()}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      return handleResponse(retryResponse);
-    } else {
-      console.log('Refresh failed, clearing auth');
-      clearToken();
-      throw new Error('Your session has expired. Please log in again.');
+    console.log('Received 401 Unauthorized, URL:', response.url);
+    
+    // Only attempt token refresh if this isn't a login or token-related request
+    if (!response.url.includes('/login/') && 
+        !response.url.includes('/token/') && 
+        !response.url.includes('/auth/')) {
+      
+      console.log('Token expired, attempting to refresh...');
+      const refreshed = await refreshToken();
+      
+      if (refreshed) {
+        console.log('Token refreshed, retrying original request');
+        
+        // Clone the original request but add the new token
+        const retryResponse = await fetch(response.url, {
+          method: response.method || 'GET',
+          headers: {
+            'Authorization': `Bearer ${getToken()}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: response._bodyInit // Include the original body if any
+        });
+        
+        return handleResponse(retryResponse);
+      } else {
+        console.log('Refresh failed, clearing auth');
+        clearToken();
+        throw new Error('Your session has expired. Please log in again.');
+      }
     }
   }
 
@@ -33,13 +58,87 @@ async function handleResponse(response) {
   }
 }
 
+// Add dual endpoint support for login to match Python test
 export async function login(username, password) {
-  const response = await fetch(`${API_URL}/api/users/login/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
-  return handleResponse(response);
+  try {
+    // Determine which endpoint to use based on global variable set in the Login component
+    const useTokenEndpoint = window.useTokenEndpoint || false;
+    
+    // Choose the appropriate endpoint
+    const loginEndpoint = useTokenEndpoint 
+      ? `${API_URL}/api/token/` 
+      : `${API_URL}/api/users/login/`;
+    
+    console.log('Attempting login at:', loginEndpoint);
+    
+    // Prepare the body based on the endpoint
+    let requestBody;
+    if (useTokenEndpoint) {
+      // The /api/token/ endpoint might expect 'username' or 'email'
+      // For now, let's assume it also expects 'username' as per previous logic.
+      // If this also needs to be 'login', this will need adjustment.
+      requestBody = JSON.stringify({ username, password });
+      console.log('Request body for /api/token/:', requestBody);
+    } else {
+      // The /api/users/login/ endpoint expects 'login' (can be username or email)
+      requestBody = JSON.stringify({ login: username, password });
+      console.log('Request body for /api/users/login/:', requestBody);
+    }
+    
+    const response = await fetch(loginEndpoint, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      credentials: 'include', // Ensure cookies (like CSRF or session) are sent
+      body: JSON.stringify({ login: username, password }) // Changed 'username' to 'login'
+    });
+    
+    // Log response status for debugging
+    console.log('Login response status:', response.status);
+    
+    // For login requests, handle 401 differently than token refreshes
+    if (response.status === 401) {
+      console.error('Login failed: Invalid credentials');
+      
+      // Try to get more details from the response
+      try {
+        const errorData = await response.json();
+        console.error('Login error details:', errorData);
+        throw new Error(errorData.detail || 'Invalid username or password');
+      } catch (parseError) {
+        throw new Error('Invalid username or password');
+      }    }
+    
+    // If we got here, something other than 401 error or success
+    if (!response.ok) {
+      console.error(`Login failed with status: ${response.status}`);
+      throw new Error(`Login failed with status: ${response.status}`);
+    }
+    
+    // Success path - attempt to parse JSON response
+    try {
+      const data = await response.json();
+      console.log('Login successful, response structure:', Object.keys(data));
+      return data;
+    } catch (error) {
+      console.error('Error parsing login response:', error);
+      
+      // Attempt to get raw text
+      try {
+        const rawText = await response.text();
+        console.error('Raw response text:', rawText);
+        throw new Error('Invalid response format from server');
+      } catch (textError) {
+        console.error('Error getting raw response text:', textError);
+        throw new Error('Could not process server response');
+      }
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
 }
 
 export async function fetchProfile() {

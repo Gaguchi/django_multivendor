@@ -35,6 +35,7 @@ export default function LoginPage() {
   const handleSubmit = async (e, type) => {
     e.preventDefault();
     setError('');
+    console.log('[Login.jsx] handleSubmit triggered for type:', type);
     
     try {
       const endpoint = type === 'signin'
@@ -43,11 +44,11 @@ export default function LoginPage() {
         
       const payload = type === 'signin'
         ? { 
-            username: formData.email,
+            login: formData.email, // Changed from email to login
             password: formData.password 
           }
         : {
-            username: formData.email,
+            username: formData.email, // Keep username for registration as it might be different
             email: formData.email,
             password: formData.password,
             firstName: formData.firstName,
@@ -60,20 +61,36 @@ export default function LoginPage() {
             }
           };
 
+      console.log('[Login.jsx] Attempting API call to:', endpoint);
+      console.log('[Login.jsx] Payload:', JSON.stringify(payload, null, 2));
+
       const response = await api.post(endpoint, payload);
       const data = response.data;
       
+      console.log('[Login.jsx] Login API call successful, response data:', data);
       // Login with received tokens and user data
       await login(data);
       
       // Redirect to homepage or intended destination
       const redirectPath = location.state?.from?.pathname || '/';
+      console.log('[Login.jsx] Navigating to:', redirectPath);
       navigate(redirectPath);
       
     } catch (error) {
+      console.error('[Login.jsx] Authentication error:', error);
+      if (error.response) {
+        console.error('[Login.jsx] Error response data:', error.response.data);
+        console.error('[Login.jsx] Error response status:', error.response.status);
+        console.error('[Login.jsx] Error response headers:', error.response.headers);
+      } else if (error.request) {
+        console.error('[Login.jsx] Error request:', error.request);
+      } else {
+        console.error('[Login.jsx] Error message:', error.message);
+      }
       setError(error.response?.data?.detail || 
                error.response?.data?.email?.[0] || 
                error.response?.data?.password?.[0] ||
+               error.message || // Fallback to error.message
                'Authentication failed');
     }
   };

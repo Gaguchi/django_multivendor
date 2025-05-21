@@ -19,6 +19,14 @@ Include the JWT token in the Authorization header for protected endpoints:
 Authorization: Bearer <your-jwt-token>
 ```
 
+### Email Authentication
+
+The authentication endpoints support both username and email for login:
+
+- You can use either `username` or `email` as the value for the `login` field
+- If an email is detected (contains `@`), the system will search for a user with that email
+- All authentication endpoints (`/login/`, `/login-or-register/`) support this feature
+
 ## Models Overview
 
 The user system is composed of:
@@ -70,13 +78,13 @@ Example Response (HTTP 201):
 ### 2. Login
 
 • **POST /login/**  
-Authenticates a user with their username and password.
+Authenticates a user with their username, email, or account login/password combination.
 
 Example Body:
 
 ```json
 {
-  "username": "jdoe",
+  "login": "jdoe@example.com",
   "password": "strongPassword123"
 }
 ```
@@ -85,23 +93,32 @@ Example Response (HTTP 200):
 
 ```json
 {
-  "username": "jdoe",
+  "refresh": "<jwt-refresh-token>",
   "access": "<jwt-access-token>",
-  "refresh": "<jwt-refresh-token>"
+  "username": "jdoe",
+  "email": "jdoe@example.com",
+  "id": 1,
+  "firstName": "John",
+  "lastName": "Doe",
+  "userprofile": {
+    "user_type": "customer",
+    "first_name": "John",
+    "last_name": "Doe",
+    "phone": "555-1234"
+  }
 }
 ```
 
 ### 3. Login or Register
 
 • **POST /login-or-register/**  
-Logs in if user exists, or creates a new account if not found.
+Logs in if user exists, or creates a new account if not found. Supports both username and email authentication.
 
 Example Body:
 
 ```json
 {
-  "username": "jdoe",
-  "email": "jdoe@example.com",
+  "login": "jdoe@example.com",
   "password": "strongPassword123"
 }
 ```
@@ -112,7 +129,7 @@ Example Response (HTTP 200 for login, 201 for register):
 {
   "refresh": "<jwt-refresh-token>",
   "access": "<jwt-access-token>",
-  "username": "jdoe",
+  "username": "jdoe@example.com",
   "expires_in": 3600
 }
 ```

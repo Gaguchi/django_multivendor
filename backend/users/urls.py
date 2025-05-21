@@ -11,9 +11,8 @@ from .views import (
 router = DefaultRouter()
 router.register(r'wishlist', WishlistViewSet, basename='wishlist')
 
-urlpatterns = [
-    path('register/', UserRegisterView.as_view(), name='register'),
-    path('login/', UserLoginView.as_view(), name='login'),
+urlpatterns = [    path('register/', UserRegisterView.as_view(), name='register'),
+    path('login/', UserLoginView.as_view(), name='login'),  # Supports both username and email login
     
     # OAuth redirect URLs (new)
     path('auth/google/', GoogleAuthRedirectView.as_view(), name='google-auth'),
@@ -22,11 +21,10 @@ urlpatterns = [
     # OAuth callback handlers (existing)
     path('auth/google/callback/', GoogleCallbackView.as_view(), name='google-callback'),
     path('auth/facebook/callback/', FacebookCallbackView.as_view(), name='facebook-callback'),
-    
-    path('profile/', ProfileView.as_view(), name='profile'),
+      path('profile/', ProfileView.as_view(), name='profile'),
     path('profile/update/', UpdateProfileView.as_view(), name='profile-update'),
     path('token-info/', TokenInfoView.as_view(), name='token-info'),
-    path('login-or-register/', RegisterOrLoginView.as_view(), name='login-or-register'),
+    path('login-or-register/', RegisterOrLoginView.as_view(), name='login-or-register'),  # Supports both username and email login/registration
     
     # Address endpoints
     path('addresses/', AddressListCreateView.as_view(), name='address-list-create'),

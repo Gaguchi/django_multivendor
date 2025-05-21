@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from rest_framework import generics, status, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer, UserProfileSerializer, AddressSerializer, WishlistSerializer
+from .serializers import UserSerializer, UserProfileSerializer, AddressSerializer, WishlistSerializer, EmailAuthSerializer
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from .models import UserProfile, Address, Wishlist
@@ -95,19 +95,59 @@ class UserRegisterView(generics.CreateAPIView):
 
 class RegisterOrLoginView(APIView):
     def post(self, request):
-        username = request.data.get('username')
+        login = request.data.get('login')  # This can be either username or email
         password = request.data.get('password')
-        email = request.data.get('email', '')
-
-        # Try authenticating first
-        user = authenticate(username=username, password=password)
+        
+        # Try to determine if this is an email
+        is_email = '@' in (login or '')
+        
+        # Set appropriate username and email values
+        username = None
+        email = None
+        
+        if is_email:
+            email = login
+            # Check if a user with this email already exists
+            try:
+                existing_user = User.objects.get(email=email)
+                username = existing_user.username
+            except User.DoesNotExist:
+                # Will create a new user with email as username
+                username = email
+        else:
+            username = login
+        
+        # Try authenticating first (either by username or email)
+        if username:
+            user = authenticate(username=username, password=password)
+        elif email:
+            try:
+                # Find user by email then authenticate with username
+                user_obj = User.objects.get(email=email)
+                user = authenticate(username=user_obj.username, password=password)
+            except User.DoesNotExist:
+                user = None
+        else:
+            user = None
+            
         if user:
             # User exists, just return tokens
             return Response(self._create_tokens(user), status=status.HTTP_200_OK)
         else:
-            # Create user if they don’t exist
-            user = User.objects.create_user(username=username, password=password, email=email)
-            UserProfile.objects.create(user=user)  # or pass additional fields
+            # No valid login provided
+            if not login or not password:
+                return Response(
+                    {"error": "Both login and password are required"}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+                
+            # Create user if they don't exist
+            user = User.objects.create_user(
+                username=username or email,
+                password=password,
+                email=email or ''
+            )
+            UserProfile.objects.create(user=user)
 
             return Response(self._create_tokens(user), status=status.HTTP_201_CREATED)
 
@@ -122,10 +162,10 @@ class RegisterOrLoginView(APIView):
 
 class UserLoginView(APIView):
     def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-        user = authenticate(username=username, password=password)
-        if user:
+        serializer = EmailAuthSerializer(data=request.data)
+        
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
             try:
                 refresh = RefreshToken.for_user(user)
                 # Get or create profile if it doesn't exist
