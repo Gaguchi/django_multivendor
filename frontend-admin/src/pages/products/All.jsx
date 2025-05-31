@@ -154,10 +154,9 @@ export default function All() {
       ) : (
         <ul className="flex flex-column">
           {products.map((product) => (            <li key={product.id} className="wg-product item-row gap20">
-              <div className="name">
-                <div className="image">
+              <div className="name">                <div className="image">
                   <img 
-                    src={product.thumbnail || "images/products/placeholder.jpg"} 
+                    src={product.thumbnail || product.images?.[0]?.image || "images/products/placeholder.jpg"} 
                     alt={product.name}
                     onError={(e) => {
                       e.target.src = "images/products/placeholder.jpg";
@@ -169,14 +168,13 @@ export default function All() {
                     {product.name}
                   </a>
                 </div>
-              </div>
-              <div className="body-text text-main-dark mt-4">#{product.id}</div>
+              </div>              <div className="body-text text-main-dark mt-4">#{product.id}</div>
               <div className="body-text text-main-dark mt-4">${parseFloat(product.price || 0).toFixed(2)}</div>
-              <div className="body-text text-main-dark mt-4">{product.stock || 0}</div>
+              <div className="body-text text-main-dark mt-4">{product.stock_quantity || product.stock || 0}</div>
               <div className="body-text text-main-dark mt-4">{product.sales_count || 0}</div>
               <div>
-                <div className={`block-${product.stock > 0 ? 'available' : 'stock'} bg-1 fw-7`}>
-                  {product.stock > 0 ? 'In Stock' : 'Out of stock'}
+                <div className={`block-${(product.stock_quantity || product.stock || 0) > 0 ? 'available' : 'stock'} bg-1 fw-7`}>
+                  {(product.stock_quantity || product.stock || 0) > 0 ? 'In Stock' : 'Out of stock'}
                 </div>
               </div>
               <div className="body-text text-main-dark mt-4">

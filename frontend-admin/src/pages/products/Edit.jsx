@@ -19,20 +19,24 @@ export default function Edit() {
                 
                 console.log("Fetching product with ID:", id);
                 const product = await api.getProductByIdApi(id);
-                console.log("Fetched product data:", product);
-                  // Transform the product data to match the form structure
+                console.log("Fetched product data:", product);                // Transform the product data to match the form structure
                 const transformedData = {
                     name: product.name || '',
                     description: product.description || '',
                     price: product.price || '',
-                    stock: product.stock || 0,  // API returns 'stock', not 'stock_quantity'
+                    stock: product.stock_quantity || product.stock || 0,
                     category: product.category || '',
                     sku: product.sku || '',
                     is_active: product.is_active !== undefined ? product.is_active : true,
+                    brand: product.brand || '',
+                    tags: product.tags || '',
+                    salePrice: product.sale_price || '',
+                    color: product.color || 'Orange',
+                    size: product.size || 'S',
                     // Transform images for the form
                     managedImages: product.images ? product.images.map((img, index) => ({
                         id: `existing-${index}`,
-                        preview: img.file || img.url,  // API returns 'file', not 'image'
+                        preview: img.image || img.file || img.url,
                         isExternal: true,
                         file: null
                     })) : [],

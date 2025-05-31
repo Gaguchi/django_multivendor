@@ -5,7 +5,7 @@ import AttributesSection from './AttributesSection';
 import PricingInventorySection from './PricingInventorySection';
 import { getCategoriesApi } from '../../../services/api';
 
-export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
+export default function ProductForm({ onSubmit, isLoading, initialData = {}, isEdit = false }) {
     const [categories, setCategories] = useState({ results: [] });
     const [formData, setFormData] = useState({
         // Initialize with an empty array for managedImages and null for selectedThumbnailId
@@ -30,7 +30,17 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
     const [categoryAttributes, setCategoryAttributes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    
+      // Update form data when initialData changes (for edit mode)
+    useEffect(() => {
+        if (initialData && Object.keys(initialData).length > 0) {
+            console.log('Updating form with initial data:', initialData);
+            setFormData(prev => ({
+                ...prev,
+                ...initialData
+            }));
+        }
+    }, [initialData]);
+
     // Fetch categories on component mount
     useEffect(() => {
         const fetchCategories = async () => {
@@ -187,13 +197,15 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {} }) {
                 onChange={handleInputChange}
             />
             
-            <div className="cols gap10">
-                <button 
+            <div className="cols gap10">                <button 
                     className="tf-button w380" 
                     type="submit"
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Adding product...' : 'Add product'}
+                    {isLoading 
+                        ? (isEdit ? 'Updating product...' : 'Adding product...') 
+                        : (isEdit ? 'Update product' : 'Add product')
+                    }
                 </button>
                 <a href="#" className="tf-button style-3 w380" type="button">
                     Cancel
