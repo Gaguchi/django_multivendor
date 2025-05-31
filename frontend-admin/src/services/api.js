@@ -176,16 +176,30 @@ export async function getCategoriesApi() {
 
 // Example product APIs
 export async function getProductsApi() {
-  const response = await fetch(`${API_URL}/api/vendors/products/`, {
-    headers: { 'Authorization': `Bearer ${getToken()}` }
+  const response = await fetch(`${API_URL}/api/vendors/products/my_products/`, {
+    headers: { 
+      'Authorization': `Bearer ${getToken()}`,
+      'Accept': 'application/json'
+    }
   });
   return handleResponse(response);
 }
 
 export async function getProductByIdApi(id) {
-  const response = await fetch(`${API_URL}/api/vendors/products/${id}/`, {
-    headers: { 'Authorization': `Bearer ${getToken()}` }
-  });
+  const masterToken = import.meta.env.VITE_MASTER_TOKEN;
+  const headers = {};
+  
+  // Try master token first if available, otherwise use Bearer token
+  if (masterToken) {
+    headers['X-Master-Token'] = masterToken;
+  } else if (getToken()) {
+    headers['Authorization'] = `Bearer ${getToken()}`;
+  }
+  
+  headers['Accept'] = 'application/json';
+
+  console.log(`Fetching product ${id} with headers:`, headers);
+  const response = await fetch(`${API_URL}/api/vendors/products/${id}/`, { headers });
   return handleResponse(response);
 }
 
@@ -284,21 +298,108 @@ export async function createProductApi(productData) {
 }
 
 export async function updateProductApi(id, productData) {
-  const response = await fetch(`${API_URL}/api/vendors/products/${id}/`, {
-    method: 'PUT',
-    headers: {
-      'Authorization': `Bearer ${getToken()}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(productData)
-  });
-  return handleResponse(response);
+  console.log("Updating product with data (api.js):", JSON.stringify(productData, (key, value) => {
+    if (key === 'file' && value instanceof File) {
+      return value.name; // Show filename for File objects
+    }
+    return value;
+  }, 2));
+
+  // Check if we have new images to upload - if so, use FormData
+  const hasNewImages = productData.managedImages && 
+    productData.managedImages.some(img => img.file instanceof File);
+
+  if (hasNewImages) {
+    // Use FormData for updates with images
+    const formData = new FormData();
+
+    // Append standard fields from productData
+    for (const key in productData) {
+      if (key === 'managedImages' || key === 'selectedThumbnailId') {
+        continue; // Skip image-specific fields, handle them separately
+      }
+      if (productData[key] !== null && productData[key] !== undefined) {
+        if (typeof productData[key] === 'object' && !(productData[key] instanceof File)) {
+          formData.append(key, productData[key]);
+        } else {
+          formData.append(key, productData[key]);
+        }
+      }
+    }
+
+    let thumbnailFilename = null;
+    if (productData.selectedThumbnailId && productData.managedImages) {
+      const thumbnailImageObject = productData.managedImages.find(img => img.id === productData.selectedThumbnailId);
+      if (thumbnailImageObject && thumbnailImageObject.file instanceof File) {
+        thumbnailFilename = thumbnailImageObject.file.name;
+      }
+    }
+
+    // Append new image files
+    if (productData.managedImages) {
+      productData.managedImages.forEach((imgObject) => {
+        if (imgObject.file instanceof File) {
+          formData.append('images', imgObject.file, imgObject.file.name);
+        }
+      });
+    }
+
+    // Append the filename of the designated thumbnail
+    if (thumbnailFilename) {
+      formData.append('thumbnail_filename', thumbnailFilename);
+    }
+
+    console.log("Sending FormData for update:");
+    for (let [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(`FormData entry: ${key} -> Name: ${value.name}, Size: ${value.size}, Type: ${value.type}`);
+      } else {
+        console.log(`FormData entry: ${key} -> ${value}`);
+      }
+    }
+
+    const response = await fetch(`${API_URL}/api/vendors/products/${id}/`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${getToken()}`,
+      },
+      body: formData
+    });
+
+    return handleResponse(response);
+  } else {
+    // No new images, use JSON for simple update
+    const jsonData = { ...productData };
+    delete jsonData.managedImages;
+    delete jsonData.selectedThumbnailId;
+
+    const response = await fetch(`${API_URL}/api/vendors/products/${id}/`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${getToken()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(jsonData)
+    });
+    return handleResponse(response);
+  }
 }
 
 export async function deleteProductApi(id) {
+  const masterToken = import.meta.env.VITE_MASTER_TOKEN;
+  const headers = {};
+  
+  // For delete operations, prefer Bearer token if available, otherwise master token
+  if (getToken()) {
+    headers['Authorization'] = `Bearer ${getToken()}`;
+  } else if (masterToken) {
+    headers['X-Master-Token'] = masterToken;
+  }
+  
+  console.log(`Deleting product ${id} with headers:`, headers);
   const response = await fetch(`${API_URL}/api/vendors/products/${id}/`, {
     method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${getToken()}` }
+    headers: headers
   });
   return handleResponse(response);
 }

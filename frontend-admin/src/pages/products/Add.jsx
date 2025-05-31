@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import ProductForm from './components/ProductForm';
-import Breadcrumb from '../../components/Breadcrumb';
+// import Breadcrumb from '../../components/Breadcrumb'; // No longer used
 import * as api from '../../services/api';
+import { Link } from 'react-router-dom'; // Added for breadcrumb links
 
 export default function Add() {
     const [loading, setLoading] = useState(false);
@@ -32,13 +33,27 @@ export default function Add() {
         <>
             <div className="flex items-center flex-wrap justify-between gap20 mb-30">
                 <h3>Add Product</h3>
-                <Breadcrumb 
-                    items={[
-                        { label: "Dashboard", url: "/" },
-                        { label: "Product", url: "/products" },
-                        { label: "Add Product" }
-                    ]} 
-                />
+                <ul className="breadcrumbs flex items-center flex-wrap justify-start gap10">
+                    <li>
+                        <Link to="/">
+                            <div className="text-tiny">Dashboard</div>
+                        </Link>
+                    </li>
+                    <li>
+                        <i className="icon-chevron-right" />
+                    </li>
+                    <li>
+                        <Link to="/products">
+                            <div className="text-tiny">Product</div>
+                        </Link>
+                    </li>
+                    <li>
+                        <i className="icon-chevron-right" />
+                    </li>
+                    <li>
+                        <div className="text-tiny">Add Product</div>
+                    </li>
+                </ul>
             </div>
             
             {error && (

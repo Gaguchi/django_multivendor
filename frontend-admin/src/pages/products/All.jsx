@@ -1,21 +1,61 @@
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import * as api from '../../services/api';
+
 export default function All() {
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                setLoading(true);
+                const response = await api.getProductsApi();
+                console.log("Products API response:", response);
+                setProducts(response?.results || response || []);
+            } catch (err) {
+                console.error("Error fetching products:", err);
+                setError(err.message || "Failed to fetch products");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    const handleDeleteProduct = async (productId) => {
+        if (!confirm("Are you sure you want to delete this product?")) {
+            return;
+        }
+
+        try {
+            await api.deleteProductApi(productId);
+            setProducts(prev => prev.filter(p => p.id !== productId));
+            alert("Product deleted successfully!");
+        } catch (err) {
+            console.error("Error deleting product:", err);
+            alert("Failed to delete product: " + (err.message || "Unknown error"));
+        }
+    };
 
     return (<>
   <div className="flex items-center flex-wrap justify-between gap20 mb-30">
     <h3>All Products</h3>
     <ul className="breadcrumbs flex items-center flex-wrap justify-start gap10">
       <li>
-        <a href="index.html">
+        <Link to="/">
           <div className="text-tiny">Dashboard</div>
-        </a>
+        </Link>
       </li>
       <li>
         <i className="icon-chevron-right" />
       </li>
       <li>
-        <a href="product-list.html#">
+        <Link to="/products">
           <div className="text-tiny">Product</div>
-        </a>
+        </Link>
       </li>
       <li>
         <i className="icon-chevron-right" />
@@ -66,11 +106,10 @@ export default function All() {
             </button>
           </div>
         </form>
-      </div>
-      <a className="tf-button style-1 w208" href="add-product.html">
+      </div>      <Link to="/addproduct" className="tf-button style-1 w208">
         <i className="icon-plus" />
         Add new
-      </a>
+      </Link>
     </div>
     <div className="wg-table table-product-list">
       <ul className="table-title flex gap20 mb-14">
@@ -99,132 +138,70 @@ export default function All() {
           <div className="body-title">Action</div>
         </li>
       </ul>
-      <ul className="flex flex-column">
-        <li className="wg-product item-row gap20">
-          <div className="name">
-            <div className="image">
-              <img src="images/products/product-1.jpg" alt="" />
-            </div>
-            <div className="title line-clamp-2 mb-0">
-              <a href="product-list.html#" className="body-text">
-                Dog Food, Chicken &amp; Chicken Liver Recipe...
-              </a>
-            </div>
-          </div>
-          <div className="body-text text-main-dark mt-4">#7712309</div>
-          <div className="body-text text-main-dark mt-4">$1,452.500</div>
-          <div className="body-text text-main-dark mt-4">1,638</div>
-          <div className="body-text text-main-dark mt-4">20</div>
-          <div>
-            <div className="block-stock bg-1 fw-7">Out of stock</div>
-          </div>
-          <div className="body-text text-main-dark mt-4">08/24/2024</div>
-          <div className="list-icon-function">
-            <div className="item eye">
-              <i className="icon-eye" />
-            </div>
-            <div className="item edit">
-              <i className="icon-edit-3" />
-            </div>
-            <div className="item trash">
-              <i className="icon-trash-2" />
-            </div>
-          </div>
-        </li>
-        <li className="wg-product item-row gap20">
-          <div className="name">
-            <div className="image">
-              <img src="images/products/product-2.jpg" alt="" />
-            </div>
-            <div className="title line-clamp-2 mb-0">
-              <a href="product-list.html#" className="body-text">
-                Grain Free Dry Dog Food{" "}
-              </a>
-            </div>
-          </div>
-          <div className="body-text text-main-dark mt-4">#7712309</div>
-          <div className="body-text text-main-dark mt-4">$1,452.500</div>
-          <div className="body-text text-main-dark mt-4">1,638</div>
-          <div className="body-text text-main-dark mt-4">20</div>
-          <div>
-            <div className="block-available bg-1 fw-7">In Stock</div>
-          </div>
-          <div className="body-text text-main-dark mt-4">08/24/2024</div>
-          <div className="list-icon-function">
-            <div className="item eye">
-              <i className="icon-eye" />
-            </div>
-            <div className="item edit">
-              <i className="icon-edit-3" />
-            </div>
-            <div className="item trash">
-              <i className="icon-trash-2" />
-            </div>
-          </div>
-        </li>
-        <li className="wg-product item-row gap20">
-          <div className="name">
-            <div className="image">
-              <img src="images/products/product-3.jpg" alt="" />
-            </div>
-            <div className="title line-clamp-2 mb-0">
-              <a href="product-list.html#" className="body-text">
-                Weruva Pumpkin Patch Up! Pumpkin With Ginger...{" "}
-              </a>
-            </div>
-          </div>
-          <div className="body-text text-main-dark mt-4">#7712309</div>
-          <div className="body-text text-main-dark mt-4">$1,452.500</div>
-          <div className="body-text text-main-dark mt-4">1,638</div>
-          <div className="body-text text-main-dark mt-4">20</div>
-          <div>
-            <div className="block-available bg-1 fw-7">In Stock</div>
-          </div>
-          <div className="body-text text-main-dark mt-4">08/24/2024</div>
-          <div className="list-icon-function">
-            <div className="item eye">
-              <i className="icon-eye" />
-            </div>
-            <div className="item edit">
-              <i className="icon-edit-3" />
-            </div>
-            <div className="item trash">
-              <i className="icon-trash-2" />
-            </div>
-          </div>
-        </li>
-        <li className="wg-product item-row gap20">
-          <div className="name">
-            <div className="image">
-              <img src="images/products/product-4.jpg" alt="" />
-            </div>
-            <div className="title line-clamp-2 mb-0">
-              <a href="product-list.html#" className="body-text">
-                Milk-Bone Mini's Flavor Snacks Dog Treats, 15 Ounce{" "}
-              </a>
-            </div>
-          </div>
-          <div className="body-text text-main-dark mt-4">#7712309</div>
-          <div className="body-text text-main-dark mt-4">$1,452.500</div>
-          <div className="body-text text-main-dark mt-4">1,638</div>
-          <div className="body-text text-main-dark mt-4">20</div>
-          <div>
-            <div className="block-available bg-1 fw-7">In Stock</div>
-          </div>
-          <div className="body-text text-main-dark mt-4">08/24/2024</div>
-          <div className="list-icon-function">
-            <div className="item eye">
-              <i className="icon-eye" />
-            </div>
-            <div className="item edit">
-              <i className="icon-edit-3" />
-            </div>
-            <div className="item trash">
-              <i className="icon-trash-2" />
-            </div>
-          </div>
-        </li>
-      </ul>
+      
+      {loading ? (
+        <div className="flex justify-center items-center py-20">
+          <div className="text-tiny">Loading products...</div>
+        </div>
+      ) : error ? (
+        <div className="flex justify-center items-center py-20">
+          <div className="text-tiny text-red">Error: {error}</div>
+        </div>
+      ) : products.length === 0 ? (
+        <div className="flex justify-center items-center py-20">
+          <div className="text-tiny">No products found</div>
+        </div>
+      ) : (
+        <ul className="flex flex-column">
+          {products.map((product) => (            <li key={product.id} className="wg-product item-row gap20">
+              <div className="name">
+                <div className="image">
+                  <img 
+                    src={product.thumbnail || "images/products/placeholder.jpg"} 
+                    alt={product.name}
+                    onError={(e) => {
+                      e.target.src = "images/products/placeholder.jpg";
+                    }}
+                  />
+                </div>
+                <div className="title line-clamp-2 mb-0">
+                  <a href={`#`} className="body-text">
+                    {product.name}
+                  </a>
+                </div>
+              </div>
+              <div className="body-text text-main-dark mt-4">#{product.id}</div>
+              <div className="body-text text-main-dark mt-4">${parseFloat(product.price || 0).toFixed(2)}</div>
+              <div className="body-text text-main-dark mt-4">{product.stock || 0}</div>
+              <div className="body-text text-main-dark mt-4">{product.sales_count || 0}</div>
+              <div>
+                <div className={`block-${product.stock > 0 ? 'available' : 'stock'} bg-1 fw-7`}>
+                  {product.stock > 0 ? 'In Stock' : 'Out of stock'}
+                </div>
+              </div>
+              <div className="body-text text-main-dark mt-4">
+                {product.created_at ? new Date(product.created_at).toLocaleDateString() : 'N/A'}
+              </div>
+              <div className="list-icon-function">
+                <div className="item eye" title="View Product">
+                  <i className="icon-eye" />
+                </div>
+                <Link to={`/editproduct/${product.id}`} className="item edit" title="Edit Product">
+                  <i className="icon-edit-3" />
+                </Link>
+                <div 
+                  className="item trash" 
+                  title="Delete Product"
+                  onClick={() => handleDeleteProduct(product.id)}
+                  style={{ cursor: 'pointer' }}
+                >
+                  <i className="icon-trash-2" />
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
     <div className="divider" />
     <div className="flex items-center justify-between flex-wrap gap10">
