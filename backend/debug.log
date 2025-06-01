@@ -23351,3 +23351,39 @@ django.core.exceptions.ImproperlyConfigured: Field name `stock_status` is not va
 [2025-06-01 18:20:42,462] INFO serializers No new image files uploaded for product ID: 17
 [2025-06-01 18:20:42,462] INFO serializers No new images uploaded or no specific thumbnail designated from new uploads. Product.thumbnail not set from new uploads for product ID: 17.
 [2025-06-01 18:20:42,462] INFO serializers No new images uploaded or no specific thumbnail designated from new uploads. Product.thumbnail not set from new uploads for product ID: 17.
+[2025-06-01 18:21:17,241] ERROR middleware Error logging request: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+[2025-06-01 18:21:17,691] INFO serializers Thumbnail filename from request: Picture6.png
+[2025-06-01 18:21:17,691] INFO serializers Thumbnail filename from request: Picture6.png
+[2025-06-01 18:21:17,751] INFO serializers Product base created with ID: 18 for vendor ID: 2. Validated data used: {'name': 'Fuel injector', 'sku': 'IN001', 'price': Decimal('50.00'), 'stock': 40, 'description': 'Fuel injector', 'is_hot': False, 'vendor': <Vendor: Betochka>}
+[2025-06-01 18:21:17,751] INFO serializers Product base created with ID: 18 for vendor ID: 2. Validated data used: {'name': 'Fuel injector', 'sku': 'IN001', 'price': Decimal('50.00'), 'stock': 40, 'description': 'Fuel injector', 'is_hot': False, 'vendor': <Vendor: Betochka>}
+[2025-06-01 18:21:17,752] INFO serializers No new image files uploaded for product ID: 18
+[2025-06-01 18:21:17,752] INFO serializers No new image files uploaded for product ID: 18
+[2025-06-01 18:21:17,752] INFO serializers No new images uploaded or no specific thumbnail designated from new uploads. Product.thumbnail not set from new uploads for product ID: 18.
+[2025-06-01 18:21:17,752] INFO serializers No new images uploaded or no specific thumbnail designated from new uploads. Product.thumbnail not set from new uploads for product ID: 18.
+[2025-06-01 18:21:23,950] INFO views Read-only action list - allowing public access
+[2025-06-01 18:21:24,127] INFO views Read-only action list - allowing public access
+[2025-06-01 18:21:30,013] INFO views Read-only action list - allowing public access
+[2025-06-01 18:21:30,198] INFO views Read-only action list - allowing public access
+[2025-06-01 18:21:32,276] INFO views Read-only action list - allowing public access
+[2025-06-01 18:21:32,456] INFO views Read-only action list - allowing public access
+[2025-06-01 18:23:52,825] WARNING log Not Found: /
+[2025-06-01 18:23:52,825] WARNING log Not Found: /
+[2025-06-01 18:27:23,030] INFO views Read-only action list - allowing public access
+[2025-06-01 18:27:23,210] INFO views Read-only action list - allowing public access
+[2025-06-01 18:27:55,140] ERROR middleware Error logging request: 'utf-8' codec can't decode byte 0x89 in position 1307: invalid start byte
+[2025-06-01 18:27:55,146] INFO serializers Thumbnail filename from request: Picture8.png
+[2025-06-01 18:27:55,146] INFO serializers Thumbnail filename from request: Picture8.png
+[2025-06-01 18:27:55,200] INFO serializers Product base created with ID: 19 for vendor ID: 2. Validated data used: {'name': 'Injector', 'sku': 'IN001', 'price': Decimal('500.00'), 'stock': 52, 'description': 'Injector', 'is_hot': False, 'vendor': <Vendor: Betochka>}
+[2025-06-01 18:27:55,200] INFO serializers Product base created with ID: 19 for vendor ID: 2. Validated data used: {'name': 'Injector', 'sku': 'IN001', 'price': Decimal('500.00'), 'stock': 52, 'description': 'Injector', 'is_hot': False, 'vendor': <Vendor: Betochka>}
+[2025-06-01 18:27:55,200] INFO serializers Processing 1 uploaded image files for product ID: 19
+[2025-06-01 18:27:55,200] INFO serializers Processing 1 uploaded image files for product ID: 19
+[2025-06-01 18:27:55,234] INFO serializers Created ProductImage ID: 21 with file: vendor_products/Betochka/Injector/images/Picture8.png for product ID: 19
+[2025-06-01 18:27:55,234] INFO serializers Created ProductImage ID: 21 with file: vendor_products/Betochka/Injector/images/Picture8.png for product ID: 19
+[2025-06-01 18:27:55,234] INFO serializers Thumbnail 'Picture8.png' matches newly uploaded image ID: 21 for product ID: 19
+[2025-06-01 18:27:55,234] INFO serializers Thumbnail 'Picture8.png' matches newly uploaded image ID: 21 for product ID: 19
+[2025-06-01 18:27:55,234] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Injector/images/Picture8.png for product ID: 19
+[2025-06-01 18:27:55,234] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Injector/images/Picture8.png for product ID: 19
+[2025-06-01 18:27:55,267] INFO serializers Saved product thumbnail for product ID: 19
+[2025-06-01 18:27:55,267] INFO serializers Saved product thumbnail for product ID: 19
+[2025-06-01 18:28:22,691] INFO views Read-only action list - allowing public access
+[2025-06-01 18:28:22,875] INFO views Read-only action list - allowing public access

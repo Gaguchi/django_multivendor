@@ -206,8 +206,8 @@ export async function getProductByIdApi(id) {
 export async function createProductApi(productData) {
   // Log the productData, stringifying File objects to their names for readability
   console.log("Attempting to create product with data (api.js):", JSON.stringify(productData, (key, value) => {
-    if (key === 'file' && value instanceof File) {
-      return value.name; // Show filename for File objects
+    if (value instanceof File) {
+      return value.name; // Represent File objects by their names in this log
     }
     return value;
   }, 2));
@@ -216,68 +216,69 @@ export async function createProductApi(productData) {
 
   // Append standard fields from productData
   for (const key in productData) {
-    if (key === 'managedImages' || key === 'selectedThumbnailId') {
-      continue; // Skip image-specific fields, handle them separately
-    }
-    if (productData[key] !== null && productData[key] !== undefined) {
-      // If a field is an object (e.g., attributes), Django REST Framework might expect it JSON stringified
-      // or handled with dot notation in field names if using certain parsers.
-      // For now, append directly. If issues arise, this might need JSON.stringify for specific complex fields.
-      if (typeof productData[key] === 'object' && !(productData[key] instanceof File)) {
-        // Example: if attributes are { color: 'red', size: 'M' }
-        // formData.append(key, JSON.stringify(productData[key]));
-        // For now, let's assume flat or simple values are expected by the backend for non-file fields.
-        // This part might need adjustment based on backend expectations for complex/nested data.
-        // A common pattern is to flatten (e.g., attributes.color) or stringify.
-        // Given the current structure, most fields are primitive or arrays of primitives (like tags).
-        formData.append(key, productData[key]);
-      } else {
-        formData.append(key, productData[key]);
-      }
+    if (key !== 'managedImages' && key !== 'selectedThumbnailId' && productData[key] !== null && productData[key] !== undefined) {
+      formData.append(key, productData[key]);
     }
   }
 
   let thumbnailFilename = null;
   if (productData.selectedThumbnailId && productData.managedImages) {
-    const thumbnailImageObject = productData.managedImages.find(img => img.id === productData.selectedThumbnailId);
-    if (thumbnailImageObject && thumbnailImageObject.file instanceof File) {
-      thumbnailFilename = thumbnailImageObject.file.name;
-    } else if (thumbnailImageObject && thumbnailImageObject.isExternal) {
-      // If the thumbnail is an existing external image, backend might need its URL or ID.
-      // For 'create' this is less common, but good to consider for 'update'.
-      // formData.append('existing_thumbnail_identifier', thumbnailImageObject.preview); // e.g. its URL
+    const thumbnailImage = productData.managedImages.find(img => img.id === productData.selectedThumbnailId);
+    if (thumbnailImage && thumbnailImage.file && thumbnailImage.file.name) { // Check file and file.name
+      thumbnailFilename = thumbnailImage.file.name;
+    } else if (thumbnailImage && thumbnailImage.name) { // Fallback if file.name isn't there but image.name is (e.g. from initialData)
+        thumbnailFilename = thumbnailImage.name;
     }
+    // Add more specific logging for thumbnail selection
+    console.log("Thumbnail selection - ID:", productData.selectedThumbnailId, "Found image:", thumbnailImage, "Derived filename:", thumbnailFilename);
+  }
+
+  // Detailed logging for managedImages before appending to FormData
+  console.log("productData.managedImages in createProductApi before loop:", productData.managedImages);
+  if (productData.managedImages && Array.isArray(productData.managedImages)) {
+    productData.managedImages.forEach((img, index) => {
+      console.log(`Inspecting managedImages[${index}]:`, img);
+      console.log(`managedImages[${index}].file:`, img.file);
+      console.log(`managedImages[${index}].file instanceof File:`, img.file instanceof File);
+    });
+  } else {
+    console.warn("productData.managedImages is not an array or is undefined:", productData.managedImages);
   }
 
   // Append image files
-  if (productData.managedImages) {
-    productData.managedImages.forEach((imgObject) => {
-      if (imgObject.file instanceof File) { // Only upload actual File objects
-        // The third argument to append (filename) is often useful for the server.
-        formData.append('images', imgObject.file, imgObject.file.name);
+  if (productData.managedImages && Array.isArray(productData.managedImages)) {
+    productData.managedImages.forEach((image, index) => {
+      if (image.file instanceof File) {
+        // Backend expects 'images[]'
+        formData.append('images[]', image.file, image.file.name); // Ensure original filename is passed
+        console.log(`Appended file to FormData: images[] - ${image.file.name} (size: ${image.file.size})`);
+      } else {
+        console.warn(`Skipped appending image ${index} (id: ${image.id}, name: ${image.name || 'N/A'}) because image.file is not a File object or is missing. image.file value:`, image.file);
       }
-      // Note: If initialImages contained URLs of already uploaded images (isExternal: true),
-      // and these need to be preserved or re-associated, the backend API must support this.
-      // For a 'create' operation, typically only new files are uploaded.
     });
   }
 
   // Append the filename of the designated thumbnail
   if (thumbnailFilename) {
     formData.append('thumbnail_filename', thumbnailFilename);
-  } else if (productData.managedImages && productData.managedImages.some(img => img.file instanceof File) && !thumbnailFilename) {
-    // If images are being uploaded but no thumbnail was explicitly selected,
-    // the backend might default to the first one, or this could be an error/warning.
-    console.warn("Images are present, but no specific thumbnail filename could be determined. Backend might use a default.");
+    console.log(`Appended thumbnail_filename to FormData: ${thumbnailFilename}`);
+  } else if (productData.managedImages && productData.managedImages.length > 0 && productData.managedImages[0].file instanceof File) {
+    // Default to first image's name if no specific thumbnail selected and first image is a new file
+    const firstImageFile = productData.managedImages[0].file;
+    formData.append('thumbnail_filename', firstImageFile.name);
+    console.log(`Appended first image as default thumbnail_filename: ${firstImageFile.name}`);
+  } else {
+    console.log("No specific thumbnail_filename to append, or first image is not a new file.");
   }
-  
+
   // Log FormData entries for debugging (cannot directly log FormData object content easily)
-  console.log("Constructed FormData to send (entries will be logged below):");
+  console.log("Constructed FormData to send (entries will be logged by the loop below if supported, or check network tab):");
+  // Standard way to log FormData entries
   for (let [key, value] of formData.entries()) {
     if (value instanceof File) {
-      console.log(`FormData entry: ${key} -> Name: ${value.name}, Size: ${value.size}, Type: ${value.type}`);
+      console.log(`FormData entry: ${key} = File { name: "${value.name}", size: ${value.size}, type: "${value.type}" }`);
     } else {
-      console.log(`FormData entry: ${key} -> ${value}`);
+      console.log(`FormData entry: ${key} = ${value}`);
     }
   }
 
