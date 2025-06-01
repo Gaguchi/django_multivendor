@@ -33,6 +33,9 @@ This is a comprehensive **Django REST API + React** multivendor e-commerce platf
 - **Shipping management**
 - **Address management**
 - **Wishlist functionality**
+- **Vendor dashboard** with product CRUD operations
+- **Modal-based confirmations** for critical actions (delete, etc.)
+- **Image upload and management** for products
 
 ---
 
@@ -48,11 +51,12 @@ This is a comprehensive **Django REST API + React** multivendor e-commerce platf
 
 ### Frontend
 
-- **Customer Frontend**: React (Vite) - `/frontend/`
-- **Admin Frontend**: React (separate app) - `/frontend-admin/`
+- **Customer Frontend**: React (Vite) - `/frontend/` - Port 5173
+- **Vendor Dashboard**: React (Vite) - `/vendor_dashboard/` - Port 5174
 - **State Management**: Context API with AuthContext
-- **HTTP Client**: Axios with interceptors
-- **UI**: Bootstrap-based responsive design
+- **HTTP Client**: Fetch API with custom error handling
+- **UI**: Custom CSS with responsive design
+- **Routing**: React Router with protected routes
 
 ### Key Dependencies
 
@@ -118,7 +122,17 @@ django_multivendor/
 │   │   └── App.jsx          # Main app component
 │   ├── public/
 │   └── package.json
-├── frontend-admin/          # Admin React app
+├── vendor_dashboard/           # Vendor Management React App
+│   ├── src/
+│   │   ├── components/       # Reusable components (Modal, ConfirmationModal)
+│   │   ├── pages/            # Page components (products, orders)
+│   │   ├── services/         # API services with authentication
+│   │   ├── utils/            # Utility functions
+│   │   └── App.jsx           # Main vendor app component
+│   ├── public/
+│   └── package.json
+├── cloudflared-config.yml    # Cloudflare tunnel configuration
+├── start.bat                 # Windows service startup script
 └── README.md
 ```
 
@@ -612,9 +626,79 @@ api.interceptors.request.use((config) => {
 export default api;
 ```
 
-### Admin Frontend (`/frontend-admin/`)
+### Vendor Dashboard (`/vendor_dashboard/`)
 
-Separate React application for vendor/admin management with similar structure but admin-focused components.
+Separate React application for vendor management with comprehensive product management interface.
+
+#### Key Components
+
+```jsx
+// Main vendor dashboard components
+src/
+├── components/
+│   ├── Modal.jsx                  # Reusable modal component
+│   ├── ConfirmationModal.jsx      # Delete confirmation modals
+│   ├── Header.jsx                 # Dashboard header
+│   ├── SideMenu.jsx              # Navigation sidebar
+│   └── MainContent.jsx           # Main content routing
+├── pages/
+│   └── products/
+│       ├── All.jsx               # Product listing with delete functionality
+│       ├── Add.jsx               # Product creation form
+│       ├── Edit.jsx              # Product editing form
+│       └── components/
+│           ├── ProductForm.jsx    # Shared form component
+│           ├── ImageUploadSection.jsx
+│           ├── ProductDetailsSection.jsx
+│           ├── AttributesSection.jsx
+│           └── PricingInventorySection.jsx
+└── services/
+    └── api.js                    # API service with authentication
+```
+
+#### Modal Implementation
+
+The vendor dashboard uses a reusable modal system for user confirmations:
+
+```jsx
+// components/Modal.jsx - Base modal component
+export default function Modal({
+    isOpen = false,
+    onClose,
+    title,
+    children,
+    size = 'md',
+    showCloseButton = true,
+    closeOnOverlayClick = true
+}) {
+    // Handles escape key, body scroll prevention, overlay clicks
+    // Supports different sizes: 'sm', 'md', 'lg', 'xl'
+}
+
+// components/ConfirmationModal.jsx - Delete confirmation
+export default function ConfirmationModal({
+    isOpen = false,
+    onClose,
+    onConfirm,
+    title = 'Confirm Action',
+    message = 'Are you sure?',
+    confirmText = 'Confirm',
+    cancelText = 'Cancel',
+    type = 'danger', // 'danger', 'warning', 'info'
+    loading = false
+}) {
+    // Styled confirmation modal with loading states
+}
+```
+
+#### Product Management Features
+
+- **Product Listing**: Displays vendor's products with real-time data
+- **CRUD Operations**: Create, read, update, delete products
+- **Image Management**: Upload multiple images with thumbnail selection
+- **Modal Confirmations**: Safe delete operations with user confirmation
+- **Form Validation**: Comprehensive form validation and error handling
+- **Authentication**: Secure API calls with JWT tokens
 
 ---
 
@@ -758,7 +842,7 @@ VITE_REDIRECT_URI=https://shop.bazro.ge/auth/callback
 VITE_OAUTH_PROTOCOL=https
 ```
 
-#### Frontend Admin (`/frontend-admin/.env`)
+#### Vendor Dashboard (`/vendor_dashboard/.env`)
 
 ```properties
 VITE_API_BASE_URL=https://api.bazro.ge
@@ -839,7 +923,7 @@ All API requests from both frontends are sent through the Cloudflare tunnel:
    cd frontend && npm run dev
 
    # Terminal 3: Admin Frontend
-   cd frontend-admin && npm run dev
+   cd vendor_dashboard && npm run dev
 
    # Terminal 4: Cloudflare Tunnel
    cloudflared tunnel --config cloudflared-config.yml run django-multivendor
@@ -848,7 +932,7 @@ All API requests from both frontends are sent through the Cloudflare tunnel:
 2. **Access Applications**:
 
    - Customer frontend: `https://shop.bazro.ge`
-   - Admin frontend: `https://seller.bazro.ge`
+   - Vendor Dashboard: `https://seller.bazro.ge`
    - API documentation: `https://api.bazro.ge/api/`
    - Django admin: `https://api.bazro.ge/admin/`
 
@@ -1043,11 +1127,35 @@ REACT_APP_FACEBOOK_APP_ID=your-facebook-app-id
 
 ## 🛠️ Development Workflow
 
+### Automated Development Setup (Windows)
+
+The project includes an automated startup script that launches all services:
+
+```bat
+# start.bat - Complete development environment startup
+# Automatically starts:
+# 1. Django Backend (localhost:8000)
+# 2. Customer Frontend (localhost:5173)
+# 3. Vendor Dashboard (localhost:5174)
+# 4. Cloudflare Tunnel (with domain routing)
+
+# Usage:
+.\start.bat
+```
+
+**Services Started:**
+
+- **Django Backend**: `localhost:8000` (via `py manage.py runserver`)
+- **Customer Frontend**: `localhost:5173` (via `npm run dev`)
+- **Vendor Dashboard**: `localhost:5174` (via `npm run dev`)
+- **Cloudflare Tunnel**: Routes to `shop.bazro.ge`, `api.bazro.ge`, `seller.bazro.ge`
+
 ### Production Deployment (Cloudflare Tunnel)
 
 **Complete Development Setup**:
 
 ```bash
+# Manual startup (if not using start.bat)
 # 1. Start Backend (Terminal 1)
 cd backend
 python manage.py runserver 8000
@@ -1056,20 +1164,18 @@ python manage.py runserver 8000
 cd frontend
 npm run dev -- --port 5173
 
-# 3. Start Admin Frontend (Terminal 3)
-cd frontend-admin
+# 3. Start Vendor Dashboard (Terminal 3)
+cd vendor_dashboard
 npm run dev -- --port 5174
 
 # 4. Start Cloudflare Tunnel (Terminal 4)
 cloudflared tunnel --config cloudflared-config.yml run django-multivendor
-# OR use the batch file
-./cloudflare.bat
 ```
 
 **Access Points**:
 
 - **Customer Frontend**: https://shop.bazro.ge
-- **Admin/Vendor Frontend**: https://seller.bazro.ge
+- **Vendor Dashboard**: https://seller.bazro.ge
 - **API/Django Admin**: https://api.bazro.ge/admin/
 - **Local Django**: http://localhost:8000 (direct access)
 
@@ -1106,8 +1212,8 @@ cd frontend
 npm install
 npm run dev
 
-# Admin frontend
-cd frontend-admin
+# Vendor Dashboard
+cd vendor_dashboard
 npm install
 npm run dev
 ```
@@ -1145,98 +1251,146 @@ curl -X GET http://localhost:8000/api/users/profile/ \
 
 ## 💻 Common Patterns & Code Examples
 
-### API View Pattern
+### Vendor Dashboard - Modal Delete Pattern
+
+```jsx
+// Product deletion with confirmation modal
+const [deleteModal, setDeleteModal] = useState({
+  isOpen: false,
+  productId: null,
+  productName: "",
+  loading: false,
+});
+
+const handleDeleteProduct = (productId, productName) => {
+  setDeleteModal({
+    isOpen: true,
+    productId,
+    productName,
+    loading: false,
+  });
+};
+
+const confirmDelete = async () => {
+  setDeleteModal((prev) => ({ ...prev, loading: true }));
+  try {
+    await api.deleteProductApi(deleteModal.productId);
+    setProducts((prev) => prev.filter((p) => p.id !== deleteModal.productId));
+    setDeleteModal({
+      isOpen: false,
+      productId: null,
+      productName: "",
+      loading: false,
+    });
+  } catch (err) {
+    setDeleteModal((prev) => ({ ...prev, loading: false }));
+    console.error("Error deleting product:", err);
+  }
+};
+
+// Modal usage
+<ConfirmationModal
+  isOpen={deleteModal.isOpen}
+  onClose={() => setDeleteModal({ ...deleteModal, isOpen: false })}
+  onConfirm={confirmDelete}
+  title="Delete Product"
+  message={`Are you sure you want to delete "${deleteModal.productName}"? This action cannot be undone.`}
+  confirmText="Delete"
+  type="danger"
+  loading={deleteModal.loading}
+/>;
+```
+
+### API ViewSet with Vendor Filtering
 
 ```python
-# Standard ViewSet pattern
+# vendors/views.py - Vendor-specific product management
 class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        # Only return products for the authenticated vendor
         return VendorProduct.objects.filter(vendor__user=self.request.user)
+
+    @action(detail=False, methods=['get'])
+    def my_products(self, request):
+        """Return only vendor's own products"""
+        products = self.get_queryset()
+        serializer = self.get_serializer(products, many=True)
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         vendor = get_object_or_404(Vendor, user=self.request.user)
         serializer.save(vendor=vendor)
-
-    @action(detail=False, methods=['get'])
-    def my_products(self, request):
-        products = self.get_queryset()
-        serializer = self.get_serializer(products, many=True)
-        return Response(serializer.data)
 ```
 
-### Custom Authentication
+### Authentication Patterns
 
 ```python
-# vendors/authentication.py
+# Dual authentication: JWT + Master Token
 class MasterTokenAuthentication(BaseAuthentication):
     def authenticate(self, request):
         token = request.META.get('HTTP_X_MASTER_TOKEN')
         if token and token == settings.MASTER_ACCESS_TOKEN:
-            return (None, token)  # Anonymous user with token
+            return (None, token)
         return None
 ```
 
-### Serializer Pattern
+```jsx
+// Frontend API authentication
+const masterToken = import.meta.env.VITE_MASTER_TOKEN;
+const headers = {};
 
-```python
-# Nested serializer with validation
-class UserSerializer(serializers.ModelSerializer):
-    userprofile = UserProfileSerializer(required=False)
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'password', 'userprofile']
-
-    def create(self, validated_data):
-        profile_data = validated_data.pop('userprofile', {})
-        user = User.objects.create_user(**validated_data)
-        UserProfile.objects.create(user=user, **profile_data)
-        return user
+// Prefer Bearer token, fallback to master token
+if (getToken()) {
+  headers["Authorization"] = `Bearer ${getToken()}`;
+} else if (masterToken) {
+  headers["X-Master-Token"] = masterToken;
+}
 ```
 
-### Frontend API Integration
+### React Form Patterns
 
 ```jsx
-// React API integration pattern
-const useProducts = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+// ProductForm with edit/create modes
+export default function ProductForm({
+  onSubmit,
+  isLoading,
+  initialData = {},
+  isEdit = false,
+}) {
+  const [formData, setFormData] = useState({
+    managedImages: [],
+    selectedThumbnailId: null,
+    name: "",
+    category: "",
+    price: "",
+    sku: "",
+    stock: "",
+    description: "",
+    ...initialData,
+  });
 
+  // Update form when editing
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await api.get("/vendors/products/");
-        setProducts(response.data.results || response.data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (initialData && Object.keys(initialData).length > 0) {
+      setFormData((prev) => ({ ...prev, ...initialData }));
+    }
+  }, [initialData]);
 
-    fetchProducts();
-  }, []);
-
-  return { products, loading };
-};
-```
-
-### Error Handling Pattern
-
-```python
-# Consistent error handling
-class CustomAPIView(APIView):
-    def handle_exception(self, exc):
-        if isinstance(exc, ValidationError):
-            return Response(
-                {'error': 'Validation failed', 'details': exc.detail},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        return super().handle_exception(exc)
+  return (
+    <button type="submit" disabled={isLoading}>
+      {isLoading
+        ? isEdit
+          ? "Updating..."
+          : "Adding..."
+        : isEdit
+        ? "Update Product"
+        : "Add Product"}
+    </button>
+  );
+}
 ```
 
 ---
@@ -1318,7 +1472,7 @@ VITE_OAUTH_PROTOCOL=https
 cd frontend
 npm run dev -- --host 0.0.0.0 --port 5173
 
-cd frontend-admin
+cd vendor_dashboard
 npm run dev -- --host 0.0.0.0 --port 5174
 
 # Check Vite configuration
@@ -1573,7 +1727,7 @@ This documentation provides a comprehensive overview of the Django multivendor e
 ### Environment Configuration Files
 
 - `frontend/.env` - Customer frontend environment variables
-- `frontend-admin/.env` - Admin frontend environment variables
+- `vendor_dashboard/.env` - Admin frontend environment variables
 - `backend/django_multivendor/settings.py` - Django configuration with Cloudflare support
 
 ### Development & Production Deployment
@@ -1594,7 +1748,7 @@ project_root/
 ├── cloudflare.bat             # Tunnel startup script
 ├── start.bat                  # Combined startup for all services
 ├── frontend/.env              # shop.bazro.ge config
-├── frontend-admin/.env        # seller.bazro.ge config
+├── vendor_dashboard/.env        # seller.bazro.ge config
 └── backend/
     └── django_multivendor/
         └── settings.py         # CORS & ALLOWED_HOSTS for Cloudflare

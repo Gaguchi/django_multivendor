@@ -5,7 +5,7 @@ echo Starting Django Multivendor Services...
 set PROJECT_ROOT=E:\Work\WebDev\django_multivendor
 set BACKEND_DIR=%PROJECT_ROOT%\backend
 set FRONTEND_DIR=%PROJECT_ROOT%\frontend
-set FRONTEND_ADMIN_DIR=%PROJECT_ROOT%\frontend-admin
+set FRONTEND_ADMIN_DIR=%PROJECT_ROOT%\vendor_dashboard
 set CLOUDFLARED_CONFIG=%PROJECT_ROOT%\cloudflared-config.yml
 
 :: Check if cloudflared-config.yml exists
@@ -30,11 +30,11 @@ start cmd /k "title Customer Frontend && echo Starting customer frontend... && c
 :: Wait for frontend to initialize
 timeout /t 5 /nobreak > nul
 
-:: Start admin frontend
-echo Starting admin frontend...
-start cmd /k "title Admin Frontend && echo Starting admin frontend... && cd /d %FRONTEND_ADMIN_DIR% && npm run dev"
+:: Start vendor dashboard
+echo Starting vendor dashboard...
+start cmd /k "title Vendor dashboard && echo Starting vendor dashboard... && cd /d %FRONTEND_ADMIN_DIR% && npm run dev"
 
-:: Wait for admin frontend to initialize
+:: Wait for vendor dashboard to initialize
 timeout /t 5 /nobreak > nul
 
 :: Start Cloudflare tunnel
@@ -48,7 +48,7 @@ echo.
 echo URLs:
 echo  - Backend API: http://localhost:8000/
 echo  - Customer Frontend: http://localhost:5173/
-echo  - Admin Frontend: http://localhost:5174/
+echo  - Vendor Dashboard: http://localhost:5174/
 echo  - Cloudflare Tunnel: https://shop.bazro.ge, https://api.bazro.ge, https://seller.bazro.ge
 echo.
 echo Press any key to close this window (services will keep running in their own windows).
