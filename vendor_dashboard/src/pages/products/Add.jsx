@@ -7,14 +7,33 @@ import { Link } from 'react-router-dom'; // Added for breadcrumb links
 export default function Add() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    
-    const handleSubmit = async (productData) => {
+      const handleSubmit = async (productData) => {
         try {
             setLoading(true);
             setError(null);
             
-            console.log("Submitting product data:", productData);
-            const response = await api.createProductApi(productData);
+            // Transform price data according to business logic
+            const transformedData = { ...productData };
+            
+            // Handle price logic: if salePrice is empty, use price as price
+            // if salePrice has value, use salePrice as price and price as old_price
+            if (productData.salePrice && productData.salePrice.trim() !== '') {
+                // Sale price is provided
+                transformedData.price = productData.salePrice;
+                transformedData.old_price = productData.price;
+            } else {
+                // No sale price, use regular price
+                transformedData.price = productData.price;
+                // Remove old_price if no sale price
+                delete transformedData.old_price;
+            }
+            
+            // Remove salePrice from the data sent to API as it's not expected by backend
+            delete transformedData.salePrice;
+            
+            console.log("Original product data:", productData);
+            console.log("Transformed product data:", transformedData);
+            const response = await api.createProductApi(transformedData);
             console.log("Product creation response:", response);
             
             // Show success notification
