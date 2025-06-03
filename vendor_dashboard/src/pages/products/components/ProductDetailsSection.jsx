@@ -16,6 +16,12 @@ export default function ProductDetailsSection({ formData, onChange, categories =
 
     // Get the actual categories array to render
     const categoryItems = categories?.results || categories || [];
+    
+    // Debug logging
+    console.log('ProductDetailsSection: Received categories:', categories);
+    console.log('ProductDetailsSection: Category items to render:', categoryItems);
+    console.log('ProductDetailsSection: Form data category value:', formData.category);
+    console.log('ProductDetailsSection: Form data brand value:', formData.brand);
 
     return (
         <div className="wg-box mb-30">

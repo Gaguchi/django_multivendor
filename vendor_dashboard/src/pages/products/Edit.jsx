@@ -16,21 +16,26 @@ export default function Edit() {
             try {
                 setProductLoading(true);
                 setError(null);
-                
-                console.log("Fetching product with ID:", id);
+                  console.log("Fetching product with ID:", id);
                 const product = await api.getProductByIdApi(id);
-                console.log("Fetched product data:", product);                // Transform the product data to match the form structure
+                console.log("Fetched product data:", product);
+                console.log("Category from API:", product.category);
+                console.log("Brand from API:", product.brand);
+                console.log("Old price from API:", product.old_price);
+                console.log("Sale price from API:", product.sale_price);
+                  // Transform the product data to match the form structure
                 const transformedData = {
                     name: product.name || '',
                     description: product.description || '',
                     price: product.price || '',
                     stock: product.stock_quantity || product.stock || 0,
-                    category: product.category || '',
+                    // Handle category - support both object format {id, name} and direct ID
+                    category: product.category?.id || product.category || '',
                     sku: product.sku || '',
                     is_active: product.is_active !== undefined ? product.is_active : true,
                     brand: product.brand || '',
                     tags: product.tags || '',
-                    salePrice: product.sale_price || '',
+                    salePrice: product.sale_price || product.old_price || '',
                     color: product.color || 'Orange',
                     size: product.size || 'S',
                     // Transform images for the form
@@ -43,8 +48,11 @@ export default function Edit() {
                     // Set thumbnail if available
                     selectedThumbnailId: product.thumbnail && product.images && product.images.length > 0 
                         ? `existing-0` 
-                        : null
-                };
+                        : null                };
+                
+                console.log("Transformed data for form:", transformedData);
+                console.log("Transformed category value:", transformedData.category);
+                console.log("Transformed brand value:", transformedData.brand);
                 
                 setInitialData(transformedData);
             } catch (err) {

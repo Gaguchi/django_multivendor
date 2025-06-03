@@ -50,6 +50,7 @@ class VendorProduct(models.Model):
     vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name='vendor_products')
     category = models.ForeignKey('categories.Category', on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=100)
+    brand = models.CharField(max_length=100, blank=True, default='')
     sku = models.CharField(max_length=50, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     old_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)

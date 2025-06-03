@@ -6,6 +6,9 @@ from .models import Vendor, VendorProduct, ProductImage
 from users.serializers import UserSerializer 
 from users.models import UserProfile
 
+# Import CategorySerializer for proper category serialization
+from categories.serializers import CategorySerializer
+
 class VendorSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)  # User will be set from the request
 
@@ -85,16 +88,14 @@ class ComboProductSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     vendor = SimpleVendorSerializer(read_only=True)
     images = ProductImageSerializer(many=True, read_only=True, source='product_images')
-    # If category is a ForeignKey and needs to be writable:
-    # category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), allow_null=True, required=False) 
-    # Ensure Category model is imported if using PrimaryKeyRelatedField
-
+    category = CategorySerializer(read_only=True)  # Include full category details
+    
     class Meta:
         model = VendorProduct
         fields = [
             'id', 'name', 'sku', 'price', 'old_price', 'stock', 'description',
             'thumbnail', 'secondaryImage', 'vendor', 'images', 'rating', 'is_hot', 'created_at',
-            # 'category' # Add category here if it's part of the model and needs to be serialized
+            'category', 'brand'  # Added brand field
         ]
 
     def create(self, validated_data):
@@ -190,6 +191,11 @@ class ProductSerializer(serializers.ModelSerializer):
 
         request = self.context.get('request')
         
+        # Get thumbnail filename early to avoid UnboundLocalError
+        thumbnail_filename_from_request = None
+        if request:
+            thumbnail_filename_from_request = request.data.get('thumbnail_filename')
+        
         # Update basic product fields
         # Pop images and thumbnail_filename from validated_data as they are not direct model fields or handled separately
         validated_data.pop('images', None) 
@@ -203,7 +209,6 @@ class ProductSerializer(serializers.ModelSerializer):
         # Handle new image uploads from request.FILES
         if request and request.FILES:
             uploaded_image_files = request.FILES.getlist('images')
-            thumbnail_filename_from_request = request.data.get('thumbnail_filename')
             logger.info(f"Processing {len(uploaded_image_files)} new image files for update. Designated thumbnail filename: '{thumbnail_filename_from_request}'")
             
             max_position = ProductImage.objects.filter(product=instance).aggregate(

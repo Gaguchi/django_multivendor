@@ -29,31 +29,31 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {}, isE
     const [showAttributes, setShowAttributes] = useState(false);
     const [categoryAttributes, setCategoryAttributes] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-      // Update form data when initialData changes (for edit mode)
+    const [error, setError] = useState(null);    // Update form data when initialData changes (for edit mode)
     useEffect(() => {
         if (initialData && Object.keys(initialData).length > 0) {
-            console.log('Updating form with initial data:', initialData);
+            console.log('ProductForm: Updating form with initial data:', initialData);
+            console.log('ProductForm: Initial category value:', initialData.category);
+            console.log('ProductForm: Initial brand value:', initialData.brand);
             setFormData(prev => ({
                 ...prev,
                 ...initialData
             }));
         }
-    }, [initialData]);
-
-    // Fetch categories on component mount
+    }, [initialData]);    // Fetch categories on component mount
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 setLoading(true);
                 setError(null);
                 const response = await getCategoriesApi();
-                console.log('Categories API response:', response);
+                console.log('ProductForm: Categories API response:', response);
+                console.log('ProductForm: Categories array:', response?.results || response);
                 
                 // Store the full response object which contains the results array
                 setCategories(response);
             } catch (error) {
-                console.error('Error fetching categories:', error);
+                console.error('ProductForm: Error fetching categories:', error);
                 setError('Failed to load categories');
             } finally {
                 setLoading(false);
