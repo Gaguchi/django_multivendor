@@ -23614,3 +23614,123 @@ django.core.exceptions.ImproperlyConfigured: Field name `stock_status` is not va
 [2025-06-01 19:57:56,217] INFO views Token refreshed successfully for user
 [2025-06-01 19:58:30,816] INFO views Read-only action list - allowing public access
 [2025-06-01 19:58:31,008] INFO views Read-only action list - allowing public access
+[2025-06-01 19:59:01,016] ERROR middleware Error logging request: 'utf-8' codec can't decode byte 0x89 in position 1304: invalid start byte
+[2025-06-01 19:59:01,021] INFO serializers Thumbnail filename from request: Titul-2.png
+[2025-06-01 19:59:01,021] INFO serializers Thumbnail filename from request: Titul-2.png
+[2025-06-01 19:59:01,084] INFO serializers Product base created with ID: 27 for vendor ID: 2. Validated data used: {'name': 'Ketchup', 'sku': 'Ketchup', 'price': Decimal('50.00'), 'old_price': Decimal('150.00'), 'stock': 50, 'description': 'Ketchup', 'is_hot': False, 'vendor': <Vendor: Betochka>}
+[2025-06-01 19:59:01,084] INFO serializers Product base created with ID: 27 for vendor ID: 2. Validated data used: {'name': 'Ketchup', 'sku': 'Ketchup', 'price': Decimal('50.00'), 'old_price': Decimal('150.00'), 'stock': 50, 'description': 'Ketchup', 'is_hot': False, 'vendor': <Vendor: Betochka>}
+[2025-06-01 19:59:01,084] INFO serializers Processing 1 uploaded image files for product ID: 27
+[2025-06-01 19:59:01,084] INFO serializers Processing 1 uploaded image files for product ID: 27
+[2025-06-01 19:59:01,119] INFO serializers Created ProductImage ID: 25 with file: vendor_products/Betochka/Ketchup/images/Titul-2.png for product ID: 27
+[2025-06-01 19:59:01,119] INFO serializers Created ProductImage ID: 25 with file: vendor_products/Betochka/Ketchup/images/Titul-2.png for product ID: 27
+[2025-06-01 19:59:01,119] INFO serializers Thumbnail 'Titul-2.png' matches newly uploaded image ID: 25 for product ID: 27
+[2025-06-01 19:59:01,119] INFO serializers Thumbnail 'Titul-2.png' matches newly uploaded image ID: 25 for product ID: 27
+[2025-06-01 19:59:01,119] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Ketchup/images/Titul-2.png for product ID: 27
+[2025-06-01 19:59:01,119] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Ketchup/images/Titul-2.png for product ID: 27
+[2025-06-01 19:59:01,152] INFO serializers Saved product thumbnail for product ID: 27
+[2025-06-01 19:59:01,152] INFO serializers Saved product thumbnail for product ID: 27
+[2025-06-01 21:29:08,354] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 21:29:08,354] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 21:29:08,440] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 21:29:08,440] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 21:29:08,688] INFO views Token refreshed successfully for user
+[2025-06-01 21:29:08,698] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-01 21:29:08,698] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-01 21:29:13,297] WARNING log Unauthorized: /api/categories/
+[2025-06-01 21:29:13,297] WARNING log Unauthorized: /api/categories/
+[2025-06-01 21:29:13,381] WARNING log Unauthorized: /api/categories/
+[2025-06-01 21:29:13,381] WARNING log Unauthorized: /api/categories/
+[2025-06-01 21:29:13,947] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 21:29:13,947] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 21:29:14,033] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 21:29:14,033] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 21:29:22,517] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-01 21:29:39,238] INFO views Read-only action list - allowing public access
+[2025-06-01 21:29:39,425] INFO views Read-only action list - allowing public access
+[2025-06-01 22:03:59,046] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:03:59,046] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:03:59,137] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:03:59,137] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:03:59,995] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:03:59,995] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:00,087] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:00,087] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:00,109] INFO views Token refreshed successfully for user
+[2025-06-01 22:04:00,116] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-01 22:04:00,116] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-01 22:04:00,176] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-01 22:04:00,176] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-01 22:04:00,195] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-01 22:04:00,195] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-01 22:04:00,211] INFO views Read-only action list - allowing public access
+[2025-06-01 22:04:05,349] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:04:05,349] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:04:05,439] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:04:05,439] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:04:06,489] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:06,489] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:06,585] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:06,585] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:08,064] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:04:08,064] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:04:08,157] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:04:08,157] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:04:17,010] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:17,010] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:17,100] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:04:17,100] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:11:36,728] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:11:36,728] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:11:36,818] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:11:36,818] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:11:38,139] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:11:38,139] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:11:38,229] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:11:38,229] WARNING log Unauthorized: /api/categories/
+[2025-06-01 22:11:39,419] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:11:39,419] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:11:39,508] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:11:39,508] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-01 22:11:47,425] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-01 22:15:38,666] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-03 12:00:00,266] INFO autoreload Watching for file changes with StatReloader
+[2025-06-03 12:00:00,506] INFO urls === Registering Vendor URLs ===
+[2025-06-03 12:00:00,506] INFO urls === Registering Vendor URLs ===
+[2025-06-03 12:00:00,507] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-03 12:00:00,507] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-03 12:00:15,380] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-03 12:00:15,381] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-03 12:00:15,381] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-03 12:00:15,380] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-03 12:00:15,382] WARNING log Unauthorized: /api/users/profile/
+[2025-06-03 12:00:15,381] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-03 12:00:15,382] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-03 12:00:15,381] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-03 12:00:15,382] WARNING log Unauthorized: /api/users/profile/
+[2025-06-03 12:00:15,382] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-03 12:00:15,385] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,386] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,386] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,387] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,385] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,386] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,386] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,387] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,479] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-03 12:00:15,479] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-03 12:00:15,493] WARNING log Unauthorized: /api/users/profile/
+[2025-06-03 12:00:15,493] WARNING log Unauthorized: /api/users/profile/
+[2025-06-03 12:00:15,509] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,509] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-03 12:00:15,590] WARNING log Unauthorized: /api/users/profile/
+[2025-06-03 12:00:15,590] WARNING log Unauthorized: /api/users/profile/
+[2025-06-03 12:00:15,686] WARNING log Unauthorized: /api/users/profile/
+[2025-06-03 12:00:15,686] WARNING log Unauthorized: /api/users/profile/
+[2025-06-03 12:00:26,264] WARNING log Not Found: /media/vendor_products/Betochka/iPad/thumbnails/pngegg_AzKM8wO.png
+[2025-06-03 12:00:26,264] WARNING log Not Found: /media/vendor_products/Betochka/Drill/images/Picture5_gXtF89i.png
+[2025-06-03 12:00:26,265] WARNING log Not Found: /media/vendor_products/Betochka/Cart/images/Picture10.png
+[2025-06-03 12:00:26,264] WARNING log Not Found: /media/vendor_products/Betochka/iPad/thumbnails/pngegg_AzKM8wO.png
+[2025-06-03 12:00:26,266] WARNING log Not Found: /media/vendor_products/Betochka/Water/thumbnails/832981534504112.png
+[2025-06-03 12:00:26,264] WARNING log Not Found: /media/vendor_products/Betochka/Drill/images/Picture5_gXtF89i.png
+[2025-06-03 12:00:26,265] WARNING log Not Found: /media/vendor_products/Betochka/Cart/images/Picture10.png
+[2025-06-03 12:00:26,266] WARNING log Not Found: /media/vendor_products/Betochka/Water/thumbnails/832981534504112.png
