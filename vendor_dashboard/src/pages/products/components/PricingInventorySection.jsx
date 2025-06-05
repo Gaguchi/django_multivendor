@@ -7,10 +7,10 @@ export default function PricingInventorySection({ formData, onChange }) {
 
     return (
         <div className="wg-box mb-30">
-            <div className="cols-lg gap22">
-                <fieldset className="price">
+            <div className="cols-lg gap22">                <fieldset className="price">
                     <div className="body-title mb-10">
                         Price <span className="tf-color-1">*</span>
+                        <small className="text-muted d-block">Original/Regular price (required)</small>
                     </div>
                     <input
                         type="number"
@@ -23,9 +23,11 @@ export default function PricingInventorySection({ formData, onChange }) {
                         required
                     />
                 </fieldset>
-                
-                <fieldset className="sale-price">
-                    <div className="body-title mb-10">Sale Price </div>
+                  <fieldset className="sale-price">
+                    <div className="body-title mb-10">
+                        Sale Price
+                        <small className="text-muted d-block">Discounted price (optional). If provided, becomes current selling price.</small>
+                    </div>
                     <input
                         type="number"
                         placeholder="Sale Price"

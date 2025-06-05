@@ -47,15 +47,27 @@ export default function Edit() {
                     description: product.description || '',
                     sku: product.sku || '',
                     is_active: product.is_active !== undefined ? product.is_active : true,
+                      // Price handling - follow same logic as Add.jsx
+                    // If old_price exists, then current price is actually the sale price
+                    // and old_price is the original price
+                    price: (() => {
+                        if (product.old_price) {
+                            // Product is on sale: show old_price as the original price
+                            return String(product.old_price);
+                        } else {
+                            // Regular product: show current price
+                            return product.price ? String(product.price) : '';
+                        }
+                    })(),
                     
-                    // Price handling - robust conversion
-                    price: product.price ? String(product.price) : '',
-                    
-                    // Handle sale price vs old price mapping
                     salePrice: (() => {
-                        if (product.sale_price) return String(product.sale_price);
-                        if (product.old_price) return String(product.old_price);
-                        return '';
+                        if (product.old_price) {
+                            // Product is on sale: current price is the sale price
+                            return product.price ? String(product.price) : '';
+                        } else {
+                            // No sale: salePrice is empty
+                            return '';
+                        }
                     })(),
                     
                     // Stock handling with fallbacks
@@ -152,23 +164,32 @@ export default function Edit() {
             setError(null);
             
             console.log("=== SUBMITTING PRODUCT UPDATE ===");
-            console.log("Form data to submit:", productData);            // Transform data for API submission if needed
+            console.log("Form data to submit:", productData);            // Transform data for API submission - follow same logic as Add.jsx
             const apiData = {
                 ...productData,
-                // Ensure numeric fields are properly formatted
-                price: productData.price ? String(productData.price) : '',
                 stock: productData.stock ? Number(productData.stock) : 0,
-                // Handle sale price mapping
-                sale_price: productData.salePrice || '',
-                // Send category as category_id for backend
                 category_id: productData.category ? Number(productData.category) : null
             };
             
-            // Remove the old category field to avoid confusion
-            delete apiData.category;
+            // Handle price/sale price logic (same as Add.jsx)
+            if (productData.salePrice && productData.salePrice.trim() !== '') {
+                // Sale price is provided: salePrice becomes price, price becomes old_price
+                apiData.price = productData.salePrice;
+                apiData.old_price = productData.price;
+            } else {
+                // No sale price: use regular price, remove old_price
+                apiData.price = productData.price;
+                delete apiData.old_price;
+            }
             
-            console.log("API submission data:", apiData);
-            console.log("Category being sent:", apiData.category, typeof apiData.category);
+            // Remove frontend-only fields
+            delete apiData.category;
+            delete apiData.salePrice;
+              console.log("API submission data:", apiData);
+            console.log("Corrected price logic:");
+            console.log("- Original price field:", apiData.price);
+            console.log("- Old price field:", apiData.old_price);
+            console.log("- Category ID being sent:", apiData.category_id, typeof apiData.category_id);
             
             const response = await api.updateProductApi(id, apiData);
             console.log("Update response:", response);
