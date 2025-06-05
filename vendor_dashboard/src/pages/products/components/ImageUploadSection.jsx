@@ -16,11 +16,9 @@ export default function ImageUploadSection({
     const imagesRef = useRef(managedImages);
     useEffect(() => {
         imagesRef.current = managedImages;
-    }, [managedImages]);
-
-    // Initialize images from props - REVISED to prevent infinite loops
+    }, [managedImages]);    // Initialize images from props - REVISED to prevent infinite loops and image duplication
     useEffect(() => {
-        // console.log("Effect: Initializing from initialImages", initialImages);
+        console.log("ImageUploadSection: Processing initialImages", initialImages);
         // This effect should map initialImages to managedImages and selectedThumbnailId
         // It should only run when initialImages prop changes.
 
@@ -42,18 +40,28 @@ export default function ImageUploadSection({
             return null;
         }).filter(Boolean); // Filter out any nulls from unexpected formats
 
+        console.log("ImageUploadSection: Processed images", processedImages);
+
         setManagedImages(currentManagedImages => {
-            // A more sophisticated merge might be needed if we want to preserve existing managed images
-            // that are not in initialImages (e.g. newly added files before initialImages prop updates)
-            // For now, let's assume initialImages is the source of truth when it changes.
+            // In edit mode, when initialImages change, we want to replace all managed images
+            // This prevents duplication when updating products
             
             // Basic check to prevent update if objects are effectively the same (shallow compare by id and preview)
             if (currentManagedImages.length === processedImages.length &&
                 currentManagedImages.every((img, index) => img.id === processedImages[index]?.id && img.preview === processedImages[index]?.preview)) {
-                // console.log("Skipping setManagedImages as it seems unchanged.");
+                console.log("ImageUploadSection: Skipping managed images update - no changes detected");
                 return currentManagedImages;
             }
-            // console.log("Setting managed images from initialImages", processedImages);
+            
+            console.log("ImageUploadSection: Updating managed images from", currentManagedImages.length, "to", processedImages.length);
+            
+            // Clean up old blob URLs before replacing
+            currentManagedImages.forEach(img => {
+                if (img.preview && img.preview.startsWith('blob:') && !img.isExternal) {
+                    URL.revokeObjectURL(img.preview);
+                }
+            });
+            
             return processedImages;
         });
 
@@ -64,19 +72,12 @@ export default function ImageUploadSection({
             // Check if the current selectedThumbnailId is still valid within the new processedImages
             const currentThumbnailStillValid = processedImages.some(img => img.id === selectedThumbnailId);
             if (!currentThumbnailStillValid) {
-                // console.log("Setting default thumbnail from initialImages", processedImages[0].id);
                 setSelectedThumbnailId(processedImages[0].id);
-            }
-            // If currentThumbnailStillValid is true, we keep the existing selectedThumbnailId
-            // to preserve user selection if possible, unless initialThumbnail explicitly overrides it.
-        } else if (processedImages.length === 0) {
-            // console.log("Clearing thumbnail as no images from initialImages");
+            }        } else if (processedImages.length === 0) {
             setSelectedThumbnailId(null);
         }
-        // If selectedThumbnailId is already valid within processedImages, and no explicit initialThumbnail, do nothing.
 
     }, [initialImages]); // Corrected dependency array
-
 
     const processFiles = useCallback((files) => {
         const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
@@ -85,19 +86,21 @@ export default function ImageUploadSection({
         const newImageObjects = imageFiles.map(file => ({
             id: generateId(),
             file: file,
-            preview: URL.createObjectURL(file)
+            preview: URL.createObjectURL(file),
+            isExternal: false
         }));
 
         setManagedImages(prevImages => {
             const updatedImages = [...prevImages, ...newImageObjects];
+            
             // If no thumbnail is selected yet, and we're adding new images, select the first new one.
-            // Or, if selectedThumbnailId was null and updatedImages is now populated.
             if (!selectedThumbnailId && updatedImages.length > 0) {
-                 setSelectedThumbnailId(updatedImages[0].id);
+                setSelectedThumbnailId(updatedImages[0].id);
             } else if (selectedThumbnailId === null && updatedImages.length > 0) {
                 // This condition ensures a thumbnail is selected if one wasn't previously.
                 setSelectedThumbnailId(updatedImages[0].id);
             }
+            
             return updatedImages;
         });
     }, [selectedThumbnailId]);

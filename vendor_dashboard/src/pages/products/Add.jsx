@@ -7,6 +7,8 @@ import { Link } from 'react-router-dom'; // Added for breadcrumb links
 export default function Add() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    
+    console.log('Add: Component rendered');
       const handleSubmit = async (productData) => {
         try {
             setLoading(true);

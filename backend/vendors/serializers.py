@@ -1,4 +1,4 @@
-import logging # Ensure logging is imported
+import logging  # Ensure logging is imported
 from rest_framework import serializers
 from .models import Vendor, VendorProduct, ProductImage
 
@@ -88,16 +88,28 @@ class ComboProductSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     vendor = SimpleVendorSerializer(read_only=True)
     images = ProductImageSerializer(many=True, read_only=True, source='product_images')
-    category = CategorySerializer(read_only=True)  # Include full category details
+    category = CategorySerializer(read_only=True)  # For reading full category details
+    category_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)  # For writing category ID
     
     class Meta:
         model = VendorProduct
         fields = [
             'id', 'name', 'sku', 'price', 'old_price', 'stock', 'description',
             'thumbnail', 'secondaryImage', 'vendor', 'images', 'rating', 'is_hot', 'created_at',
-            'category', 'brand'  # Added brand field
+            'category', 'category_id', 'brand'  # Added category_id field for writing
         ]
-
+    
+    def validate_category_id(self, value):
+        """Validate that the category exists"""
+        if value is not None:
+            from categories.models import Category
+            try:
+                Category.objects.get(id=value)
+                return value
+            except Category.DoesNotExist:
+                raise serializers.ValidationError("Invalid category ID")
+        return value
+    
     def create(self, validated_data):
         """Handle product creation with image uploads - Fixed to prevent thumbnail duplication and set default thumbnail."""
         logger = logging.getLogger(__name__)
@@ -120,16 +132,17 @@ class ProductSerializer(serializers.ModelSerializer):
         # This prevents issues if 'thumbnail' was part of the initial validated_data.
         validated_data.pop('thumbnail', None)
         
-        # If 'category' is a field expecting an ID, ensure it's correctly handled.
-        # Example: if validated_data['category'] is an object, extract id.
-        # category_data = validated_data.pop('category', None)
-        # if category_data:
-        #     try:
-        #         category_id = int(category_data) # Or however category is sent
-        #         validated_data['category_id'] = category_id
-        #     except (ValueError, TypeError):
-        #         logger.warning(f"Invalid category data: {category_data}")
-        #         # Optionally raise validation error or handle as per business logic
+        # Handle category_id field - convert to category object
+        category_id = validated_data.pop('category_id', None)
+        if category_id is not None:
+            from categories.models import Category
+            try:
+                category = Category.objects.get(id=category_id)
+                validated_data['category'] = category
+                logger.info(f"Category set: {category.name} (ID: {category.id})")
+            except Category.DoesNotExist:
+                logger.warning(f"Invalid category ID: {category_id}")
+                # Don't set category if invalid ID provided
 
         product = VendorProduct.objects.create(**validated_data)
         logger.info(f"Product base created with ID: {product.id} for vendor ID: {vendor.id}. Validated data used: {validated_data}")
@@ -157,14 +170,15 @@ class ProductSerializer(serializers.ModelSerializer):
                 # Check if original filename (before potential storage renaming) matches
                 if pi.file.name.endswith(thumbnail_filename_from_request) or \
                    (hasattr(pi.file.file, 'original_name') and pi.file.file.original_name == thumbnail_filename_from_request) or \
-                   (image_file_obj.name == thumbnail_filename_from_request for image_file_obj in uploaded_image_files if image_file_obj.name == thumbnail_filename_from_request): # Check original name if available
+                   (image_file_obj.name == thumbnail_filename_from_request for image_file_obj in uploaded_image_files if image_file_obj.name == thumbnail_filename_from_request):
                     designated_thumbnail_product_image = pi
                     break
+            
             if designated_thumbnail_product_image:
                 logger.info(f"Thumbnail '{thumbnail_filename_from_request}' matches newly uploaded image ID: {designated_thumbnail_product_image.id} for product ID: {product.id}")
             else:
                 logger.warning(f"Thumbnail filename '{thumbnail_filename_from_request}' provided but did not match any newly uploaded images for product ID: {product.id}.")
-
+        
         if designated_thumbnail_product_image:
             product.thumbnail = designated_thumbnail_product_image.file
             initial_thumbnail_set_for_product = True
@@ -176,13 +190,12 @@ class ProductSerializer(serializers.ModelSerializer):
             logger.info(f"Set product.thumbnail to the first uploaded image: {product.thumbnail.name} for product ID: {product.id}")
         else:
             logger.info(f"No new images uploaded or no specific thumbnail designated from new uploads. Product.thumbnail not set from new uploads for product ID: {product.id}.")
-
+        
         if initial_thumbnail_set_for_product:
             product.save(update_fields=['thumbnail'])
-            logger.info(f"Saved product thumbnail for product ID: {product.id}")
-        
+            logger.info(f"Saved product thumbnail for product ID: {product.id}")        
         return product
-
+    
     def update(self, instance, validated_data):
         """Handle product updates with image uploads"""
         import logging # Ensure logging is available in update too
@@ -191,20 +204,42 @@ class ProductSerializer(serializers.ModelSerializer):
 
         request = self.context.get('request')
         
-        # Get thumbnail filename early to avoid UnboundLocalError
+        # Get thumbnail filename early to avoid UnboundLocalError - ensure it's always defined
         thumbnail_filename_from_request = None
-        if request:
+        if request and hasattr(request, 'data') and request.data:
             thumbnail_filename_from_request = request.data.get('thumbnail_filename')
+        
+        logger.info(f"Update method: thumbnail_filename_from_request = {thumbnail_filename_from_request}")
+        
+        # Handle category_id field - convert to category object and set directly on instance
+        if 'category_id' in validated_data: # Check if category_id was provided
+            category_id_value = validated_data.pop('category_id') # Pop it as we handle it directly
+            if category_id_value is not None:
+                from categories.models import Category
+                try:
+                    category_obj = Category.objects.get(id=category_id_value)
+                    instance.category = category_obj # Directly assign to the instance's category field
+                    logger.info(f"Instance category directly set to: {category_obj.name} (ID: {category_obj.id})")
+                except Category.DoesNotExist:
+                    logger.warning(f"Invalid category ID: {category_id_value}. Category not changed on instance.")
+                    # If an invalid ID is sent, we choose not to change the category.
+                    # Alternatively, could raise ValidationError or set to None.
+            else: # category_id_value is None (client explicitly sent category_id: null)
+                instance.category = None # Directly set instance's category to None
+                logger.info("Instance category directly set to null.")
+        # If 'category_id' was not in validated_data, instance.category is not modified by this block.
         
         # Update basic product fields
         # Pop images and thumbnail_filename from validated_data as they are not direct model fields or handled separately
         validated_data.pop('images', None) 
         validated_data.pop('thumbnail_filename', None)
+        validated_data.pop('category', None) # Safeguard: remove 'category' (object field) if it's in validated_data
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        instance.save() # Save main attribute changes
-        logger.info(f"Product instance (ID: {instance.id}) updated with basic fields.")
+            
+        instance.save() # Save main attribute changes, including the direct change to instance.category
+        logger.info(f"Product instance (ID: {instance.id}) SAVED. Category after save: {instance.category}")
         
         # Handle new image uploads from request.FILES
         if request and request.FILES:
@@ -249,8 +284,8 @@ class ProductSerializer(serializers.ModelSerializer):
                 except ProductImage.MultipleObjectsReturned:
                     logger.error(f"Multiple existing images found matching filename '{thumbnail_filename_from_request}' for product ID {instance.id}. Thumbnail not changed.")
 
-
-        elif thumbnail_filename_from_request: # No new files, but thumbnail_filename might refer to an existing image
+        # Handle case where thumbnail_filename is provided but no new files uploaded
+        if thumbnail_filename_from_request and (not request or not request.FILES):
             logger.info(f"No new files uploaded, but thumbnail_filename '{thumbnail_filename_from_request}' was provided. Checking existing images.")
             try:
                 existing_image_as_thumbnail = instance.product_images.get(file__endswith=thumbnail_filename_from_request)

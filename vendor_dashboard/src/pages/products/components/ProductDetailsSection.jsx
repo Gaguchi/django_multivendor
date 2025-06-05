@@ -16,12 +16,13 @@ export default function ProductDetailsSection({ formData, onChange, categories =
 
     // Get the actual categories array to render
     const categoryItems = categories?.results || categories || [];
-    
-    // Debug logging
+      // Debug logging
     console.log('ProductDetailsSection: Received categories:', categories);
     console.log('ProductDetailsSection: Category items to render:', categoryItems);
     console.log('ProductDetailsSection: Form data category value:', formData.category);
     console.log('ProductDetailsSection: Form data brand value:', formData.brand);
+    console.log('ProductDetailsSection: Category value type:', typeof formData.category);
+    console.log('ProductDetailsSection: Available category IDs:', categoryItems.map(cat => String(cat.id)));
 
     return (
         <div className="wg-box mb-30">
@@ -46,18 +47,17 @@ export default function ProductDetailsSection({ formData, onChange, categories =
             <fieldset className="category">
                 <div className="body-title mb-10">
                     Category <span className="tf-color-1">*</span>
-                </div>
-                <select
+                </div>                <select
                     className=""
                     name="category"
-                    value={formData.category}
+                    value={formData.category || ''}
                     onChange={handleInputChange}
                     required
                     disabled={loading}
                 >
                     <option value="">Choose category</option>
                     {Array.isArray(categoryItems) && categoryItems.map(category => (
-                        <option key={category.id} value={category.id}>
+                        <option key={category.id} value={String(category.id)}>
                             {category.name}
                         </option>
                     ))}
