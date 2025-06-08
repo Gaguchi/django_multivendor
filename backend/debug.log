@@ -25131,3 +25131,116 @@ UnboundLocalError: cannot access local variable 'thumbnail_filename_from_request
 [2025-06-05 19:05:51,647] INFO serializers Instance category directly set to: Electronics (ID: 2)
 [2025-06-05 19:05:51,707] INFO serializers Product instance (ID: 26) SAVED. Category after save: Electronics
 [2025-06-05 19:05:51,707] INFO serializers Product instance (ID: 26) SAVED. Category after save: Electronics
+[2025-06-05 21:10:28,118] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-05 21:10:28,118] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-05 21:10:28,204] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-05 21:10:28,204] WARNING log Unauthorized: /api/vendors/products/my_products/
+[2025-06-05 21:10:28,482] INFO views Token refreshed successfully for user
+[2025-06-05 21:10:28,490] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-05 21:10:28,490] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-05 21:10:42,524] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-05 21:11:03,791] INFO views Read-only action list - allowing public access
+[2025-06-05 21:11:03,969] INFO views Read-only action list - allowing public access
+[2025-06-05 21:11:24,740] INFO serializers Update method: thumbnail_filename_from_request = None
+[2025-06-05 21:11:24,740] INFO serializers Update method: thumbnail_filename_from_request = None
+[2025-06-05 21:11:24,740] INFO serializers Instance category directly set to: Electronics (ID: 2)
+[2025-06-05 21:11:24,740] INFO serializers Instance category directly set to: Electronics (ID: 2)
+[2025-06-05 21:11:24,802] INFO serializers Product instance (ID: 25) SAVED. Category after save: Electronics
+[2025-06-05 21:11:24,802] INFO serializers Product instance (ID: 25) SAVED. Category after save: Electronics
+[2025-06-08 19:52:02,373] INFO autoreload Watching for file changes with StatReloader
+[2025-06-08 19:52:02,619] INFO urls === Registering Vendor URLs ===
+[2025-06-08 19:52:02,619] INFO urls === Registering Vendor URLs ===
+[2025-06-08 19:52:02,620] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-08 19:52:02,620] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-08 19:56:04,680] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-08 19:56:09,954] INFO views Read-only action list - allowing public access
+[2025-06-08 19:56:10,135] INFO views Read-only action list - allowing public access
+[2025-06-08 19:57:09,471] ERROR middleware Error logging request: 'utf-8' codec can't decode byte 0xff in position 1372: invalid start byte
+[2025-06-08 19:57:09,476] INFO serializers Thumbnail filename from request: 64463190dda6945a304d4239-four-leaf-clover-necklace-double-sided.jpg
+[2025-06-08 19:57:09,476] INFO serializers Thumbnail filename from request: 64463190dda6945a304d4239-four-leaf-clover-necklace-double-sided.jpg
+[2025-06-08 19:57:10,377] INFO serializers Product base created with ID: 28 for vendor ID: 2. Validated data used: {'name': 'Necklace', 'sku': 'prada01', 'price': Decimal('350.00'), 'old_price': Decimal('250.00'), 'stock': 50, 'description': 'A  pair of crosses', 'is_hot': False, 'brand': 'Prada', 'vendor': <Vendor: Betochka>}
+[2025-06-08 19:57:10,377] INFO serializers Product base created with ID: 28 for vendor ID: 2. Validated data used: {'name': 'Necklace', 'sku': 'prada01', 'price': Decimal('350.00'), 'old_price': Decimal('250.00'), 'stock': 50, 'description': 'A  pair of crosses', 'is_hot': False, 'brand': 'Prada', 'vendor': <Vendor: Betochka>}
+[2025-06-08 19:57:10,377] INFO serializers Processing 1 uploaded image files for product ID: 28
+[2025-06-08 19:57:10,377] INFO serializers Processing 1 uploaded image files for product ID: 28
+[2025-06-08 19:57:10,405] INFO serializers Created ProductImage ID: 31 with file: vendor_products/Betochka/Necklace/images/64463190dda6945a304d4239-four-leaf-clover-neckl_VdB4Gtr.jpg for product ID: 28
+[2025-06-08 19:57:10,405] INFO serializers Created ProductImage ID: 31 with file: vendor_products/Betochka/Necklace/images/64463190dda6945a304d4239-four-leaf-clover-neckl_VdB4Gtr.jpg for product ID: 28
+[2025-06-08 19:57:10,411] INFO serializers Thumbnail '64463190dda6945a304d4239-four-leaf-clover-necklace-double-sided.jpg' matches newly uploaded image ID: 31 for product ID: 28
+[2025-06-08 19:57:10,411] INFO serializers Thumbnail '64463190dda6945a304d4239-four-leaf-clover-necklace-double-sided.jpg' matches newly uploaded image ID: 31 for product ID: 28
+[2025-06-08 19:57:10,412] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Necklace/images/64463190dda6945a304d4239-four-leaf-clover-neckl_VdB4Gtr.jpg for product ID: 28
+[2025-06-08 19:57:10,412] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Necklace/images/64463190dda6945a304d4239-four-leaf-clover-neckl_VdB4Gtr.jpg for product ID: 28
+[2025-06-08 19:57:10,439] INFO serializers Saved product thumbnail for product ID: 28
+[2025-06-08 19:57:10,439] INFO serializers Saved product thumbnail for product ID: 28
+[2025-06-08 19:57:16,736] INFO views Read-only action list - allowing public access
+[2025-06-08 19:57:16,931] INFO views Read-only action list - allowing public access
+[2025-06-08 19:59:34,331] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-08 19:59:40,412] INFO views Read-only action list - allowing public access
+[2025-06-08 19:59:40,633] INFO views Read-only action list - allowing public access
+[2025-06-08 20:00:27,889] ERROR middleware Error logging request: 'utf-8' codec can't decode byte 0xff in position 1325: invalid start byte
+[2025-06-08 20:00:27,893] INFO serializers Thumbnail filename from request: 562731C00_RGB.jpg
+[2025-06-08 20:00:27,893] INFO serializers Thumbnail filename from request: 562731C00_RGB.jpg
+[2025-06-08 20:00:27,952] INFO serializers Product base created with ID: 29 for vendor ID: 2. Validated data used: {'name': 'Bracelet', 'sku': 'Pandora01', 'price': Decimal('150.00'), 'old_price': Decimal('200.00'), 'stock': 25, 'description': 'A golden Bracelet', 'is_hot': False, 'brand': 'Pandora', 'vendor': <Vendor: Betochka>}
+[2025-06-08 20:00:27,952] INFO serializers Product base created with ID: 29 for vendor ID: 2. Validated data used: {'name': 'Bracelet', 'sku': 'Pandora01', 'price': Decimal('150.00'), 'old_price': Decimal('200.00'), 'stock': 25, 'description': 'A golden Bracelet', 'is_hot': False, 'brand': 'Pandora', 'vendor': <Vendor: Betochka>}
+[2025-06-08 20:00:27,952] INFO serializers Processing 1 uploaded image files for product ID: 29
+[2025-06-08 20:00:27,952] INFO serializers Processing 1 uploaded image files for product ID: 29
+[2025-06-08 20:00:27,986] INFO serializers Created ProductImage ID: 32 with file: vendor_products/Betochka/Bracelet/images/562731C00_RGB.jpg for product ID: 29
+[2025-06-08 20:00:27,986] INFO serializers Created ProductImage ID: 32 with file: vendor_products/Betochka/Bracelet/images/562731C00_RGB.jpg for product ID: 29
+[2025-06-08 20:00:27,986] INFO serializers Thumbnail '562731C00_RGB.jpg' matches newly uploaded image ID: 32 for product ID: 29
+[2025-06-08 20:00:27,986] INFO serializers Thumbnail '562731C00_RGB.jpg' matches newly uploaded image ID: 32 for product ID: 29
+[2025-06-08 20:00:27,986] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Bracelet/images/562731C00_RGB.jpg for product ID: 29
+[2025-06-08 20:00:27,986] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Bracelet/images/562731C00_RGB.jpg for product ID: 29
+[2025-06-08 20:00:28,019] INFO serializers Saved product thumbnail for product ID: 29
+[2025-06-08 20:00:28,019] INFO serializers Saved product thumbnail for product ID: 29
+[2025-06-08 20:00:48,439] WARNING log Unauthorized: /api/users/login/
+[2025-06-08 20:00:48,439] WARNING log Unauthorized: /api/users/login/
+[2025-06-08 20:01:02,397] INFO views OAuth Callback Request: provider=LAwIyCwrYD2bOCtxd18Bxe7bGg6ZldKr, code_length=73
+[2025-06-08 20:01:02,397] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-06-08 20:01:02,397] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-06-08 20:01:02,397] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-06-08 20:01:02,403] INFO views OAuth Callback Request: provider=LAwIyCwrYD2bOCtxd18Bxe7bGg6ZldKr, code_length=73
+[2025-06-08 20:01:02,405] INFO views Redirect URI: https://shop.bazro.ge/auth/callback
+[2025-06-08 20:01:02,405] INFO views Using redirect URI: https://shop.bazro.ge/auth/callback
+[2025-06-08 20:01:02,405] INFO views Making token exchange request to: https://oauth2.googleapis.com/token
+[2025-06-08 20:01:02,983] INFO views Successfully obtained tokens from google
+[2025-06-08 20:01:03,053] ERROR views Token exchange failed: 400 {
+  "error": "invalid_grant",
+  "error_description": "Bad Request"
+}
+[2025-06-08 20:01:03,054] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-06-08 20:01:03,054] WARNING log Bad Request: /api/users/auth/google/callback/
+[2025-06-08 20:01:28,926] WARNING log Not Found: /api/cart/items/5/
+[2025-06-08 20:01:28,926] WARNING log Not Found: /api/cart/items/5/
+[2025-06-08 20:04:25,136] INFO views Read-only action list - allowing public access
+[2025-06-08 20:04:25,335] INFO views Read-only action list - allowing public access
+[2025-06-08 20:05:17,520] ERROR middleware Error logging request: 'utf-8' codec can't decode byte 0xff in position 1395: invalid start byte
+[2025-06-08 20:05:17,524] INFO serializers Thumbnail filename from request: 4447-lyra-gold-rose-oval-ring-1-bf626ef4f7b9331fb3d10b2fca80f53d.largex2.jpg
+[2025-06-08 20:05:17,524] INFO serializers Thumbnail filename from request: 4447-lyra-gold-rose-oval-ring-1-bf626ef4f7b9331fb3d10b2fca80f53d.largex2.jpg
+[2025-06-08 20:05:18,505] INFO serializers Product base created with ID: 30 for vendor ID: 2. Validated data used: {'name': 'Diamond Ring', 'sku': 'GUCHI01', 'price': Decimal('599.99'), 'old_price': Decimal('1200.00'), 'stock': 12, 'description': 'A beautiful diamond ring', 'is_hot': False, 'brand': 'Guchi', 'vendor': <Vendor: Betochka>}
+[2025-06-08 20:05:18,505] INFO serializers Product base created with ID: 30 for vendor ID: 2. Validated data used: {'name': 'Diamond Ring', 'sku': 'GUCHI01', 'price': Decimal('599.99'), 'old_price': Decimal('1200.00'), 'stock': 12, 'description': 'A beautiful diamond ring', 'is_hot': False, 'brand': 'Guchi', 'vendor': <Vendor: Betochka>}
+[2025-06-08 20:05:18,505] INFO serializers Processing 1 uploaded image files for product ID: 30
+[2025-06-08 20:05:18,505] INFO serializers Processing 1 uploaded image files for product ID: 30
+[2025-06-08 20:05:18,539] INFO serializers Created ProductImage ID: 33 with file: vendor_products/Betochka/Diamond_Ring/images/4447-lyra-gold-rose-oval-ring-1-bf626ef4f7b_DwTJeES.jpg for product ID: 30
+[2025-06-08 20:05:18,539] INFO serializers Created ProductImage ID: 33 with file: vendor_products/Betochka/Diamond_Ring/images/4447-lyra-gold-rose-oval-ring-1-bf626ef4f7b_DwTJeES.jpg for product ID: 30
+[2025-06-08 20:05:18,543] INFO serializers Thumbnail '4447-lyra-gold-rose-oval-ring-1-bf626ef4f7b9331fb3d10b2fca80f53d.largex2.jpg' matches newly uploaded image ID: 33 for product ID: 30
+[2025-06-08 20:05:18,543] INFO serializers Thumbnail '4447-lyra-gold-rose-oval-ring-1-bf626ef4f7b9331fb3d10b2fca80f53d.largex2.jpg' matches newly uploaded image ID: 33 for product ID: 30
+[2025-06-08 20:05:18,543] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Diamond_Ring/images/4447-lyra-gold-rose-oval-ring-1-bf626ef4f7b_DwTJeES.jpg for product ID: 30
+[2025-06-08 20:05:18,543] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Betochka/Diamond_Ring/images/4447-lyra-gold-rose-oval-ring-1-bf626ef4f7b_DwTJeES.jpg for product ID: 30
+[2025-06-08 20:05:18,573] INFO serializers Saved product thumbnail for product ID: 30
+[2025-06-08 20:05:18,573] INFO serializers Saved product thumbnail for product ID: 30
+[2025-06-08 20:05:39,448] WARNING log Not Found: /api/cart/items/30/
+[2025-06-08 20:05:39,448] WARNING log Not Found: /api/cart/items/30/
+[2025-06-08 20:06:02,354] WARNING log Not Found: /favicon.ico
+[2025-06-08 20:06:02,354] WARNING log Not Found: /favicon.ico
+[2025-06-08 20:26:45,376] INFO views Token refreshed successfully for user
+[2025-06-08 20:26:45,472] INFO views Token refreshed successfully for user
+[2025-06-08 20:56:47,334] INFO views Token refreshed successfully for user
+[2025-06-08 20:56:47,436] INFO views Token refreshed successfully for user
+[2025-06-08 21:26:52,142] INFO views Token refreshed successfully for user
+[2025-06-08 21:26:52,245] INFO views Token refreshed successfully for user
+[2025-06-08 21:56:56,094] INFO views Token refreshed successfully for user
+[2025-06-08 21:56:56,163] INFO views Token refreshed successfully for user
+[2025-06-08 22:27:00,307] INFO views Token refreshed successfully for user
+[2025-06-08 22:27:00,409] INFO views Token refreshed successfully for user
+[2025-06-08 22:57:04,677] INFO views Token refreshed successfully for user
+[2025-06-08 22:57:04,770] INFO views Token refreshed successfully for user
+[2025-06-08 23:27:07,053] INFO views Token refreshed successfully for user
+[2025-06-08 23:27:07,122] INFO views Token refreshed successfully for user
