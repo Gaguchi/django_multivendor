@@ -6,12 +6,12 @@ set PROJECT_ROOT=E:\Work\WebDev\django_multivendor
 set BACKEND_DIR=%PROJECT_ROOT%\backend
 set FRONTEND_DIR=%PROJECT_ROOT%\frontend
 set FRONTEND_ADMIN_DIR=%PROJECT_ROOT%\vendor_dashboard
-set CLOUDFLARED_CONFIG=%PROJECT_ROOT%\cloudflared-config.yml
+set CLOUDFLARED_CONFIG=%PROJECT_ROOT%\cloudflare\cloudflared-config.yml
 
 :: Check if cloudflared-config.yml exists
 if not exist "%CLOUDFLARED_CONFIG%" (
     echo ERROR: cloudflared-config.yml not found at %CLOUDFLARED_CONFIG%
-    echo Please create the configuration file before running this script.
+    echo Please create the configuration file in the cloudflare folder before running this script.
     pause
     exit /b 1
 )
@@ -39,7 +39,7 @@ timeout /t 5 /nobreak > nul
 
 :: Start Cloudflare tunnel
 echo Starting Cloudflare tunnel...
-start cmd /k "title Cloudflare Tunnel && echo Starting Cloudflare tunnel... && cd /d %PROJECT_ROOT% && cloudflared tunnel --config cloudflared-config.yml run django-multivendor"
+start cmd /k "title Cloudflare Tunnel && echo Starting Cloudflare tunnel... && cd /d %PROJECT_ROOT%\cloudflare && cloudflared tunnel --config cloudflared-config.yml run django-multivendor"
 
 :: Display final message
 echo.

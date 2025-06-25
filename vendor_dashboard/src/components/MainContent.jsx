@@ -12,7 +12,8 @@ export default function MainContent() {
             {/* main-content-wrap */}
             <div className="main-content-inner">
               {/* main-content-wrap */}
-              <div className="main-content-wrap">                <Routes>
+              <div className="main-content-wrap">
+                <Routes>
                   <Route path="/" element={<Default />} />
                   <Route path="/products" element={<All />} />
                   <Route path="/addproduct" element={<Add />} />

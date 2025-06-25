@@ -131,7 +131,10 @@ django_multivendor/
 │   │   └── App.jsx           # Main vendor app component
 │   ├── public/
 │   └── package.json
-├── cloudflared-config.yml    # Cloudflare tunnel configuration
+├── cloudflare/               # Cloudflare tunnel configuration
+│   ├── cloudflared-config.yml  # Tunnel configuration
+│   ├── cloudflare.bat          # Windows tunnel startup script
+│   └── cloudflare-tunnel-setup.md  # Setup documentation
 ├── start.bat                 # Windows service startup script
 └── README.md
 ```

@@ -48,7 +48,7 @@ This command will create a tunnel and generate a credentials file at `~/.cloudfl
 
 ## 4. Configure the Tunnel
 
-Create a configuration file at `~/.cloudflared/config.yml` or in the project directory:
+Create a configuration file named `cloudflared-config.yml` in the `cloudflare` directory of your project:
 
 ```yaml
 # Config for Cloudflare Tunnel
@@ -79,13 +79,17 @@ Create CNAME records in your Cloudflare DNS dashboard for the hostnames you want
 
 ## 6. Start the Tunnel
 
-Run the tunnel:
+Run the tunnel from the cloudflare directory:
 
 ```
+cd cloudflare
 cloudflared tunnel run django-multivendor
 ```
 
+Or run it with the config file:
+
 ```
+cd cloudflare
 cloudflared tunnel --config cloudflared-config.yml run django-multivendor
 ```
 
