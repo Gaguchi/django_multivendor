@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import serializers
@@ -10,13 +10,22 @@ from users.models import UserProfile
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .authentication import MasterTokenAuthentication
 from rest_framework.pagination import PageNumberPagination
+from django.contrib.auth.models import User
+from rest_framework_simplejwt.tokens import RefreshToken
 
 logger = logging.getLogger(__name__)
 
 class VendorViewSet(viewsets.ModelViewSet):
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
-    permission_classes = [IsAuthenticated]  # Only keep permission_classes, remove authentication_classes
+    
+    def get_permissions(self):
+        """Allow registration without authentication, require auth for other actions"""
+        if self.action == 'register':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
 
     def initial(self, request, *args, **kwargs):
         """Log information before any other processing occurs"""
@@ -26,6 +35,214 @@ class VendorViewSet(viewsets.ModelViewSet):
         logger.info(f"Request Auth: {request.auth}")
         logger.info(f"Request Headers: {request.headers}")
         return super().initial(request, *args, **kwargs)
+
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def register(self, request):
+        """Register a new vendor account"""
+        logger.info("=== Vendor Registration ===")
+        logger.info(f"Registration data: {request.data}")
+        logger.info(f"Registration files: {request.FILES}")
+        
+        # Extract required fields
+        email = request.data.get('email', '').strip()
+        password = request.data.get('password', '')
+        store_name = request.data.get('store_name', '').strip()
+        first_name = request.data.get('first_name', '').strip()
+        last_name = request.data.get('last_name', '').strip()
+        phone = request.data.get('phone', '').strip()
+        contact_email = request.data.get('contact_email', '').strip() or email
+        description = request.data.get('description', '').strip()
+        address = request.data.get('address', '').strip()
+        
+        # New fields for comprehensive registration
+        business_type = request.data.get('business_type', '').strip()
+        business_category = request.data.get('business_category', '')
+        website = request.data.get('website', '').strip()
+        
+        # Social media fields
+        facebook = request.data.get('facebook', '').strip()
+        instagram = request.data.get('instagram', '').strip()
+        twitter = request.data.get('twitter', '').strip()
+        
+        # Marketing preferences
+        marketing_emails = request.data.get('marketing_emails', 'false').lower() == 'true'
+        
+        # Logo file
+        logo_file = request.FILES.get('logo')
+        
+        # Validate required fields
+        if not all([email, password, store_name, first_name, last_name]):
+            return Response(
+                {"error": "Email, password, store name, first name, and last name are required"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Additional validation
+        if len(password) < 8:
+            return Response(
+                {"password": ["Password must be at least 8 characters long"]}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if user already exists
+        if User.objects.filter(email=email).exists():
+            return Response(
+                {"email": ["A user with this email already exists"]}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if store name is already taken
+        if Vendor.objects.filter(store_name=store_name).exists():
+            return Response(
+                {"store_name": ["A store with this name already exists"]}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Create user account
+            user = User.objects.create_user(
+                username=email,  # Use email as username
+                email=email,
+                password=password,
+                first_name=first_name,
+                last_name=last_name
+            )
+            
+            # Create or update user profile as vendor
+            profile, created = UserProfile.objects.get_or_create(user=user)
+            profile.user_type = 'vendor'
+            profile.first_name = first_name
+            profile.last_name = last_name
+            profile.phone = phone
+            profile.save()
+            
+            # Prepare vendor data
+            vendor_data = {
+                'user': user,
+                'store_name': store_name,
+                'description': description,
+                'contact_email': contact_email,
+                'phone': phone,
+                'address': address,
+            }
+            
+            # Add logo if provided
+            if logo_file:
+                vendor_data['logo'] = logo_file
+            
+            vendor = Vendor.objects.create(**vendor_data)
+            
+            # Store additional information in description or create a separate metadata field
+            additional_info = []
+            if business_type:
+                additional_info.append(f"Business Type: {business_type}")
+            if website:
+                additional_info.append(f"Website: {website}")
+            if facebook:
+                additional_info.append(f"Facebook: {facebook}")
+            if instagram:
+                additional_info.append(f"Instagram: {instagram}")
+            if twitter:
+                additional_info.append(f"Twitter: {twitter}")
+            
+            # Append additional info to description if any
+            if additional_info:
+                if vendor.description:
+                    vendor.description += "\n\n--- Additional Information ---\n" + "\n".join(additional_info)
+                else:
+                    vendor.description = "--- Additional Information ---\n" + "\n".join(additional_info)
+                vendor.save()
+            
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+            
+            # Serialize vendor data
+            vendor_serializer = VendorSerializer(vendor)
+            
+            logger.info(f"Vendor registration successful: {vendor.store_name}")
+            
+            return Response({
+                'access': access_token,
+                'refresh': refresh_token,
+                'vendor': vendor_serializer.data,
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name
+                },
+                'profile': {
+                    'user_type': profile.user_type,
+                    'first_name': profile.first_name,
+                    'last_name': profile.last_name,
+                    'phone': profile.phone
+                }
+            }, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            logger.error(f"Vendor registration failed: {str(e)}")
+            # Clean up user if vendor creation failed
+            if 'user' in locals():
+                try:
+                    user.delete()
+                except:
+                    pass
+            return Response(
+                {"error": "Registration failed. Please try again."}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+            profile.last_name = last_name
+            profile.phone = phone
+            profile.save()
+            
+            # Create vendor profile
+            vendor = Vendor.objects.create(
+                user=user,
+                store_name=store_name,
+                description=description,
+                contact_email=contact_email,
+                phone=phone,
+                address=address
+            )
+            
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+            
+            # Serialize vendor data
+            vendor_serializer = VendorSerializer(vendor)
+            
+            logger.info(f"Vendor registration successful: {vendor.store_name}")
+            
+            return Response({
+                'access': access_token,
+                'refresh': refresh_token,
+                'vendor': vendor_serializer.data,
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name
+                },
+                'profile': {
+                    'user_type': profile.user_type,
+                    'first_name': profile.first_name,
+                    'last_name': profile.last_name,
+                    'phone': profile.phone
+                }
+            }, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            logger.error(f"Vendor registration failed: {str(e)}")
+            return Response(
+                {"error": "Registration failed. Please try again."}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     def create(self, request, *args, **kwargs):
         logger.info("=== VendorViewSet Create Method ===")

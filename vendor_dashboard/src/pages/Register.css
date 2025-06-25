@@ -1,0 +1,604 @@
+/* Vendor Registration Styles */
+
+/* Make the login page scrollable */
+.login-page {
+    min-height: 100vh;
+    overflow-y: auto;
+    display: flex;
+}
+
+.login-page .left {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    padding: 20px 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.login-page .right {
+    flex: 1;
+    min-height: 100vh;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+    padding: 30px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+/* Custom scrollbar for webkit browsers */
+.login-box::-webkit-scrollbar {
+    width: 6px;
+}
+
+.login-box::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.login-box::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.login-box::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.registration-progress {
+    margin-bottom: 30px;
+}
+
+.progress-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.progress-steps::before {
+    content: '';
+    position: absolute;
+    top: 17px;
+    left: 17px;
+    right: 17px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 1;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.step-number {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.progress-step.active .step-number {
+    background: var(--tf-color, #2196F3);
+    border-color: var(--tf-color, #2196F3);
+    box-shadow: 0 0 0 4px rgba(33, 150, 243, 0.2);
+}
+
+.progress-step.completed .step-number {
+    background: #28a745;
+    border-color: #28a745;
+}
+
+.progress-step.completed .step-number::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.step-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.progress-step.active .step-label,
+.progress-step.completed .step-label {
+    color: white;
+    font-weight: 500;
+}
+
+.progress-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--tf-color, #2196F3), #42A5F5);
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
+
+/* Form Navigation */
+.form-navigation {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.form-navigation .tf-button.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    flex: 0 0 auto;
+    padding: 12px 24px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.form-navigation .tf-button.secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.form-navigation .tf-button:not(.secondary) {
+    flex: 1;
+    background: linear-gradient(135deg, var(--tf-color, #2196F3), #42A5F5);
+    border: none;
+    padding: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.form-navigation .tf-button:not(.secondary):hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(33, 150, 243, 0.3);
+}
+
+.form-navigation .tf-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Form Rows */
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-row fieldset {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Form Login Container */
+.form-login {
+    max-height: none;
+    overflow: visible;
+}
+
+.form-login > fieldset,
+.form-login > .form-row,
+.form-login > .social-media-section,
+.form-login > .terms-section {
+    margin-bottom: 20px;
+}
+
+/* Error Handling */
+.error-text {
+    color: #ff4757;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.error-text::before {
+    content: '⚠';
+    font-size: 14px;
+}
+
+.flex-grow.error,
+.password-input.error {
+    border-color: #ff4757 !important;
+    box-shadow: 0 0 0 2px rgba(255, 71, 87, 0.2) !important;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Checkbox Styling */
+.checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    cursor: pointer;
+    margin-bottom: 15px;
+    line-height: 1.4;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.checkbox-container:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.checkbox-container input[type="checkbox"] {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    margin-right: 12px;
+    margin-top: 2px;
+    position: relative;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.checkbox-container input[type="checkbox"]:checked + .checkmark {
+    background: var(--tf-color, #2196F3);
+    border-color: var(--tf-color, #2196F3);
+    transform: scale(1.1);
+}
+
+.checkbox-container input[type="checkbox"]:checked + .checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+/* Social Media Section */
+.social-media-section {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.social-media-section .body-title {
+    margin-bottom: 20px;
+    color: var(--tf-color, #2196F3);
+    font-weight: 600;
+}
+
+.social-media-section fieldset {
+    margin-bottom: 15px;
+}
+
+.social-media-section fieldset:last-child {
+    margin-bottom: 0;
+}
+
+/* Terms Content */
+.terms-content {
+    font-size: 14px;
+    line-height: 1.6;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.terms-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.terms-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+.terms-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+
+.terms-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.terms-content h4 {
+    margin-bottom: 15px;
+    color: var(--tf-color, #2196F3);
+    font-weight: 600;
+}
+
+.terms-content ul {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.terms-content li {
+    margin-bottom: 8px;
+    position: relative;
+}
+
+.terms-content li::marker {
+    color: var(--tf-color, #2196F3);
+}
+
+/* File Upload Styling */
+input[type="file"] {
+    padding: 12px !important;
+    border: 2px dashed rgba(255, 255, 255, 0.3) !important;
+    border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: white !important;
+    transition: all 0.3s ease !important;
+}
+
+input[type="file"]:hover {
+    border-color: var(--tf-color, #2196F3) !important;
+    background: rgba(33, 150, 243, 0.1) !important;
+}
+
+input[type="file"]:focus {
+    outline: none !important;
+    border-color: var(--tf-color, #2196F3) !important;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2) !important;
+}
+
+/* Select Dropdown Styling */
+select.flex-grow {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='white' viewBox='0 0 16 16'%3e%3cpath d='m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    appearance: none;
+    padding-right: 40px !important;
+}
+
+/* Loading States */
+.tf-button:disabled {
+    position: relative;
+    overflow: hidden;
+}
+
+.tf-button:disabled::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Enhanced Input Focus States */
+.flex-grow:focus,
+.password-input:focus,
+textarea:focus,
+select:focus {
+    outline: none !important;
+    border-color: var(--tf-color, #2196F3) !important;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2) !important;
+    transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .login-page .left {
+        padding: 10px;
+        min-height: 100vh;
+    }
+    
+    .login-box {
+        padding: 20px;
+        max-height: none;
+        min-height: calc(100vh - 20px);
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .progress-steps {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .progress-steps::before {
+        display: none;
+    }
+    
+    .progress-step {
+        flex: 0 0 calc(50% - 5px);
+        margin-bottom: 10px;
+    }
+    
+    .step-label {
+        font-size: 11px;
+    }
+    
+    .form-navigation {
+        flex-direction: column;
+    }
+    
+    .form-navigation .tf-button.secondary {
+        order: 2;
+    }
+    
+    .social-media-section {
+        padding: 15px;
+    }
+    
+    .terms-content {
+        max-height: 150px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-page .left {
+        padding: 5px;
+    }
+    
+    .login-box {
+        padding: 15px;
+    }
+    
+    .progress-step {
+        flex: 0 0 100%;
+    }
+    
+    .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+    
+    .checkbox-container {
+        padding: 8px;
+    }
+    
+    .checkmark {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Ensure proper height for mobile landscape */
+@media (max-height: 600px) and (orientation: landscape) {
+    .login-page .left {
+        align-items: flex-start;
+        padding: 10px 0;
+    }
+    
+    .login-box {
+        max-height: calc(100vh - 20px);
+        overflow-y: auto;
+        margin: 0 auto;
+    }
+}
+
+/* Success State Animation */
+.registration-success {
+    animation: successPulse 2s ease-in-out;
+}
+
+@keyframes successPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Enhanced Error Message */
+.error-message {
+    border-left: 4px solid #ff4757;
+    animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+    0% {
+        transform: translateY(-10px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Form Section Transitions */
+.form-login > * {
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.form-login > *:nth-child(1) { animation-delay: 0.1s; }
+.form-login > *:nth-child(2) { animation-delay: 0.2s; }
+.form-login > *:nth-child(3) { animation-delay: 0.3s; }
+.form-login > *:nth-child(4) { animation-delay: 0.4s; }
+.form-login > *:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+.login-box {
+    scroll-behavior: smooth;
+}
+
+/* Step transition effects */
+.step-content {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.step-content.entering {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.step-content.entered {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.step-content.exiting {
+    opacity: 0;
+    transform: translateX(-20px);
+}

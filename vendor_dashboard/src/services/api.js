@@ -58,6 +58,84 @@ async function handleResponse(response) {
   }
 }
 
+// Get categories without authentication (for registration)
+export async function getCategories() {
+  try {
+    const response = await fetch(`${API_URL}/api/categories/`, {
+      headers: { 
+        'Accept': 'application/json'
+      }
+    });
+    const data = await handleResponse(response);
+    console.log("Categories response:", data);
+    return data.results || data; // Handle paginated or direct response
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    return []; // Return empty array if categories fail to load
+  }
+}
+
+// Vendor registration API
+export async function registerVendor(vendorData) {
+  try {
+    console.log('Attempting vendor registration with data:', vendorData);
+    
+    // Check if vendorData is FormData or regular object
+    const isFormData = vendorData instanceof FormData;
+    
+    let requestOptions = {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json'
+      }
+    };
+    
+    if (isFormData) {
+      // For FormData, don't set Content-Type (browser will set it with boundary)
+      requestOptions.body = vendorData;
+    } else {
+      // For regular object, stringify and set Content-Type
+      requestOptions.headers['Content-Type'] = 'application/json';
+      requestOptions.body = JSON.stringify(vendorData);
+    }
+    
+    const response = await fetch(`${API_URL}/api/vendors/register/`, requestOptions);
+    
+    console.log('Vendor registration response status:', response.status);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Vendor registration error details:', errorData);
+      
+      // Create a more user-friendly error message
+      let errorMessage = 'Registration failed. ';
+      if (errorData.email) {
+        errorMessage += 'Email: ' + (Array.isArray(errorData.email) ? errorData.email[0] : errorData.email) + ' ';
+      }
+      if (errorData.store_name) {
+        errorMessage += 'Store name: ' + (Array.isArray(errorData.store_name) ? errorData.store_name[0] : errorData.store_name) + ' ';
+      }
+      if (errorData.detail) {
+        errorMessage += errorData.detail;
+      }
+      if (errorData.error) {
+        errorMessage += errorData.error;
+      }
+      
+      const error = new Error(errorMessage.trim());
+      error.response = { data: errorData };
+      throw error;
+    }
+    
+    const data = await response.json();
+    console.log('Vendor registration successful:', data);
+    return data;
+  } catch (error) {
+    console.error('Vendor registration error:', error);
+    throw error;
+  }
+}
+
 // Add dual endpoint support for login to match Python test
 export async function login(username, password) {
   try {

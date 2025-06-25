@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { login } from '../services/api';
 import { setToken, debugTokenStatus } from '../utils/auth';
 
@@ -308,10 +308,10 @@ export default function Login() {
                     </button>
                   </form>
                   <div className="bottom body-text text-center text-center text-white w-full">
-                    Need to register as a vendor?
-                    <a href="/contact-admin" className="body-text tf-color">
-                      Contact Admin
-                    </a>
+                    Don't have a vendor account?
+                    <Link to="/register" className="body-text tf-color">
+                      Register as Vendor
+                    </Link>
                   </div>
                 </div>
               </div>

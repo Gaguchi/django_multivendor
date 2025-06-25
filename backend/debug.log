@@ -25309,3 +25309,90 @@ UnboundLocalError: cannot access local variable 'thumbnail_filename_from_request
 [2025-06-25 11:40:30,596] INFO views Token refreshed successfully for user
 [2025-06-25 12:10:32,544] INFO views Token refreshed successfully for user
 [2025-06-25 12:10:32,623] INFO views Token refreshed successfully for user
+[2025-06-25 12:37:34,811] INFO views Token refreshed successfully for user
+[2025-06-25 12:37:34,814] INFO views Token refreshed successfully for user
+[2025-06-25 12:37:34,849] INFO views Token refreshed successfully for user
+[2025-06-25 12:37:34,862] INFO views Token refreshed successfully for user
+[2025-06-25 13:10:07,560] INFO views Token refreshed successfully for user
+[2025-06-25 13:10:07,583] INFO views Token refreshed successfully for user
+[2025-06-25 13:40:09,556] INFO views Token refreshed successfully for user
+[2025-06-25 13:40:09,636] INFO views Token refreshed successfully for user
+[2025-06-25 14:10:11,485] INFO views Token refreshed successfully for user
+[2025-06-25 14:10:11,632] INFO views Token refreshed successfully for user
+[2025-06-25 14:40:13,416] INFO views Token refreshed successfully for user
+[2025-06-25 14:40:13,485] INFO views Token refreshed successfully for user
+[2025-06-25 15:10:15,656] INFO views Token refreshed successfully for user
+[2025-06-25 15:10:15,737] INFO views Token refreshed successfully for user
+[2025-06-25 15:40:16,626] INFO views Token refreshed successfully for user
+[2025-06-25 15:40:16,707] INFO views Token refreshed successfully for user
+[2025-06-25 16:10:18,627] INFO views Token refreshed successfully for user
+[2025-06-25 16:10:18,718] INFO views Token refreshed successfully for user
+[2025-06-25 16:40:20,551] INFO views Token refreshed successfully for user
+[2025-06-25 16:40:20,631] INFO views Token refreshed successfully for user
+[2025-06-25 17:10:24,971] INFO views Token refreshed successfully for user
+[2025-06-25 17:10:25,072] INFO views Token refreshed successfully for user
+[2025-06-25 17:40:27,021] INFO views Token refreshed successfully for user
+[2025-06-25 17:40:27,157] INFO views Token refreshed successfully for user
+[2025-06-25 18:10:28,718] INFO views Token refreshed successfully for user
+[2025-06-25 18:10:29,023] INFO views Token refreshed successfully for user
+[2025-06-25 18:40:31,109] INFO views Token refreshed successfully for user
+[2025-06-25 18:40:31,202] INFO views Token refreshed successfully for user
+[2025-06-25 19:12:30,635] INFO views Token refreshed successfully for user
+[2025-06-25 19:12:30,731] INFO views Token refreshed successfully for user
+[2025-06-25 19:42:32,902] INFO views Token refreshed successfully for user
+[2025-06-25 19:42:33,069] INFO views Token refreshed successfully for user
+[2025-06-25 20:12:34,474] INFO views Token refreshed successfully for user
+[2025-06-25 20:12:34,634] INFO views Token refreshed successfully for user
+[2025-06-25 20:44:34,203] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-25 20:44:34,204] WARNING log Unauthorized: /api/users/profile/
+[2025-06-25 20:44:34,203] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-25 20:44:34,204] WARNING log Unauthorized: /api/users/profile/
+[2025-06-25 20:44:34,205] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-25 20:44:34,206] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-25 20:44:34,205] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-25 20:44:34,206] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-25 20:44:34,214] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-25 20:44:34,214] WARNING log Unauthorized: /api/vendors/products/
+[2025-06-25 20:44:34,295] WARNING log Unauthorized: /api/users/profile/
+[2025-06-25 20:44:34,296] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-25 20:44:34,295] WARNING log Unauthorized: /api/users/profile/
+[2025-06-25 20:44:34,296] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-25 20:44:34,386] WARNING log Unauthorized: /api/users/profile/
+[2025-06-25 20:44:34,386] WARNING log Unauthorized: /api/users/profile/
+[2025-06-25 20:44:34,474] WARNING log Unauthorized: /api/users/profile/
+[2025-06-25 20:44:34,474] WARNING log Unauthorized: /api/users/profile/
+[2025-06-25 20:44:35,168] INFO views Token refreshed successfully for user
+[2025-06-25 20:44:35,174] INFO views Token refreshed successfully for user
+[2025-06-25 20:44:35,267] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-25 20:44:35,267] INFO views Token refreshed successfully for user
+[2025-06-25 20:44:35,267] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-25 20:44:35,282] INFO views Token refreshed successfully for user
+[2025-06-25 21:15:03,800] INFO views Token refreshed successfully for user
+[2025-06-25 21:15:03,817] INFO views Token refreshed successfully for user
+[2025-06-25 21:22:09,510] INFO autoreload E:\Work\WebDev\django_multivendor\backend\vendors\views.py changed, reloading.
+[2025-06-25 21:22:10,190] INFO autoreload Watching for file changes with StatReloader
+[2025-06-25 21:22:10,299] INFO urls === Registering Vendor URLs ===
+[2025-06-25 21:22:10,299] INFO urls === Registering Vendor URLs ===
+[2025-06-25 21:22:10,300] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-25 21:22:10,300] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-25 21:34:21,619] INFO autoreload E:\Work\WebDev\django_multivendor\backend\vendors\views.py changed, reloading.
+[2025-06-25 21:34:22,213] INFO autoreload Watching for file changes with StatReloader
+[2025-06-25 21:34:22,325] INFO urls === Registering Vendor URLs ===
+[2025-06-25 21:34:22,325] INFO urls === Registering Vendor URLs ===
+[2025-06-25 21:34:22,326] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-25 21:34:22,326] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-25 21:37:35,076] INFO autoreload E:\Work\WebDev\django_multivendor\backend\vendors\views.py changed, reloading.
+[2025-06-25 21:37:35,680] INFO autoreload Watching for file changes with StatReloader
+[2025-06-25 21:37:35,786] INFO urls === Registering Vendor URLs ===
+[2025-06-25 21:37:35,786] INFO urls === Registering Vendor URLs ===
+[2025-06-25 21:37:35,787] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-25 21:37:35,787] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-25 21:37:41,903] INFO views Read-only action list - allowing public access
+[2025-06-25 21:37:42,105] INFO views Read-only action list - allowing public access
+[2025-06-25 21:41:43,423] INFO views Read-only action list - allowing public access
+[2025-06-25 21:41:56,482] INFO views Token refreshed successfully for user
+[2025-06-25 21:41:56,491] INFO views Token refreshed successfully for user
+[2025-06-25 21:42:06,367] INFO views Read-only action list - allowing public access
+[2025-06-25 21:42:45,504] INFO views Read-only action list - allowing public access
+[2025-06-25 21:42:52,141] INFO views Read-only action list - allowing public access
+[2025-06-25 21:42:52,327] INFO views Read-only action list - allowing public access

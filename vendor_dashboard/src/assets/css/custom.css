@@ -44,6 +44,66 @@
   overflow-y: auto;
 }
 
+/* Custom styles for registration form */
+.form-login textarea {
+  background: #40495d;
+  border: 1px solid #525863;
+  border-radius: 8px;
+  color: #fff;
+  padding: 12px 16px;
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-login textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-login textarea::placeholder {
+  color: #9ca3af;
+}
+
+/* Two column layout for form fields */
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row fieldset {
+  flex: 1;
+}
+
+/* Better spacing for registration form */
+.login-box .form-login .gap22 {
+  gap: 22px;
+}
+
+/* Add loading state styles */
+.tf-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Improve error message styling */
+.error-message {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 /* Add a caret indicator for expandable menus */
 /* .menu-item.has-children > .menu-item-button::after {
   content: '▾';

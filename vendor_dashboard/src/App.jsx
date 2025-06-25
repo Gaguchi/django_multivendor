@@ -4,6 +4,7 @@ import SideMenu from './components/SideMenu';
 import Header from './components/Header';
 import MainContent from './components/MainContent';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import OAuthCallback from './components/OAuthCallback';
 import ProtectedRoute from './components/ProtectedRoute';
 import { isAuthenticated, isVendor } from './utils/auth';
@@ -189,6 +190,10 @@ function App() {
         <Route 
           path="/login" 
           element={isAuthorized ? <Navigate to="/" /> : <Login />} 
+        />
+        <Route 
+          path="/register" 
+          element={isAuthorized ? <Navigate to="/" /> : <Register />} 
         />
         <Route 
           path="/auth/callback" 
