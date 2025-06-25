@@ -25396,3 +25396,74 @@ UnboundLocalError: cannot access local variable 'thumbnail_filename_from_request
 [2025-06-25 21:42:45,504] INFO views Read-only action list - allowing public access
 [2025-06-25 21:42:52,141] INFO views Read-only action list - allowing public access
 [2025-06-25 21:42:52,327] INFO views Read-only action list - allowing public access
+[2025-06-25 21:46:01,574] INFO views === VendorViewSet Initial Processing ===
+[2025-06-25 21:46:01,574] INFO views === VendorViewSet Initial Processing ===
+[2025-06-25 21:46:01,574] INFO views Request Method: POST
+[2025-06-25 21:46:01,574] INFO views Request Method: POST
+[2025-06-25 21:46:01,575] INFO views Request User: AnonymousUser
+[2025-06-25 21:46:01,575] INFO views Request User: AnonymousUser
+[2025-06-25 21:46:01,575] INFO views Request Auth: None
+[2025-06-25 21:46:01,575] INFO views Request Auth: None
+[2025-06-25 21:46:01,575] INFO views Request Headers: {'Content-Length': '1731', 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundarytyXfp078NneAf876', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '955648c45e9cd100-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'fb4c8dc2-c9a4-424f-8d34-211402318c65', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-25 21:46:01,575] INFO views Request Headers: {'Content-Length': '1731', 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundarytyXfp078NneAf876', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '955648c45e9cd100-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'fb4c8dc2-c9a4-424f-8d34-211402318c65', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-25 21:46:01,575] INFO views === Checking Permissions ===
+[2025-06-25 21:46:01,575] INFO views === Checking Permissions ===
+[2025-06-25 21:46:01,575] INFO views Permission Classes: [<rest_framework.permissions.AllowAny object at 0x00000176A5441090>]
+[2025-06-25 21:46:01,575] INFO views Permission Classes: [<rest_framework.permissions.AllowAny object at 0x00000176A5441090>]
+[2025-06-25 21:46:01,575] INFO views === Vendor Registration ===
+[2025-06-25 21:46:01,575] INFO views === Vendor Registration ===
+[2025-06-25 21:46:01,576] INFO views Registration data: <QueryDict: {'email': ['jason@gmail.com'], 'password': ['Nji9nji9'], 'first_name': ['Jason'], 'last_name': ['Johnson'], 'store_name': ["Jason's Store"], 'contact_email': ['Jason@gmail.com'], 'phone': ['595995442'], 'description': ["Jason's electronics store!"], 'address': ['Ilya Antelava st 6\r\nHouse 6'], 'business_category': ['2'], 'business_type': ['individual'], 'website': [''], 'facebook': [''], 'instagram': [''], 'twitter': [''], 'marketing_emails': ['true']}>
+[2025-06-25 21:46:01,576] INFO views Registration data: <QueryDict: {'email': ['jason@gmail.com'], 'password': ['Nji9nji9'], 'first_name': ['Jason'], 'last_name': ['Johnson'], 'store_name': ["Jason's Store"], 'contact_email': ['Jason@gmail.com'], 'phone': ['595995442'], 'description': ["Jason's electronics store!"], 'address': ['Ilya Antelava st 6\r\nHouse 6'], 'business_category': ['2'], 'business_type': ['individual'], 'website': [''], 'facebook': [''], 'instagram': [''], 'twitter': [''], 'marketing_emails': ['true']}>
+[2025-06-25 21:46:01,576] INFO views Registration files: <MultiValueDict: {}>
+[2025-06-25 21:46:01,576] INFO views Registration files: <MultiValueDict: {}>
+[2025-06-25 21:46:02,911] INFO views Vendor registration successful: Jason's Store
+[2025-06-25 21:46:02,911] INFO views Vendor registration successful: Jason's Store
+[2025-06-25 21:46:15,759] INFO views Read-only action list - allowing public access
+[2025-06-25 21:46:15,947] INFO views Read-only action list - allowing public access
+[2025-06-25 21:46:41,184] INFO views Read-only action list - allowing public access
+[2025-06-25 21:46:41,440] INFO views Read-only action list - allowing public access
+[2025-06-25 21:56:17,307] INFO views Read-only action list - allowing public access
+[2025-06-25 21:56:17,549] INFO views Read-only action list - allowing public access
+[2025-06-25 21:58:48,566] INFO views === VendorViewSet Initial Processing ===
+[2025-06-25 21:58:48,566] INFO views === VendorViewSet Initial Processing ===
+[2025-06-25 21:58:48,566] INFO views Request Method: POST
+[2025-06-25 21:58:48,566] INFO views Request Method: POST
+[2025-06-25 21:58:48,566] INFO views Request User: AnonymousUser
+[2025-06-25 21:58:48,566] INFO views Request User: AnonymousUser
+[2025-06-25 21:58:48,566] INFO views Request Auth: None
+[2025-06-25 21:58:48,566] INFO views Request Auth: None
+[2025-06-25 21:58:48,566] INFO views Request Headers: {'Content-Length': '1759', 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryc304prbasJeYhUpJ', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '95565b7e5e43d0ce-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'fb4c8dc2-c9a4-424f-8d34-211402318c65', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-25 21:58:48,566] INFO views Request Headers: {'Content-Length': '1759', 'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundaryc304prbasJeYhUpJ', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '95565b7e5e43d0ce-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'fb4c8dc2-c9a4-424f-8d34-211402318c65', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-25 21:58:48,567] INFO views === Checking Permissions ===
+[2025-06-25 21:58:48,567] INFO views === Checking Permissions ===
+[2025-06-25 21:58:48,567] INFO views Permission Classes: [<rest_framework.permissions.AllowAny object at 0x00000176A53DE810>]
+[2025-06-25 21:58:48,567] INFO views Permission Classes: [<rest_framework.permissions.AllowAny object at 0x00000176A53DE810>]
+[2025-06-25 21:58:48,567] INFO views === Vendor Registration ===
+[2025-06-25 21:58:48,567] INFO views === Vendor Registration ===
+[2025-06-25 21:58:48,568] INFO views Registration data: <QueryDict: {'email': ['Blair@gmail.com'], 'password': ['Mko0mko0'], 'first_name': ['Blair'], 'last_name': ['Waldorf'], 'store_name': ['Waldorf'], 'contact_email': ['Blair@gmail.com'], 'phone': ['12345678'], 'description': ['Waldorf Jewelry is a leading Jewelry manufacturer in the World!'], 'address': ['Mirian Mepes 17\r\nFlat 22'], 'business_category': ['1'], 'business_type': ['corporation'], 'website': [''], 'facebook': [''], 'instagram': [''], 'twitter': [''], 'marketing_emails': ['true']}>
+[2025-06-25 21:58:48,568] INFO views Registration data: <QueryDict: {'email': ['Blair@gmail.com'], 'password': ['Mko0mko0'], 'first_name': ['Blair'], 'last_name': ['Waldorf'], 'store_name': ['Waldorf'], 'contact_email': ['Blair@gmail.com'], 'phone': ['12345678'], 'description': ['Waldorf Jewelry is a leading Jewelry manufacturer in the World!'], 'address': ['Mirian Mepes 17\r\nFlat 22'], 'business_category': ['1'], 'business_type': ['corporation'], 'website': [''], 'facebook': [''], 'instagram': [''], 'twitter': [''], 'marketing_emails': ['true']}>
+[2025-06-25 21:58:48,569] INFO views Registration files: <MultiValueDict: {}>
+[2025-06-25 21:58:48,569] INFO views Registration files: <MultiValueDict: {}>
+[2025-06-25 21:58:50,012] INFO views Vendor registration successful: Waldorf
+[2025-06-25 21:58:50,012] INFO views Vendor registration successful: Waldorf
+[2025-06-25 21:58:56,338] INFO views Read-only action list - allowing public access
+[2025-06-25 21:58:56,561] INFO views Read-only action list - allowing public access
+[2025-06-25 22:00:52,802] ERROR middleware Error logging request: 'utf-8' codec can't decode byte 0xff in position 1385: invalid start byte
+[2025-06-25 22:00:52,806] INFO serializers Thumbnail filename from request: GUEST_91e7e467-4b8c-42e3-bf9b-3f43024bb52d.jpg
+[2025-06-25 22:00:52,806] INFO serializers Thumbnail filename from request: GUEST_91e7e467-4b8c-42e3-bf9b-3f43024bb52d.jpg
+[2025-06-25 22:00:53,700] INFO serializers Product base created with ID: 31 for vendor ID: 4. Validated data used: {'name': 'Diamond Earrings', 'sku': 'WALD001', 'price': Decimal('1000.00'), 'old_price': Decimal('1200.00'), 'stock': 12, 'description': 'Beautif Diamon Earrings for any occasion', 'is_hot': False, 'brand': 'Waldorf', 'vendor': <Vendor: Waldorf>}
+[2025-06-25 22:00:53,700] INFO serializers Product base created with ID: 31 for vendor ID: 4. Validated data used: {'name': 'Diamond Earrings', 'sku': 'WALD001', 'price': Decimal('1000.00'), 'old_price': Decimal('1200.00'), 'stock': 12, 'description': 'Beautif Diamon Earrings for any occasion', 'is_hot': False, 'brand': 'Waldorf', 'vendor': <Vendor: Waldorf>}
+[2025-06-25 22:00:53,700] INFO serializers Processing 1 uploaded image files for product ID: 31
+[2025-06-25 22:00:53,700] INFO serializers Processing 1 uploaded image files for product ID: 31
+[2025-06-25 22:00:53,734] INFO serializers Created ProductImage ID: 34 with file: vendor_products/Waldorf/Diamond_Earrings/images/GUEST_91e7e467-4b8c-42e3-bf9b-3f43024bb52d.jpg for product ID: 31
+[2025-06-25 22:00:53,734] INFO serializers Created ProductImage ID: 34 with file: vendor_products/Waldorf/Diamond_Earrings/images/GUEST_91e7e467-4b8c-42e3-bf9b-3f43024bb52d.jpg for product ID: 31
+[2025-06-25 22:00:53,734] INFO serializers Thumbnail 'GUEST_91e7e467-4b8c-42e3-bf9b-3f43024bb52d.jpg' matches newly uploaded image ID: 34 for product ID: 31
+[2025-06-25 22:00:53,734] INFO serializers Thumbnail 'GUEST_91e7e467-4b8c-42e3-bf9b-3f43024bb52d.jpg' matches newly uploaded image ID: 34 for product ID: 31
+[2025-06-25 22:00:53,734] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Waldorf/Diamond_Earrings/images/GUEST_91e7e467-4b8c-42e3-bf9b-3f43024bb52d.jpg for product ID: 31
+[2025-06-25 22:00:53,734] INFO serializers Set product.thumbnail to newly uploaded designated image: vendor_products/Waldorf/Diamond_Earrings/images/GUEST_91e7e467-4b8c-42e3-bf9b-3f43024bb52d.jpg for product ID: 31
+[2025-06-25 22:00:53,780] INFO serializers Saved product thumbnail for product ID: 31
+[2025-06-25 22:00:53,780] INFO serializers Saved product thumbnail for product ID: 31
+[2025-06-25 22:11:15,613] INFO views Token refreshed successfully for user
+[2025-06-25 22:11:15,684] INFO views Token refreshed successfully for user
+[2025-06-25 22:41:18,276] INFO views Token refreshed successfully for user
+[2025-06-25 22:41:18,351] INFO views Token refreshed successfully for user
