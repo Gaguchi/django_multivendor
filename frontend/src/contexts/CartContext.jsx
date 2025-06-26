@@ -15,6 +15,7 @@ export const useCart = () => {
 export function CartProvider({ children }) {
     const [cart, setCart] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [mergingCart, setMergingCart] = useState(false)
     const { user } = useAuth()
     // Keep track of guest session key locally, but AuthContext handles removal on merge
     const [guestSessionKey, setGuestSessionKey] = useState(
@@ -24,16 +25,19 @@ export function CartProvider({ children }) {
     // --- Generate Guest Session Key if needed --- 
     useEffect(() => {
         if (!user && !localStorage.getItem('guestSessionKey')) {
-            const newSessionKey = 'guest_' + Math.random().toString(36).substring(2, 15)
+            const newSessionKey = 'guest_' + Math.random().toString(36).substring(2, 15) + '_' + Date.now()
             localStorage.setItem('guestSessionKey', newSessionKey)
             setGuestSessionKey(newSessionKey)
             console.log('[CartContext] Generated new guest session key:', newSessionKey)
         } else if (!user) {
             // Ensure component state matches localStorage if user is guest
-            setGuestSessionKey(localStorage.getItem('guestSessionKey'))
+            const storedKey = localStorage.getItem('guestSessionKey')
+            setGuestSessionKey(storedKey)
+            console.log('[CartContext] Using existing guest session key:', storedKey)
         } else {
              // Clear local state guest key if user is logged in
              setGuestSessionKey(null)
+             console.log('[CartContext] User logged in, cleared guest session key from state')
         }
     }, [user]) // Re-evaluate when user logs in or out
 
@@ -62,8 +66,45 @@ export function CartProvider({ children }) {
     // Fetch cart whenever the user logs in or out
     useEffect(() => {
         console.log('[CartContext] User state changed, fetching cart.', { user: !!user });
-        fetchCart()
+        fetchCart();
     }, [user])
+
+    // Listen for cart merge events from AuthContext
+    useEffect(() => {
+        const handleCartMerged = async (event) => {
+            console.log('[CartContext] Cart merge event received:', event.detail);
+            
+            setMergingCart(true);
+            
+            try {
+                // Wait a moment for backend to complete the merge operation
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                // Force fetch the updated cart
+                await fetchCart();
+                
+                // Show success message if items were actually merged
+                if (event.detail.merged && event.detail.hadGuestItems) {
+                    console.log('[CartContext] Guest cart items successfully merged with user cart');
+                } else if (event.detail.merged && !event.detail.hadGuestItems) {
+                    console.log('[CartContext] No guest cart items to merge, loaded user cart');
+                } else if (event.detail.error) {
+                    console.warn('[CartContext] Cart merge failed, but loaded user cart:', event.detail.error);
+                }
+                
+            } catch (error) {
+                console.error('[CartContext] Error refreshing cart after merge:', error);
+            } finally {
+                setMergingCart(false);
+            }
+        };
+
+        window.addEventListener('cartMerged', handleCartMerged);
+        
+        return () => {
+            window.removeEventListener('cartMerged', handleCartMerged);
+        };
+    }, []);
 
     // --- Cart Actions (Unchanged) --- 
 
@@ -71,10 +112,26 @@ export function CartProvider({ children }) {
         try {
             setLoading(true)
             console.log(`[CartContext] Adding item ${productId} (qty: ${quantity})`) 
+            
+            // For guest users, ensure we have a session key
+            if (!user) {
+                let sessionKey = localStorage.getItem('guestSessionKey')
+                if (!sessionKey) {
+                    sessionKey = 'guest_' + Math.random().toString(36).substring(2, 15) + '_' + Date.now()
+                    localStorage.setItem('guestSessionKey', sessionKey)
+                    setGuestSessionKey(sessionKey)
+                    console.log('[CartContext] Generated session key for cart operation:', sessionKey)
+                } else {
+                    console.log('[CartContext] Using existing session key for cart operation:', sessionKey)
+                }
+            }
+            
             const response = await api.post('/api/cart/carts/add_item/', {
                 product_id: productId,
                 quantity
             })
+            
+            console.log('[CartContext] Item added successfully, refreshing cart')
             await fetchCart() // Refresh cart after adding
             return response.data
         } catch (error) {
@@ -141,15 +198,28 @@ export function CartProvider({ children }) {
         }
     };
 
+    const forceRefreshCart = async () => {
+        console.log('[CartContext] Force refreshing cart after merge...');
+        setMergingCart(true);
+        try {
+            await fetchCart();
+        } finally {
+            setMergingCart(false);
+        }
+    };
+
     const value = {
         cart,
-        loading,
+        loading: loading || mergingCart,
         addToCart,
         updateCartItem,
         removeFromCart,
         clearCart,
         refreshCart: fetchCart,
-        isGuestCart: !user && cart !== null
+        forceRefreshCart,
+        isGuestCart: !user && cart !== null && cart.items && cart.items.length > 0,
+        mergingCart,
+        guestSessionKey: !user ? guestSessionKey : null
     }
 
     return (

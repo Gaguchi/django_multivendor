@@ -19,6 +19,7 @@ import OrderConfirmation from './pages/OrderConfirmation'
 import Orders from './pages/Orders'
 import OrderDetail from './pages/OrderDetail'
 import OrderTracking from './pages/OrderTracking'
+import CartMergeNotification from './components/Cart/CartMergeNotification'
 import { initializePage } from './utils/jQuerySimple'
 
 function AppContent() {
@@ -64,6 +65,7 @@ function App() {
         <WishlistProvider>
           <OrderProvider>
             <AppContent />
+            <CartMergeNotification />
           </OrderProvider>
         </WishlistProvider>
       </CartProvider>

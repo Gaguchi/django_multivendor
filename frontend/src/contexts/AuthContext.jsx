@@ -76,19 +76,42 @@ export const AuthProvider = ({ children }) => {
       if (guestSessionKey) {
         console.log('[AuthContext] Guest session key found, attempting merge:', guestSessionKey);
         try {
-          await api.post('/api/cart/carts/merge_cart/', {
+          const mergeResponse = await api.post('/api/cart/carts/merge_cart/', {
             session_key: guestSessionKey
           });
-          console.log('[AuthContext] Backend merge_cart called successfully.');
+          console.log('[AuthContext] Backend merge_cart called successfully.', mergeResponse.data);
+          
+          // Always dispatch the event, even if no items were merged
+          // This ensures the CartContext refreshes to show the user's existing cart
+          window.dispatchEvent(new CustomEvent('cartMerged', { 
+            detail: { 
+              merged: true, 
+              cartData: mergeResponse.data,
+              hadGuestItems: mergeResponse.data.items && mergeResponse.data.items.length > 0,
+              merge_summary: mergeResponse.data.merge_summary
+            } 
+          }));
+          
           localStorage.removeItem('guestSessionKey');
           console.log('[AuthContext] Guest session key removed from localStorage.');
+          
         } catch (mergeError) {
           console.error('[AuthContext] Error calling merge_cart endpoint:', mergeError);
+          
+          // Even on merge error, still trigger cart refresh to show user's existing cart
+          window.dispatchEvent(new CustomEvent('cartMerged', { 
+            detail: { merged: false, error: mergeError.message } 
+          }));
+          
           localStorage.removeItem('guestSessionKey');
           console.warn('[AuthContext] Guest session key removed even after merge error to prevent retries.');
         }
       } else {
         console.log('[AuthContext] No guest session key found, skipping merge.');
+        // Still trigger a cart refresh to load user's existing cart
+        window.dispatchEvent(new CustomEvent('cartMerged', { 
+          detail: { merged: false, noGuestCart: true } 
+        }));
       }
 
       return loggedInUserData;

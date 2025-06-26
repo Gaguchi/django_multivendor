@@ -93,7 +93,7 @@ const refreshToken = async () => {
   }
 };
 
-// Request interceptor - add authorization header
+// Request interceptor - add authorization header and guest session key
 api.interceptors.request.use(
   config => {
     // Skip auth header for token endpoints
@@ -104,6 +104,16 @@ api.interceptors.request.use(
     const tokens = getAuthTokens();
     if (tokens?.access) {
       config.headers['Authorization'] = `Bearer ${tokens.access}`;
+    } else {
+      // For guest users, add session key to headers for cart operations
+      const guestSessionKey = localStorage.getItem('guestSessionKey');
+      if (guestSessionKey) {
+        // Add guest session key for cart-related endpoints
+        if (config.url?.includes('/cart/') || config.url?.includes('/carts/')) {
+          config.headers['X-Guest-Session-Key'] = guestSessionKey;
+          console.log('[API] Adding guest session key to request:', guestSessionKey, 'for URL:', config.url);
+        }
+      }
     }
     return config;
   },

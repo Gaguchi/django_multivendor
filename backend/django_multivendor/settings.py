@@ -112,10 +112,19 @@ if is_package_installed('corsheaders'):
         'x-csrftoken',
         'x-requested-with',
         'x-master-token',  # Add this header to allow master token authentication
+        'x-guest-session-key',  # Add this header to allow guest session key
     ]
 
     CORS_ALLOW_CREDENTIALS = True
     CORS_EXPOSE_HEADERS = ['Content-Type', 'X-CSRFToken']
+    
+    # Additional settings for proper preflight handling
+    CORS_PREFLIGHT_MAX_AGE = 86400  # Cache preflight requests for 24 hours
+    CORS_ALLOW_PRIVATE_NETWORK = True  # Allow local network access
+    
+    # Debug CORS issues
+    import logging
+    logging.getLogger('corsheaders').setLevel(logging.DEBUG)
 
     CORS_ALLOWED_ORIGINS = [
         'https://localhost:5173',
@@ -445,4 +454,5 @@ CORS_ALLOW_HEADERS = [
     'x-csrftoken',
     'x-requested-with',
     'x-master-token',  # Add this header to allow master token authentication
+    'x-guest-session-key',  # Add this header to allow guest session key
 ]

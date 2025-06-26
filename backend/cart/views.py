@@ -28,11 +28,20 @@ class CartViewSet(viewsets.ModelViewSet):
         user = self.request.user if self.request.user.is_authenticated else None
         session_key = self.request.session.session_key
         
-        # Make sure we have a session key for anonymous users
-        if not user and not session_key:
-            self.request.session.create()
-            session_key = self.request.session.session_key
+        # For guest users, check for custom session key from headers (for CORS situations)
+        if not user:
+            guest_session_key = self.request.headers.get('X-Guest-Session-Key')
+            print(f"[Cart] Guest session key from headers: {guest_session_key}")
+            if guest_session_key:
+                session_key = guest_session_key
+                print(f"[Cart] Using guest session key: {session_key}")
+            elif not session_key:
+                # Fallback to Django session if no custom session key
+                self.request.session.create()
+                session_key = self.request.session.session_key
+                print(f"[Cart] Created new Django session: {session_key}")
             
+        print(f"[Cart] Getting cart for user: {user}, session_key: {session_key}")
         return Cart.get_or_create_cart(user=user, session_key=session_key)
 
     @action(detail=False, methods=['get'])
@@ -110,19 +119,33 @@ class CartViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
             
+        print(f"[Cart Merge] Starting merge for user {request.user.id} with session {session_key}")
+        
         # Get guest cart
         try:
             guest_cart = Cart.objects.get(session_key=session_key)
+            guest_items_count = guest_cart.items.count()
+            print(f"[Cart Merge] Found guest cart with {guest_items_count} items")
         except Cart.DoesNotExist:
-            return Response(
-                {"message": "No guest cart found to merge"}, 
-                status=status.HTTP_200_OK
-            )
+            print(f"[Cart Merge] No guest cart found for session: {session_key}")
+            # Return user's existing cart instead of error
+            user_cart = Cart.get_or_create_cart(user=request.user)
+            serializer = self.get_serializer(user_cart)
+            return Response({
+                **serializer.data,
+                "merge_message": "No guest cart found to merge"
+            }, status=status.HTTP_200_OK)
             
         # Get or create user cart
         user_cart = Cart.get_or_create_cart(user=request.user)
+        user_items_before = user_cart.items.count()
+        print(f"[Cart Merge] User cart has {user_items_before} items before merge")
         
         # Transfer items from guest cart to user cart
+        merged_items = []
+        items_added = 0
+        items_merged = 0
+        
         for item in guest_cart.items.all():
             user_cart_item, created = CartItem.objects.get_or_create(
                 cart=user_cart,
@@ -136,16 +159,41 @@ class CartViewSet(viewsets.ModelViewSet):
             )
             
             if not created:
+                # If item already exists, add quantities
+                old_quantity = user_cart_item.quantity
                 user_cart_item.quantity += item.quantity
                 user_cart_item.updated_at = timezone.now()
                 user_cart_item.save()
+                items_merged += 1
+                print(f"[Cart Merge] Merged {item.product.name}: {old_quantity} + {item.quantity} = {user_cart_item.quantity}")
+            else:
+                items_added += 1
+                print(f"[Cart Merge] Added {item.product.name}: quantity {item.quantity}")
+            
+            merged_items.append(user_cart_item)
+        
+        # Update user cart timestamp
+        user_cart.updated_at = timezone.now()
+        user_cart.save()
         
         # Delete the guest cart
         guest_cart.delete()
+        user_items_after = user_cart.items.count()
+        print(f"[Cart Merge] Deleted guest cart. User cart now has {user_items_after} items")
+        print(f"[Cart Merge] Summary: {items_added} items added, {items_merged} items merged")
         
-        # Return the updated user cart
+        # Return the updated user cart with merge summary
         serializer = self.get_serializer(user_cart)
-        return Response(serializer.data)
+        return Response({
+            **serializer.data,
+            "merge_summary": {
+                "items_added": items_added,
+                "items_merged": items_merged,
+                "total_guest_items": guest_items_count,
+                "user_items_before": user_items_before,
+                "user_items_after": user_items_after
+            }
+        })
 
 class CartItemViewSet(viewsets.ModelViewSet):
     serializer_class = CartItemSerializer
@@ -160,6 +208,12 @@ class CartItemViewSet(viewsets.ModelViewSet):
             
         # For guest users, get items by session key
         session_key = self.request.session.session_key
+        
+        # Check for custom session key from headers (for CORS situations)
+        guest_session_key = self.request.headers.get('X-Guest-Session-Key')
+        if guest_session_key:
+            session_key = guest_session_key
+        
         if session_key:
             return CartItem.objects.filter(cart__session_key=session_key)
             
@@ -173,9 +227,15 @@ class CartItemViewSet(viewsets.ModelViewSet):
             cart = Cart.get_or_create_cart(user=self.request.user)
         else:
             session_key = self.request.session.session_key
-            if not session_key:
+            
+            # Check for custom session key from headers (for CORS situations)
+            guest_session_key = self.request.headers.get('X-Guest-Session-Key')
+            if guest_session_key:
+                session_key = guest_session_key
+            elif not session_key:
                 self.request.session.create()
                 session_key = self.request.session.session_key
+                
             cart = Cart.get_or_create_cart(session_key=session_key)
         
         try:
