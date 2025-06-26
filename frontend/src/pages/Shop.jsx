@@ -1,10 +1,46 @@
 import { useProducts } from '../hooks/useProducts'
 import ProductGrid from '../elements/ProductGrid'
 import Sidebar from '../components/Shop/Sidebar'
+import { useEffect, useRef } from 'react'
 
 export default function Products() {
-  const { data, isLoading, error } = useProducts()
-  const products = data?.pages?.[0]?.results || []
+  const { 
+    data, 
+    isLoading, 
+    error, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage 
+  } = useProducts()
+  
+  // Flatten all pages into a single array of products
+  const products = data?.pages?.flatMap(page => page.results) || []
+  
+  const observerRef = useRef()
+  const loadMoreRef = useRef()
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage()
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current)
+    }
+
+    observerRef.current = observer
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   return (
     <>
@@ -163,16 +199,19 @@ export default function Products() {
                 lg: 4,
                 xl: 4
               }}
-              defaultLimit={{
-                xs: 12,
-                sm: 12,
-                md: 12,
-                lg: 12,
-                xl: 12
-              }}
               className="row product-ajax-grid scroll-load"
             />
             
+            {/* Infinite scroll trigger */}
+            <div ref={loadMoreRef} className="load-more-trigger" style={{ height: '20px', margin: '20px 0' }}>
+              {isFetchingNextPage && (
+                <div className="text-center">
+                  <div className="spinner-border" role="status">
+                    <span className="sr-only">Loading more products...</span>
+                  </div>
+                </div>
+              )}
+            </div>
 
           </div>
           <Sidebar />

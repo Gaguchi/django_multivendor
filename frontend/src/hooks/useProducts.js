@@ -12,7 +12,7 @@ export function useProducts(options = {}) {
           },
           params: {
             page: pageParam,
-            page_size: options.pageSize || 10,
+            page_size: options.pageSize || 20,
             ...options.filters
           }
         })

@@ -14,49 +14,34 @@ export default function ProductGrid({
     md: 3, // tablet
     lg: 4, // desktop
     xl: 4  // desktop large
-  },
-  defaultLimit = {
-    xs: 4,
-    sm: 6, 
-    md: 9,
-    lg: 8,
-    xl: 8
   }
 }) {
-  const [displayCount, setDisplayCount] = useState(defaultLimit.xs)
   const [gridTemplateColumns, setGridTemplateColumns] = useState('')
   
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth
       let columns
-      let limit
       
       if (width >= 1200) {
         columns = defaultColumns.xl
-        limit = defaultLimit.xl
       } else if (width >= 992) {
-        columns = defaultColumns.lg
-        limit = defaultLimit.lg 
+        columns = defaultColumns.lg 
       } else if (width >= 768) {
         columns = defaultColumns.md
-        limit = defaultLimit.md
       } else if (width >= 576) {
         columns = defaultColumns.sm
-        limit = defaultLimit.sm
       } else {
         columns = defaultColumns.xs
-        limit = defaultLimit.xs
       }
       
-      setDisplayCount(limit)
       setGridTemplateColumns(`repeat(${columns}, 1fr)`)
     }
 
     handleResize() // Initialize on component mount
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [defaultColumns, defaultLimit])
+  }, [defaultColumns])
 
   if (loading) {
     return (
@@ -86,7 +71,7 @@ export default function ProductGrid({
     )
   }
 
-  const displayProducts = products.slice(0, displayCount)
+  const displayProducts = products
 
   return (
     <div 
@@ -122,13 +107,6 @@ ProductGrid.propTypes = {
   error: PropTypes.object,
   className: PropTypes.string,
   defaultColumns: PropTypes.shape({
-    xs: PropTypes.number,
-    sm: PropTypes.number,
-    md: PropTypes.number,
-    lg: PropTypes.number,
-    xl: PropTypes.number
-  }),
-  defaultLimit: PropTypes.shape({
     xs: PropTypes.number,
     sm: PropTypes.number,
     md: PropTypes.number,
