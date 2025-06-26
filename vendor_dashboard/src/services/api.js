@@ -482,3 +482,34 @@ export async function deleteProductApi(id) {
   });
   return handleResponse(response);
 }
+
+// Email availability check API
+export async function checkEmailAvailability(email) {
+  try {
+    console.log('Checking email availability for:', email);
+    
+    const response = await fetch(`${API_URL}/api/users/check-email/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({ email: email.toLowerCase().trim() })
+    });
+    
+    console.log('Email check response status:', response.status);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Email check error details:', errorData);
+      throw new Error('Failed to check email availability');
+    }
+    
+    const data = await response.json();
+    console.log('Email availability check result:', data);
+    return data; // Should return { available: true/false }
+  } catch (error) {
+    console.error('Email availability check error:', error);
+    throw error;
+  }
+}

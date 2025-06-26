@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from users.models import UserProfile, Address, Wishlist
 from django.contrib.auth import authenticate
+from django.db import transaction, IntegrityError
 import logging
 
 logger = logging.getLogger(__name__)
@@ -63,44 +64,64 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email', 'password', 'userprofile', 'first_name', 'last_name', 'phone']
 
+    def validate_email(self, value):
+        """Check if email already exists"""
+        value = value.lower().strip()  # Normalize email
+        
+        # For updates, exclude the current user
+        user_id = self.instance.id if self.instance else None
+        queryset = User.objects.filter(email=value)
+        if user_id:
+            queryset = queryset.exclude(id=user_id)
+            
+        if queryset.exists():
+            raise serializers.ValidationError("A user with this email already exists.")
+        return value
+
+    def validate_username(self, value):
+        """Check if username already exists"""
+        if value:
+            value = value.strip()
+            # For updates, exclude the current user
+            user_id = self.instance.id if self.instance else None
+            queryset = User.objects.filter(username=value)
+            if user_id:
+                queryset = queryset.exclude(id=user_id)
+                
+            if queryset.exists():
+                raise serializers.ValidationError("A user with this username already exists.")
+        return value
+
     def create(self, validated_data):
         # Extract profile fields from top-level data
         first_name = validated_data.pop('first_name', '')
         last_name = validated_data.pop('last_name', '')
         phone = validated_data.pop('phone', '')
-        
-        # Get or initialize userprofile data
         userprofile_data = validated_data.pop('userprofile', {})
-        
-        # Update profile data with any top-level profile fields
         if first_name and 'first_name' not in userprofile_data:
             userprofile_data['first_name'] = first_name
         if last_name and 'last_name' not in userprofile_data:
             userprofile_data['last_name'] = last_name
         if phone and 'phone' not in userprofile_data:
             userprofile_data['phone'] = phone
-            
-        # Create user with remaining data
-        user = User.objects.create_user(
-            username=validated_data.get('username', validated_data['email']),
-            email=validated_data.get('email'),
-            password=validated_data['password']
-        )
-        
-        # Update or create profile (instead of always creating)
         try:
-            # If profile exists (due to signals), update it
-            if hasattr(user, 'userprofile'):
-                for key, value in userprofile_data.items():
-                    setattr(user.userprofile, key, value)
-                user.userprofile.save()
-            else:
-                # Create profile if it doesn't exist
-                UserProfile.objects.create(user=user, **userprofile_data)
-        except Exception as e:
-            # If there's any error with profile creation, log it but don't fail
-            print(f"Error updating profile: {e}")
-            
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=validated_data.get('username', validated_data['email']),
+                    email=validated_data.get('email'),
+                    password=validated_data['password']
+                )
+                # Update or create profile (instead of always creating)
+                if hasattr(user, 'userprofile'):
+                    for key, value in userprofile_data.items():
+                        setattr(user.userprofile, key, value)
+                    user.userprofile.save()
+                else:
+                    UserProfile.objects.create(user=user, **userprofile_data)
+        except IntegrityError as e:
+            if 'unique constraint' in str(e).lower() or 'unique violation' in str(e).lower():
+                raise serializers.ValidationError({'email': 'A user with this email or username already exists.'})
+            raise
         return user
 
 class AddressSerializer(serializers.ModelSerializer):

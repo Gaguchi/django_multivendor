@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from .models import UserProfile, Address, Wishlist
 from django.contrib.auth.models import User
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.backends import TokenBackend
 from datetime import timedelta
 from rest_framework_simplejwt.settings import api_settings
@@ -772,3 +772,24 @@ class FacebookAuthRedirectView(APIView):
         
         # Redirect to the Facebook authorization URL
         return redirect(auth_url)
+
+class EmailAvailabilityView(APIView):
+    """Check if an email is available for registration"""
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        email = request.data.get('email', '').strip().lower()
+        
+        if not email:
+            return Response(
+                {'error': 'Email is required'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if email exists in the User model
+        is_available = not User.objects.filter(email=email).exists()
+        
+        return Response({
+            'available': is_available,
+            'email': email
+        }, status=status.HTTP_200_OK)

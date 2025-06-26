@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { registerVendor, getCategories } from '../services/api';
+import { registerVendor, getCategories, checkEmailAvailability } from '../services/api';
 import { setToken } from '../utils/auth';
 import './Register.css';
 
@@ -42,6 +42,9 @@ export default function Register() {
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [emailChecking, setEmailChecking] = useState(false);
+    const [emailAvailable, setEmailAvailable] = useState(null);
+    const [emailCheckTimeout, setEmailCheckTimeout] = useState(null);
     const navigate = useNavigate();
 
     // Business types for dropdown
@@ -106,6 +109,24 @@ export default function Register() {
             }));
         }
 
+        // Reset email availability status when email changes and debounce check
+        if (name === 'email') {
+            setEmailAvailable(null);
+            
+            // Clear existing timeout
+            if (emailCheckTimeout) {
+                clearTimeout(emailCheckTimeout);
+            }
+            
+            // Set new timeout for email checking (500ms delay)
+            if (value && /\S+@\S+\.\S+/.test(value)) {
+                const timeout = setTimeout(() => {
+                    checkEmailAvailabilityAsync(value);
+                }, 500);
+                setEmailCheckTimeout(timeout);
+            }
+        }
+        
         // Clear field-specific errors when user starts typing
         if (fieldErrors[name]) {
             setFieldErrors(prev => ({
@@ -115,7 +136,29 @@ export default function Register() {
         }
     };
 
-    const validateStep = (step) => {
+    const checkEmailAvailabilityAsync = async (email) => {
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+            return false;
+        }
+
+        setEmailChecking(true);
+        try {
+            const result = await checkEmailAvailability(email);
+            setEmailAvailable(result.available);
+            return result.available;
+        } catch (error) {
+            console.error('Error checking email availability:', error);
+            setFieldErrors(prev => ({
+                ...prev,
+                email: 'Unable to verify email availability. Please try again.'
+            }));
+            return false;
+        } finally {
+            setEmailChecking(false);
+        }
+    };
+
+    const validateStep = async (step) => {
         const errors = {};
         
         switch (step) {
@@ -126,6 +169,12 @@ export default function Register() {
                     errors.email = 'Email is required';
                 } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
                     errors.email = 'Please enter a valid email address';
+                } else {
+                    // Check email availability
+                    const available = await checkEmailAvailabilityAsync(formData.email);
+                    if (!available) {
+                        errors.email = 'This email is already registered. Please use a different email.';
+                    }
                 }
                 if (!formData.password) {
                     errors.password = 'Password is required';
@@ -166,13 +215,10 @@ export default function Register() {
         // If there are errors, scroll to the first error field
         if (Object.keys(errors).length > 0) {
             setTimeout(() => {
-                const firstErrorField = document.querySelector('.error, .flex-grow.error, .password-input.error');
+                const firstErrorField = document.querySelector('.error');
                 if (firstErrorField) {
-                    firstErrorField.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center',
-                        inline: 'nearest'
-                    });
+                    firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    firstErrorField.focus();
                 }
             }, 100);
         }
@@ -180,8 +226,9 @@ export default function Register() {
         return Object.keys(errors).length === 0;
     };
 
-    const nextStep = () => {
-        if (validateStep(currentStep)) {
+    const nextStep = async () => {
+        const isValid = await validateStep(currentStep);
+        if (isValid) {
             setCurrentStep(prev => Math.min(prev + 1, 4));
             setError('');
             // Scroll to top of form on step change
@@ -202,10 +249,11 @@ export default function Register() {
         }
     };
 
-    const validateForm = () => {
+    const validateForm = async () => {
         // Validate all steps
         for (let step = 1; step <= 4; step++) {
-            if (!validateStep(step)) {
+            const isValid = await validateStep(step);
+            if (!isValid) {
                 setCurrentStep(step);
                 return false;
             }
@@ -351,17 +399,55 @@ export default function Register() {
                 <div className="body-title mb-10 text-white">
                     Email Address <span className="tf-color-1">*</span>
                 </div>
-                <input
-                    className={`flex-grow ${fieldErrors.email ? 'error' : ''}`}
-                    type="email"
-                    placeholder="Enter your email address"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                />
+                <div className="email-input-container" style={{ position: 'relative' }}>
+                    <input
+                        className={`flex-grow ${fieldErrors.email ? 'error' : ''} ${emailAvailable === true ? 'success' : ''}`}
+                        type="email"
+                        placeholder="Enter your email address"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                    />
+                    {emailChecking && (
+                        <div className="email-checking" style={{
+                            position: 'absolute',
+                            right: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: '#2196F3'
+                        }}>
+                            Checking...
+                        </div>
+                    )}
+                    {!emailChecking && emailAvailable === true && formData.email && (
+                        <div className="email-available" style={{
+                            position: 'absolute',
+                            right: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: '#4CAF50'
+                        }}>
+                            ✓ Available
+                        </div>
+                    )}
+                    {!emailChecking && emailAvailable === false && formData.email && (
+                        <div className="email-unavailable" style={{
+                            position: 'absolute',
+                            right: '10px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            color: '#ff4757'
+                        }}>
+                            ✗ Taken
+                        </div>
+                    )}
+                </div>
                 {fieldErrors.email && (
                     <div className="error-text">{fieldErrors.email}</div>
+                )}
+                {!fieldErrors.email && emailAvailable === false && formData.email && (
+                    <div className="error-text">This email is already registered. Please use a different email.</div>
                 )}
             </fieldset>
 
@@ -770,9 +856,9 @@ export default function Register() {
                                             type="button" 
                                             className="tf-button w-full"
                                             onClick={nextStep}
-                                            disabled={loading}
+                                            disabled={loading || (currentStep === 1 && emailChecking)}
                                         >
-                                            Next Step
+                                            {currentStep === 1 && emailChecking ? 'Checking Email...' : 'Next Step'}
                                         </button>
                                     ) : (
                                         <button 
@@ -804,6 +890,27 @@ export default function Register() {
                 :root {
                     --tf-color: #2196F3;
                     --tf-color-1: #ff4757;
+                }
+                
+                .flex-grow.success {
+                    border-color: #4CAF50 !important;
+                    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+                }
+                
+                .email-input-container {
+                    position: relative;
+                }
+                
+                .email-checking,
+                .email-available,
+                .email-unavailable {
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                }
+                
+                .tf-button:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
                 }
             `}</style>
         </div>

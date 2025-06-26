@@ -159,7 +159,7 @@ section {
 }
 
 html {
-  font-size: 62.5%;
+  font-size: 100%;
   overflow-y: scroll;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -3170,7 +3170,7 @@ select option {
   display: -webkit-flex;
   display: flex;
   align-items: start;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 22px;
   flex-direction: column;
   padding: 30px;

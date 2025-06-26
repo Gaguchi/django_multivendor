@@ -379,6 +379,8 @@ All API endpoints are prefixed with `/api/`
 
 ```http
 POST /api/users/register/          # User registration
+    - Returns 400 if email is already registered.
+POST /api/users/check-email/       # Check email availability (returns {available: boolean})
 POST /api/users/login/             # User login (username/email)
 POST /api/users/login-or-register/ # Smart login/register
 POST /api/token/refresh/           # JWT token refresh
@@ -388,6 +390,13 @@ GET  /api/users/auth/google/       # Google OAuth redirect
 POST /api/users/auth/google/callback/  # Google OAuth callback
 GET  /api/users/auth/facebook/     # Facebook OAuth redirect
 POST /api/users/auth/facebook/callback/ # Facebook OAuth callback
+```
+
+### Vendor Registration
+
+```http
+POST /api/vendors/register/        # Vendor registration
+    - Returns 400 if email is already registered (as user or vendor).
 ```
 
 ### User Management
@@ -701,7 +710,15 @@ export default function ConfirmationModal({
 - **Image Management**: Upload multiple images with thumbnail selection
 - **Modal Confirmations**: Safe delete operations with user confirmation
 - **Form Validation**: Comprehensive form validation and error handling
+- **Real-time Email Validation**: Email availability checking before form submission
 - **Authentication**: Secure API calls with JWT tokens
+
+#### Email Validation Features
+
+- **Real-time Checking**: Email availability is checked automatically as users type (debounced)
+- **Visual Feedback**: Clear indicators show if email is available, taken, or being checked
+- **Step Prevention**: Users cannot proceed to step 2 if email is already registered
+- **Backend Validation**: Atomic transactions prevent race conditions during registration
 
 ---
 
@@ -925,7 +942,7 @@ All API requests from both frontends are sent through the Cloudflare tunnel:
    # Terminal 2: Customer Frontend
    cd frontend && npm run dev
 
-   # Terminal 3: Admin Frontend
+   # Terminal 3: Vendor Dashboard
    cd vendor_dashboard && npm run dev
 
    # Terminal 4: Cloudflare Tunnel
@@ -1739,7 +1756,7 @@ This documentation provides a comprehensive overview of the Django multivendor e
 
 1. All services run locally on different ports
 2. Cloudflare tunnel exposes them via subdomains
-3. Real HTTPS URLs for testing OAuth and webhooks
+3. Real HTTPS URLs for testing on mobile devices
 4. No need for port forwarding or ngrok
 
 **File Structure for Cloudflare Setup**:

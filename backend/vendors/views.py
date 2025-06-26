@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import serializers
+from django.db import transaction, IntegrityError
 import logging
 from .models import Vendor, VendorProduct
 from .serializers import VendorSerializer, ProductSerializer, ProductListSerializer
@@ -44,13 +45,13 @@ class VendorViewSet(viewsets.ModelViewSet):
         logger.info(f"Registration files: {request.FILES}")
         
         # Extract required fields
-        email = request.data.get('email', '').strip()
+        email = request.data.get('email', '').strip().lower()  # Normalize email
         password = request.data.get('password', '')
         store_name = request.data.get('store_name', '').strip()
         first_name = request.data.get('first_name', '').strip()
         last_name = request.data.get('last_name', '').strip()
         phone = request.data.get('phone', '').strip()
-        contact_email = request.data.get('contact_email', '').strip() or email
+        contact_email = request.data.get('contact_email', '').strip().lower() or email  # Normalize contact email
         description = request.data.get('description', '').strip()
         address = request.data.get('address', '').strip()
         
@@ -84,29 +85,36 @@ class VendorViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Check if user already exists
-        if User.objects.filter(email=email).exists():
-            return Response(
-                {"email": ["A user with this email already exists"]}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        # Check if store name is already taken
-        if Vendor.objects.filter(store_name=store_name).exists():
-            return Response(
-                {"store_name": ["A store with this name already exists"]}, 
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
+        # Use atomic transaction to prevent race conditions
         try:
-            # Create user account
-            user = User.objects.create_user(
-                username=email,  # Use email as username
-                email=email,
-                password=password,
-                first_name=first_name,
-                last_name=last_name
-            )
+            with transaction.atomic():
+                # Check if user already exists (within transaction for consistency)
+                if User.objects.filter(email=email).exists():
+                    return Response(
+                        {"email": ["A user with this email already exists"]},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                # Check if store name is already taken
+                if Vendor.objects.filter(store_name=store_name).exists():
+                    return Response(
+                        {"store_name": ["A store with this name already exists"]},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                try:
+                    user = User.objects.create_user(
+                        username=email,  # Use email as username
+                        email=email,
+                        password=password,
+                        first_name=first_name,
+                        last_name=last_name
+                    )
+                except IntegrityError as e:
+                    if 'unique constraint' in str(e).lower() or 'unique violation' in str(e).lower():
+                        return Response(
+                            {"email": ["A user with this email or username already exists."]},
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
+                    raise
             
             # Create or update user profile as vendor
             profile, created = UserProfile.objects.get_or_create(user=user)
