@@ -52,7 +52,17 @@ export default function AISearchModal({ onClose }) {
                 throw new Error(data.error || 'Search failed')
             }
 
-            setSearchResults(data.results || [])
+            // Filter results to only show products with AI match score > 20% (1.0 out of 5)
+            const filteredResults = (data.results || []).filter(product => {
+                // If no match_score, include the product (for backwards compatibility)
+                if (product.match_score === undefined || product.match_score === null) {
+                    return true
+                }
+                // Only include products with match score > 1.0 (which represents > 20% when displayed as percentage)
+                return product.match_score > 1.0
+            })
+
+            setSearchResults(filteredResults)
             setSearchPerformed(true)
             
         } catch (err) {
@@ -88,6 +98,29 @@ export default function AISearchModal({ onClose }) {
             )
         }
         return <span className="current-price">{formattedPrice}</span>
+    }
+
+    // Helper function to format image URLs
+    const formatImageUrl = (imagePath) => {
+        if (!imagePath) return null
+        
+        // If it's already a full URL, return as is
+        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+            return imagePath
+        }
+        
+        // If it's a relative path starting with /media/, prepend the API base URL
+        if (imagePath.startsWith('/media/')) {
+            return `https://api.bazro.ge${imagePath}`
+        }
+        
+        // If it starts with media/ (without leading slash), add the slash
+        if (imagePath.startsWith('media/')) {
+            return `https://api.bazro.ge/${imagePath}`
+        }
+        
+        // For any other path, treat it as a media path
+        return `https://api.bazro.ge/media/${imagePath}`
     }
 
     return (
@@ -232,7 +265,7 @@ export default function AISearchModal({ onClose }) {
                                                 <div className="product-image">
                                                     {product.thumbnail ? (
                                                         <img 
-                                                            src={product.thumbnail} 
+                                                            src={formatImageUrl(product.thumbnail)} 
                                                             alt={product.name}
                                                             onError={(e) => {
                                                                 e.target.src = '/placeholder-product.png'

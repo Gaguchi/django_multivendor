@@ -24,6 +24,29 @@ export default function SearchResults() {
         setSearchType(initialSearchType)
     }, [initialSearchType])
 
+    // Helper function to format image URLs
+    const formatImageUrl = (imagePath) => {
+        if (!imagePath) return null
+        
+        // If it's already a full URL, return as is
+        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+            return imagePath
+        }
+        
+        // If it's a relative path starting with /media/, prepend the API base URL
+        if (imagePath.startsWith('/media/')) {
+            return `https://api.bazro.ge${imagePath}`
+        }
+        
+        // If it starts with media/ (without leading slash), add the slash
+        if (imagePath.startsWith('media/')) {
+            return `https://api.bazro.ge/${imagePath}`
+        }
+        
+        // For any other path, treat it as a media path
+        return `https://api.bazro.ge/media/${imagePath}`
+    }
+
     useEffect(() => {
         if (query) {
             performSearch()
@@ -96,10 +119,20 @@ export default function SearchResults() {
             throw new Error(data.error || 'AI Search failed')
         }
 
-        setResults(data.results || [])
+        // Filter results to only show products with AI match score > 20% (1.0 out of 5)
+        const filteredResults = (data.results || []).filter(product => {
+            // If no match_score, include the product (for backwards compatibility)
+            if (product.match_score === undefined || product.match_score === null) {
+                return true
+            }
+            // Only include products with match score > 1.0 (which represents > 20% when displayed as percentage)
+            return product.match_score > 1.0
+        })
+
+        setResults(filteredResults)
         // For AI search, create pagination-like structure
         setPagination({
-            total_count: data.total_count || data.results?.length || 0,
+            total_count: filteredResults.length,
             total_pages: 1,
             current_page: 1,
             has_previous: false,
@@ -300,7 +333,7 @@ export default function SearchResults() {
                                         <div className="product-image">
                                             {product.thumbnail ? (
                                                 <img 
-                                                    src={product.thumbnail} 
+                                                    src={formatImageUrl(product.thumbnail)} 
                                                     alt={product.name}
                                                     onError={(e) => {
                                                         e.target.src = '/placeholder-product.png'
