@@ -1,3 +1,5 @@
+import AISearchButton from '../../../Search/AISearchButton'
+
 export default function HeaderLeft() {
 
     return (
@@ -18,6 +20,12 @@ export default function HeaderLeft() {
                 alt="Porto Logo"
               />
             </a>
+            
+            {/* AI Search Button */}
+            <div className="header-ai-search d-flex align-items-center ml-3">
+              <AISearchButton />
+            </div>
+            
             <div className="header-icon header-search header-search-inline header-search-category d-lg-block d-none text-right mt-0">
               <a href="/" className="search-toggle" role="button">
                 <i className="icon-magnifier" />
@@ -68,6 +76,25 @@ export default function HeaderLeft() {
             {/* End .header-search */}
           </div>
           {/* End .header-left */}
+          
+          {/* AI Search Button Styles for Header Integration */}
+          <style jsx>{`
+            .header-ai-search {
+              margin-left: 15px;
+            }
+            
+            @media (max-width: 991px) {
+              .header-ai-search {
+                margin-left: 10px;
+              }
+            }
+            
+            @media (max-width: 576px) {
+              .header-ai-search {
+                margin-left: 8px;
+              }
+            }
+          `}</style>
 
         </>
     )

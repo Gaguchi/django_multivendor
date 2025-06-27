@@ -1,4 +1,5 @@
 import Categories from "./Categories"
+import AISearchButton from "../../Search/AISearchButton"
 import { Link } from 'react-router-dom'
 import { useCart } from '../../../contexts/CartContext'
 import { useAuth } from '../../../contexts/AuthContext'
@@ -16,6 +17,10 @@ export default function HeaderBottom() {
                 <div className="header-center w-100 ml-0">
                     <Categories />
                     <div className="info-boxes font2 align-items-center ml-auto">
+                        {/* AI Search for Desktop */}
+                        <div className="info-item d-none d-xl-block">
+                            <AISearchButton />
+                        </div>
                         <div className="info-item">
                             <Link to="/wishlist" className="wishlist-toggle" title="Wishlist">
                                 <i className="icon-wishlist-2" />

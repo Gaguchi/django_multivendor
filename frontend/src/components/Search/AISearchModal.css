@@ -1,0 +1,318 @@
+/* AI Search Modal Styles */
+
+/* Search overlay - similar to cart overlay */
+.search-opened .search-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1060;
+    backdrop-filter: blur(2px);
+}
+
+/* Search modal container */
+.search-modal {
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    width: 90%;
+    max-width: 600px;
+    margin: 0;
+    transition: transform 0.3s ease-in-out;
+    background-color: #fff;
+    z-index: 1061;
+    border: none;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    max-height: 80vh;
+    overflow: hidden;
+}
+
+/* Show modal when search is opened */
+.search-opened .search-modal {
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Search modal header */
+.search-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e7eb;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.search-modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+.search-modal-title .mr-2 {
+    margin-right: 8px;
+}
+
+.search-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Search modal body */
+.search-modal-body {
+    padding: 24px;
+    max-height: calc(80vh - 80px);
+    overflow-y: auto;
+}
+
+/* Search form */
+.search-form {
+    margin-bottom: 24px;
+}
+
+.search-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input-container:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 16px 20px;
+    font-size: 16px;
+    outline: none;
+    color: #1f2937;
+}
+
+.search-input::placeholder {
+    color: #9ca3af;
+}
+
+.search-submit-btn {
+    background: #667eea;
+    border: none;
+    color: white;
+    padding: 12px;
+    margin: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+}
+
+.search-submit-btn:hover:not(:disabled) {
+    background: #5a67d8;
+}
+
+.search-submit-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* Spinner for loading state */
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Search suggestions */
+.search-suggestions {
+    margin-bottom: 24px;
+}
+
+.suggestions-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.suggestion-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.suggestion-chip {
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.suggestion-chip:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+/* Search results area */
+.search-results {
+    min-height: 200px;
+}
+
+/* Loading state */
+.search-loading {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.loading-animation {
+    margin-bottom: 16px;
+}
+
+.loading-dots {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.loading-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #667eea;
+    animation: bounce 1.4s ease-in-out infinite both;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+.loading-dots span:nth-child(3) { animation-delay: 0s; }
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+.search-loading p {
+    color: #6b7280;
+    margin: 0;
+    font-size: 16px;
+}
+
+/* Empty state */
+.search-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b7280;
+}
+
+.search-empty i {
+    font-size: 48px;
+    color: #d1d5db;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.search-empty p {
+    font-size: 18px;
+    margin: 0 0 8px 0;
+    color: #374151;
+}
+
+.search-empty small {
+    color: #9ca3af;
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-modal {
+        width: 95%;
+        max-height: 85vh;
+    }
+    
+    .search-modal-header {
+        padding: 16px 20px;
+    }
+    
+    .search-modal-title {
+        font-size: 1.1rem;
+    }
+    
+    .search-modal-body {
+        padding: 20px;
+    }
+    
+    .search-input {
+        padding: 14px 16px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .suggestion-chips {
+        justify-content: center;
+    }
+    
+    .suggestion-chip {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-modal {
+        width: 98%;
+        border-radius: 0 0 8px 8px;
+    }
+    
+    .search-input::placeholder {
+        font-size: 14px;
+    }
+}

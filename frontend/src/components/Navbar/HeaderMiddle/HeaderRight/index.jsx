@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import SideCart from '../../../Cart/SideCart'
+import AISearchButton from '../../../Search/AISearchButton'
 import { useAuth } from '../../../../contexts/AuthContext'
 import { useCart } from '../../../../contexts/CartContext'
 
@@ -20,6 +21,11 @@ export default function HeaderRight() {
     
     return (
         <div className="header-right">
+            {/* AI Search Button for Mobile */}
+            <div className="header-middle-icon d-lg-none">
+                <AISearchButton />
+            </div>
+            
             <div className="header-middle-icon -fav">
                 <Link to="/wishlist" className="header-icon position-relative">
                     <i className="icon-wishlist-2" />
