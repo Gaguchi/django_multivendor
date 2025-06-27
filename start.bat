@@ -24,8 +24,8 @@ start cmd /k "title Ollama AI Server && echo Starting Ollama AI server... && oll
 timeout /t 3 /nobreak > nul
 
 :: Pull the AI model if not already available (runs in background)
-echo Checking/downloading AI model (gemma:7b)...
-start cmd /c "ollama pull gemma:7b"
+echo Checking/downloading AI model (mistral)...
+start cmd /c "ollama pull mistral"
 
 :: Start Django backend server
 echo Starting Django backend server...
