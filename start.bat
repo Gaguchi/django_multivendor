@@ -16,6 +16,17 @@ if not exist "%CLOUDFLARED_CONFIG%" (
     exit /b 1
 )
 
+:: Start Ollama server
+echo Starting Ollama server for AI search...
+start cmd /k "title Ollama AI Server && echo Starting Ollama AI server... && ollama serve"
+
+:: Wait for Ollama to initialize
+timeout /t 3 /nobreak > nul
+
+:: Pull the AI model if not already available (runs in background)
+echo Checking/downloading AI model (gemma:7b)...
+start cmd /c "ollama pull gemma:7b"
+
 :: Start Django backend server
 echo Starting Django backend server...
 start cmd /k "title Django Backend && echo Starting Django backend... && cd /d %BACKEND_DIR% && py manage.py runserver"
@@ -49,6 +60,7 @@ echo URLs:
 echo  - Backend API: http://localhost:8000/
 echo  - Customer Frontend: http://localhost:5173/
 echo  - Vendor Dashboard: http://localhost:5174/
+echo  - Ollama AI Server: http://localhost:11434/
 echo  - Cloudflare Tunnel: https://shop.bazro.ge, https://api.bazro.ge, https://seller.bazro.ge
 echo.
 echo Press any key to close this window (services will keep running in their own windows).

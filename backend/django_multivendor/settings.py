@@ -60,6 +60,8 @@ PROJECT_APPS = [
     'categories',
     'reviews',
     'shipping',
+    'search',  # AI search functionality
+    'ai_search',  # AI-powered search with Ollama
 ]
 
 # Optional third-party apps, only added if installed
@@ -456,3 +458,9 @@ CORS_ALLOW_HEADERS = [
     'x-master-token',  # Add this header to allow master token authentication
     'x-guest-session-key',  # Add this header to allow guest session key
 ]
+
+# AI Search Configuration
+OLLAMA_API_URL = 'http://localhost:11434/api/generate'
+OLLAMA_MODEL = 'gemma:7b'
+AI_SEARCH_DEBUG = True  # Set to False in production
+AI_SEARCH_CACHE_TIMEOUT = 3600  # 1 hour cache

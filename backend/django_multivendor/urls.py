@@ -77,6 +77,12 @@ if 'reviews' in settings.INSTALLED_APPS:
 if 'shipping' in settings.INSTALLED_APPS:
     urlpatterns.append(path('api/shipping/', include('shipping.urls')))
 
+if 'search' in settings.INSTALLED_APPS:
+    urlpatterns.append(path('api/search/', include('search.urls')))
+
+if 'ai_search' in settings.INSTALLED_APPS:
+    urlpatterns.append(path('api/ai/', include('ai_search.urls')))
+
 # Only include social auth URLs if the package is installed
 if 'social_django' in settings.INSTALLED_APPS:
     urlpatterns.append(path('auth/', include('social_django.urls', namespace='social')))
