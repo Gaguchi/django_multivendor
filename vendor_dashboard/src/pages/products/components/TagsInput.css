@@ -1,0 +1,160 @@
+/* Tags Input Component Styling */
+.tags-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.tags-input-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid #e3e6f0;
+    border-radius: 6px;
+    background-color: white;
+    cursor: text;
+    min-height: 44px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tags-input-wrapper:focus-within {
+    border-color: #5847eb;
+    box-shadow: 0 0 0 3px rgba(88, 71, 235, 0.1);
+}
+
+.tag-item {
+    display: inline-flex;
+    align-items: center;
+    background-color: #5847eb;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    gap: 6px;
+    white-space: nowrap;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag-remove {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+    margin: 0;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.tag-remove:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.tags-input-field {
+    border: none;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    min-width: 120px;
+    padding: 2px 0;
+    font-size: 14px;
+}
+
+.tags-input-field::placeholder {
+    color: #adb5bd;
+}
+
+.tags-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: white;
+    border: 1px solid #e3e6f0;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.tags-suggestion-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+.tags-suggestion-item:hover {
+    background-color: #f8f9fa;
+}
+
+.tags-suggestion-item:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+.tags-info {
+    margin-top: 4px;
+    text-align: right;
+}
+
+.tags-info small {
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .tag-item {
+        font-size: 0.75rem;
+        padding: 3px 6px;
+        max-width: 120px;
+    }
+    
+    .tags-input-field {
+        min-width: 100px;
+        font-size: 13px;
+    }
+    
+    .tags-suggestion-item {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+}
+
+/* Error state */
+.tags-input-container.error .tags-input-wrapper {
+    border-color: #dc3545;
+}
+
+.tags-input-container.error .tags-input-wrapper:focus-within {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+/* Disabled state */
+.tags-input-wrapper.disabled {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.tags-input-wrapper.disabled .tags-input-field {
+    cursor: not-allowed;
+}
+
+.tags-input-wrapper.disabled .tag-remove {
+    cursor: not-allowed;
+}

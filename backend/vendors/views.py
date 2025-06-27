@@ -6,7 +6,7 @@ from rest_framework import serializers
 from django.db import transaction, IntegrityError
 import logging
 from .models import Vendor, VendorProduct
-from .serializers import VendorSerializer, ProductSerializer, ProductListSerializer
+from .serializers import VendorSerializer, ProductSerializer, ProductListSerializer, ProductDetailSerializer
 from users.models import UserProfile
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from .authentication import MasterTokenAuthentication
@@ -318,6 +318,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return ProductListSerializer
+        elif self.action == 'retrieve':
+            return ProductDetailSerializer
         return ProductSerializer
 
     def get_queryset(self):
@@ -325,6 +327,12 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             # Optimize query for listings
             queryset = queryset.defer('description', 'video')
+        elif self.action == 'retrieve':
+            # For detail view, prefetch frequently bought together products
+            queryset = queryset.prefetch_related(
+                'frequently_bought_together__vendor',
+                'frequently_bought_together__category'
+            )
         return queryset.order_by('-created_at')
 
     def perform_create(self, serializer):

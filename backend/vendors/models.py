@@ -76,6 +76,7 @@ class VendorProduct(models.Model):
         help_text='Upload product video file (MP4 recommended)'
     )
     display_order = models.PositiveIntegerField(default=0, blank=False, null=False)
+    tags = models.TextField(blank=True, default='', help_text='Comma-separated tags for the product')
     
     # Add frequently bought together relationship
     frequently_bought_together = models.ManyToManyField(
@@ -98,6 +99,19 @@ class VendorProduct(models.Model):
         for product in self.frequently_bought_together.all():
             total += product.price
         return total
+    
+    def get_tags_list(self):
+        """Return tags as a list"""
+        if self.tags:
+            return [tag.strip() for tag in self.tags.split(',') if tag.strip()]
+        return []
+    
+    def set_tags_from_list(self, tags_list):
+        """Set tags from a list of strings"""
+        if tags_list:
+            self.tags = ', '.join([tag.strip() for tag in tags_list if tag.strip()])
+        else:
+            self.tags = ''
 
 class ProductImage(models.Model):
     product = models.ForeignKey(

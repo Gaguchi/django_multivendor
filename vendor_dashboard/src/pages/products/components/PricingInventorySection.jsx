@@ -1,9 +1,27 @@
 
+import './PricingInventorySection.css';
+import TagsInput from './TagsInput';
+
 export default function PricingInventorySection({ formData, onChange }) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         onChange(name, value);
     };
+
+    const handleTagsChange = (tagsValue) => {
+        onChange('tags', tagsValue);
+    };
+
+    // Common tag suggestions for products
+    const tagSuggestions = [
+        'electronics', 'gadgets', 'smartphones', 'laptops', 'computers',
+        'accessories', 'clothing', 'fashion', 'shoes', 'bags',
+        'home', 'kitchen', 'furniture', 'decorative', 'tools',
+        'sports', 'fitness', 'outdoor', 'books', 'education',
+        'health', 'beauty', 'skincare', 'makeup', 'jewelry',
+        'toys', 'games', 'entertainment', 'music', 'art',
+        'automotive', 'parts', 'maintenance', 'garden', 'plants'
+    ];
 
     return (
         <div className="wg-box mb-30">
@@ -77,14 +95,17 @@ export default function PricingInventorySection({ formData, onChange }) {
                     />
                 </fieldset>
                 
-                <fieldset className="sku">
-                    <div className="body-title mb-10">Tags</div>
-                    <input
-                        type="text"
-                        placeholder="Enter a tag"
-                        name="tags"
+                <fieldset className="tags-field">
+                    <div className="body-title mb-10">
+                        Tags
+                        <small className="text-muted d-block">Enter tags to help customers find your product</small>
+                    </div>
+                    <TagsInput
                         value={formData.tags}
-                        onChange={handleInputChange}
+                        onChange={handleTagsChange}
+                        placeholder="Add tags (press Enter or comma to add)"
+                        maxTags={10}
+                        suggestions={tagSuggestions}
                     />
                 </fieldset>
             </div>

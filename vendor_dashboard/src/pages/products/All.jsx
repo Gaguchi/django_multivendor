@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ConfirmationModal from '../../components/ConfirmationModal';
 import * as api from '../../services/api';
+import './All.css';
 
 export default function All() {
     const [products, setProducts] = useState([]);
@@ -157,7 +158,7 @@ export default function All() {
           <div className="body-title">Quantity</div>
         </li>
         <li>
-          <div className="body-title">Sale</div>
+          <div className="body-title">Tags</div>
         </li>
         <li>
           <div className="body-title">Stock</div>
@@ -202,7 +203,22 @@ export default function All() {
               </div>              <div className="body-text text-main-dark mt-4">#{product.id}</div>
               <div className="body-text text-main-dark mt-4">${parseFloat(product.price || 0).toFixed(2)}</div>
               <div className="body-text text-main-dark mt-4">{product.stock_quantity || product.stock || 0}</div>
-              <div className="body-text text-main-dark mt-4">{product.sales_count || 0}</div>
+              <div className="tags-cell mt-4">
+                {product.tags ? (
+                  <div className="product-tags">
+                    {product.tags.split(',').slice(0, 3).map((tag, index) => (
+                      <span key={index} className="tag-badge-small">
+                        {tag.trim()}
+                      </span>
+                    ))}
+                    {product.tags.split(',').length > 3 && (
+                      <span className="tag-more">+{product.tags.split(',').length - 3}</span>
+                    )}
+                  </div>
+                ) : (
+                  <span className="text-muted">No tags</span>
+                )}
+              </div>
               <div>
                 <div className={`block-${(product.stock_quantity || product.stock || 0) > 0 ? 'available' : 'stock'} bg-1 fw-7`}>
                   {(product.stock_quantity || product.stock || 0) > 0 ? 'In Stock' : 'Out of stock'}

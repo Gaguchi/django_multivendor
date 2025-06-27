@@ -66,13 +66,14 @@ class ProductListSerializer(serializers.ModelSerializer):
         model = VendorProduct
         fields = [
             'id', 'name', 'price', 'old_price', 'thumbnail', 'vendor_name', 'rating', 
-            'category_name', 'is_hot', 'stock', 'images', 'created_at'
+            'category_name', 'is_hot', 'stock', 'images', 'created_at', 'tags'
         ]
 
 # Fix: Define the ComboProductSerializer before it's used
 class ComboProductSerializer(serializers.ModelSerializer):
     """Simple serializer for products in combos/frequently bought together"""
     vendor_name = serializers.CharField(source='vendor.store_name', read_only=True)
+    tags_list = serializers.SerializerMethodField()
     
     class Meta:
         model = VendorProduct
@@ -83,21 +84,32 @@ class ComboProductSerializer(serializers.ModelSerializer):
             'thumbnail',
             'vendor_name',
             'rating',
+            'tags',
+            'tags_list'
         ]
+    
+    def get_tags_list(self, obj):
+        """Return tags as a list"""
+        return obj.get_tags_list()
 
 class ProductSerializer(serializers.ModelSerializer):
     vendor = SimpleVendorSerializer(read_only=True)
     images = ProductImageSerializer(many=True, read_only=True, source='product_images')
     category = CategorySerializer(read_only=True)  # For reading full category details
     category_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)  # For writing category ID
+    tags_list = serializers.SerializerMethodField()
     
     class Meta:
         model = VendorProduct
         fields = [
             'id', 'name', 'sku', 'price', 'old_price', 'stock', 'description',
             'thumbnail', 'secondaryImage', 'vendor', 'images', 'rating', 'is_hot', 'created_at',
-            'category', 'category_id', 'brand'  # Added category_id field for writing
+            'category', 'category_id', 'brand', 'tags', 'tags_list'  # Added tags field
         ]
+    
+    def get_tags_list(self, obj):
+        """Return tags as a list"""
+        return obj.get_tags_list()
     
     def validate_category_id(self, value):
         """Validate that the category exists"""
@@ -301,3 +313,25 @@ class ProductSerializer(serializers.ModelSerializer):
                 logger.error(f"Multiple existing images found matching filename '{thumbnail_filename_from_request}' for product ID {instance.id}. Thumbnail not changed.")
         
         return instance
+
+# Add ProductDetailSerializer for detailed product views
+class ProductDetailSerializer(serializers.ModelSerializer):
+    """Detailed serializer for individual product views with frequently bought together"""
+    vendor = SimpleVendorSerializer(read_only=True)
+    images = ProductImageSerializer(many=True, read_only=True, source='product_images')
+    category = CategorySerializer(read_only=True)
+    category_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
+    frequently_bought_together = ComboProductSerializer(many=True, read_only=True)
+    tags_list = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = VendorProduct
+        fields = [
+            'id', 'name', 'sku', 'price', 'old_price', 'stock', 'description',
+            'thumbnail', 'secondaryImage', 'vendor', 'images', 'rating', 'is_hot', 'created_at',
+            'category', 'category_id', 'brand', 'tags', 'tags_list', 'frequently_bought_together'
+        ]
+    
+    def get_tags_list(self, obj):
+        """Return tags as a list"""
+        return obj.get_tags_list()
