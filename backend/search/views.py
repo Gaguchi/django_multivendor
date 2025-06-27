@@ -463,3 +463,168 @@ def search_analytics(request):
         return Response({
             'error': 'Failed to get analytics'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def regular_search(request):
+    """Regular text-based product search endpoint"""
+    start_time = time.time()
+    
+    try:
+        query = request.GET.get('q', '').strip()
+        category = request.GET.get('category', '').strip()
+        sort_by = request.GET.get('sort', 'relevance')  # relevance, price_low, price_high, rating, newest
+        page = int(request.GET.get('page', 1))
+        per_page = min(int(request.GET.get('per_page', 20)), 50)  # Max 50 items per page
+        
+        if not query:
+            return Response({
+                'error': 'Search query is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Get user info for logging
+        user = request.user if request.user.is_authenticated else None
+        session_key = request.session.session_key
+        
+        logger.info(f"Regular search query: '{query}' category: '{category}' from user: {user or session_key}")
+        
+        # Build the search query
+        search_query = Q()
+        
+        # Split query into words for better matching
+        search_words = [word.strip() for word in query.split() if len(word.strip()) > 2]
+        
+        if search_words:
+            # Search in product name (highest priority)
+            name_query = Q()
+            for word in search_words:
+                name_query |= Q(name__icontains=word)
+            
+            # Search in description
+            desc_query = Q()
+            for word in search_words:
+                desc_query |= Q(description__icontains=word)
+            
+            # Search in tags
+            tags_query = Q()
+            for word in search_words:
+                tags_query |= Q(tags__icontains=word)
+            
+            # Search in brand
+            brand_query = Q()
+            for word in search_words:
+                brand_query |= Q(brand__icontains=word)
+            
+            # Combine all search conditions
+            search_query = name_query | desc_query | tags_query | brand_query
+        
+        # Start with active products that have stock
+        products = VendorProduct.objects.filter(
+            stock__gt=0
+        ).select_related('vendor', 'category')
+        
+        # Apply search filter
+        if search_query:
+            products = products.filter(search_query)
+        
+        # Apply category filter
+        if category:
+            products = products.filter(category__name__icontains=category)
+        
+        # Calculate relevance score for sorting
+        if search_words:
+            # Annotate with relevance score
+            relevance_cases = []
+            
+            for i, word in enumerate(search_words):
+                # Name matches get highest score
+                relevance_cases.append(
+                    When(name__icontains=word, then=Value(10.0 - i))
+                )
+                # Brand matches get medium score  
+                relevance_cases.append(
+                    When(brand__icontains=word, then=Value(7.0 - i))
+                )
+                # Tags matches get medium score
+                relevance_cases.append(
+                    When(tags__icontains=word, then=Value(6.0 - i))
+                )
+                # Description matches get lower score
+                relevance_cases.append(
+                    When(description__icontains=word, then=Value(3.0 - i))
+                )
+            
+            products = products.annotate(
+                relevance_score=Case(
+                    *relevance_cases,
+                    default=Value(0.0),
+                    output_field=FloatField()
+                )
+            )
+        else:
+            # No search words, set default relevance
+            products = products.annotate(relevance_score=Value(0.0, output_field=FloatField()))
+        
+        # Apply sorting
+        if sort_by == 'price_low':
+            products = products.order_by('price')
+        elif sort_by == 'price_high':
+            products = products.order_by('-price')
+        elif sort_by == 'rating':
+            products = products.order_by('-rating', '-relevance_score')
+        elif sort_by == 'newest':
+            products = products.order_by('-id')
+        else:  # relevance (default)
+            products = products.order_by('-relevance_score', '-rating', 'price')
+        
+        # Get total count before pagination
+        total_count = products.count()
+        
+        # Apply pagination
+        start_index = (page - 1) * per_page
+        end_index = start_index + per_page
+        products_page = products[start_index:end_index]
+        
+        # Serialize the products
+        serializer = ProductListSerializer(products_page, many=True, context={'request': request})
+        
+        # Calculate pagination info
+        total_pages = (total_count + per_page - 1) // per_page
+        has_next = page < total_pages
+        has_previous = page > 1
+        
+        # Log the search
+        SearchLog.objects.create(
+            query=query,
+            user=user,
+            session_key=session_key,
+            results_count=total_count,
+            search_type='regular'
+        )
+        
+        # Calculate response time
+        response_time = int((time.time() - start_time) * 1000)
+        
+        return Response({
+            'query': query,
+            'category': category,
+            'results': serializer.data,
+            'pagination': {
+                'current_page': page,
+                'total_pages': total_pages,
+                'total_count': total_count,
+                'per_page': per_page,
+                'has_next': has_next,
+                'has_previous': has_previous
+            },
+            'search_type': 'regular',
+            'sort_by': sort_by,
+            'response_time_ms': response_time
+        }, status=status.HTTP_200_OK)
+        
+    except Exception as e:
+        logger.error(f"Regular search error: {str(e)}")
+        return Response({
+            'error': 'Search failed',
+            'message': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

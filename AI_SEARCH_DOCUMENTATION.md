@@ -2,7 +2,23 @@
 
 ## Overview
 
-This implementation provides an AI-powered product search system for the Django multivendor e-commerce platform, inspired by the standalone Python script that uses Ollama (LLM) for tag-based product search.
+This implementation provides a complete dual-search system for the Django multivendor e-commerce platform, featuring both AI-powered and ordinary search capabilities fully integrated into the frontend user interface.
+
+## Complete Integration Features
+
+### Dual Search System
+
+- **AI Search**: Natural language queries using Ollama LLM with intelligent tag mapping
+- **Ordinary Search**: Traditional keyword-based search with filters and sorting
+- **Seamless Switching**: Users can toggle between search types on the same results page
+- **Unified Interface**: Both search types accessible from header components
+
+### Frontend Integration
+
+- **Search Results Page**: Displays both AI and ordinary search results with type toggle
+- **AI Search Modal**: Quick AI search overlay with instant results preview
+- **Search Box**: Traditional search with suggestions and category filtering
+- **Cross-Navigation**: Easy switching between search types with preserved queries
 
 ## Architecture
 
@@ -48,6 +64,18 @@ This implementation provides an AI-powered product search system for the Django 
 - **Ollama Server**: Automatically started in `start.bat`
 - **Model Management**: Automatic download of AI model (gemma:7b)
 - **Health Monitoring**: API endpoints for service health checks
+- **Production API**: Configured to use `https://api.bazro.ge` endpoint
+- **Development Support**: Fallback to local development servers when needed
+
+### API Configuration
+
+The system is configured to use the production API endpoint:
+
+- **Base URL**: `https://api.bazro.ge`
+- **AI Search**: `POST /api/ai/search/`
+- **Ordinary Search**: `GET /api/search/`
+- **Search Suggestions**: `GET /api/search/suggestions/`
+- **Cross-Origin Support**: CORS configured for frontend integration
 
 ## Features
 
@@ -168,6 +196,29 @@ The AI search components are already integrated into the header. No additional s
 
 ## Usage
 
+### Frontend User Experience
+
+#### AI Search
+
+1. **Quick Search**: Click the "Ask AI" button in the header for instant AI search modal
+2. **Natural Language**: Type queries like "Show me wireless headphones under $100"
+3. **Instant Results**: See product results with AI match scores and relevant tags
+4. **View All**: Click "View All Results" to see complete results on search page
+
+#### Ordinary Search
+
+1. **Search Box**: Use the main search box in the header
+2. **Category Filtering**: Select categories for focused searches
+3. **Auto-suggestions**: Get suggestions as you type
+4. **Advanced Sorting**: Sort by price, rating, relevance, or date
+
+#### Unified Search Results
+
+1. **Search Page**: Navigate to `/search?q=your-query&type=ai` or `&type=ordinary`
+2. **Toggle Between Types**: Switch between AI and ordinary search while keeping your query
+3. **Enhanced Display**: See match scores, relevant tags, and detailed product information
+4. **Responsive Design**: Optimized for desktop and mobile devices
+
 ### Command Line Testing
 
 ```bash
@@ -182,6 +233,11 @@ python manage.py ai_search "gaming laptop" --ai
 ```
 
 ### API Testing
+
+```bash
+# Test the integrated APIs
+python test_search_apis.py
+```
 
 ```bash
 # Test the API directly

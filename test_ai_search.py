@@ -9,7 +9,7 @@ import json
 import sys
 
 # API endpoint
-API_URL = "http://localhost:8000/api/ai/search/"
+API_URL = "https://api.bazro.ge/api/ai/search/"
 
 def test_ai_search(query, max_results=10):
     """Test the AI search API"""
@@ -76,7 +76,8 @@ def test_ai_search(query, max_results=10):
                 print(f"Response text: {response.text}")
                 
     except requests.exceptions.ConnectionError:
-        print("Error: Could not connect to the API. Make sure Django server is running on http://localhost:8000")
+        print("Error: Could not connect to the API. Make sure Django server is running and Cloudflare tunnel is active")
+        print("Expected API URL: https://api.bazro.ge")
     except requests.exceptions.Timeout:
         print("Error: Request timed out")
     except Exception as e:

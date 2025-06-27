@@ -35,7 +35,7 @@ export default function AISearchModal({ onClose }) {
             setError('')
             setSearchPerformed(false)
             
-            const response = await fetch('http://localhost:8000/api/ai/search/', {
+            const response = await fetch('https://api.bazro.ge/api/ai/search/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -280,12 +280,48 @@ export default function AISearchModal({ onClose }) {
                                             </div>
                                         ))}
                                     </div>
+                                    
+                                    {/* View All Results Button */}
+                                    <div className="view-all-container">
+                                        <button 
+                                            className="view-all-btn"
+                                            onClick={() => {
+                                                const searchParams = new URLSearchParams({
+                                                    q: searchQuery.trim(),
+                                                    type: 'ai'
+                                                })
+                                                navigate(`/search?${searchParams.toString()}`)
+                                                closeModal()
+                                            }}
+                                        >
+                                            <i className="icon-external-link"></i>
+                                            View All Results on Search Page
+                                        </button>
+                                    </div>
                                 </>
                             ) : (
                                 <div className="search-empty">
                                     <i className="icon-search"></i>
                                     <p>No products found for your query</p>
                                     <small>Try adjusting your search terms or check our suggestions above</small>
+                                    
+                                    {/* Alternative search suggestion */}
+                                    <div className="alternative-search">
+                                        <button 
+                                            className="alternative-search-btn"
+                                            onClick={() => {
+                                                const searchParams = new URLSearchParams({
+                                                    q: searchQuery.trim(),
+                                                    type: 'ordinary'
+                                                })
+                                                navigate(`/search?${searchParams.toString()}`)
+                                                closeModal()
+                                            }}
+                                        >
+                                            <i className="icon-search"></i>
+                                            Try Ordinary Search Instead
+                                        </button>
+                                    </div>
                                 </div>
                             )}
                         </div>
