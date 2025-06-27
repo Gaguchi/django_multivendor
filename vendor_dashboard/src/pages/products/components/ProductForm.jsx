@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import ImageUploadSection from './ImageUploadSection';
 import ProductDetailsSection from './ProductDetailsSection';
-import AttributesSection from './AttributesSection';
 import PricingInventorySection from './PricingInventorySection';
 import { getCategoriesApi } from '../../../services/api';
 
@@ -26,8 +25,6 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {}, isE
         ...initialData
     });
     
-    const [showAttributes, setShowAttributes] = useState(false);
-    const [categoryAttributes, setCategoryAttributes] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);    // Update form data when initialData changes (for edit mode)
     useEffect(() => {
@@ -62,90 +59,6 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {}, isE
         
         fetchCategories();
     }, []);
-    
-    // Handle category change
-    useEffect(() => {
-        const fetchCategoryAttributes = async () => {
-            if (formData.category) {
-                try {
-                    setLoading(true);
-                    // In a real implementation, you'd make an API call to get attributes by category
-                    // const response = await getCategoryAttributesApi(formData.category);
-                    // setCategoryAttributes(response);
-                    
-                    // Look up the selected category in our categories data to get its attributes
-                    const allCategories = categories?.results || [];
-                    let selectedCategory = null;
-                    
-                    // Search in root categories
-                    for (const cat of allCategories) {
-                        if (cat.id === parseInt(formData.category)) {
-                            selectedCategory = cat;
-                            break;
-                        }
-                        
-                        // Search in subcategories if not found
-                        if (cat.subcategories) {
-                            for (const subCat of cat.subcategories) {
-                                if (subCat.id === parseInt(formData.category)) {
-                                    selectedCategory = subCat;
-                                    break;
-                                }
-                                
-                                // Search in sub-subcategories if available
-                                if (subCat.subcategories) {
-                                    for (const subSubCat of subCat.subcategories) {
-                                        if (subSubCat.id === parseInt(formData.category)) {
-                                            selectedCategory = subSubCat;
-                                            break;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    
-                    // If we found the category, get its attribute groups
-                    if (selectedCategory && selectedCategory.attribute_groups) {
-                        const attributes = [];
-                        
-                        // Flatten attributes from all attribute groups
-                        selectedCategory.attribute_groups.forEach(group => {
-                            group.attributes.forEach(attr => {
-                                attributes.push({
-                                    id: attr.id,
-                                    name: attr.name,
-                                    type: attr.attribute_type,
-                                    required: attr.is_required,
-                                    options: attr.options?.map(opt => opt.value) || []
-                                });
-                            });
-                        });
-                        
-                        setCategoryAttributes(attributes);
-                        setShowAttributes(attributes.length > 0);
-                    } else {
-                        // Mock data for development if no attributes found
-                        setCategoryAttributes([
-                            { id: 1, name: 'Material', type: 'select', options: ['Cotton', 'Polyester', 'Wool'] },
-                            { id: 2, name: 'Weight', type: 'number' },
-                            { id: 3, name: 'Waterproof', type: 'boolean' }
-                        ]);
-                        setShowAttributes(true);
-                    }
-                } catch (error) {
-                    console.error('Error fetching category attributes:', error);
-                } finally {
-                    setLoading(false);
-                }
-            } else {
-                setShowAttributes(false);
-                setCategoryAttributes([]);
-            }
-        };
-        
-        fetchCategoryAttributes();
-    }, [formData.category, categories]);
     
     const handleInputChange = (name, value) => {
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -183,14 +96,6 @@ export default function ProductForm({ onSubmit, isLoading, initialData = {}, isE
                 categories={categories}
                 loading={loading}
             />
-            
-            {showAttributes && (
-                <AttributesSection 
-                    attributes={categoryAttributes}
-                    formData={formData}
-                    onChange={handleInputChange}
-                />
-            )}
             
             <PricingInventorySection 
                 formData={formData}
