@@ -407,9 +407,45 @@
   cursor: crosshair; /* Indicate zoom functionality */
 }
 
+/* Global zoom result styling to ensure visibility */
+:global(.img-zoom-result) {
+  position: fixed !important;
+  background: #fff !important;
+  border: 2px solid #007bff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25) !important;
+  z-index: 999999 !important;
+  pointer-events: none !important;
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+  width: 400px !important;
+  height: 400px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+:global(.img-zoom-lens) {
+  position: absolute !important;
+  border: 2px solid #007bff !important;
+  background: rgba(0, 123, 255, 0.1) !important;
+  border-radius: 50% !important;
+  cursor: none !important;
+  z-index: 15 !important;
+  pointer-events: none !important;
+  width: 150px !important;
+  height: 150px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
 /* Hide zoom on touch devices and small screens */
 @media (hover: none) or (max-width: 991px) {
   .mainProductImage {
     cursor: default;
+  }
+  
+  :global(.img-zoom-result),
+  :global(.img-zoom-lens) {
+    display: none !important;
   }
 }

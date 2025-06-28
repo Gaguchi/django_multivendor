@@ -26589,3 +26589,75 @@ UnboundLocalError: cannot access local variable 'thumbnail_filename_from_request
 [2025-06-28 14:20:58,328] WARNING log Not Found: /
 [2025-06-28 14:20:58,328] WARNING log Not Found: /
 [2025-06-28 14:27:46,092] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-28 14:57:48,583] INFO views Token refreshed successfully for user
+[2025-06-28 15:27:50,412] INFO views Token refreshed successfully for user
+[2025-06-28 15:57:52,369] INFO views Token refreshed successfully for user
+[2025-06-28 16:27:54,373] INFO views Token refreshed successfully for user
+[2025-06-28 16:57:56,561] INFO views Token refreshed successfully for user
+[2025-06-28 17:24:39,417] INFO views Token refreshed successfully for user
+[2025-06-28 17:24:39,423] INFO views Token refreshed successfully for user
+[2025-06-28 17:54:41,450] INFO views Token refreshed successfully for user
+[2025-06-28 17:54:41,543] INFO views Token refreshed successfully for user
+[2025-06-28 18:24:43,350] INFO views Token refreshed successfully for user
+[2025-06-28 18:24:43,418] INFO views Token refreshed successfully for user
+[2025-06-28 18:54:44,544] INFO views Token refreshed successfully for user
+[2025-06-28 18:54:44,625] INFO views Token refreshed successfully for user
+[2025-06-28 19:21:53,974] INFO views Token refreshed successfully for user
+[2025-06-28 19:21:53,993] INFO views Token refreshed successfully for user
+[2025-06-28 19:21:54,009] INFO views Token refreshed successfully for user
+[2025-06-28 19:21:54,027] INFO views Token refreshed successfully for user
+[2025-06-28 19:47:26,606] INFO views Token refreshed successfully for user
+[2025-06-28 19:47:26,612] INFO views Token refreshed successfully for user
+[2025-06-28 19:47:26,639] INFO views Token refreshed successfully for user
+[2025-06-28 19:47:26,642] INFO views Token refreshed successfully for user
+[2025-06-28 19:48:43,528] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-28 19:48:50,665] INFO views Read-only action list - allowing public access
+[2025-06-28 19:48:50,843] INFO views Read-only action list - allowing public access
+[2025-06-28 19:48:57,034] INFO views Read-only action list - allowing public access
+[2025-06-28 19:48:57,245] INFO views Read-only action list - allowing public access
+[2025-06-28 19:49:52,481] ERROR middleware Error logging request: Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.
+[2025-06-28 19:49:54,452] INFO serializers Update method: thumbnail_filename_from_request = None
+[2025-06-28 19:49:54,452] INFO serializers Update method: thumbnail_filename_from_request = None
+[2025-06-28 19:49:54,453] INFO serializers Instance category directly set to: Electronics (ID: 2)
+[2025-06-28 19:49:54,453] INFO serializers Instance category directly set to: Electronics (ID: 2)
+[2025-06-28 19:49:55,099] INFO serializers Product instance (ID: 14) SAVED. Category after save: Electronics
+[2025-06-28 19:49:55,099] INFO serializers Product instance (ID: 14) SAVED. Category after save: Electronics
+[2025-06-28 19:49:55,099] INFO serializers Processing 3 new image files for update. Designated thumbnail filename: 'None'
+[2025-06-28 19:49:55,099] INFO serializers Processing 3 new image files for update. Designated thumbnail filename: 'None'
+[2025-06-28 19:49:55,100] INFO serializers Processing new image file 0 for update: chimney_part_6.jpg, size: 463359
+[2025-06-28 19:49:55,100] INFO serializers Processing new image file 0 for update: chimney_part_6.jpg, size: 463359
+[2025-06-28 19:49:55,144] INFO serializers Created new ProductImage with ID: 35, File path: vendor_products/Betochka/SANSUI_Computer_Monitor_24_inch_IPS_Eye_Care_1080P/images/chimn_fSSGk7z.jpg
+[2025-06-28 19:49:55,144] INFO serializers Created new ProductImage with ID: 35, File path: vendor_products/Betochka/SANSUI_Computer_Monitor_24_inch_IPS_Eye_Care_1080P/images/chimn_fSSGk7z.jpg
+[2025-06-28 19:49:55,144] INFO serializers Processing new image file 1 for update: chimney_part_5.png, size: 1742604
+[2025-06-28 19:49:55,144] INFO serializers Processing new image file 1 for update: chimney_part_5.png, size: 1742604
+[2025-06-28 19:49:55,190] INFO serializers Created new ProductImage with ID: 36, File path: vendor_products/Betochka/SANSUI_Computer_Monitor_24_inch_IPS_Eye_Care_1080P/images/chimn_MqI8ohV.png
+[2025-06-28 19:49:55,190] INFO serializers Created new ProductImage with ID: 36, File path: vendor_products/Betochka/SANSUI_Computer_Monitor_24_inch_IPS_Eye_Care_1080P/images/chimn_MqI8ohV.png
+[2025-06-28 19:49:55,190] INFO serializers Processing new image file 2 for update: chimney_1.jpg, size: 890444
+[2025-06-28 19:49:55,190] INFO serializers Processing new image file 2 for update: chimney_1.jpg, size: 890444
+[2025-06-28 19:49:55,269] INFO serializers Created new ProductImage with ID: 37, File path: vendor_products/Betochka/SANSUI_Computer_Monitor_24_inch_IPS_Eye_Care_1080P/images/chimney_1.jpg
+[2025-06-28 19:49:55,269] INFO serializers Created new ProductImage with ID: 37, File path: vendor_products/Betochka/SANSUI_Computer_Monitor_24_inch_IPS_Eye_Care_1080P/images/chimney_1.jpg
+[2025-06-28 20:22:20,373] INFO views Token refreshed successfully for user
+[2025-06-28 20:22:20,386] INFO views Token refreshed successfully for user
+[2025-06-28 20:53:57,261] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-28 20:53:57,261] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-28 20:53:57,269] WARNING log Unauthorized: /api/users/profile/
+[2025-06-28 20:53:57,269] WARNING log Unauthorized: /api/users/profile/
+[2025-06-28 20:53:57,375] INFO views Token refreshed successfully for user
+[2025-06-28 20:53:57,391] INFO views Token refreshed successfully for user
+[2025-06-28 20:53:57,404] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-28 20:53:57,405] WARNING log Unauthorized: /api/users/profile/
+[2025-06-28 20:53:57,404] WARNING log Unauthorized: /api/cart/carts/current/
+[2025-06-28 20:53:57,405] WARNING log Unauthorized: /api/users/profile/
+[2025-06-28 20:53:57,406] INFO views Token refreshed successfully for user
+[2025-06-28 20:53:57,421] INFO views Token refreshed successfully for user
+[2025-06-28 20:53:57,501] WARNING log Unauthorized: /api/users/profile/
+[2025-06-28 20:53:57,501] WARNING log Unauthorized: /api/users/profile/
+[2025-06-28 20:53:57,530] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-28 20:53:57,530] WARNING log Unauthorized: /api/token/refresh/
+[2025-06-28 20:53:57,593] WARNING log Unauthorized: /api/users/profile/
+[2025-06-28 20:53:57,593] WARNING log Unauthorized: /api/users/profile/
+[2025-06-28 23:05:49,625] INFO autoreload Watching for file changes with StatReloader
+[2025-06-28 23:05:49,762] INFO urls === Registering Vendor URLs ===
+[2025-06-28 23:05:49,762] INFO urls === Registering Vendor URLs ===
+[2025-06-28 23:05:49,764] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-28 23:05:49,764] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
