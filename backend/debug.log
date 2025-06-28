@@ -26374,3 +26374,218 @@ UnboundLocalError: cannot access local variable 'thumbnail_filename_from_request
 [2025-06-27 21:50:03,123] INFO services [AI_SEARCH_DEBUG] Final selected tags: []
 [2025-06-27 21:50:03,123] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: []
 [2025-06-27 21:50:12,638] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-27 21:50:52,957] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 21:50:52,957] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: present for a woman
+[2025-06-27 21:50:55,002] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: 404 Client Error: Not Found for url: http://localhost:11434/api/generate
+[2025-06-27 21:50:55,002] INFO services [AI_SEARCH_DEBUG] Query words: ['present', 'for', 'a', 'woman']
+[2025-06-27 21:50:55,002] INFO services [AI_SEARCH_DEBUG] Direct matches: ['present for girls', 'present for women']
+[2025-06-27 21:50:55,002] INFO services [AI_SEARCH_DEBUG] Concept matches: []
+[2025-06-27 21:50:55,003] INFO services [AI_SEARCH_DEBUG] Final selected tags: ['present for girls', 'present for women']
+[2025-06-27 21:50:55,003] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['present for girls', 'present for women']
+[2025-06-27 21:51:09,866] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 21:51:09,867] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: a present
+[2025-06-27 21:51:11,930] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: 404 Client Error: Not Found for url: http://localhost:11434/api/generate
+[2025-06-27 21:51:11,931] INFO services [AI_SEARCH_DEBUG] Query words: ['a', 'present']
+[2025-06-27 21:51:11,931] INFO services [AI_SEARCH_DEBUG] Direct matches: ['present for girls', 'present for women']
+[2025-06-27 21:51:11,931] INFO services [AI_SEARCH_DEBUG] Concept matches: []
+[2025-06-27 21:51:11,931] INFO services [AI_SEARCH_DEBUG] Final selected tags: ['present for girls', 'present for women']
+[2025-06-27 21:51:11,931] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['present for girls', 'present for women']
+[2025-06-27 21:51:19,724] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 21:51:19,724] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: a ring
+[2025-06-27 21:51:21,769] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: 404 Client Error: Not Found for url: http://localhost:11434/api/generate
+[2025-06-27 21:51:21,769] INFO services [AI_SEARCH_DEBUG] Query words: ['a', 'ring']
+[2025-06-27 21:51:21,770] INFO services [AI_SEARCH_DEBUG] Direct matches: ['ring']
+[2025-06-27 21:51:21,770] INFO services [AI_SEARCH_DEBUG] Concept matches: []
+[2025-06-27 21:51:21,770] INFO services [AI_SEARCH_DEBUG] Final selected tags: ['ring']
+[2025-06-27 21:51:21,770] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['ring']
+[2025-06-27 21:51:31,494] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 21:51:31,494] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: gold
+[2025-06-27 21:51:33,546] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: 404 Client Error: Not Found for url: http://localhost:11434/api/generate
+[2025-06-27 21:51:33,546] INFO services [AI_SEARCH_DEBUG] Query words: ['gold']
+[2025-06-27 21:51:33,546] INFO services [AI_SEARCH_DEBUG] Direct matches: ['gold', 'golden']
+[2025-06-27 21:51:33,546] INFO services [AI_SEARCH_DEBUG] Concept matches: []
+[2025-06-27 21:51:33,547] INFO services [AI_SEARCH_DEBUG] Final selected tags: ['gold', 'golden']
+[2025-06-27 21:51:33,547] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['gold', 'golden']
+[2025-06-27 22:16:23,407] INFO serializers User authenticated via email: beta@gmail.com
+[2025-06-27 22:42:06,357] INFO views Token refreshed successfully for user
+[2025-06-27 22:42:06,366] INFO views Token refreshed successfully for user
+[2025-06-27 22:42:06,367] INFO views Token refreshed successfully for user
+[2025-06-27 22:42:06,382] INFO views Token refreshed successfully for user
+[2025-06-27 23:12:07,862] INFO views Token refreshed successfully for user
+[2025-06-27 23:12:08,020] INFO views Token refreshed successfully for user
+[2025-06-27 23:23:01,057] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:23:01,058] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: Show me the best smartphones under $500
+[2025-06-27 23:23:33,126] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=30)
+[2025-06-27 23:23:33,126] INFO services [AI_SEARCH_DEBUG] Query words: ['show', 'me', 'the', 'best', 'smartphones', 'under', '$500']
+[2025-06-27 23:23:33,127] INFO services [AI_SEARCH_DEBUG] Direct matches: []
+[2025-06-27 23:23:33,127] INFO services [AI_SEARCH_DEBUG] Concept matches: ['smartphone', '5g', 'smartphone']
+[2025-06-27 23:23:33,127] INFO services [AI_SEARCH_DEBUG] Final selected tags: []
+[2025-06-27 23:23:33,127] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: []
+[2025-06-27 23:23:33,971] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:23:33,971] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: Show me trending electronics
+[2025-06-27 23:23:46,706] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:23:46,706] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: electronics
+[2025-06-27 23:24:06,056] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=30)
+[2025-06-27 23:24:06,057] INFO services [AI_SEARCH_DEBUG] Query words: ['show', 'me', 'trending', 'electronics']
+[2025-06-27 23:24:06,057] INFO services [AI_SEARCH_DEBUG] Direct matches: ['Electronics']
+[2025-06-27 23:24:06,057] INFO services [AI_SEARCH_DEBUG] Concept matches: []
+[2025-06-27 23:24:06,057] INFO services [AI_SEARCH_DEBUG] Final selected tags: ['Electronics']
+[2025-06-27 23:24:06,057] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['Electronics']
+[2025-06-27 23:24:06,093] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate
+[2025-06-27 23:24:06,093] INFO services [AI_SEARCH_DEBUG] Query words: ['electronics']
+[2025-06-27 23:24:06,094] INFO services [AI_SEARCH_DEBUG] Direct matches: ['Electronics']
+[2025-06-27 23:24:06,094] INFO services [AI_SEARCH_DEBUG] Concept matches: []
+[2025-06-27 23:24:06,094] INFO services [AI_SEARCH_DEBUG] Final selected tags: ['Electronics']
+[2025-06-27 23:24:06,094] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['Electronics']
+[2025-06-27 23:24:11,138] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me trending electronics
+[2025-06-27 23:24:13,556] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:24:13,557] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: Find wireless headphones with good battery life
+[2025-06-27 23:24:45,615] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=30)
+[2025-06-27 23:24:45,616] INFO services [AI_SEARCH_DEBUG] Query words: ['find', 'wireless', 'headphones', 'with', 'good', 'battery', 'life']
+[2025-06-27 23:24:45,616] INFO services [AI_SEARCH_DEBUG] Direct matches: []
+[2025-06-27 23:24:45,616] INFO services [AI_SEARCH_DEBUG] Concept matches: ['wireless', 'bluetooth', 'headphones', 'earbuds', 'audio', 'long-battery', 'rechargeable', 'smartphone', '5g']
+[2025-06-27 23:24:45,616] INFO services [AI_SEARCH_DEBUG] Final selected tags: []
+[2025-06-27 23:24:45,616] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: []
+[2025-06-27 23:43:31,599] INFO views Token refreshed successfully for user
+[2025-06-27 23:43:31,670] INFO views Token refreshed successfully for user
+[2025-06-27 23:44:11,793] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me trending electronics
+[2025-06-27 23:44:13,242] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Find wireless headphones with good battery life
+[2025-06-27 23:44:14,189] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me the best smartphones under $500
+[2025-06-27 23:44:15,914] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:44:15,914] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: Recommend laptops for students
+[2025-06-27 23:44:21,740] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Find wireless headphones with good battery life
+[2025-06-27 23:44:22,519] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me trending electronics
+[2025-06-27 23:44:23,588] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:44:23,588] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: Recommend laptops for students
+[2025-06-27 23:44:47,960] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=30)
+[2025-06-27 23:44:47,960] INFO services [AI_SEARCH_DEBUG] Query words: ['recommend', 'laptops', 'for', 'students']
+[2025-06-27 23:44:47,960] INFO services [AI_SEARCH_DEBUG] Direct matches: []
+[2025-06-27 23:44:47,960] INFO services [AI_SEARCH_DEBUG] Concept matches: ['laptop']
+[2025-06-27 23:44:47,960] INFO services [AI_SEARCH_DEBUG] Final selected tags: []
+[2025-06-27 23:44:47,960] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: []
+[2025-06-27 23:44:48,053] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: 500 Server Error: Internal Server Error for url: http://localhost:11434/api/generate
+[2025-06-27 23:44:48,053] INFO services [AI_SEARCH_DEBUG] Query words: ['recommend', 'laptops', 'for', 'students']
+[2025-06-27 23:44:48,053] INFO services [AI_SEARCH_DEBUG] Direct matches: []
+[2025-06-27 23:44:48,054] INFO services [AI_SEARCH_DEBUG] Concept matches: ['laptop']
+[2025-06-27 23:44:48,054] INFO services [AI_SEARCH_DEBUG] Final selected tags: []
+[2025-06-27 23:44:48,054] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: []
+[2025-06-27 23:44:57,795] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:44:57,795] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: nice jewelry
+[2025-06-27 23:45:16,629] INFO services [AI_SEARCH_DEBUG] AI response: [
+  "jewelry",
+  "beautiful",
+  "braclet",
+  "ring",
+  "gold",
+  "silver",
+  "diamond"
+]
+[2025-06-27 23:45:16,629] INFO services [AI_SEARCH_DEBUG] AI selected tags: ['beautiful', 'braclet', 'ring', 'gold', 'silver', 'diamond']
+[2025-06-27 23:45:16,629] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['beautiful', 'braclet', 'ring', 'gold', 'silver', 'diamond']
+[2025-06-27 23:50:04,492] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:50:04,493] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: a present for my wife
+[2025-06-27 23:50:16,414] INFO services [AI_SEARCH_DEBUG] AI response: [
+  "present for women",
+  "beautiful",
+  "jewelry",
+  "ring",
+  "diamond",
+  "silver",
+  "cross",
+  "bracelet"
+]
+[2025-06-27 23:50:16,414] INFO services [AI_SEARCH_DEBUG] AI selected tags: ['present for women', 'beautiful', 'ring', 'diamond', 'silver', 'cross']
+[2025-06-27 23:50:16,414] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['present for women', 'beautiful', 'ring', 'diamond', 'silver', 'cross']
+[2025-06-27 23:50:43,220] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:50:43,220] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: a girf for my daughter
+[2025-06-27 23:50:52,248] INFO services [AI_SEARCH_DEBUG] AI response: [
+  "present for girls",
+  "beautiful",
+  "ring",
+  "bracelet",
+  "silver",
+  "gold",
+  "diamond"
+]
+[2025-06-27 23:50:52,248] INFO services [AI_SEARCH_DEBUG] AI selected tags: ['present for girls', 'beautiful', 'ring', 'silver', 'gold', 'diamond']
+[2025-06-27 23:50:52,248] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['present for girls', 'beautiful', 'ring', 'silver', 'gold', 'diamond']
+[2025-06-27 23:51:07,743] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:51:07,744] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: something to quench my thirst
+[2025-06-27 23:51:17,228] INFO services [AI_SEARCH_DEBUG] AI response: [
+  "drink",
+  "fizzy",
+  "juice",
+  "lemonade",
+  "water",
+  "tomato",
+  "spicy",
+  "sweet"
+]
+[2025-06-27 23:51:17,229] INFO services [AI_SEARCH_DEBUG] AI selected tags: ['drink', 'fizzy', 'juice', 'lemonade', 'water', 'tomato', 'spicy', 'sweet']
+[2025-06-27 23:51:17,229] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['drink', 'fizzy', 'juice', 'lemonade', 'water', 'tomato', 'spicy', 'sweet']
+[2025-06-27 23:55:29,844] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:55:29,844] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: a ring
+[2025-06-27 23:55:39,426] INFO services [AI_SEARCH_DEBUG] AI response: [
+  "ring",
+  "beautiful",
+  "diamond",
+  "gold",
+  "silver",
+  "present for girls",
+  "present for women"
+]
+[2025-06-27 23:55:39,427] INFO services [AI_SEARCH_DEBUG] AI selected tags: ['ring', 'beautiful', 'diamond', 'gold', 'silver', 'present for girls', 'present for women']
+[2025-06-27 23:55:39,427] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['ring', 'beautiful', 'diamond', 'gold', 'silver', 'present for girls', 'present for women']
+[2025-06-27 23:57:21,271] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Find wireless headphones with good battery life
+[2025-06-27 23:57:29,791] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me trending electronics
+[2025-06-27 23:57:39,037] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Recommend laptops for students
+[2025-06-27 23:57:40,937] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me the best smartphones under $500
+[2025-06-27 23:58:21,937] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-27 23:58:21,938] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: nice silver jewelry
+[2025-06-27 23:58:31,081] INFO services [AI_SEARCH_DEBUG] AI response: [
+  "jewelry",
+  "silver",
+  "beautiful",
+  "bracelet",
+  "ring",
+  "cross",
+  "diamond"
+]
+[2025-06-27 23:58:31,081] INFO services [AI_SEARCH_DEBUG] AI selected tags: ['silver', 'beautiful', 'ring', 'cross', 'diamond']
+[2025-06-27 23:58:31,081] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['silver', 'beautiful', 'ring', 'cross', 'diamond']
+[2025-06-27 23:58:56,934] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: nice silver jewelry
+[2025-06-27 23:59:29,790] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: nice silver jewelry
+[2025-06-28 00:00:41,378] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Recommend laptops for students
+[2025-06-28 00:00:42,468] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me the best smartphones under $500
+[2025-06-28 00:00:43,925] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me the best smartphones under $500
+[2025-06-28 00:00:44,340] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me the best smartphones under $500
+[2025-06-28 00:00:44,547] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me the best smartphones under $500
+[2025-06-28 00:00:44,748] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me the best smartphones under $500
+[2025-06-28 00:02:26,298] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: a present for my wife
+[2025-06-28 00:05:26,136] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me the best smartphones under $500
+[2025-06-28 00:05:27,283] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Find wireless headphones with good battery life
+[2025-06-28 00:05:28,558] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Show me trending electronics
+[2025-06-28 00:05:29,184] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: Recommend laptops for students
+[2025-06-28 00:05:44,286] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: a present for my wife
+[2025-06-28 00:10:51,399] INFO views Token refreshed successfully for user
+[2025-06-28 00:10:51,480] INFO views Token refreshed successfully for user
+[2025-06-28 00:40:52,621] INFO views Token refreshed successfully for user
+[2025-06-28 00:40:52,707] INFO views Token refreshed successfully for user
+[2025-06-28 13:45:06,363] INFO autoreload Watching for file changes with StatReloader
+[2025-06-28 13:45:06,837] INFO urls === Registering Vendor URLs ===
+[2025-06-28 13:45:06,837] INFO urls === Registering Vendor URLs ===
+[2025-06-28 13:45:06,838] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-28 13:45:06,838] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-28 14:16:41,050] INFO autoreload Watching for file changes with StatReloader
+[2025-06-28 14:16:41,149] INFO urls === Registering Vendor URLs ===
+[2025-06-28 14:16:41,149] INFO urls === Registering Vendor URLs ===
+[2025-06-28 14:16:41,151] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-28 14:16:41,151] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-28 14:20:38,966] INFO autoreload Watching for file changes with StatReloader
+[2025-06-28 14:20:41,576] INFO urls === Registering Vendor URLs ===
+[2025-06-28 14:20:41,576] INFO urls === Registering Vendor URLs ===
+[2025-06-28 14:20:41,579] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-28 14:20:41,579] INFO urls Registered URLs: ["<URLPattern '^products/$' [name='product-list']>", "<URLPattern '^products\\.(?P<format>[a-z0-9]+)/?$' [name='product-list']>", "<URLPattern '^products/my_products/$' [name='product-my-products']>", "<URLPattern '^products/my_products\\.(?P<format>[a-z0-9]+)/?$' [name='product-my-products']>", "<URLPattern '^products/(?P<pk>[^/.]+)/$' [name='product-detail']>", "<URLPattern '^products/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='product-detail']>", "<URLPattern '^$' [name='vendor-list']>", "<URLPattern '^\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-list']>", "<URLPattern '^my_vendor/$' [name='vendor-my-vendor']>", "<URLPattern '^my_vendor\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-my-vendor']>", "<URLPattern '^register/$' [name='vendor-register']>", "<URLPattern '^register\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-register']>", "<URLPattern '^(?P<pk>[^/.]+)/$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-detail']>", "<URLPattern '^(?P<pk>[^/.]+)/products/$' [name='vendor-products']>", "<URLPattern '^(?P<pk>[^/.]+)/products\\.(?P<format>[a-z0-9]+)/?$' [name='vendor-products']>", "<URLPattern '' [name='api-root']>", "<URLPattern '<drf_format_suffix:format>' [name='api-root']>"]
+[2025-06-28 14:20:58,328] WARNING log Not Found: /
+[2025-06-28 14:20:58,328] WARNING log Not Found: /
+[2025-06-28 14:27:46,092] INFO serializers User authenticated via email: beta@gmail.com

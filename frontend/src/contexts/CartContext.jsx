@@ -131,8 +131,32 @@ export function CartProvider({ children }) {
                 quantity
             })
             
-            console.log('[CartContext] Item added successfully, refreshing cart')
-            await fetchCart() // Refresh cart after adding
+            console.log('[CartContext] Item added successfully, updating cart state')
+            
+            // Instead of full refresh, update cart state intelligently
+            if (response.data && cart) {
+                const existingItemIndex = cart.items.findIndex(item => item.product.id === productId)
+                
+                if (existingItemIndex >= 0) {
+                    // Update existing item quantity
+                    setCart(prevCart => ({
+                        ...prevCart,
+                        items: prevCart.items.map((item, index) => 
+                            index === existingItemIndex 
+                                ? { ...item, quantity: item.quantity + quantity }
+                                : item
+                        )
+                    }))
+                } else {
+                    // Add new item - we need to fetch product details, so do a targeted refresh
+                    await fetchCart()
+                }
+            } else {
+                // If no current cart, fetch it
+                await fetchCart()
+            }
+            
+            setLoading(false)
             return response.data
         } catch (error) {
             console.error('[CartContext] Error adding to cart:', error)
@@ -141,35 +165,106 @@ export function CartProvider({ children }) {
         }
     }
 
+    // Helper function to calculate cart totals
+    const calculateCartTotals = (items) => {
+        if (!items || items.length === 0) {
+            return { subtotal: 0, total: 0, totalItems: 0 }
+        }
+        
+        const subtotal = items.reduce((sum, item) => {
+            const price = parseFloat(item.product.price || 0)
+            const quantity = parseInt(item.quantity || 0)
+            return sum + (price * quantity)
+        }, 0)
+        
+        // For now, total equals subtotal (can add tax/shipping later)
+        const total = subtotal
+        const totalItems = items.reduce((sum, item) => sum + parseInt(item.quantity || 0), 0)
+        
+        return { subtotal, total, totalItems }
+    }
+
     const updateCartItem = async (productId, quantity) => {
         try {
-            setLoading(true)
             console.log(`[CartContext] Updating item ${productId} to quantity ${quantity}`) 
+            
             if (quantity <= 0) {
                 await removeFromCart(productId)
-            } else {
-                await api.patch(
-                    `/api/cart/items/${productId}/`,
-                    { quantity }
+                return
+            }
+
+            // Optimistically update the cart state first for instant UI feedback
+            if (cart && cart.items) {
+                const updatedItems = cart.items.map(item => 
+                    item.product.id === productId 
+                        ? { ...item, quantity: quantity }
+                        : item
                 )
-                await fetchCart() // Refresh cart after update
+                
+                const totals = calculateCartTotals(updatedItems)
+                
+                setCart(prevCart => ({
+                    ...prevCart,
+                    items: updatedItems,
+                    ...totals
+                }))
+            }
+
+            // Then update the backend
+            const response = await api.patch(
+                `/api/cart/items/${productId}/`,
+                { quantity }
+            )
+
+            // Update cart state with the response data if it includes updated totals
+            if (response.data && cart) {
+                const updatedItems = cart.items.map(item => 
+                    item.product.id === productId 
+                        ? { ...item, quantity: response.data.quantity || quantity }
+                        : item
+                )
+                
+                const totals = calculateCartTotals(updatedItems)
+                
+                setCart(prevCart => ({
+                    ...prevCart,
+                    items: updatedItems,
+                    // Use backend totals if provided, otherwise use calculated ones
+                    ...(response.data.cart_total ? { total: response.data.cart_total } : totals)
+                }))
             }
         } catch (error) {
             console.error('[CartContext] Error updating cart:', error)
-            setLoading(false)
+            // On error, refresh the cart to ensure consistency
+            await fetchCart()
             throw error
         }
     }
 
     const removeFromCart = async (productId) => {
         try {
-            setLoading(true)
             console.log(`[CartContext] Removing item ${productId}`) 
+            
+            // Optimistically update the cart state first for instant UI feedback
+            if (cart && cart.items) {
+                const updatedItems = cart.items.filter(item => item.product.id !== productId)
+                const totals = calculateCartTotals(updatedItems)
+                
+                setCart(prevCart => ({
+                    ...prevCart,
+                    items: updatedItems,
+                    ...totals
+                }))
+            }
+
+            // Then update the backend
             await api.delete(`/api/cart/items/${productId}/`)
-            await fetchCart() // Refresh cart after removal
+            
+            // No need to refetch the entire cart since we've already updated the state
         } catch (error) {
             console.error('[CartContext] Error removing from cart:', error)
-            setLoading(false)
+            // On error, refresh the cart to ensure consistency
+            await fetchCart()
             throw error
         }
     }
