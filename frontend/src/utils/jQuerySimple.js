@@ -137,11 +137,17 @@ const initOwlCarousels = () => {
   try {
     if (!jQuery.fn.owlCarousel) return;
     
-    jQuery('.owl-carousel:not(.owl-loaded)').each(function() {
+    // Exclude React-managed containers to prevent conflicts
+    jQuery('.owl-carousel:not(.owl-loaded)').not('[data-react-managed]').each(function() {
       const $this = jQuery(this);
       
       // Skip if already initialized
       if ($this.data('owl.carousel')) {
+        return;
+      }
+      
+      // Skip if inside a React component container
+      if ($this.closest('[data-reactroot], .react-component, [id*="react"]').length > 0) {
         return;
       }
       

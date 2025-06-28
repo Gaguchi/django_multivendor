@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { setupImageZoom } from '../../utils/imageZoom'
+import styles from './Images.module.css'
 
 export default function Images({ product, selectedImage, setSelectedImage }) {
   // Extract image URLs from the product.images array
@@ -8,439 +9,504 @@ export default function Images({ product, selectedImage, setSelectedImage }) {
   // Combine thumbnail with additional images
   const allImages = [product.thumbnail, ...imageUrls]
   
-  const carouselRef = useRef(null)
-  const carouselContainerRef = useRef(null)
-  const thumbsRef = useRef(null)
-  const thumbsWrapRef = useRef(null)
-  const thumbUpRef = useRef(null)
-  const thumbDownRef = useRef(null)
-  const zoomContainerRef = useRef(null)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const [thumbsScrollPosition, setThumbsScrollPosition] = useState(0)
+  const [canScrollUp, setCanScrollUp] = useState(false)
+  const [canScrollDown, setCanScrollDown] = useState(true)
+  const [imageLoaded, setImageLoaded] = useState(false)
   
-  // Use fixed height instead of dynamic state to prevent recursive updates
-  const fixedHeightRef = useRef(null)
+  // Force zoom reset flag to trigger complete rebuild
+  const [forceZoomReset, setForceZoomReset] = useState(0)
+  
+  const mainImageRef = useRef(null)
+  const thumbsContainerRef = useRef(null)
+  const thumbsWrapRef = useRef(null)
+  const zoomContainerRef = useRef(null)
+  const thumbnailsSectionRef = useRef(null)
   
   // Debug mode toggle for zoom functionality
   const DEBUG_ZOOM = true
-  
-  // Function to adjust thumbnails wrapper height
-  const adjustThumbsHeight = () => {
-    if (carouselContainerRef.current && thumbsWrapRef.current) {
-      // Get the actual height of the carousel container
-      const carouselHeight = carouselContainerRef.current.clientHeight;
-      
-      // Limit maximum height to prevent infinite growth
-      const maxHeight = 220; // Maximum reasonable height in pixels
-      const newHeight = Math.min(carouselHeight, maxHeight);
-      
-      // Set fixed height reference
-      fixedHeightRef.current = newHeight;
-      
-      // Apply directly to the DOM element
-      if (thumbsWrapRef.current) {
-        thumbsWrapRef.current.style.height = `${newHeight}px`;
-      }
-    }
-  };
 
+  // Handle thumbnail navigation
+  const scrollThumbs = useCallback((direction) => {
+    if (!thumbsContainerRef.current || !thumbsWrapRef.current) return
+    
+    const thumbHeight = 95 // thumbnail height + margin
+    const containerHeight = thumbsWrapRef.current.clientHeight
+    const totalHeight = allImages.length * thumbHeight
+    const maxScroll = Math.max(0, totalHeight - containerHeight)
+    
+    let newPosition = thumbsScrollPosition
+    if (direction === 'up') {
+      newPosition = Math.max(0, thumbsScrollPosition - thumbHeight * 2)
+    } else {
+      newPosition = Math.min(maxScroll, thumbsScrollPosition + thumbHeight * 2)
+    }
+    
+    setThumbsScrollPosition(newPosition)
+    setCanScrollUp(newPosition > 0)
+    setCanScrollDown(newPosition < maxScroll)
+    
+    // Apply smooth scroll
+    if (thumbsContainerRef.current) {
+      thumbsContainerRef.current.style.transform = `translateY(-${newPosition}px)`
+    }
+  }, [thumbsScrollPosition, allImages.length])
+
+  // Handle image selection with zoom cleanup
+  const handleImageSelect = useCallback((index, source = 'unknown') => {
+    console.log(`IMG ${selectedImage}→${index} [${source}] load:${imageLoaded}`)
+    
+    setSelectedImage(index)
+    setImageLoaded(false)
+    
+    // Force complete zoom cleanup and DOM reset for new image
+    if (zoomContainerRef.current) {
+      // Remove ALL existing zoom elements globally
+      const existingLens = document.querySelectorAll('.img-zoom-lens');
+      const existingResult = document.querySelectorAll('.img-zoom-result');
+      existingLens.forEach(el => el.remove());
+      existingResult.forEach(el => el.remove());
+      
+      // Clear any mouseover states
+      if (zoomContainerRef.current.style) {
+        zoomContainerRef.current.style.cursor = 'crosshair';
+      }
+      
+      // Force zoom system rebuild by incrementing reset counter
+      setForceZoomReset(prev => prev + 1);
+      
+      console.log(`CLEANUP [${source}] lens:${existingLens.length} result:${existingResult.length}`)
+    }
+  }, [setSelectedImage, selectedImage, imageLoaded])
+
+  // Handle navigation arrows with enhanced logging
+  const handlePrevImage = useCallback(() => {
+    const newIndex = selectedImage > 0 ? selectedImage - 1 : allImages.length - 1
+    console.log(`⬅️ PREV ${selectedImage}→${newIndex}`)
+    handleImageSelect(newIndex, 'prev-arrow')
+  }, [selectedImage, allImages.length, handleImageSelect])
+
+  const handleNextImage = useCallback(() => {
+    const newIndex = selectedImage < allImages.length - 1 ? selectedImage + 1 : 0
+    console.log(`➡️ NEXT ${selectedImage}→${newIndex}`)
+    handleImageSelect(newIndex, 'next-arrow')
+  }, [selectedImage, allImages.length, handleImageSelect])
+
+  // Handle fullscreen toggle
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(!isFullscreen)
+  }, [isFullscreen])
+
+  // Handle keyboard navigation
+  const handleKeyDown = useCallback((e) => {
+    if (!isFullscreen) return
+    
+    console.log(`⌨️ KEY ${e.key} img:${selectedImage} fs:${isFullscreen}`)
+    
+    switch (e.key) {
+      case 'ArrowLeft':
+        e.preventDefault()
+        handlePrevImage()
+        break
+      case 'ArrowRight':
+        e.preventDefault()
+        handleNextImage()
+        break
+      case 'Escape':
+        console.log('⌨️ ESC - exit fullscreen')
+        e.preventDefault()
+        setIsFullscreen(false)
+        break
+    }
+  }, [isFullscreen, handlePrevImage, handleNextImage, selectedImage])
+
+  // Setup zoom and event listeners
   useEffect(() => {
-    let owlCarousel = null;
-    let zoomCleanup = null;
+    let zoomCleanup = null
     
-    // Initialize main carousel
-    if (carouselRef.current) {
-      owlCarousel = $(carouselRef.current);
-      
-      owlCarousel.owlCarousel({
-        items: 1,
-        nav: true,
-        navText: ['<i class="icon-angle-left"></i>', '<i class="icon-angle-right"></i>'],
-        dots: false,
-        loop: false,
-        margin: 0,
-        autoplay: false,
-        startPosition: selectedImage,
-        onInitialized: () => {
-          // Adjust heights after carousel is fully initialized with a slight delay
-          setTimeout(() => {
-            adjustThumbsHeight();
-            
-            // Setup zoom with debugging enabled
-            if (zoomCleanup) zoomCleanup(); // Clean up previous zoom
-            zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
-          }, 200);
-        },
-        onChanged: (e) => {
-          setSelectedImage(e.item.index);
-          
-          // Update active thumbnail
-          if (thumbsRef.current) {
-            $(thumbsRef.current).find('.owl-dot').removeClass('active');
-            $(thumbsRef.current).find(`.owl-dot:eq(${e.item.index})`).addClass('active');
-          }
-          
-          // Update zoom for new image
-          setTimeout(() => {
-            if (zoomCleanup) zoomCleanup(); // Clean up previous zoom
-            zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
-          }, 100);
+    // Only setup zoom when image is loaded and container is ready
+    if (!imageLoaded || !zoomContainerRef.current) {
+      if (DEBUG_ZOOM) {
+        console.log(`⏳ ZOOM skip load:${imageLoaded} cont:${!!zoomContainerRef.current}`)
+      }
+      return
+    }
+    
+    // Small delay to ensure image is fully rendered
+    const setupTimer = setTimeout(() => {
+      if (zoomContainerRef.current) {
+        if (DEBUG_ZOOM) {
+          console.log(`ZOOM setup img:${selectedImage} reset:${forceZoomReset}`)
         }
-      });
-      
-      // Sync carousel with selected image
-      if (selectedImage !== 0) {
-        owlCarousel.trigger('to.owl.carousel', [selectedImage, 300, true]);
+        zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM)
       }
-    }
+    }, 100)
     
-    // Setup thumbnails
-    if (thumbsRef.current) {
-      // Set active state on thumbnail click
-      $(thumbsRef.current).find('.owl-dot').on('click', function() {
-        $(thumbsRef.current).find('.owl-dot').removeClass('active');
-        $(this).addClass('active');
-        const index = $(this).index();
-        setSelectedImage(index);
-        
-        if (owlCarousel) {
-          owlCarousel.trigger('to.owl.carousel', [index, 300, true]);
-        }
-        
-        // Update zoom for selected image
-        setTimeout(() => {
-          if (zoomCleanup) zoomCleanup(); // Clean up previous zoom
-          zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
-        }, 100);
-      });
-    }
-    
-    // Add thumb navigation
-    const $thumbsWrap = $(thumbsWrapRef.current);
-    const $productThumbs = $thumbsWrap.find('.product-thumbs');
-    
-    // Function to check and update buttons state
-    const updateNavButtonState = () => {
-      if (!thumbsWrapRef.current || !thumbUpRef.current || !thumbDownRef.current) return;
-      
-      const wrapHeight = $thumbsWrap.height();
-      const currentTop = parseInt($productThumbs.css('top'), 10) || 0;
-      const thumbsHeight = $productThumbs.height();
-      
-      // Enable/disable up button
-      if (currentTop >= 0) {
-        thumbUpRef.current.classList.add('disabled');
-      } else {
-        thumbUpRef.current.classList.remove('disabled');
-      }
-      
-      // Enable/disable down button
-      if (wrapHeight >= thumbsHeight + currentTop) {
-        thumbDownRef.current.classList.add('disabled');
-      } else {
-        thumbDownRef.current.classList.remove('disabled');
-      }
-    };
-    
-    // Initial button state check after images load
-    setTimeout(updateNavButtonState, 500);
-    
-    // Up button click handler using React refs
-    const handleThumbUp = () => {
-      if (!thumbUpRef.current || !thumbsWrapRef.current) return;
-      if (thumbUpRef.current.classList.contains('disabled')) return;
-      
-      const currentTop = parseInt($productThumbs.css('top'), 10) || 0;
-      const newTop = Math.min(currentTop + 100, 0);
-      
-      $productThumbs.css('top', newTop + 'px');
-      updateNavButtonState();
-    };
-    
-    // Down button click handler using React refs
-    const handleThumbDown = () => {
-      if (!thumbDownRef.current || !thumbsWrapRef.current) return;
-      if (thumbDownRef.current.classList.contains('disabled')) return;
-      
-      const wrapHeight = $thumbsWrap.height();
-      const currentTop = parseInt($productThumbs.css('top'), 10) || 0;
-      const thumbsHeight = $productThumbs.height();
-      
-      // Only scroll down if there's more content to show
-      if (wrapHeight < thumbsHeight + currentTop) {
-        const newTop = Math.max(currentTop - 100, wrapHeight - thumbsHeight);
-        $productThumbs.css('top', newTop + 'px');
-        updateNavButtonState();
-      }
-    };
-    
-    // Attach event listeners directly to the button elements
-    const upButton = thumbUpRef.current;
-    const downButton = thumbDownRef.current;
-    
-    if (upButton) {
-      upButton.addEventListener('click', handleThumbUp);
-    }
-    
-    if (downButton) {
-      downButton.addEventListener('click', handleThumbDown);
-    }
-    
-    // Handle window resize to recalculate button states and adjust heights
-    const handleResize = () => {
-      // Use a debounced approach to avoid multiple rapid adjustments
-      clearTimeout(window.resizeTimer);
-      window.resizeTimer = setTimeout(() => {
-        adjustThumbsHeight();
-        updateNavButtonState();
-        
-        // Re-initialize zoom on resize
-        if (zoomCleanup) zoomCleanup();
-        zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
-      }, 250);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    
-    // Handle image load events
-    const imageLoadHandler = () => {
-      adjustThumbsHeight();
-      
-      // Re-initialize zoom when images load
-      if (zoomCleanup) zoomCleanup();
-      zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
-    };
-    
-    const carouselImages = document.querySelectorAll('.product-single-image');
-    carouselImages.forEach(img => {
-      img.addEventListener('load', imageLoadHandler);
-    });
-    
-    // Run the height adjustment once initially
-    adjustThumbsHeight();
-    
-    // Setup zoom initially
-    zoomCleanup = setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM);
-    
-    // Clean up function
+    // Cleanup function
     return () => {
-      // Destroy carousel instances
-      if (owlCarousel) {
-        owlCarousel.trigger('destroy.owl.carousel');
-      }
-      
-      // Clean up zoom
+      clearTimeout(setupTimer)
       if (zoomCleanup) {
-        zoomCleanup();
+        if (DEBUG_ZOOM) console.log('ZOOM cleanup effect')
+        zoomCleanup()
+        zoomCleanup = null
       }
-      
-      // Remove event listeners
-      if (thumbsRef.current) {
-        $(thumbsRef.current).find('.owl-dot').off('click');
-      }
-      
-      if (upButton) {
-        upButton.removeEventListener('click', handleThumbUp);
-      }
-      
-      if (downButton) {
-        downButton.removeEventListener('click', handleThumbDown);
-      }
-      
-      window.removeEventListener('resize', handleResize);
-      
-      carouselImages.forEach(img => {
-        img.removeEventListener('load', imageLoadHandler);
-      });
-      
-      // Clear any pending resize timers
-      clearTimeout(window.resizeTimer);
-    };
-  }, [allImages, selectedImage, setSelectedImage, DEBUG_ZOOM]);
-  
-  // Get height from ref instead of state
-  const getThumbsWrapStyles = () => {
-    return {
-      height: fixedHeightRef.current ? `${fixedHeightRef.current}px` : '500px',
-      overflow: 'hidden'
-    };
-  };
-  
-  const productThumbsStyles = {
-    position: 'relative',
-    top: 0,
-    transition: 'top 0.3s ease'
-  };
-  
-  const thumbStyles = {
-    marginBottom: '15px',
-    cursor: 'pointer',
-    maxWidth: '100%',
-    transition: 'all 0.3s ease'
-  };
+    }
+  }, [selectedImage, imageLoaded, forceZoomReset, DEBUG_ZOOM])
 
-  // Apply responsive styles using CSS classes
-  const getResponsiveClasses = () => {
-    return "product-single-gallery pg-vertical responsive-gallery";
-  };
+  // Separate effect for keyboard events
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [handleKeyDown])
+
+  // Initial height sync on component mount
+  useEffect(() => {
+    const initialSync = () => {
+      if (zoomContainerRef.current && thumbnailsSectionRef.current) {
+        const containerHeight = zoomContainerRef.current.offsetHeight
+        if (containerHeight > 0) {
+          thumbnailsSectionRef.current.style.height = `${containerHeight}px`
+        }
+      }
+    }
+
+    // Try to sync initially with a small delay
+    const timer = setTimeout(initialSync, 300)
+    
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Debug effect to track image changes
+  useEffect(() => {
+    console.log(`🔄 IMG change ${selectedImage} src:${allImages[selectedImage]?.slice(-20)} load:${imageLoaded}`)
+  }, [selectedImage, allImages, imageLoaded])
+
+  // Debug effect to track image load state changes
+  useEffect(() => {
+    console.log(`🔄 LOAD state:${imageLoaded} img:${selectedImage} w:${mainImageRef.current?.naturalWidth || 0}x${mainImageRef.current?.naturalHeight || 0}`)
+  }, [imageLoaded])
+
+  // Update thumbnail scroll buttons
+  useEffect(() => {
+    if (!thumbsWrapRef.current || allImages.length <= 5) {
+      setCanScrollUp(false)
+      setCanScrollDown(false)
+      return
+    }
+    
+    const thumbHeight = 95
+    const containerHeight = thumbsWrapRef.current.clientHeight
+    const totalHeight = allImages.length * thumbHeight
+    const maxScroll = Math.max(0, totalHeight - containerHeight)
+    
+    setCanScrollUp(thumbsScrollPosition > 0)
+    setCanScrollDown(thumbsScrollPosition < maxScroll)
+  }, [thumbsScrollPosition, allImages.length])
+
+  // Handle image load
+  const handleImageLoad = useCallback(() => {
+    console.log(`📸 LOAD img:${selectedImage} w:${mainImageRef.current?.naturalWidth || 0}`)
+    
+    setImageLoaded(true)
+    
+    // Sync thumbnails section to match the main image container height
+    setTimeout(() => {
+      if (zoomContainerRef.current && thumbnailsSectionRef.current) {
+        const containerHeight = zoomContainerRef.current.offsetHeight
+        console.log(`📏 HEIGHT sync:${containerHeight}`)
+        if (containerHeight > 0) {
+          // Set thumbnails section to match the square container height
+          thumbnailsSectionRef.current.style.height = `${containerHeight}px`
+        }
+      }
+    }, 100)
+  }, [selectedImage, allImages])
+
+  // Sync container heights when image changes or window resizes
+  useEffect(() => {
+    const syncHeights = () => {
+      if (zoomContainerRef.current && thumbnailsSectionRef.current) {
+        const containerHeight = zoomContainerRef.current.offsetHeight
+        if (containerHeight > 0) {
+          // Ensure thumbnails section matches the square container height
+          thumbnailsSectionRef.current.style.height = `${containerHeight}px`
+        }
+      }
+    }
+
+    // Create resize observer to watch for container size changes
+    let resizeObserver = null
+    if (zoomContainerRef.current) {
+      resizeObserver = new ResizeObserver(syncHeights)
+      resizeObserver.observe(zoomContainerRef.current)
+    }
+
+    return () => {
+      if (resizeObserver) {
+        resizeObserver.disconnect()
+      }
+    }
+  }, [selectedImage, imageLoaded])
 
   return (
     <>
       {/* Image Gallery */}
-      <div className="col-12 col-lg-4">
-        <div className={getResponsiveClasses()}>
-          <div className="product-slider-container" ref={carouselContainerRef}>
-            <div 
-              ref={carouselRef} 
-              className="product-single-carousel owl-carousel owl-theme show-nav-hover"
-            >
-              {allImages.map((img, idx) => (
-                <div key={idx} className="product-item">
-                  <img 
-                    className="product-single-image" 
-                    src={img}
-                    alt={`${product.name}-${idx}`} 
-                    style={{ width: '100%', height: 'auto' }}
-                  />
+      <div className="col-12 col-lg-4" data-react-managed="true">
+        <div className={styles.modernProductGallery}>
+          {/* Main Image Container */}
+          <div 
+            className={styles.mainImageContainer} 
+            ref={zoomContainerRef}
+            onMouseEnter={(e) => {
+              console.log(`🖱️ ENTER load:${imageLoaded} zoom:${!!zoomContainerRef.current}`)
+              
+              // Force cleanup any stale zoom elements before hover starts
+              const existingLens = document.querySelectorAll('.img-zoom-lens');
+              const existingResult = document.querySelectorAll('.img-zoom-result');
+              if (existingLens.length > 0 || existingResult.length > 0) {
+                console.log(`🧹 ENTER cleanup lens:${existingLens.length} result:${existingResult.length}`);
+                existingLens.forEach(el => el.remove());
+                existingResult.forEach(el => el.remove());
+              }
+            }}
+            onMouseLeave={(e) => {
+              console.log(`🖱️ LEAVE`)
+            }}
+            onMouseMove={(e) => {
+              if (DEBUG_ZOOM) {
+                console.log(`🖱️ MOVE x:${e.clientX},${e.clientY} rel:${e.nativeEvent.offsetX},${e.nativeEvent.offsetY}`)
+              }
+            }}
+            onClick={(e) => {
+              console.log(`🖱️ CLICK cont img:${selectedImage} load:${imageLoaded} lens:${!!document.querySelector('.img-zoom-lens')}`)
+              
+              // Force zoom recalculation on click to handle image changes
+              if (zoomContainerRef.current && imageLoaded) {
+                // Clear existing zoom elements
+                const existingLens = document.querySelector('.img-zoom-lens');
+                const existingResult = document.querySelector('.img-zoom-result');
+                if (existingLens) existingLens.remove();
+                if (existingResult) existingResult.remove();
+                
+                if (DEBUG_ZOOM) {
+                  console.log('🔄 FORCE zoom recalc after click');
+                }
+                
+                // Re-setup zoom with fresh calculations
+                setTimeout(() => {
+                  if (imageLoaded && mainImageRef.current && zoomContainerRef.current) {
+                    setupImageZoom(zoomContainerRef.current, DEBUG_ZOOM)
+                  }
+                }, 100)
+              }
+            }}
+          >
+            <div className={styles.imageWrapper}>
+              <img 
+                ref={mainImageRef}
+                className={styles.mainProductImage} 
+                src={allImages[selectedImage]}
+                alt={`${product.name}-${selectedImage}`}
+                onLoad={handleImageLoad}
+                onClick={(e) => {
+                  console.log(`🖱️ CLICK img w:${e.target.naturalWidth} h:${e.target.naturalHeight} comp:${e.target.complete}`)
+                  
+                  // Prevent event bubbling to container
+                  e.stopPropagation()
+                }}
+              />
+              
+              {/* Loading indicator */}
+              {!imageLoaded && (
+                <div className={styles.imageLoader}>
+                  <div className={styles.spinner}></div>
                 </div>
-              ))}
-            </div>
-
-            {/* Custom zoom container - now with explicit positioning context */}
-            <div ref={zoomContainerRef} className="product-zoom-container"></div>
-            
-            <span className="prod-full-screen">
-              <i className="icon-plus"></i>
-            </span>
-          </div>
-
-          <div className="vertical-thumbs">
-            <button 
-              ref={thumbUpRef} 
-              className="thumb-up disabled"
-              type="button"
-            >
-              <i className="icon-angle-up"></i>
-            </button>
-            <div className="product-thumbs-wrap" ref={thumbsWrapRef} style={getThumbsWrapStyles()}>
-              <div 
-                ref={thumbsRef} 
-                className="product-thumbs owl-dots" 
-                id="carousel-custom-dots" 
-                style={productThumbsStyles}
-              >
-                {allImages.map((img, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`owl-dot ${selectedImage === idx ? 'active' : ''}`}
-                    style={thumbStyles}
+              )}
+              
+              {/* Navigation Arrows */}
+              {allImages.length > 1 && (
+                <>
+                  <button 
+                    className={`${styles.navArrow} ${styles.navArrowLeft}`}
+                    onClick={(e) => {
+                      console.log(`⬅️ ARROW L ${selectedImage}`)
+                      handlePrevImage()
+                    }}
+                    type="button"
+                    aria-label="Previous image"
                   >
-                    <img 
-                      src={img} 
-                      alt={`${product.name}-thumbnail-${idx}`}
-                      style={{width: '100%', height: 'auto'}}
-                      draggable="false"
-                    />
-                  </div>
-                ))}
-              </div>
+                    <i className="fas fa-chevron-left"></i>
+                  </button>
+                  <button 
+                    className={`${styles.navArrow} ${styles.navArrowRight}`}
+                    onClick={(e) => {
+                      console.log(`➡️ ARROW R ${selectedImage}`)
+                      handleNextImage()
+                    }}
+                    type="button"
+                    aria-label="Next image"
+                  >
+                    <i className="fas fa-chevron-right"></i>
+                  </button>
+                </>
+              )}
+              
+              {/* Fullscreen Button */}
+              <button 
+                className={styles.fullscreenBtn}
+                onClick={(e) => {
+                  console.log(`🔍 FULLSCREEN ${isFullscreen}→${!isFullscreen}`)
+                  toggleFullscreen()
+                }}
+                type="button"
+                aria-label="View fullscreen"
+              >
+                <i className="fas fa-expand"></i>
+              </button>
+              
+              {/* Image Counter */}
+              {allImages.length > 1 && (
+                <div className={styles.imageCounter}>
+                  {selectedImage + 1} / {allImages.length}
+                </div>
+              )}
             </div>
-            <button 
-              ref={thumbDownRef} 
-              className="thumb-down"
-              type="button"
-            >
-              <i className="icon-angle-down"></i>
-            </button>
           </div>
+
+          {/* Thumbnail Navigation */}
+          {allImages.length > 1 && (
+            <div className={styles.thumbnailsSection} ref={thumbnailsSectionRef}>
+              {/* Scroll Up Button */}
+              {canScrollUp && (
+                <button 
+                  className={styles.thumbScrollBtn}
+                  onClick={(e) => {
+                    console.log(`🔼 SCROLL UP pos:${thumbsScrollPosition} imgs:${allImages.length}`)
+                    scrollThumbs('up')
+                  }}
+                  type="button"
+                  aria-label="Scroll thumbnails up"
+                >
+                  <i className="fas fa-chevron-up"></i>
+                </button>
+              )}
+              
+              {/* Thumbnails Container */}
+              <div className={styles.thumbnailsWrapper} ref={thumbsWrapRef}>
+                <div 
+                  className={styles.thumbnailsContainer} 
+                  ref={thumbsContainerRef}
+                  style={{ 
+                    transform: `translateY(-${thumbsScrollPosition}px)`,
+                    transition: 'transform 0.3s ease'
+                  }}
+                >
+                  {allImages.map((img, idx) => (
+                    <div 
+                      key={idx}
+                      className={`${styles.thumbnailItem} ${selectedImage === idx ? styles.active : ''}`}
+                      onClick={(e) => {
+                        console.log(`🖼️ THUMB ${idx} curr:${selectedImage} zoom:${!!zoomContainerRef.current}`)
+                        handleImageSelect(idx, 'thumbnail-click')
+                      }}
+                    >
+                      <img 
+                        src={img} 
+                        alt={`${product.name}-thumbnail-${idx}`}
+                        className={styles.thumbnailImage}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Scroll Down Button */}
+              {canScrollDown && (
+                <button 
+                  className={styles.thumbScrollBtn}
+                  onClick={(e) => {
+                    console.log(`🔽 SCROLL DOWN pos:${thumbsScrollPosition} imgs:${allImages.length}`)
+                    scrollThumbs('down')
+                  }}
+                  type="button"
+                  aria-label="Scroll thumbnails down"
+                >
+                  <i className="fas fa-chevron-down"></i>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Add custom CSS for responsive gallery and zoom functionality */}
-      <style jsx>{`
-        .pg-vertical .product-slider-container {
-          max-width: calc(100% - 52px);
-          position: relative;
-          z-index: 20;
-        }
+      {/* Fullscreen Modal */}
+      {isFullscreen && (
+        <div className={styles.fullscreenModal} onClick={(e) => {
+          console.log(`🔍 FS modal bg click`)
+          toggleFullscreen()
+        }}>
+          <div className={styles.fullscreenContent} onClick={(e) => e.stopPropagation()}>
+            <button 
+              className={styles.fullscreenClose}
+              onClick={(e) => {
+                console.log(`❌ FS close click`)
+                toggleFullscreen()
+              }}
+              type="button"
+              aria-label="Close fullscreen"
+            >
+              <i className="fas fa-times"></i>
+            </button>
+            
+            <div className={styles.fullscreenImageContainer}>
+              <img 
+                src={allImages[selectedImage]}
+                alt={`${product.name}-fullscreen-${selectedImage}`}
+                className={styles.fullscreenImage}
+              />
+              
+              {/* Fullscreen Navigation */}
+              {allImages.length > 1 && (
+                <>
+                  <button 
+                    className={`${styles.fullscreenNav} ${styles.fullscreenNavLeft}`}
+                    onClick={(e) => {
+                      console.log(`⬅️ FS nav L ${selectedImage}`)
+                      handlePrevImage()
+                    }}
+                    type="button"
+                    aria-label="Previous image"
+                  >
+                    <i className="fas fa-chevron-left"></i>
+                  </button>
+                  <button 
+                    className={`${styles.fullscreenNav} ${styles.fullscreenNavRight}`}
+                    onClick={(e) => {
+                      console.log(`➡️ FS nav R ${selectedImage}`)
+                      handleNextImage()
+                    }}
+                    type="button"
+                    aria-label="Next image"
+                  >
+                    <i className="fas fa-chevron-right"></i>
+                  </button>
+                </>
+              )}
+              
+              {/* Fullscreen Counter */}
+              {allImages.length > 1 && (
+                <div className={styles.fullscreenCounter}>
+                  {selectedImage + 1} / {allImages.length}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
-        /* Create a new stacking context */
-        .product-slider-container {
-          isolation: isolate; /* Modern browsers */
-          transform: translateZ(0); /* Fallback for older browsers */
-        }
-
-        /* Force position and z-index */
-        .product-zoom-container {
-          position: absolute !important;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 2000 !important;
-          pointer-events: none;
-          transform: translateZ(0);
-        }
-        
-        .img-zoom-lens {
-          position: absolute !important;
-          border: 1px solid #d4d4d4;
-          background-color: rgba(0, 0, 0, 0.2);
-          width: 100px;
-          height: 100px;
-          display: none;
-          cursor: crosshair;
-          z-index: 3000 !important;
-          pointer-events: none;
-        }
-        
-        .img-zoom-result {
-          position: absolute !important;
-          right: -320px;
-          top: 0;
-          border: 1px solid #d4d4d4;
-          width: 300px;
-          height: 300px;
-          background-repeat: no-repeat;
-          display: none;
-          z-index: 9999 !important;
-          pointer-events: none;
-          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-          transform: translateZ(0);
-        }
-        
-        /* Make sure the active image gets pointer events */
-        .product-single-carousel .active .product-single-image {
-          pointer-events: auto;
-          z-index: 10;
-        }
-        
-        @media (max-width: 991px) {
-          .responsive-gallery .product-thumbs .owl-dot {
-            margin-bottom: 8px;
-          }
-          
-          .img-zoom-result {
-            display: none !important;
-          }
-        }
-
-        .pg-vertical {
-          display: flex;
-          flex-wrap: nowrap;
-          margin-bottom: 1rem;
-          position: sticky;
-        }
-        /* Global styles to ensure zoom container is above all content */
-        #root .img-zoom-result {
-          z-index: 9999 !important;
-          position: absolute !important;
-        }
-        
-        /* Create global override */
-        body .img-zoom-result {
-          position: absolute !important;
-          z-index: 9999 !important;
-        }
-      `}</style>
     </>
   )
 }

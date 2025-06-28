@@ -1,196 +1,490 @@
 /**
- * Image zoom utility for product images
+ * Modern Image zoom utility for product images
+ * Amazon-style hover zoom functionality
  */
 
+// Global state to prevent multiple zoom instances
+let activeZoomInstance = null;
+let isZoomActive = false;
+
 export function setupImageZoom(zoomContainer, debug = false) {
+  console.log(`🚀 ZOOM setup cont:${zoomContainer?.className} dim:${zoomContainer?.offsetWidth}x${zoomContainer?.offsetHeight} active:${!!activeZoomInstance}`);
+  
   if (!zoomContainer) {
-    console.warn('Zoom container not found');
-    return;
+    console.warn('❌ No zoom container');
+    return null;
   }
 
-  // Clear existing zoom elements
-  while (zoomContainer.firstChild) {
-    zoomContainer.removeChild(zoomContainer.firstChild);
+  // Force cleanup of any existing zoom instance
+  if (activeZoomInstance) {
+    console.log(`🧹 FORCE cleanup prev:${activeZoomInstance.container === zoomContainer ? 'SAME' : 'DIFF'}`);
+    activeZoomInstance.cleanup();
+    activeZoomInstance = null;
   }
 
-  // Get the current active image
-  const activeImage = document.querySelector('.product-single-carousel .active .product-single-image');
+  // Clear existing zoom elements globally (more thorough cleanup)
+  const existingLenses = document.querySelectorAll('.img-zoom-lens');
+  const existingResults = document.querySelectorAll('.img-zoom-result');
+  console.log(`🧹 GLOBAL cleanup lens:${existingLenses.length} result:${existingResults.length}`);
+  existingLenses.forEach(el => el.remove());
+  existingResults.forEach(el => el.remove());
+
+  // Get the current active image from React component
+  const activeImage = zoomContainer.querySelector('img');
   if (!activeImage) {
-    if (debug) console.warn('Active image not found for zoom');
-    return;
+    console.warn('No img found for zoom');
+    return null;
   }
 
-  // Create zoom lens element with explicit dimensions
+  console.log(`🖼️ IMG found src:${activeImage.src.slice(-20)} comp:${activeImage.complete} w:${activeImage.naturalWidth}x${activeImage.naturalHeight}`);
+
+  // Ensure image is fully loaded
+  if (!activeImage.complete || activeImage.naturalWidth === 0) {
+    console.warn('⚠️ IMG not loaded, zoom abort');
+    return null;
+  }
+
+  // Store container and image references for calculations - force fresh calculation
+  let containerRect = null;
+  let currentImageSrc = activeImage.src;
+  let isCurrentlyHovering = false;
+
+  // Function to refresh container dimensions (always fresh calculation)
+  const refreshContainerRect = () => {
+    // Force reflow and get fresh dimensions
+    zoomContainer.offsetHeight; // trigger reflow
+    containerRect = zoomContainer.getBoundingClientRect();
+    if (debug) {
+      console.log(`📦 RECT refresh ${containerRect.width}x${containerRect.height}`);
+    }
+    return containerRect;
+  };
+
+  // Initial container rect calculation
+  refreshContainerRect();
+
+  // Check if device supports hover (desktop/tablet with cursor)
+  const supportsHover = window.matchMedia('(hover: hover)').matches;
+  if (!supportsHover) {
+    console.log('Touch device, skip zoom');
+    return null;
+  }
+
+  // Create zoom lens element
   const lens = document.createElement('div');
   lens.className = 'img-zoom-lens';
-  lens.style.width = '180px';
-  lens.style.height = '180px';
+  lens.style.cssText = `
+    position: absolute;
+    border: 2px solid #007bff;
+    background: rgba(0, 123, 255, 0.1);
+    border-radius: 50%;
+    cursor: none;
+    display: none;
+    z-index: 5;
+    pointer-events: none;
+    width: 150px;
+    height: 150px;
+  `;
   
   // Add lens to the container
   zoomContainer.appendChild(lens);
   
-  // Create zoom result element with explicit dimensions
+  // Create zoom result element
   const result = document.createElement('div');
   result.className = 'img-zoom-result';
-  result.style.width = '600px';
-  result.style.height = '600px';
-  result.style.position = 'fixed';
-  result.style.zIndex = '9999';
-  result.style.background = '#fff';
-  result.style.border = '1px solid #ddd';
-  result.style.backgroundRepeat = 'no-repeat';
-  result.style.boxShadow = '0 5px 10px rgba(0,0,0,0.1)';
+  result.style.cssText = `
+    position: fixed;
+    background: #fff;
+    border: 2px solid #007bff;
+    border-radius: 12px;
+    background-repeat: no-repeat;
+    display: none;
+    z-index: 9999;
+    pointer-events: none;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    width: 400px;
+    height: 400px;
+  `;
   
   // Append result to body for z-index control
   document.body.appendChild(result);
-  
+
+  // Set up the background image for zoom
+  const setupBackground = () => {
+    const currentImg = zoomContainer.querySelector('img');
+    if (currentImg && currentImg.complete) {
+      result.style.backgroundImage = `url('${currentImg.src}')`;
+      result.style.backgroundSize = `1200px 1200px`; // 3x zoom
+      currentImageSrc = currentImg.src; // Update tracked src
+      
+      if (debug) console.log(`BG set:${currentImg.src.slice(-20)}`);
+    }
+  };
+
+  // Check for image changes and update background
+  const updateBackground = () => {
+    const currentImg = zoomContainer.querySelector('img');
+    if (currentImg && currentImg.src !== currentImageSrc) {
+      setupBackground();
+      refreshContainerRect(); // Refresh container dimensions on image change
+      if (debug) console.log(`🔄 IMG change, bg+rect updated`);
+    }
+  };
+
   // Position the result element beside the image
   const positionZoomResult = () => {
-    if (!activeImage) return;
-    
-    const imageRect = activeImage.getBoundingClientRect();
-    const windowWidth = window.innerWidth;
-    
-    // Default position to the right of the image
-    let left = imageRect.right + 20;
-    
-    // If showing to the right would push it off screen, show on the left instead
-    if (left + 300 > windowWidth) {
-      left = Math.max(0, imageRect.left - 320);
+    if (!zoomContainer || !containerRect) {
+      refreshContainerRect();
+      if (!containerRect) return;
     }
     
-    result.style.top = `${imageRect.top}px`;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const resultSize = 400;
+    
+    // Calculate optimal position next to the container
+    let left = containerRect.right + 20;
+    let top = containerRect.top;
+    
+    // If showing to the right would push it off screen, show on the left
+    if (left + resultSize > windowWidth - 20) {
+      left = Math.max(20, containerRect.left - resultSize - 20);
+    }
+    
+    // Adjust vertical position if needed
+    if (top + resultSize > windowHeight - 20) {
+      top = Math.max(20, windowHeight - resultSize - 20);
+    }
+    
+    result.style.top = `${top}px`;
     result.style.left = `${left}px`;
+    
+    if (debug) console.log('Positioned zoom result at:', left, top);
   };
-  
-  // Position result initially and on window events
+
+  // Initialize position and background
   positionZoomResult();
-  window.addEventListener('resize', positionZoomResult);
-  window.addEventListener('scroll', positionZoomResult);
-  
-  // Load the full-size image to get accurate dimensions
-  const getImageDimensions = () => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        resolve({
-          width: img.width,
-          height: img.height
-        });
-      };
-      img.src = activeImage.src;
-    });
-  };
-  
-  // Setup the image background
-  const setupBackground = async () => {
-    const dimensions = await getImageDimensions();
+  setupBackground();
+
+  // Get cursor position relative to the zoom container
+  function getCursorPos(e) {
+    // Always refresh container rect for accurate positioning
+    refreshContainerRect();
     
-    // Set zoom result background image
-    result.style.backgroundImage = `url('${activeImage.src}')`;
+    const relativeX = e.clientX - containerRect.left;
+    const relativeY = e.clientY - containerRect.top;
     
-    // Use a lower zoom ratio for better usability
-    const zoomRatio = 1.5;
-    result.style.backgroundSize = `${dimensions.width * zoomRatio}px ${dimensions.height * zoomRatio}px`;
+    if (debug) {
+      console.log(`🖱️ POS x:${relativeX} y:${relativeY} cont:${containerRect.width}x${containerRect.height}`);
+    }
     
-    return { dimensions, zoomRatio };
-  };
-  
-  // Initialize setup and store zoom settings
-  let zoomSettings = {
-    dimensions: { width: 0, height: 0 },
-    zoomRatio: 1.5
-  };
-  
-  setupBackground().then(settings => {
-    zoomSettings = settings;
-  });
-  
+    return { 
+      x: relativeX,
+      y: relativeY
+    };
+  }
+
   // Handle mouse movement for zoom effect
   function moveLens(e) {
     e.preventDefault();
     
+    if (!isCurrentlyHovering) {
+      if (debug) console.log('🖱️ Not hovering, skip move');
+      return;
+    }
+    
+    if (debug) {
+      console.log(`🖱️ MOVE lens:${lens?.style.display} result:${result?.style.display}`);
+    }
+    
+    // ALWAYS refresh container rect and background on movement for accuracy
+    refreshContainerRect();
+    updateBackground();
+    
+    // Validate zoom state during movement (every 10th move to avoid spam)
+    if (Math.random() < 0.1) { // 10% chance
+      validateZoomState('moveLens');
+    }
+    
     const pos = getCursorPos(e);
-    const imageRect = activeImage.getBoundingClientRect();
+    
+    // Validate position is within container bounds
+    if (!containerRect || pos.x < 0 || pos.y < 0 || pos.x > containerRect.width || pos.y > containerRect.height) {
+      if (debug) console.log('🖱️ Out of bounds, skip');
+      return;
+    }
+    
+    const lensSize = 150;
+    const resultSize = 400;
     
     // Calculate lens position
-    let x = pos.x - lens.offsetWidth / 2;
-    let y = pos.y - lens.offsetHeight / 2;
+    let x = pos.x - lensSize / 2;
+    let y = pos.y - lensSize / 2;
     
-    // Constrain lens to image boundaries
-    const maxX = imageRect.width - lens.offsetWidth;
-    const maxY = imageRect.height - lens.offsetHeight;
+    // Constrain lens to container boundaries
+    const maxX = containerRect.width - lensSize;
+    const maxY = containerRect.height - lensSize;
     
-    x = x < 0 ? 0 : x > maxX ? maxX : x;
-    y = y < 0 ? 0 : y > maxY ? maxY : y;
+    x = Math.max(0, Math.min(maxX, x));
+    y = Math.max(0, Math.min(maxY, y));
     
     // Position the lens
     lens.style.left = x + "px";
     lens.style.top = y + "px";
     
-    // Calculate the relative position as a percentage of the image size
-    const lensPercentX = (x / (imageRect.width - lens.offsetWidth)) * 100;
-    const lensPercentY = (y / (imageRect.height - lens.offsetHeight)) * 100;
+    // Calculate background position for zoom result
+    const lensPercentX = maxX > 0 ? (x / maxX) : 0;
+    const lensPercentY = maxY > 0 ? (y / maxY) : 0;
     
-    // Calculate zoom result's background position
-    const resultWidth = 600;
-    const resultHeight = 600;
-    const bgWidth = zoomSettings.dimensions.width * zoomSettings.zoomRatio;
-    const bgHeight = zoomSettings.dimensions.height * zoomSettings.zoomRatio;
+    const bgX = (1200 - resultSize) * lensPercentX;
+    const bgY = (1200 - resultSize) * lensPercentY;
     
-    // The background image should shift in proportion to where the lens is
-    const bgX = (lensPercentX / 100) * (bgWidth - resultWidth);
-    const bgY = (lensPercentY / 100) * (bgHeight - resultHeight);
-    
-    // Apply the background position
     result.style.backgroundPosition = `-${bgX}px -${bgY}px`;
     
-    // Calculate what percentage into the background we're showing
-    const bgPercentX = (bgX / (bgWidth - resultWidth)) * 100;
-    const bgPercentY = (bgY / (bgHeight - resultHeight)) * 100;
-    
     if (debug) {
-      // Compact debugging output showing lens position and background position as percentages
-      console.log(`Lens: ${lensPercentX.toFixed(1)}%, ${lensPercentY.toFixed(1)}% | BG: ${bgPercentX.toFixed(1)}%, ${bgPercentY.toFixed(1)}% | Diff: ${(bgPercentX - lensPercentX).toFixed(1)}%, ${(bgPercentY - lensPercentY).toFixed(1)}%`);
+      console.log(`Lens ${x},${y} | BG -${bgX},-${bgY} | Cont ${containerRect.width}x${containerRect.height}`);
     }
   }
   
-  // Get cursor position relative to the image
-  function getCursorPos(e) {
-    const imageRect = activeImage.getBoundingClientRect();
+  // Show zoom elements
+  const showZoom = () => {
+    if (isCurrentlyHovering) {
+      if (debug) console.log('⚠️ Already hovering, skip show');
+      return;
+    }
     
-    return { 
-      x: e.clientX - imageRect.left,
-      y: e.clientY - imageRect.top
-    };
-  }
-  
-  // Attach event listeners
-  activeImage.addEventListener("mousemove", moveLens);
-  zoomContainer.addEventListener("mousemove", moveLens);
-  
-  // Show/hide zoom elements
-  activeImage.addEventListener("mouseenter", () => {
+    console.log(`🔍 ZOOM SHOW lens:${!!lens} result:${!!result} src:${currentImageSrc.slice(-20)}`);
+    
+    // Validate zoom state before showing
+    validateZoomState('showZoom');
+    
+    isCurrentlyHovering = true;
+    
+    // FORCE fresh state on hover enter - more aggressive reset
+    updateBackground();
+    const freshRect = refreshContainerRect(); // Force fresh calculation
+    
+    // Ensure elements exist
+    if (!lens || !result || !freshRect) {
+      if (debug) console.warn(`⚠️ Missing elements lens:${!!lens} result:${!!result} rect:${!!freshRect}`);
+      isCurrentlyHovering = false;
+      return;
+    }
+    
+    // Force a complete reset of zoom state - this is key since leaving works
+    // Remove the delay and make it immediate
     lens.style.display = "block";
     result.style.display = "block";
     positionZoomResult();
-  });
-  
-  activeImage.addEventListener("mouseleave", () => {
-    lens.style.display = "none";
-    result.style.display = "none";
-  });
-  
-  // Return cleanup function
-  return () => {
-    activeImage.removeEventListener("mousemove", moveLens);
-    zoomContainer.removeEventListener("mousemove", moveLens);
-    activeImage.removeEventListener("mouseenter", () => {});
-    activeImage.removeEventListener("mouseleave", () => {});
-    window.removeEventListener('resize', positionZoomResult);
-    window.removeEventListener('scroll', positionZoomResult);
     
-    if (lens.parentNode) lens.parentNode.removeChild(lens);
-    if (result.parentNode) result.parentNode.removeChild(result);
+    if (debug) console.log('✅ zoom shown');
   };
+  
+  // Hide zoom elements
+  const hideZoom = () => {
+    if (!isCurrentlyHovering) {
+      if (debug) console.log('⚠️ Not hovering, skip hide');
+      return;
+    }
+    
+    console.log('🔍 ZOOM HIDE');
+    
+    isCurrentlyHovering = false;
+    
+    if (lens) lens.style.display = "none";
+    if (result) result.style.display = "none";
+    
+    if (debug) console.log('Zoom hidden');
+  };
+  
+  // Update position on scroll/resize
+  const handleResize = () => {
+    refreshContainerRect();
+    positionZoomResult();
+  };
+  
+  // Handle window scroll with container refresh
+  const handleScroll = () => {
+    refreshContainerRect();
+    positionZoomResult();
+  };
+  
+  window.addEventListener('resize', handleResize);
+  window.addEventListener('scroll', handleScroll);
+  
+  // Attach event listeners
+  zoomContainer.addEventListener("mouseenter", showZoom);
+  zoomContainer.addEventListener("mouseleave", hideZoom);
+  zoomContainer.addEventListener("mousemove", moveLens);
+  
+  // Handle click events for debugging zoom state
+  const handleZoomClick = (e) => {
+    console.log(`🖱️ ZOOM CLICK ${e.target.tagName} hover:${isCurrentlyHovering} lens:${lens?.style.display} result:${result?.style.display}`);
+    
+    // If zoom isn't working after click, try to force recalculation
+    if (isCurrentlyHovering && (!lens || lens.style.display !== 'block')) {
+      console.log('🔄 FORCE refresh after click');
+      refreshContainerRect();
+      updateBackground();
+      if (lens) lens.style.display = 'block';
+      if (result) result.style.display = 'block';
+      positionZoomResult();
+    }
+  };
+
+  // Handle lens click events for debugging
+  const handleLensClick = (e) => {
+    console.log(`🖱️ LENS CLICK pos:${lens.style.left},${lens.style.top} hover:${isCurrentlyHovering}`);
+    
+    // Prevent click from bubbling to container
+    e.stopPropagation();
+  };
+
+  // Add click event listeners for debugging
+  zoomContainer.addEventListener("click", handleZoomClick);
+  
+  // Keep lens non-interactive to avoid blocking UI controls
+  // lens.style.pointerEvents = 'auto';
+  // lens.addEventListener("click", handleLensClick);
+
+  // Window/document click handler to detect clicks outside zoom area
+  const handleDocumentClick = (e) => {
+    if (!zoomContainer.contains(e.target) && !result.contains(e.target)) {
+      console.log(`🖱️ CLICK outside ${e.target.tagName} hover:${isCurrentlyHovering}`);
+    }
+  };
+  
+  document.addEventListener('click', handleDocumentClick);
+  
+  if (debug) {
+    console.log('Event listeners attached for zoom container:', zoomContainer);
+    console.log('Container dimensions:', {
+      width: zoomContainer.offsetWidth,
+      height: zoomContainer.offsetHeight,
+      rect: zoomContainer.getBoundingClientRect()
+    });
+  }
+  
+  // Watch for container resize changes specifically
+  let containerResizeObserver = null;
+  
+  if (window.ResizeObserver) {
+    containerResizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        if (entry.target === zoomContainer) {
+          const newRect = entry.contentRect;
+          console.log(`🔄 RESIZE ${containerRect?.width}x${containerRect?.height} → ${newRect.width}x${newRect.height} hover:${isCurrentlyHovering}`);
+          
+          // Force refresh container rect and reposition result
+          refreshContainerRect();
+          positionZoomResult();
+          
+          // Validate state after resize
+          validateZoomState('containerResize');
+        }
+      }
+    });
+    
+    containerResizeObserver.observe(zoomContainer);
+  }
+
+  // Function to validate zoom state and detect issues
+  const validateZoomState = (context = 'unknown') => {
+    const currentImg = zoomContainer.querySelector('img');
+    const currentSrc = currentImg?.src;
+    const currentRect = zoomContainer.getBoundingClientRect();
+    
+    const imageChanged = currentSrc !== currentImageSrc;
+    const containerSizeChanged = !containerRect || 
+      Math.abs(currentRect.width - containerRect.width) > 1 || 
+      Math.abs(currentRect.height - containerRect.height) > 1;
+    
+    // Log any inconsistencies
+    if (imageChanged || containerSizeChanged) {
+      console.warn(`⚠️ VALIDATION [${context}] img:${imageChanged} size:${containerSizeChanged}`);
+      
+      // Auto-fix by refreshing state
+      if (imageChanged) {
+        console.log('🔄 Auto-fix img change');
+        updateBackground();
+      }
+      if (containerSizeChanged) {
+        console.log('🔄 Auto-fix size change');
+        refreshContainerRect();
+        positionZoomResult();
+      }
+    } else if (debug) {
+      console.log(`✅ VALIDATION [${context}] OK`);
+    }
+    
+    return { imageChanged, containerSizeChanged };
+  };
+
+  // Periodic zoom state validation (helps catch async issues)
+  let stateCheckInterval = null;
+  
+  if (debug) {
+    stateCheckInterval = setInterval(() => {
+      if (isCurrentlyHovering) {
+        validateZoomState('periodicCheck');
+      }
+    }, 2000); // Check every 2 seconds when hovering
+  }
+
+  // Return cleanup function
+  const cleanup = () => {
+    if (debug) console.log('🧹 Cleaning up zoom instance');
+    
+    isCurrentlyHovering = false;
+    
+    // Remove event listeners
+    zoomContainer.removeEventListener("mouseenter", showZoom);
+    zoomContainer.removeEventListener("mouseleave", hideZoom);
+    zoomContainer.removeEventListener("mousemove", moveLens);
+    zoomContainer.removeEventListener("click", handleZoomClick);
+    window.removeEventListener('resize', handleResize);
+    window.removeEventListener('scroll', handleScroll);
+    document.removeEventListener('click', handleDocumentClick);
+    
+    // Remove lens-specific event listeners
+    // if (lens) {
+    //   lens.removeEventListener("click", handleLensClick);
+    // }
+    
+    // Remove DOM elements
+    if (lens && lens.parentNode) lens.parentNode.removeChild(lens);
+    if (result && result.parentNode) result.parentNode.removeChild(result);
+    
+    // Clear active instance if this is the active one
+    if (activeZoomInstance && activeZoomInstance.container === zoomContainer) {
+      activeZoomInstance = null;
+    }
+    
+    // Clear periodic state check interval
+    if (stateCheckInterval) {
+      clearInterval(stateCheckInterval);
+      stateCheckInterval = null;
+    }
+    
+    // Cleanup container resize observer
+    if (containerResizeObserver) {
+      containerResizeObserver.disconnect();
+      containerResizeObserver = null;
+    }
+    
+    // Unobserve container resize
+    if (containerResizeObserver) {
+      containerResizeObserver.unobserve(zoomContainer);
+      containerResizeObserver = null;
+    }
+  };
+
+  // Store this instance as the active one
+  activeZoomInstance = {
+    container: zoomContainer,
+    cleanup: cleanup
+  };
+
+  return cleanup;
 }
