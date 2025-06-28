@@ -14,7 +14,7 @@ export default function HeaderLeft() {
             </button>
             <a href="/" className="logo">
               <img
-                src="/src/assets/images/logo-black.png"
+                src="/src/assets/images/Logo.svg"
                 className="w-100"
                 width={111}
                 height={44}
