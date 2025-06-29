@@ -8,7 +8,7 @@ import Register from './pages/Register';
 import OAuthCallback from './components/OAuthCallback';
 import ProtectedRoute from './components/ProtectedRoute';
 import { VendorProvider } from './contexts/VendorContext';
-import { isAuthenticated, isVendor } from './utils/auth';
+import { isAuthenticated, isVendor, initializeTokenManagement, cleanupTokenManagement } from './utils/auth';
 import './assets/css/custom.css'; // Import custom CSS for menu fixes
 
 function App() {
@@ -53,6 +53,30 @@ function App() {
     
     checkAuth();
   }, []);
+
+  // Initialize token management for authenticated users
+  useEffect(() => {
+    if (isAuthorized) {
+      console.log('App: Initializing token management for authenticated vendor');
+      initializeTokenManagement();
+      
+      // Listen for auth logout events
+      const handleAuthLogout = (event) => {
+        console.log('App: Received auth logout event:', event.detail);
+        setIsAuthorized(false);
+        setCheckingAuth(false);
+      };
+      
+      window.addEventListener('auth:logout', handleAuthLogout);
+      
+      // Cleanup function
+      return () => {
+        console.log('App: Cleaning up token management');
+        cleanupTokenManagement();
+        window.removeEventListener('auth:logout', handleAuthLogout);
+      };
+    }
+  }, [isAuthorized]);
 
   useEffect(() => {
     // Only load scripts if they haven't been loaded already

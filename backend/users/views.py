@@ -28,6 +28,128 @@ logger = logging.getLogger(__name__)
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
+# Add this new class for custom token refresh with enhanced error handling
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from django.core.cache import cache
+from django.utils import timezone
+import time
+
+class EnhancedTokenRefreshView(TokenRefreshView):
+    """
+    Enhanced token refresh view with better error handling and rate limiting
+    """
+    serializer_class = TokenRefreshSerializer
+    
+    def post(self, request, *args, **kwargs):
+        # Rate limiting per IP address
+        client_ip = self.get_client_ip(request)
+        rate_limit_key = f"token_refresh_rate_limit_{client_ip}"
+        
+        # Check rate limit (max 10 requests per minute per IP)
+        current_time = timezone.now()
+        cache_key_time = cache.get(rate_limit_key, [])
+        
+        # Remove entries older than 1 minute
+        recent_requests = [t for t in cache_key_time if (current_time.timestamp() - t) < 60]
+        
+        if len(recent_requests) >= 10:
+            logger.warning(f"Token refresh rate limit exceeded for IP: {client_ip}")
+            return Response({
+                'error': 'rate_limit_exceeded',
+                'detail': 'Too many refresh attempts. Please try again later.',
+                'retry_after': 60
+            }, status=status.HTTP_429_TOO_MANY_REQUESTS)
+        
+        # Add current request to rate limit tracker
+        recent_requests.append(current_time.timestamp())
+        cache.set(rate_limit_key, recent_requests, 60)
+        
+        try:
+            # Log the refresh attempt
+            logger.info(f"Token refresh attempt from IP: {client_ip}")
+            
+            # Validate the request data first
+            serializer = self.get_serializer(data=request.data)
+            if not serializer.is_valid():
+                return Response({
+                    'error': 'invalid_request',
+                    'detail': 'Invalid refresh token format.',
+                    'error_code': 'INVALID_REQUEST'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Call the parent class's post method
+            response = super().post(request, *args, **kwargs)
+            
+            # Add additional metadata to successful response
+            if response.status_code == 200:
+                response_data = response.data
+                
+                # Add token metadata
+                response_data['token_type'] = 'Bearer'
+                response_data['expires_in'] = int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds())
+                response_data['refresh_expires_in'] = int(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds())
+                response_data['issued_at'] = int(current_time.timestamp())
+                
+                logger.info(f"Token refreshed successfully for IP: {client_ip}")
+                response.data = response_data
+            
+            return response
+            
+        except (TokenError, InvalidToken) as e:
+            error_msg = str(e)
+            logger.error(f"Token refresh failed for IP {client_ip}: {error_msg}")
+            
+            # Provide specific error responses based on the type of token error
+            if 'expired' in error_msg.lower():
+                return Response({
+                    'error': 'refresh_token_expired',
+                    'detail': 'Refresh token has expired. Please log in again.',
+                    'error_code': 'TOKEN_EXPIRED'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+            
+            elif 'invalid' in error_msg.lower() or 'blacklisted' in error_msg.lower():
+                return Response({
+                    'error': 'invalid_refresh_token',
+                    'detail': 'Refresh token is invalid or has been revoked. Please log in again.',
+                    'error_code': 'TOKEN_INVALID'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+            
+            else:
+                return Response({
+                    'error': 'token_refresh_failed',
+                    'detail': 'Unable to refresh token. Please try again or log in.',
+                    'error_code': 'REFRESH_FAILED'
+                }, status=status.HTTP_401_UNAUTHORIZED)
+                
+        except ValueError as e:
+            # Handle JSON decode errors and other value errors
+            logger.error(f"Value error during token refresh for IP {client_ip}: {str(e)}")
+            return Response({
+                'error': 'invalid_request',
+                'detail': 'Invalid request format or data.',
+                'error_code': 'INVALID_REQUEST'
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Exception as e:
+            logger.error(f"Unexpected error during token refresh for IP {client_ip}: {str(e)}")
+            return Response({
+                'error': 'server_error',
+                'detail': 'An unexpected error occurred. Please try again.',
+                'error_code': 'SERVER_ERROR'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def get_client_ip(self, request):
+        """Extract client IP address from request"""
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+
 class CustomTokenRefreshView(TokenRefreshView):
     def post(self, request, *args, **kwargs):
         try:

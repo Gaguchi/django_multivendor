@@ -263,21 +263,53 @@ REST_FRAMEWORK = {
 
 # Add Simple JWT settings
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Increased from 2 minutes to 30 minutes
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    # Token lifetimes - industry standard for web applications
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Shorter for security, longer than before
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Longer refresh for better UX
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=15),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
+    
+    # Token rotation for enhanced security
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': is_package_installed('rest_framework_simplejwt.token_blacklist'),
+    'BLACKLIST_AFTER_ROTATION': False,  # Temporarily disabled to test refresh issue
     'UPDATE_LAST_LOGIN': True,
     
+    # Algorithm and signing
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': 'django_multivendor',
+    
+    # Authentication
     'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+    
+    # Token classes
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
     
-    # Custom settings for better error handling
-    'AUTH_TOKEN_EXTEND_WHEN_CLOSE': True,  # Extend token lifetime if close to expiry
-    'TOKEN_REFRESH_GRACE_PERIOD': 60,  # 60 second grace period for refresh
+    # Token refresh settings
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_REFRESH_LIFETIME_CLAIM': 'refresh_exp',
     
-    # Update blacklist settings with error handling
+    # Blacklist settings
     'USE_BLACKLIST': is_package_installed('rest_framework_simplejwt.token_blacklist'),
+    'BLACKLIST_AFTER_ROTATION': False,  # Temporarily disabled to test refresh issue
+    
+    # Custom claims
+    'TOKEN_OBTAIN_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainPairSerializer',
+    'TOKEN_REFRESH_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenRefreshSerializer',
+    'TOKEN_VERIFY_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenVerifySerializer',
+    'TOKEN_BLACKLIST_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenBlacklistSerializer',
+    
+    # Error handling
+    'LEEWAY': 10,  # 10 seconds leeway for clock skew
 }
 
 # Master token for frontend access

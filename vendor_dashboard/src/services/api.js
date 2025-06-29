@@ -1,4 +1,4 @@
-import { getToken, refreshToken, clearToken, getVendorId } from '../utils/auth';
+import { getToken, refreshToken, clearToken, getVendorId, ensureValidToken } from '../utils/auth';
 
 // API URL with fallback to local development server if not specified in env
 const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.bazro.ge';
@@ -322,6 +322,9 @@ export async function login(username, password) {
 export async function fetchProfile() {
   if (!getToken()) return null;
   try {
+    // Ensure token is valid before making the request
+    await ensureValidToken();
+    
     const response = await fetch(`${API_URL}/api/users/profile/`, {
       method: 'GET',
       headers: {
@@ -354,6 +357,9 @@ export async function getCategoriesApi() {
 
 // Example product APIs
 export async function getProductsApi() {
+  // Ensure token is valid before making the request
+  await ensureValidToken();
+  
   const response = await fetch(`${API_URL}/api/vendors/products/my_products/`, {
     headers: { 
       'Authorization': `Bearer ${getToken()}`,
@@ -617,6 +623,9 @@ export async function checkEmailAvailability(email) {
 // Get vendor profile information
 export async function getVendorProfile() {
   try {
+    // Ensure token is valid before making the request
+    await ensureValidToken();
+    
     const response = await fetch(`${API_URL}/api/vendors/profile/`, {
       headers: {
         'Authorization': `Bearer ${getToken()}`,

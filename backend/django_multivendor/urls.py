@@ -13,7 +13,7 @@ import importlib.util
 
 # Conditionally import the custom view based on availability
 if importlib.util.find_spec('users.views'):
-    from users.views import CustomTokenRefreshView
+    from users.views import EnhancedTokenRefreshView
 else:
     # Use the default view if the custom one isn't available
     from rest_framework_simplejwt.views import TokenRefreshView as CustomTokenRefreshView
@@ -45,7 +45,7 @@ def api_endpoints(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
+    path('api/token/refresh/', EnhancedTokenRefreshView.as_view(), name='token_refresh'),
     path('api/endpoints/', api_endpoints, name='api-endpoints'),
 ]
 

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Token Refresh Testing</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fafafa;
+        }
+        
+        .test-section h2 {
+            color: #444;
+            margin-top: 0;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: black;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .status-display {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            min-height: 100px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        
+        .log-output {
+            background: #263238;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .test-results {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .pass {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .fail {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .info {
+            color: #007bff;
+        }
+        
+        .warning {
+            color: #ffc107;
+        }
+        
+        .input-group {
+            margin: 10px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .input-group label {
+            min-width: 120px;
+            font-weight: bold;
+        }
+        
+        .input-group input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-connected {
+            background: #28a745;
+        }
+        
+        .status-disconnected {
+            background: #dc3545;
+        }
+        
+        .status-warning {
+            background: #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 JWT Token Refresh Testing Suite</h1>
+        
+        <!-- Connection Status -->
+        <div class="test-section">
+            <h2>🌐 Connection Status</h2>
+            <div id="connectionStatus">
+                <span class="status-indicator status-disconnected"></span>
+                Checking connection...
+            </div>
+            <div class="button-group">
+                <button class="btn-primary" onclick="checkConnection()">Check API Connection</button>
+                <button class="btn-secondary" onclick="checkEndpoints()">List Available Endpoints</button>
+            </div>
+        </div>
+        
+        <!-- Authentication Testing -->
+        <div class="test-section">
+            <h2>🔑 Authentication Testing</h2>
+            <div class="input-group">
+                <label>Username/Email:</label>
+                <input type="text" id="username" value="testvendor@bazro.ge" placeholder="Enter username or email">
+            </div>
+            <div class="input-group">
+                <label>Password:</label>
+                <input type="password" id="password" value="" placeholder="Enter password">
+            </div>
+            <div class="button-group">
+                <button class="btn-success" onclick="testLogin()">Test Login</button>
+                <button class="btn-warning" onclick="testTokenRefresh()">Test Token Refresh</button>
+                <button class="btn-danger" onclick="testLogout()">Test Logout</button>
+            </div>
+            <div id="authStatus" class="status-display"></div>
+        </div>
+        
+        <!-- Token Management Testing -->
+        <div class="test-section">
+            <h2>🎫 Token Management Testing</h2>
+            <div class="button-group">
+                <button class="btn-primary" onclick="showTokenInfo()">Show Token Info</button>
+                <button class="btn-secondary" onclick="testTokenValidation()">Test Token Validation</button>
+                <button class="btn-warning" onclick="simulateExpiredToken()">Simulate Expired Token</button>
+                <button class="btn-danger" onclick="clearAllTokens()">Clear All Tokens</button>
+            </div>
+            <div id="tokenStatus" class="status-display"></div>
+        </div>
+        
+        <!-- API Request Testing -->
+        <div class="test-section">
+            <h2>🔄 API Request Testing</h2>
+            <div class="button-group">
+                <button class="btn-primary" onclick="testVendorProfile()">Test Vendor Profile</button>
+                <button class="btn-secondary" onclick="testVendorOrders()">Test Vendor Orders</button>
+                <button class="btn-warning" onclick="testMultipleRequests()">Test Multiple Requests</button>
+                <button class="btn-danger" onclick="testNetworkError()">Simulate Network Error</button>
+            </div>
+            <div id="apiStatus" class="status-display"></div>
+        </div>
+        
+        <!-- Automated Test Suite -->
+        <div class="test-section">
+            <h2>🧪 Automated Test Suite</h2>
+            <div class="button-group">
+                <button class="btn-primary" onclick="runUnitTests()">Run Unit Tests</button>
+                <button class="btn-secondary" onclick="runIntegrationTests()">Run Integration Tests</button>
+                <button class="btn-success" onclick="runAllTests()">Run All Tests</button>
+                <button class="btn-warning" onclick="runPerformanceTests()">Performance Tests</button>
+            </div>
+            <div id="testResults" class="test-results"></div>
+        </div>
+        
+        <!-- Debug Console -->
+        <div class="test-section">
+            <h2>🐛 Debug Console</h2>
+            <div class="button-group">
+                <button class="btn-secondary" onclick="clearConsole()">Clear Console</button>
+                <button class="btn-warning" onclick="exportLogs()">Export Logs</button>
+            </div>
+            <div id="debugConsole" class="status-display log-output"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Global state
+        let logs = [];
+        let tokenManager = null;
+        let enhancedApi = null;
+        
+        // Initialize when page loads
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Import our enhanced modules
+                const authModule = await import('./src/utils/enhancedAuth.js');
+                const apiModule = await import('./src/services/enhancedApi.js');
+                
+                tokenManager = authModule.tokenManager;
+                enhancedApi = apiModule;
+                
+                log('✅ Enhanced token management loaded successfully');
+                
+                // Set up token event listeners
+                tokenManager.addEventListener((event, data) => {
+                    log(`🔔 Token Event: ${event}`, data);
+                });
+                
+                // Initial status check
+                updateTokenDisplay();
+                checkConnection();
+                
+            } catch (error) {
+                log('❌ Failed to load enhanced modules:', error);
+                // Fallback to basic auth if enhanced version fails
+                try {
+                    const basicAuth = await import('./src/utils/auth.js');
+                    log('⚠️ Loaded basic auth as fallback');
+                } catch (fallbackError) {
+                    log('❌ No auth modules available:', fallbackError);
+                }
+            }
+        });
+        
+        // Utility functions
+        function log(message, data = null) {
+            const timestamp = new Date().toISOString();
+            const logEntry = `[${timestamp}] ${message}`;
+            
+            if (data) {
+                console.log(logEntry, data);
+                logs.push({ timestamp, message, data });
+            } else {
+                console.log(logEntry);
+                logs.push({ timestamp, message });
+            }
+            
+            updateDebugConsole();
+        }
+        
+        function updateDebugConsole() {
+            const console = document.getElementById('debugConsole');
+            const recent = logs.slice(-50); // Show last 50 logs
+            console.textContent = recent.map(log => 
+                `[${log.timestamp.split('T')[1].split('.')[0]}] ${log.message}${log.data ? '\n' + JSON.stringify(log.data, null, 2) : ''}`
+            ).join('\n');
+            console.scrollTop = console.scrollHeight;
+        }
+        
+        function updateStatus(elementId, content, className = '') {
+            const element = document.getElementById(elementId);
+            element.innerHTML = content;
+            if (className) element.className = `status-display ${className}`;
+        }
+        
+        function updateTokenDisplay() {
+            if (!tokenManager) return;
+            
+            const debugInfo = tokenManager.getDebugInfo();
+            const tokenInfo = debugInfo.tokenInfo;
+            
+            let status = '<strong>Token Status:</strong>\n';
+            status += `Authenticated: ${debugInfo.isAuthenticated ? '✅' : '❌'}\n`;
+            status += `Is Vendor: ${debugInfo.isVendor ? '✅' : '❌'}\n`;
+            status += `Vendor ID: ${debugInfo.vendorId || 'None'}\n`;
+            status += `Token Valid: ${tokenInfo.isValid ? '✅' : '❌'}\n`;
+            status += `Token Expired: ${tokenInfo.isExpired ? '❌' : '✅'}\n`;
+            status += `Should Refresh: ${tokenInfo.shouldRefresh ? '⚠️' : '✅'}\n`;
+            
+            if (tokenInfo.timeToExpiry !== undefined) {
+                const minutes = Math.floor(tokenInfo.timeToExpiry / (1000 * 60));
+                const seconds = Math.floor((tokenInfo.timeToExpiry % (1000 * 60)) / 1000);
+                status += `Time to Expiry: ${minutes}m ${seconds}s\n`;
+            }
+            
+            status += `Is Refreshing: ${debugInfo.isRefreshing ? '🔄' : '✅'}\n`;
+            status += `Retry Count: ${debugInfo.retryCount}\n`;
+            status += `Queued Requests: ${debugInfo.queuedRequests}`;
+            
+            updateStatus('tokenStatus', status);
+        }
+        
+        // Connection testing
+        window.checkConnection = async () => {
+            try {
+                log('🔍 Checking API connection...');
+                const response = await fetch('https://api.bazro.ge/api/endpoints/', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                if (response.ok) {
+                    log('✅ API connection successful');
+                    document.getElementById('connectionStatus').innerHTML = 
+                        '<span class="status-indicator status-connected"></span>Connected to API';
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                log('❌ API connection failed:', error);
+                document.getElementById('connectionStatus').innerHTML = 
+                    '<span class="status-indicator status-disconnected"></span>API connection failed';
+            }
+        };
+        
+        window.checkEndpoints = async () => {
+            try {
+                const response = await fetch('https://api.bazro.ge/api/endpoints/');
+                const data = await response.json();
+                log('📋 Available endpoints:', data);
+            } catch (error) {
+                log('❌ Failed to fetch endpoints:', error);
+            }
+        };
+        
+        // Authentication testing
+        window.testLogin = async () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                updateStatus('authStatus', '⚠️ Please enter username and password');
+                return;
+            }
+            
+            try {
+                log(`🔐 Attempting login for: ${username}`);
+                updateStatus('authStatus', '🔄 Logging in...');
+                
+                if (enhancedApi && enhancedApi.login) {
+                    const response = await enhancedApi.login(username, password);
+                    
+                    if (response.access && response.refresh) {
+                        tokenManager.setTokens(response.access, response.refresh, {
+                            username: response.username || username,
+                            email: response.email || username
+                        });
+                        
+                        log('✅ Login successful');
+                        updateStatus('authStatus', '✅ Login successful!\nTokens stored and ready for use.');
+                        updateTokenDisplay();
+                    } else {
+                        throw new Error('Invalid response format');
+                    }
+                } else {
+                    throw new Error('Enhanced API not available');
+                }
+            } catch (error) {
+                log('❌ Login failed:', error);
+                updateStatus('authStatus', `❌ Login failed: ${error.message}`);
+            }
+        };
+        
+        window.testTokenRefresh = async () => {
+            if (!tokenManager) {
+                updateStatus('authStatus', '❌ Token manager not available');
+                return;
+            }
+            
+            try {
+                log('🔄 Testing token refresh...');
+                updateStatus('authStatus', '🔄 Refreshing token...');
+                
+                const result = await tokenManager.performRefresh();
+                
+                if (result) {
+                    log('✅ Token refresh successful');
+                    updateStatus('authStatus', '✅ Token refresh successful!');
+                    updateTokenDisplay();
+                } else {
+                    log('❌ Token refresh failed');
+                    updateStatus('authStatus', '❌ Token refresh failed');
+                }
+            } catch (error) {
+                log('❌ Token refresh error:', error);
+                updateStatus('authStatus', `❌ Token refresh error: ${error.message}`);
+            }
+        };
+        
+        window.testLogout = () => {
+            if (!tokenManager) return;
+            
+            log('🚪 Logging out...');
+            tokenManager.clearTokens();
+            updateStatus('authStatus', '✅ Logged out successfully');
+            updateTokenDisplay();
+        };
+        
+        // Token management testing
+        window.showTokenInfo = () => {
+            updateTokenDisplay();
+            log('ℹ️ Token information updated');
+        };
+        
+        window.testTokenValidation = () => {
+            if (!tokenManager) return;
+            
+            const startTime = performance.now();
+            
+            for (let i = 0; i < 1000; i++) {
+                tokenManager.getTokenInfo();
+            }
+            
+            const endTime = performance.now();
+            const avgTime = (endTime - startTime) / 1000;
+            
+            log(`⚡ Token validation performance: ${avgTime.toFixed(3)}ms average`);
+            updateStatus('tokenStatus', `Performance Test Results:\nAverage validation time: ${avgTime.toFixed(3)}ms\nTest iterations: 1000`);
+        };
+        
+        window.simulateExpiredToken = () => {
+            if (!tokenManager) return;
+            
+            // Create an expired token (expired 1 hour ago)
+            const expiredTime = Math.floor(Date.now() / 1000) - 3600;
+            const expiredToken = createTestToken(expiredTime);
+            
+            tokenManager.setAccessToken(expiredToken);
+            log('⚠️ Simulated expired token');
+            updateTokenDisplay();
+        };
+        
+        window.clearAllTokens = () => {
+            if (!tokenManager) return;
+            
+            tokenManager.clearTokens();
+            log('🗑️ All tokens cleared');
+            updateTokenDisplay();
+        };
+        
+        // API request testing
+        window.testVendorProfile = async () => {
+            if (!enhancedApi) {
+                updateStatus('apiStatus', '❌ Enhanced API not available');
+                return;
+            }
+            
+            try {
+                log('👤 Testing vendor profile request...');
+                updateStatus('apiStatus', '🔄 Fetching vendor profile...');
+                
+                const profile = await enhancedApi.fetchVendorProfile();
+                log('✅ Vendor profile fetched:', profile);
+                updateStatus('apiStatus', `✅ Vendor profile fetched:\n${JSON.stringify(profile, null, 2)}`);
+            } catch (error) {
+                log('❌ Vendor profile request failed:', error);
+                updateStatus('apiStatus', `❌ Vendor profile failed: ${error.message}`);
+            }
+        };
+        
+        window.testVendorOrders = async () => {
+            if (!enhancedApi) {
+                updateStatus('apiStatus', '❌ Enhanced API not available');
+                return;
+            }
+            
+            try {
+                log('📦 Testing vendor orders request...');
+                updateStatus('apiStatus', '🔄 Fetching vendor orders...');
+                
+                const orders = await enhancedApi.fetchVendorOrders();
+                log('✅ Vendor orders fetched:', orders);
+                updateStatus('apiStatus', `✅ Vendor orders fetched:\n${JSON.stringify(orders, null, 2)}`);
+            } catch (error) {
+                log('❌ Vendor orders request failed:', error);
+                updateStatus('apiStatus', `❌ Vendor orders failed: ${error.message}`);
+            }
+        };
+        
+        window.testMultipleRequests = async () => {
+            if (!enhancedApi) {
+                updateStatus('apiStatus', '❌ Enhanced API not available');
+                return;
+            }
+            
+            try {
+                log('🔄 Testing multiple simultaneous requests...');
+                updateStatus('apiStatus', '🔄 Making multiple requests...');
+                
+                const promises = [
+                    enhancedApi.fetchVendorProfile(),
+                    enhancedApi.fetchVendorOrders(),
+                    enhancedApi.checkApiHealth()
+                ];
+                
+                const results = await Promise.allSettled(promises);
+                const successful = results.filter(r => r.status === 'fulfilled').length;
+                
+                log(`✅ Multiple requests completed: ${successful}/${results.length} successful`);
+                updateStatus('apiStatus', `✅ Multiple requests completed:\n${successful}/${results.length} successful`);
+            } catch (error) {
+                log('❌ Multiple requests failed:', error);
+                updateStatus('apiStatus', `❌ Multiple requests failed: ${error.message}`);
+            }
+        };
+        
+        window.testNetworkError = () => {
+            log('🌐 Simulating network error...');
+            updateStatus('apiStatus', '⚠️ Network error simulation - check debug console');
+        };
+        
+        // Test suite functions
+        window.runUnitTests = async () => {
+            try {
+                const { default: TokenRefreshTester } = await import('./src/utils/tokenRefreshTests.js');
+                const tester = new TokenRefreshTester();
+                
+                log('🧪 Running unit tests...');
+                updateStatus('testResults', '🔄 Running unit tests...');
+                
+                await tester.runUnitTests();
+                
+                log('✅ Unit tests completed');
+                updateStatus('testResults', '✅ Unit tests completed - check debug console');
+            } catch (error) {
+                log('❌ Unit tests failed:', error);
+                updateStatus('testResults', `❌ Unit tests failed: ${error.message}`);
+            }
+        };
+        
+        window.runIntegrationTests = async () => {
+            try {
+                const { default: TokenRefreshTester } = await import('./src/utils/tokenRefreshTests.js');
+                const tester = new TokenRefreshTester();
+                
+                log('🔧 Running integration tests...');
+                updateStatus('testResults', '🔄 Running integration tests...');
+                
+                await tester.runIntegrationTests();
+                
+                log('✅ Integration tests completed');
+                updateStatus('testResults', '✅ Integration tests completed - check debug console');
+            } catch (error) {
+                log('❌ Integration tests failed:', error);
+                updateStatus('testResults', `❌ Integration tests failed: ${error.message}`);
+            }
+        };
+        
+        window.runAllTests = async () => {
+            try {
+                const { default: TokenRefreshTester } = await import('./src/utils/tokenRefreshTests.js');
+                const tester = new TokenRefreshTester();
+                
+                log('🚀 Running all tests...');
+                updateStatus('testResults', '🔄 Running complete test suite...');
+                
+                await tester.runAllTests();
+                
+                log('✅ All tests completed');
+                updateStatus('testResults', '✅ All tests completed - check debug console');
+            } catch (error) {
+                log('❌ Test suite failed:', error);
+                updateStatus('testResults', `❌ Test suite failed: ${error.message}`);
+            }
+        };
+        
+        window.runPerformanceTests = async () => {
+            try {
+                const { default: TokenRefreshTester } = await import('./src/utils/tokenRefreshTests.js');
+                const tester = new TokenRefreshTester();
+                
+                log('⚡ Running performance tests...');
+                updateStatus('testResults', '🔄 Running performance tests...');
+                
+                await tester.runPerformanceTests();
+                
+                log('✅ Performance tests completed');
+                updateStatus('testResults', '✅ Performance tests completed - check debug console');
+            } catch (error) {
+                log('❌ Performance tests failed:', error);
+                updateStatus('testResults', `❌ Performance tests failed: ${error.message}`);
+            }
+        };
+        
+        // Debug functions
+        window.clearConsole = () => {
+            logs = [];
+            updateDebugConsole();
+        };
+        
+        window.exportLogs = () => {
+            const logData = JSON.stringify(logs, null, 2);
+            const blob = new Blob([logData], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `token-refresh-logs-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            log('📁 Logs exported to file');
+        };
+        
+        // Helper function to create test tokens
+        function createTestToken(exp) {
+            const header = btoa(JSON.stringify({ typ: 'JWT', alg: 'HS256' }));
+            const payload = btoa(JSON.stringify({
+                token_type: 'access',
+                exp: exp,
+                iat: Math.floor(Date.now() / 1000),
+                jti: 'test_jti',
+                user_id: 1
+            }));
+            const signature = 'test_signature';
+            
+            return `${header}.${payload}.${signature}`;
+        }
+        
+        // Auto-refresh token display every 5 seconds
+        setInterval(() => {
+            if (tokenManager) {
+                updateTokenDisplay();
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
