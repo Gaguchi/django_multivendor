@@ -623,8 +623,18 @@ export async function checkEmailAvailability(email) {
 // Get vendor profile information
 export async function getVendorProfile() {
   try {
-    // Ensure token is valid before making the request
-    await ensureValidToken();
+    const token = getToken();
+    if (!token) {
+      throw new Error('No authentication token available');
+    }
+
+    // Ensure token is valid before making the request, but don't wait too long
+    try {
+      await ensureValidToken();
+    } catch (tokenError) {
+      console.warn('Token validation failed, attempting request anyway:', tokenError);
+      // Continue with the request using the current token
+    }
     
     const response = await fetch(`${API_URL}/api/vendors/profile/`, {
       headers: {

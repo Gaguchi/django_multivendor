@@ -97,36 +97,36 @@ export default function Edit() {
                     // Image handling with robust transformation
                     managedImages: (() => {
                         if (!product.images || !Array.isArray(product.images)) return [];
-                        return product.images.map((img, index) => {
-                            // Handle different image object structures
-                            const imageUrl = img.file || img.image || img.url || '';
-                            return {
-                                id: `existing-${img.id || index}`,
-                                preview: imageUrl,
-                                isExternal: true,
-                                file: null,
-                                originalData: img // Keep original data for reference
-                            };
-                        });
-                    })(),
-                    
-                    // Thumbnail selection
-                    selectedThumbnailId: (() => {
-                        if (product.thumbnail && product.images && product.images.length > 0) {
-                            // Try to find the image that matches the thumbnail
+                        
+                        // First, determine which image should be the thumbnail
+                        let thumbnailImageId = null;
+                        if (product.thumbnail && product.images.length > 0) {
                             const matchingImageIndex = product.images.findIndex(img => 
                                 (img.file && img.file === product.thumbnail) ||
                                 (img.image && img.image === product.thumbnail) ||
                                 (img.url && img.url === product.thumbnail)
                             );
                             if (matchingImageIndex !== -1) {
-                                return `existing-${product.images[matchingImageIndex].id || matchingImageIndex}`;
+                                thumbnailImageId = product.images[matchingImageIndex].id || matchingImageIndex;
+                            } else {
+                                // Default to first image
+                                thumbnailImageId = product.images[0].id || 0;
                             }
-                            // Default to first image
-                            return `existing-${product.images[0].id || 0}`;
                         }
-                        return null;
-                    })()
+                        
+                        return product.images.map((img, index) => {
+                            const imageId = img.id || index;
+                            const imageUrl = img.file || img.image || img.url || '';
+                            return {
+                                id: `existing-${imageId}`,
+                                preview: imageUrl,
+                                isExternal: true,
+                                file: null,
+                                originalData: img, // Keep original data for reference
+                                isThumbnail: thumbnailImageId === imageId // Mark the thumbnail image
+                            };
+                        });
+                    })(),
                 };
                 
                 console.log("=== TRANSFORMATION RESULTS ===");
@@ -137,7 +137,7 @@ export default function Edit() {
                 console.log("Transformed salePrice:", transformedData.salePrice);
                 console.log("Transformed stock:", transformedData.stock);
                 console.log("Transformed images count:", transformedData.managedImages.length);
-                console.log("Selected thumbnail ID:", transformedData.selectedThumbnailId);
+                console.log("Transformed images with thumbnails:", transformedData.managedImages.map(img => ({ id: img.id, isThumbnail: img.isThumbnail })));
                 
                 setInitialData(transformedData);
             } catch (err) {

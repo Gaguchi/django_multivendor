@@ -65,17 +65,32 @@ export default function ImageUploadSection({
             return processedImages;
         });
 
-        const initialThumbnail = initialImages.find(img => img.isThumbnail);
-        if (initialThumbnail) {
-            setSelectedThumbnailId(initialThumbnail.id);
-        } else if (processedImages.length > 0) {
+        // Handle thumbnail selection logic
+        setSelectedThumbnailId(currentSelectedThumbnailId => {
+            // First check if there's an initial thumbnail marked
+            const initialThumbnail = initialImages.find(img => img.isThumbnail);
+            if (initialThumbnail) {
+                console.log("ImageUploadSection: Found initial thumbnail with isThumbnail flag:", initialThumbnail.id);
+                return initialThumbnail.id;
+            }
+            
+            // If no images, clear thumbnail
+            if (processedImages.length === 0) {
+                console.log("ImageUploadSection: No images, clearing thumbnail");
+                return null;
+            }
+            
             // Check if the current selectedThumbnailId is still valid within the new processedImages
-            const currentThumbnailStillValid = processedImages.some(img => img.id === selectedThumbnailId);
-            if (!currentThumbnailStillValid) {
-                setSelectedThumbnailId(processedImages[0].id);
-            }        } else if (processedImages.length === 0) {
-            setSelectedThumbnailId(null);
-        }
+            const currentThumbnailStillValid = processedImages.some(img => img.id === currentSelectedThumbnailId);
+            if (currentThumbnailStillValid) {
+                console.log("ImageUploadSection: Current thumbnail still valid:", currentSelectedThumbnailId);
+                return currentSelectedThumbnailId;
+            }
+            
+            // Default to first image if current selection is invalid
+            console.log("ImageUploadSection: Defaulting to first image as thumbnail:", processedImages[0].id);
+            return processedImages[0].id;
+        });
 
     }, [initialImages]); // Corrected dependency array
 
@@ -157,12 +172,17 @@ export default function ImageUploadSection({
         }
     };
 
-    // Effect to call onImagesChange when state updates
+    // Effect to call onImagesChange when state updates - stabilized with useCallback
     useEffect(() => {
-        if (onImagesChange) {
-            onImagesChange({ managedImages, selectedThumbnailId });
+        // Add safety check to prevent React error #31
+        if (typeof onImagesChange === 'function') {
+            try {
+                onImagesChange({ managedImages, selectedThumbnailId });
+            } catch (error) {
+                console.error('Error in onImagesChange callback:', error);
+            }
         }
-    }, [managedImages, selectedThumbnailId, onImagesChange]);
+    }, [managedImages, selectedThumbnailId]); // Remove onImagesChange from dependencies to prevent loops
 
     // Effect for cleanup of object URLs on unmount
     useEffect(() => {

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { getVendorProfile } from '../services/api';
-import { setVendorId, getVendorId, clearVendorId, getToken } from '../utils/auth';
+import { setVendorId, getVendorId, clearVendorId, getToken, isAuthenticated } from '../utils/auth';
 
 const VendorContext = createContext();
 
@@ -17,6 +17,7 @@ export function VendorProvider({ children }) {
   const [vendorId, setVendorIdState] = useState(getVendorId());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [initialized, setInitialized] = useState(false);
 
   // Fetch vendor profile information
   const fetchVendorProfile = async () => {
@@ -39,10 +40,12 @@ export function VendorProvider({ children }) {
         console.warn('No vendor_id found in profile response');
       }
       
+      setInitialized(true);
       return data;
     } catch (err) {
       setError('Failed to fetch vendor profile');
       console.error('Error fetching vendor profile:', err);
+      setInitialized(true); // Mark as initialized even on error
       throw err;
     } finally {
       setLoading(false);
@@ -52,12 +55,25 @@ export function VendorProvider({ children }) {
   // Initialize vendor profile on mount if user is authenticated
   useEffect(() => {
     const token = getToken();
-    if (token && !vendor && !vendorId) {
-      fetchVendorProfile().catch(() => {
-        // Silently handle error - it will be shown in UI if needed
-      });
-    }
-  }, []);
+    // Add a small delay to ensure authentication system is ready
+    const initializeProfile = async () => {
+      // Double-check authentication status
+      if (token && isAuthenticated() && !vendor && !loading && !initialized) {
+        try {
+          await fetchVendorProfile();
+        } catch (error) {
+          // Silently handle error - it will be shown in UI if needed
+          console.warn('Initial vendor profile fetch failed:', error);
+        }
+      } else if (!token || !isAuthenticated()) {
+        setInitialized(true); // Mark as initialized if not authenticated
+      }
+    };
+
+    // Add a small delay to ensure the auth system is ready
+    const timer = setTimeout(initializeProfile, 100);
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array - only run on mount
 
   // Clear vendor data
   const clearVendor = () => {
@@ -76,6 +92,7 @@ export function VendorProvider({ children }) {
     vendorId,
     loading,
     error,
+    initialized,
     fetchVendorProfile,
     clearVendor,
     isVendorLoaded,

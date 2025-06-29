@@ -1,20 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useVendor } from '../contexts/VendorContext';
 import { getToken } from '../utils/auth';
 
 export default function VendorProfileLoader({ children }) {
-  const { vendor, vendorId, loading, error, fetchVendorProfile, isVendorLoaded } = useVendor();
+  const { vendor, vendorId, loading, error, initialized, fetchVendorProfile, isVendorLoaded } = useVendor();
+  const [hasFetchAttempted, setHasFetchAttempted] = useState(false);
 
   useEffect(() => {
     const token = getToken();
-    if (token && !isVendorLoaded && !loading) {
+    if (token && !isVendorLoaded() && !loading && !hasFetchAttempted && initialized) {
+      setHasFetchAttempted(true);
       fetchVendorProfile().catch(() => {
         // Error is already handled in context
       });
     }
-  }, []);
+  }, [isVendorLoaded, loading, fetchVendorProfile, hasFetchAttempted, initialized]);
 
-  if (loading) {
+  // Show loading if we're loading OR if we have a token but haven't initialized yet
+  if (loading || (getToken() && !initialized)) {
     return (
       <div className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="text-center">
@@ -59,7 +62,7 @@ export default function VendorProfileLoader({ children }) {
     );
   }
 
-  if (!isVendorLoaded()) {
+  if (!loading && !error && initialized && !isVendorLoaded()) {
     return (
       <div className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="text-center">
@@ -72,7 +75,10 @@ export default function VendorProfileLoader({ children }) {
             <hr />
             <button 
               className="btn btn-outline-warning me-2" 
-              onClick={() => fetchVendorProfile()}
+              onClick={() => {
+                setHasFetchAttempted(false);
+                fetchVendorProfile();
+              }}
             >
               <i className="bi bi-arrow-clockwise me-1"></i>
               Retry
