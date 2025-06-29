@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Skeleton from '../../Skeleton';
 
 export default function ProductDetailsSection({ formData, onChange, categories = [], loading = false }) {
     const handleInputChange = (e) => {
@@ -62,7 +63,7 @@ export default function ProductDetailsSection({ formData, onChange, categories =
                         </option>
                     ))}
                 </select>
-                {loading && <div className="text-tiny mt-2">Loading categories...</div>}
+                {loading && <Skeleton variant="text" width="200px" className="mt-2" />}
             </fieldset>
             
             <fieldset className="description">

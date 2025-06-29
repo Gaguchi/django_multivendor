@@ -1,6 +1,7 @@
 import { useProducts } from '../hooks/useProducts'
 import ProductGrid from '../elements/ProductGrid'
 import Sidebar from '../components/Shop/Sidebar'
+import { SearchResultsSkeleton } from '../components/Skeleton'
 import { useEffect, useRef } from 'react'
 
 export default function Products() {
@@ -41,6 +42,15 @@ export default function Products() {
       }
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage])
+
+  // Show skeleton loader on initial load
+  if (isLoading && !products.length) {
+    return (
+      <div className="container">
+        <SearchResultsSkeleton />
+      </div>
+    )
+  }
 
   return (
     <>

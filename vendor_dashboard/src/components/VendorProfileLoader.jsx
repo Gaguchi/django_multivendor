@@ -1,38 +1,79 @@
 import { useEffect, useState } from 'react';
 import { useVendor } from '../contexts/VendorContext';
 import { getToken } from '../utils/auth';
+import Skeleton, { DashboardCardSkeleton } from './Skeleton';
 
 export default function VendorProfileLoader({ children }) {
   const { vendor, vendorId, loading, error, initialized, fetchVendorProfile, isVendorLoaded } = useVendor();
-  const [hasFetchAttempted, setHasFetchAttempted] = useState(false);
+  const [retryAttempts, setRetryAttempts] = useState(0);
+  const [isRetrying, setIsRetrying] = useState(false);
 
-  useEffect(() => {
-    const token = getToken();
-    // Only attempt fetch if we're authenticated, initialized, not already loading, and haven't attempted yet
-    if (token && initialized && !isVendorLoaded() && !loading && !hasFetchAttempted) {
-      setHasFetchAttempted(true);
-      fetchVendorProfile().catch(() => {
-        // Error is already handled in context
-      });
+  const handleRetry = async () => {
+    setIsRetrying(true);
+    setRetryAttempts(prev => prev + 1);
+    
+    try {
+      await fetchVendorProfile();
+    } catch (error) {
+      console.error('Retry failed:', error);
+    } finally {
+      setIsRetrying(false);
     }
-  }, [isVendorLoaded, loading, fetchVendorProfile, hasFetchAttempted, initialized]);
+  };
 
-  // Show loading if we're loading OR if we have a token but haven't initialized yet
-  if (loading || (getToken() && !initialized)) {
+  // Auto retry once if initial load fails
+  useEffect(() => {
+    if (error && retryAttempts === 0 && initialized && !loading) {
+      const timer = setTimeout(() => {
+        console.log('Auto-retrying vendor profile fetch...');
+        handleRetry();
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [error, retryAttempts, initialized, loading]);
+
+  // Show loading skeleton while not initialized or while loading
+  if (!initialized || loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center min-vh-100">
-        <div className="text-center">
-          <div className="spinner-border text-primary mb-3" role="status" style={{width: '3rem', height: '3rem'}}>
-            <span className="visually-hidden">Loading...</span>
+      <div className="skeleton-container">
+        <div className="skeleton-grid">
+          <DashboardCardSkeleton />
+          <DashboardCardSkeleton />
+          <DashboardCardSkeleton />
+          <DashboardCardSkeleton />
+        </div>
+        
+        <div className="skeleton-section mt-4">
+          <Skeleton variant="text" width="200px" height="1.5rem" className="mb-3" />
+          <div className="table-responsive">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th><Skeleton variant="text" width="100px" /></th>
+                  <th><Skeleton variant="text" width="120px" /></th>
+                  <th><Skeleton variant="text" width="80px" /></th>
+                  <th><Skeleton variant="text" width="100px" /></th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 5 }, (_, index) => (
+                  <tr key={index}>
+                    <td><Skeleton variant="text" width="120px" /></td>
+                    <td><Skeleton variant="text" width="150px" /></td>
+                    <td><Skeleton variant="text" width="80px" /></td>
+                    <td><Skeleton variant="rectangular" width="80px" height="32px" /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-          <h4>Loading Vendor Profile...</h4>
-          <p className="text-muted">Please wait while we load your vendor information.</p>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  if (error && initialized && !loading) {
     return (
       <div className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="text-center">
@@ -42,13 +83,28 @@ export default function VendorProfileLoader({ children }) {
               Vendor Profile Error
             </h4>
             <p className="mb-3">{error}</p>
+            {retryAttempts > 0 && (
+              <p className="mb-3 text-muted">
+                <small>Retry attempts: {retryAttempts}</small>
+              </p>
+            )}
             <hr />
             <button 
               className="btn btn-outline-danger me-2" 
-              onClick={() => fetchVendorProfile()}
+              onClick={handleRetry}
+              disabled={isRetrying}
             >
-              <i className="bi bi-arrow-clockwise me-1"></i>
-              Retry
+              {isRetrying ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Retrying...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-arrow-clockwise me-1"></i>
+                  Retry
+                </>
+              )}
             </button>
             <button 
               className="btn btn-outline-secondary" 
@@ -63,7 +119,8 @@ export default function VendorProfileLoader({ children }) {
     );
   }
 
-  if (!loading && !error && initialized && !isVendorLoaded()) {
+  // Show warning when initialized but no vendor profile found
+  if (initialized && !error && !loading && !isVendorLoaded()) {
     return (
       <div className="d-flex justify-content-center align-items-center min-vh-100">
         <div className="text-center">
@@ -76,13 +133,20 @@ export default function VendorProfileLoader({ children }) {
             <hr />
             <button 
               className="btn btn-outline-warning me-2" 
-              onClick={() => {
-                setHasFetchAttempted(false);
-                fetchVendorProfile();
-              }}
+              onClick={handleRetry}
+              disabled={isRetrying}
             >
-              <i className="bi bi-arrow-clockwise me-1"></i>
-              Retry
+              {isRetrying ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Retrying...
+                </>
+              ) : (
+                <>
+                  <i className="bi bi-arrow-clockwise me-1"></i>
+                  Retry
+                </>
+              )}
             </button>
             <button 
               className="btn btn-outline-secondary" 

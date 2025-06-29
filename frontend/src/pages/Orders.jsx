@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useOrder } from '../contexts/OrderContext';
 import { useAuth } from '../contexts/AuthContext';
+import { OrderSkeleton } from '../components/Skeleton';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Orders() {
   const { orders, loading, error, fetchOrders, cancelOrder, getStatusColor } = useOrder();
@@ -48,11 +50,15 @@ export default function Orders() {
 
   if (loading) {
     return (
-      <div className="container py-5 text-center">
-        <div className="spinner-border text-primary" role="status">
-          <span className="sr-only">Loading...</span>
+      <div className="container py-5">
+        <div className="row">
+          <div className="col-12">
+            <h2 className="mb-4">My Orders</h2>
+            {Array.from({ length: 4 }, (_, index) => (
+              <OrderSkeleton key={index} />
+            ))}
+          </div>
         </div>
-        <p className="mt-3">Loading your orders...</p>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { ImageUploadSkeleton } from '../../Skeleton';
 import './ImageUploadSection.css'; // We'll create this file for custom styles
 
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -15,12 +16,14 @@ const debugThumbnailState = (context, managedImages, selectedThumbnailId) => {
 
 export default function ImageUploadSection({ 
     initialImages = [], 
-    onImagesChange 
+    onImagesChange,
+    loading = false 
 }) {
     const fileInputRef = useRef(null);
     const [managedImages, setManagedImages] = useState([]);
     const [selectedThumbnailId, setSelectedThumbnailId] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
     
     // Ref to store the latest managedImages for cleanup
     const imagesRef = useRef(managedImages);
@@ -105,30 +108,38 @@ export default function ImageUploadSection({
 
     }, [initialImages]); // Corrected dependency array
 
-    const processFiles = useCallback((files) => {
-        const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
-        if (imageFiles.length === 0) return;
+    const processFiles = useCallback(async (files) => {
+        setIsProcessing(true);
+        
+        try {
+            const imageFiles = Array.from(files).filter(file => file.type.startsWith('image/'));
+            if (imageFiles.length === 0) return;
 
-        const newImageObjects = imageFiles.map(file => ({
-            id: generateId(),
-            file: file,
-            preview: URL.createObjectURL(file),
-            isExternal: false
-        }));
+            const newImageObjects = imageFiles.map(file => ({
+                id: generateId(),
+                file: file,
+                preview: URL.createObjectURL(file),
+                isExternal: false
+            }));
 
-        setManagedImages(prevImages => {
-            const updatedImages = [...prevImages, ...newImageObjects];
-            
-            // If no thumbnail is selected yet, and we're adding new images, select the first new one.
-            if (!selectedThumbnailId && updatedImages.length > 0) {
-                setSelectedThumbnailId(updatedImages[0].id);
-            } else if (selectedThumbnailId === null && updatedImages.length > 0) {
-                // This condition ensures a thumbnail is selected if one wasn't previously.
-                setSelectedThumbnailId(updatedImages[0].id);
-            }
-            
-            return updatedImages;
-        });
+            setManagedImages(prevImages => {
+                const updatedImages = [...prevImages, ...newImageObjects];
+                
+                // If no thumbnail is selected yet, and we're adding new images, select the first new one.
+                if (!selectedThumbnailId && updatedImages.length > 0) {
+                    setSelectedThumbnailId(updatedImages[0].id);
+                } else if (selectedThumbnailId === null && updatedImages.length > 0) {
+                    // This condition ensures a thumbnail is selected if one wasn't previously.
+                    setSelectedThumbnailId(updatedImages[0].id);
+                }
+                
+                return updatedImages;
+            });
+        } catch (error) {
+            console.error('Error processing image files:', error);
+        } finally {
+            setIsProcessing(false);
+        }
     }, [selectedThumbnailId]);
 
     const handleFileSelect = (e) => {
@@ -227,6 +238,11 @@ export default function ImageUploadSection({
         };
     }, []); // Runs only on unmount
 
+    // Show skeleton loader during initial loading
+    if (loading) {
+        return <ImageUploadSkeleton />;
+    }
+
     return (
         <div className="wg-box mb-30">
             <fieldset>
@@ -265,6 +281,15 @@ export default function ImageUploadSection({
                             />
                         </label>
                     </div>
+                    
+                    {isProcessing && (
+                        <div className="upload-processing">
+                            <div className="d-flex align-items-center justify-content-center p-3">
+                                <div className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></div>
+                                <span>Processing images...</span>
+                            </div>
+                        </div>
+                    )}
                     
                     {managedImages.length > 0 && (
                         <div className="image-previews-container">

@@ -29345,3 +29345,248 @@ UnboundLocalError: cannot access local variable 'thumbnail_filename_from_request
 [2025-06-29 16:24:46,056] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002CEA30D8050>]
 [2025-06-29 16:24:46,327] INFO views Read-only action list - allowing public access
 [2025-06-29 16:24:46,533] INFO views Read-only action list - allowing public access
+[2025-06-29 16:32:35,488] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:32:35,489] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:32:35,492] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:32:35,494] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:32:54,154] INFO views Read-only action list - allowing public access
+[2025-06-29 16:32:54,367] INFO views Read-only action list - allowing public access
+[2025-06-29 16:34:44,059] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:34:44,061] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:34:44,063] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:34:44,065] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:39:41,765] INFO views Read-only action list - allowing public access
+[2025-06-29 16:39:41,991] INFO views Read-only action list - allowing public access
+[2025-06-29 16:39:42,556] INFO views Read-only action list - allowing public access
+[2025-06-29 16:39:42,772] INFO views Read-only action list - allowing public access
+[2025-06-29 16:39:47,383] INFO views === VendorViewSet Initial Processing ===
+[2025-06-29 16:39:47,383] INFO views === VendorViewSet Initial Processing ===
+[2025-06-29 16:39:47,384] INFO views Request Method: GET
+[2025-06-29 16:39:47,384] INFO views Request Method: GET
+[2025-06-29 16:39:47,385] INFO views Request User: Beta
+[2025-06-29 16:39:47,385] INFO views Request User: Beta
+[2025-06-29 16:39:47,385] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjAxMzg0LCJpYXQiOjE3NTExOTk4ODQsImp0aSI6ImI4YmJiMWQxMGEwMzRiNmNiZDQ4NTBhMGVjM2VjZWUwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.sfrpLTdBcCVncLSAjZlDJM-gl9htyf3lqMV2uBalRQ8
+[2025-06-29 16:39:47,385] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjAxMzg0LCJpYXQiOjE3NTExOTk4ODQsImp0aSI6ImI4YmJiMWQxMGEwMzRiNmNiZDQ4NTBhMGVjM2VjZWUwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.sfrpLTdBcCVncLSAjZlDJM-gl9htyf3lqMV2uBalRQ8
+[2025-06-29 16:39:47,386] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjAxMzg0LCJpYXQiOjE3NTExOTk4ODQsImp0aSI6ImI4YmJiMWQxMGEwMzRiNmNiZDQ4NTBhMGVjM2VjZWUwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.sfrpLTdBcCVncLSAjZlDJM-gl9htyf3lqMV2uBalRQ8', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '95757dcf4d19d0ce-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'dc767be6-025c-45c7-b8b5-e06dcfdcaa02', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-29 16:39:47,386] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjAxMzg0LCJpYXQiOjE3NTExOTk4ODQsImp0aSI6ImI4YmJiMWQxMGEwMzRiNmNiZDQ4NTBhMGVjM2VjZWUwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.sfrpLTdBcCVncLSAjZlDJM-gl9htyf3lqMV2uBalRQ8', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '95757dcf4d19d0ce-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'dc767be6-025c-45c7-b8b5-e06dcfdcaa02', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-29 16:39:47,386] INFO views === Checking Permissions ===
+[2025-06-29 16:39:47,386] INFO views === Checking Permissions ===
+[2025-06-29 16:39:47,386] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002CEA344A390>]
+[2025-06-29 16:39:47,386] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002CEA344A390>]
+[2025-06-29 16:39:47,620] INFO views Read-only action list - allowing public access
+[2025-06-29 16:39:47,841] INFO views Read-only action list - allowing public access
+[2025-06-29 16:39:57,792] INFO views Read-only action list - allowing public access
+[2025-06-29 16:39:58,013] INFO views Read-only action list - allowing public access
+[2025-06-29 16:39:59,928] INFO views Read-only action list - allowing public access
+[2025-06-29 16:40:00,106] INFO views Read-only action list - allowing public access
+[2025-06-29 16:40:04,588] INFO views Read-only action list - allowing public access
+[2025-06-29 16:40:04,807] INFO views Read-only action list - allowing public access
+[2025-06-29 16:40:07,556] INFO views Read-only action list - allowing public access
+[2025-06-29 16:40:07,744] INFO views Read-only action list - allowing public access
+[2025-06-29 16:40:18,223] INFO views Read-only action list - allowing public access
+[2025-06-29 16:40:18,402] INFO views Read-only action list - allowing public access
+[2025-06-29 16:42:36,425] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:42:36,425] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:42:36,429] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:42:36,430] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:44:44,170] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:44:44,171] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:44:44,174] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:44:44,175] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:52:37,482] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:52:37,484] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:52:37,488] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:52:37,488] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:54:44,418] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:54:44,421] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 16:55:20,431] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 16:55:20,434] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:02:38,478] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:02:38,480] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:02:38,483] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:02:38,484] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:05:20,427] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:05:20,429] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:05:20,434] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:05:20,434] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:12:39,490] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:12:39,491] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:12:39,495] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:12:39,496] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:15:20,570] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:15:20,570] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:15:20,574] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:15:20,583] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:22:40,500] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:22:40,501] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:22:40,504] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:22:40,505] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:25:20,443] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:25:20,445] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:25:20,449] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:25:20,449] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:31:42,806] INFO views === VendorViewSet Initial Processing ===
+[2025-06-29 17:31:42,806] INFO views === VendorViewSet Initial Processing ===
+[2025-06-29 17:31:42,806] INFO views Request Method: GET
+[2025-06-29 17:31:42,806] INFO views Request Method: GET
+[2025-06-29 17:31:42,808] INFO views Request User: Beta
+[2025-06-29 17:31:42,808] INFO views Request User: Beta
+[2025-06-29 17:31:42,808] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA0NDIwLCJpYXQiOjE3NTEyMDI5MjAsImp0aSI6IjJiZTRhN2NlMTRmZDQ1YzhiY2U1ZGIxOWU2Y2NlNTAwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.NNoMlcJTxhEjEXmnR7e5mdTUV80icPGj_NVX60-ZaKc
+[2025-06-29 17:31:42,808] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA0NDIwLCJpYXQiOjE3NTEyMDI5MjAsImp0aSI6IjJiZTRhN2NlMTRmZDQ1YzhiY2U1ZGIxOWU2Y2NlNTAwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.NNoMlcJTxhEjEXmnR7e5mdTUV80icPGj_NVX60-ZaKc
+[2025-06-29 17:31:42,808] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA0NDIwLCJpYXQiOjE3NTEyMDI5MjAsImp0aSI6IjJiZTRhN2NlMTRmZDQ1YzhiY2U1ZGIxOWU2Y2NlNTAwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.NNoMlcJTxhEjEXmnR7e5mdTUV80icPGj_NVX60-ZaKc', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '9575c9dfbd65d0cf-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'dc767be6-025c-45c7-b8b5-e06dcfdcaa02', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?1', 'Sec-Ch-Ua-Platform': '"Android"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-29 17:31:42,808] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA0NDIwLCJpYXQiOjE3NTEyMDI5MjAsImp0aSI6IjJiZTRhN2NlMTRmZDQ1YzhiY2U1ZGIxOWU2Y2NlNTAwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.NNoMlcJTxhEjEXmnR7e5mdTUV80icPGj_NVX60-ZaKc', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '9575c9dfbd65d0cf-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'dc767be6-025c-45c7-b8b5-e06dcfdcaa02', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?1', 'Sec-Ch-Ua-Platform': '"Android"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-29 17:31:42,808] INFO views === Checking Permissions ===
+[2025-06-29 17:31:42,808] INFO views === Checking Permissions ===
+[2025-06-29 17:31:42,809] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002CEA34C64D0>]
+[2025-06-29 17:31:42,809] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002CEA34C64D0>]
+[2025-06-29 17:31:43,030] INFO views Read-only action list - allowing public access
+[2025-06-29 17:31:43,214] INFO views Read-only action list - allowing public access
+[2025-06-29 17:31:57,967] INFO views === VendorViewSet Initial Processing ===
+[2025-06-29 17:31:57,967] INFO views === VendorViewSet Initial Processing ===
+[2025-06-29 17:31:57,967] INFO views Request Method: GET
+[2025-06-29 17:31:57,967] INFO views Request Method: GET
+[2025-06-29 17:31:57,969] INFO views Request User: Beta
+[2025-06-29 17:31:57,969] INFO views Request User: Beta
+[2025-06-29 17:31:57,969] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA0NDIwLCJpYXQiOjE3NTEyMDI5MjAsImp0aSI6IjJiZTRhN2NlMTRmZDQ1YzhiY2U1ZGIxOWU2Y2NlNTAwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.NNoMlcJTxhEjEXmnR7e5mdTUV80icPGj_NVX60-ZaKc
+[2025-06-29 17:31:57,969] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA0NDIwLCJpYXQiOjE3NTEyMDI5MjAsImp0aSI6IjJiZTRhN2NlMTRmZDQ1YzhiY2U1ZGIxOWU2Y2NlNTAwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.NNoMlcJTxhEjEXmnR7e5mdTUV80icPGj_NVX60-ZaKc
+[2025-06-29 17:31:57,969] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA0NDIwLCJpYXQiOjE3NTEyMDI5MjAsImp0aSI6IjJiZTRhN2NlMTRmZDQ1YzhiY2U1ZGIxOWU2Y2NlNTAwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.NNoMlcJTxhEjEXmnR7e5mdTUV80icPGj_NVX60-ZaKc', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '9575ca3e7ecdd0cf-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'dc767be6-025c-45c7-b8b5-e06dcfdcaa02', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-29 17:31:57,969] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA0NDIwLCJpYXQiOjE3NTEyMDI5MjAsImp0aSI6IjJiZTRhN2NlMTRmZDQ1YzhiY2U1ZGIxOWU2Y2NlNTAwIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.NNoMlcJTxhEjEXmnR7e5mdTUV80icPGj_NVX60-ZaKc', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '9575ca3e7ecdd0cf-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'dc767be6-025c-45c7-b8b5-e06dcfdcaa02', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-29 17:31:57,970] INFO views === Checking Permissions ===
+[2025-06-29 17:31:57,970] INFO views === Checking Permissions ===
+[2025-06-29 17:31:57,970] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002CEA350C950>]
+[2025-06-29 17:31:57,970] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002CEA350C950>]
+[2025-06-29 17:31:58,176] INFO views Read-only action list - allowing public access
+[2025-06-29 17:31:58,366] INFO views Read-only action list - allowing public access
+[2025-06-29 17:32:41,429] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:32:41,432] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:32:41,433] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:32:41,436] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:35:20,101] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:35:20,105] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:35:20,105] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:35:20,108] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:42:42,639] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:42:42,639] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:42:42,645] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:42:42,646] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:45:20,429] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:45:20,432] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:45:20,433] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:45:20,436] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:47:30,375] INFO views === VendorViewSet Initial Processing ===
+[2025-06-29 17:47:30,375] INFO views === VendorViewSet Initial Processing ===
+[2025-06-29 17:47:30,376] INFO views Request Method: GET
+[2025-06-29 17:47:30,376] INFO views Request Method: GET
+[2025-06-29 17:47:30,378] INFO views Request User: Beta
+[2025-06-29 17:47:30,378] INFO views Request User: Beta
+[2025-06-29 17:47:30,378] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA1NjIwLCJpYXQiOjE3NTEyMDQxMjAsImp0aSI6ImY2MjFlMTI0MWI5ZTQ0YzU5N2YxMWI5NzZiZDRiZDZlIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.mdYqZs5ysfZCyVyyms5kND9449jvv1fyzAoQVRbOL8g
+[2025-06-29 17:47:30,378] INFO views Request Auth: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA1NjIwLCJpYXQiOjE3NTEyMDQxMjAsImp0aSI6ImY2MjFlMTI0MWI5ZTQ0YzU5N2YxMWI5NzZiZDRiZDZlIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.mdYqZs5ysfZCyVyyms5kND9449jvv1fyzAoQVRbOL8g
+[2025-06-29 17:47:30,378] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA1NjIwLCJpYXQiOjE3NTEyMDQxMjAsImp0aSI6ImY2MjFlMTI0MWI5ZTQ0YzU5N2YxMWI5NzZiZDRiZDZlIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.mdYqZs5ysfZCyVyyms5kND9449jvv1fyzAoQVRbOL8g', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '9575e1024a35d0f3-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'dc767be6-025c-45c7-b8b5-e06dcfdcaa02', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-29 17:47:30,378] INFO views Request Headers: {'Content-Length': '', 'Content-Type': 'application/json', 'Host': 'api.bazro.ge', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36', 'Accept': 'application/json', 'Accept-Encoding': 'gzip, br', 'Accept-Language': 'en,en-US;q=0.9,ru;q=0.8,ka;q=0.7', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUxMjA1NjIwLCJpYXQiOjE3NTEyMDQxMjAsImp0aSI6ImY2MjFlMTI0MWI5ZTQ0YzU5N2YxMWI5NzZiZDRiZDZlIiwidXNlcl9pZCI6MTEsImlzcyI6ImRqYW5nb19tdWx0aXZlbmRvciJ9.mdYqZs5ysfZCyVyyms5kND9449jvv1fyzAoQVRbOL8g', 'Cdn-Loop': 'cloudflare; loops=1', 'Cf-Connecting-Ip': '31.146.76.40', 'Cf-Ipcountry': 'GE', 'Cf-Ray': '9575e1024a35d0f3-SOF', 'Cf-Visitor': '{"scheme":"https"}', 'Cf-Warp-Tag-Id': 'dc767be6-025c-45c7-b8b5-e06dcfdcaa02', 'Connection': 'keep-alive', 'Origin': 'https://seller.bazro.ge', 'Priority': 'u=1, i', 'Referer': 'https://seller.bazro.ge/', 'Sec-Ch-Ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"', 'Sec-Ch-Ua-Mobile': '?0', 'Sec-Ch-Ua-Platform': '"Windows"', 'Sec-Fetch-Dest': 'empty', 'Sec-Fetch-Mode': 'cors', 'Sec-Fetch-Site': 'same-site', 'X-Forwarded-For': '31.146.76.40', 'X-Forwarded-Proto': 'https'}
+[2025-06-29 17:47:30,379] INFO views === Checking Permissions ===
+[2025-06-29 17:47:30,379] INFO views === Checking Permissions ===
+[2025-06-29 17:47:30,379] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002CEA3053190>]
+[2025-06-29 17:47:30,379] INFO views Permission Classes: [<rest_framework.permissions.IsAuthenticated object at 0x000002CEA3053190>]
+[2025-06-29 17:52:43,418] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:52:43,423] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:52:43,424] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:52:43,426] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:55:20,439] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:55:20,442] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 17:55:20,447] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 17:55:20,450] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:02:44,413] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:02:44,416] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:02:44,417] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:02:44,420] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:05:20,448] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:05:20,451] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:05:20,452] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:05:20,455] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:12:45,425] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:12:45,429] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:12:45,430] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:12:45,434] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:15:20,429] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:15:20,432] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:15:20,433] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:15:20,440] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:17:10,413] INFO views Read-only action list - allowing public access
+[2025-06-29 18:17:10,623] INFO views Read-only action list - allowing public access
+[2025-06-29 18:22:46,492] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:22:46,494] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:22:46,499] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:22:46,501] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:25:20,103] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:25:20,105] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:25:20,110] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:25:20,111] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:35:20,457] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:35:20,459] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:35:20,464] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:35:20,465] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:42:44,638] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:42:44,640] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:42:44,644] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:42:44,645] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:45:20,386] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:45:20,389] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:45:20,393] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:45:20,395] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:48:16,039] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-29 18:48:16,039] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: liquid
+[2025-06-29 18:48:48,079] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=30)
+[2025-06-29 18:48:48,079] INFO services [AI_SEARCH_DEBUG] Query words: ['liquid']
+[2025-06-29 18:48:48,079] INFO services [AI_SEARCH_DEBUG] Direct matches: []
+[2025-06-29 18:48:48,079] INFO services [AI_SEARCH_DEBUG] Concept matches: []
+[2025-06-29 18:48:48,079] INFO services [AI_SEARCH_DEBUG] Final selected tags: []
+[2025-06-29 18:48:48,080] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: []
+[2025-06-29 18:48:55,520] INFO services [AI_SEARCH_DEBUG] Loaded 23 products and 36 tags
+[2025-06-29 18:48:55,521] INFO services [AI_SEARCH_DEBUG] Sending AI query for tag analysis: something to drink
+[2025-06-29 18:49:27,555] INFO services [AI_SEARCH_DEBUG] AI tag selection failed: HTTPConnectionPool(host='localhost', port=11434): Read timed out. (read timeout=30)
+[2025-06-29 18:49:27,555] INFO services [AI_SEARCH_DEBUG] Query words: ['something', 'to', 'drink']
+[2025-06-29 18:49:27,555] INFO services [AI_SEARCH_DEBUG] Direct matches: ['drink']
+[2025-06-29 18:49:27,555] INFO services [AI_SEARCH_DEBUG] Concept matches: []
+[2025-06-29 18:49:27,555] INFO services [AI_SEARCH_DEBUG] Final selected tags: ['drink']
+[2025-06-29 18:49:27,555] INFO services [AI_SEARCH_DEBUG] Selected relevant tags: ['drink']
+[2025-06-29 18:52:41,451] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: something to drink
+[2025-06-29 18:52:41,453] INFO views Regular search query: 'something to drink' category: '' from user: None
+[2025-06-29 18:52:41,613] INFO views Regular search query: 'something to drink' category: '' from user: None
+[2025-06-29 18:54:13,469] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:54:13,474] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:54:13,479] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:54:13,484] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:54:13,506] INFO views Regular search query: 'something to drink' category: '' from user: None
+[2025-06-29 18:54:13,506] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: something to drink
+[2025-06-29 18:54:23,391] INFO views Regular search query: 'something to drink' category: '' from user: None
+[2025-06-29 18:54:23,408] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: something to drink
+[2025-06-29 18:55:18,428] INFO views Regular search query: 'something to drink' category: '' from user: None
+[2025-06-29 18:55:18,428] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: something to drink
+[2025-06-29 18:55:20,364] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:55:20,364] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 18:55:20,368] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:55:20,368] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 18:56:25,430] INFO views Regular search query: 'something to drink' category: '' from user: None
+[2025-06-29 18:56:25,431] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: something to drink
+[2025-06-29 18:56:48,384] INFO views Regular search query: 'something to drink' category: '' from user: None
+[2025-06-29 18:56:48,388] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: something to drink
+[2025-06-29 18:57:06,421] INFO views Regular search query: 'something to drink' category: '' from user: None
+[2025-06-29 18:57:06,425] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: something to drink
+[2025-06-29 18:57:28,381] INFO views Regular search query: 'something to drink' category: '' from user: None
+[2025-06-29 18:57:28,390] INFO services [AI_SEARCH_DEBUG] Returning cached result for query: something to drink
+[2025-06-29 18:57:52,433] WARNING log Not Found: /api/ai-search/
+[2025-06-29 18:57:52,433] WARNING log Not Found: /api/ai-search/
+[2025-06-29 19:05:20,499] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 19:05:20,500] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 19:05:20,504] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 19:05:20,505] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 19:05:31,821] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 19:05:31,837] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 19:05:31,851] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 19:05:31,853] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 19:05:31,859] INFO views Token refresh attempt from IP: 31.146.76.40
+[2025-06-29 19:05:31,875] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 19:05:31,879] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 19:05:31,880] INFO views Token refreshed successfully for IP: 31.146.76.40
+[2025-06-29 19:05:34,614] INFO views Regular search query: 'water' category: '' from user: None
+[2025-06-29 19:05:34,784] INFO views Regular search query: 'water' category: '' from user: None

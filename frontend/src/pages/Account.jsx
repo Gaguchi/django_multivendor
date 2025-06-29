@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { AccountSidebarSkeleton } from '../components/Skeleton'
+import LoadingSpinner from '../components/LoadingSpinner'
 
 // Import Dashboard Components
 import DashboardSummary from '../components/Dashboard/DashboardSummary'
@@ -71,10 +73,13 @@ export default function Account() {
     // Show loading state when checking auth
     if (!user) {
         return (
-            <div className="container">
-                <div className="text-center py-5">
-                    <div className="spinner-border" role="status">
-                        <span className="sr-only">Loading...</span>
+            <div className="container py-5">
+                <div className="row">
+                    <div className="col-md-3">
+                        <AccountSidebarSkeleton />
+                    </div>
+                    <div className="col-md-9">
+                        <LoadingSpinner text="Loading account..." />
                     </div>
                 </div>
             </div>

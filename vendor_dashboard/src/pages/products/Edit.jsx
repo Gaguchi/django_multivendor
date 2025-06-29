@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ProductForm from './components/ProductForm';
+import { ProductFormSkeleton } from '../../components/Skeleton';
 import * as api from '../../services/api';
 
 export default function Edit() {
@@ -236,9 +237,7 @@ export default function Edit() {
                     </ul>
                 </div>
                 
-                <div className="flex justify-center items-center py-20">
-                    <div className="text-tiny">Loading product data...</div>
-                </div>
+                <ProductFormSkeleton />
             </>
         );
     }

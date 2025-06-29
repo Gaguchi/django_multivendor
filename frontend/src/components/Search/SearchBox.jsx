@@ -7,6 +7,7 @@ export default function SearchBox({ className = '', placeholder = "Search produc
     const [showSuggestions, setShowSuggestions] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [selectedCategory, setSelectedCategory] = useState('')
+    const [isAIMode, setIsAIMode] = useState(false)
     const navigate = useNavigate()
 
     // Debounce search suggestions
@@ -24,7 +25,8 @@ export default function SearchBox({ className = '', placeholder = "Search produc
 
     const fetchSuggestions = async (searchQuery) => {
         try {
-            const response = await fetch(`https://api.bazro.ge/api/search/suggestions/?q=${encodeURIComponent(searchQuery)}`)
+            const endpoint = isAIMode ? 'ai-search/suggestions' : 'search/suggestions'
+            const response = await fetch(`https://api.bazro.ge/api/${endpoint}/?q=${encodeURIComponent(searchQuery)}`)
             if (response.ok) {
                 const data = await response.json()
                 setSuggestions(data.suggestions || [])
@@ -46,7 +48,8 @@ export default function SearchBox({ className = '', placeholder = "Search produc
             // Navigate to search results page with query parameters
             const searchParams = new URLSearchParams({
                 q: query.trim(),
-                ...(selectedCategory && { category: selectedCategory })
+                ...(selectedCategory && { category: selectedCategory }),
+                ...(isAIMode && { type: 'ai' })
             })
             navigate(`/search?${searchParams.toString()}`)
         } catch (error) {
@@ -57,12 +60,14 @@ export default function SearchBox({ className = '', placeholder = "Search produc
     }
 
     const handleSuggestionClick = (suggestion) => {
-        setQuery(suggestion)
+        const searchText = typeof suggestion === 'object' ? suggestion.text : String(suggestion);
+        setQuery(searchText)
         setShowSuggestions(false)
         // Trigger search
         const searchParams = new URLSearchParams({
-            q: suggestion,
-            ...(selectedCategory && { category: selectedCategory })
+            q: searchText,
+            ...(selectedCategory && { category: selectedCategory }),
+            ...(isAIMode && { type: 'ai' })
         })
         navigate(`/search?${searchParams.toString()}`)
     }
@@ -98,11 +103,24 @@ export default function SearchBox({ className = '', placeholder = "Search produc
                     )}
                     
                     <div className="search-input-container">
+                        {/* AI Mode Toggle */}
+                        <div className="search-mode-toggle">
+                            <button
+                                type="button"
+                                className={`ai-toggle ${isAIMode ? 'active' : ''}`}
+                                onClick={() => setIsAIMode(!isAIMode)}
+                                title={isAIMode ? 'Disable AI Search' : 'Enable AI Search'}
+                            >
+                                <i className="icon-cpu"></i>
+                                {isAIMode && <span className="ai-label">AI</span>}
+                            </button>
+                        </div>
+
                         <input
                             type="search"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            placeholder={placeholder}
+                            placeholder={isAIMode ? "Ask AI anything..." : placeholder}
                             className="search-input"
                             autoComplete="off"
                         />
@@ -122,16 +140,28 @@ export default function SearchBox({ className = '', placeholder = "Search produc
                         {/* Search Suggestions Dropdown */}
                         {showSuggestions && suggestions.length > 0 && (
                             <div className="search-suggestions-dropdown">
-                                {suggestions.map((suggestion, index) => (
-                                    <div 
-                                        key={index}
-                                        className="suggestion-item"
-                                        onClick={() => handleSuggestionClick(suggestion)}
-                                    >
-                                        <i className="icon-magnifier"></i>
-                                        <span>{suggestion}</span>
-                                    </div>
-                                ))}
+                                {suggestions.map((suggestion, index) => {
+                                    const suggestionText = typeof suggestion === 'object' ? suggestion.text : String(suggestion);
+                                    const suggestionType = typeof suggestion === 'object' ? suggestion.type : null;
+                                    const suggestionCount = typeof suggestion === 'object' ? suggestion.count : null;
+                                    
+                                    return (
+                                        <div 
+                                            key={index}
+                                            className="suggestion-item"
+                                            onClick={() => handleSuggestionClick(suggestion)}
+                                        >
+                                            <i className="icon-magnifier"></i>
+                                            <span className="suggestion-text">{suggestionText}</span>
+                                            {suggestionType && (
+                                                <span className="suggestion-type">{String(suggestionType)}</span>
+                                            )}
+                                            {suggestionCount && (
+                                                <span className="suggestion-count">({String(suggestionCount)})</span>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>
@@ -182,6 +212,44 @@ export default function SearchBox({ className = '', placeholder = "Search produc
                     position: relative;
                     flex: 1;
                     display: flex;
+                    align-items: center;
+                }
+
+                .search-mode-toggle {
+                    padding-left: 10px;
+                }
+
+                .ai-toggle {
+                    background: transparent;
+                    border: none;
+                    padding: 8px;
+                    border-radius: 50%;
+                    color: #666;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                    font-size: 12px;
+                    min-width: 32px;
+                    height: 32px;
+                    justify-content: center;
+                }
+
+                .ai-toggle:hover {
+                    background: rgba(0, 136, 204, 0.1);
+                    color: #08C;
+                }
+
+                .ai-toggle.active {
+                    background: #08C;
+                    color: white;
+                }
+
+                .ai-label {
+                    font-size: 10px;
+                    font-weight: bold;
+                    margin-left: 2px;
                 }
 
                 .search-input {
@@ -265,11 +333,27 @@ export default function SearchBox({ className = '', placeholder = "Search produc
                 .suggestion-item i {
                     color: #666;
                     font-size: 14px;
+                    flex-shrink: 0;
                 }
 
-                .suggestion-item span {
+                .suggestion-text {
                     font-size: 14px;
                     color: #333;
+                    flex: 1;
+                }
+
+                .suggestion-type {
+                    font-size: 12px;
+                    color: #666;
+                    background: #f0f0f0;
+                    padding: 2px 6px;
+                    border-radius: 3px;
+                    text-transform: capitalize;
+                }
+
+                .suggestion-count {
+                    font-size: 12px;
+                    color: #999;
                 }
 
                 /* Responsive styles */

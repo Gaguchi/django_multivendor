@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import ProductCard from './ProductCard'
+import { ProductGridSkeleton } from '../components/Skeleton'
 import '../assets/css/uniform-product-card.css'
 
 export default function ProductGrid({ 
@@ -44,11 +45,25 @@ export default function ProductGrid({
   }, [defaultColumns])
 
   if (loading) {
+    // Calculate number of skeleton items based on default columns
+    const width = window.innerWidth
+    let skeletonCount
+    
+    if (width >= 1200) {
+      skeletonCount = defaultColumns.xl * 2 // Show 2 rows
+    } else if (width >= 992) {
+      skeletonCount = defaultColumns.lg * 2
+    } else if (width >= 768) {
+      skeletonCount = defaultColumns.md * 2
+    } else if (width >= 576) {
+      skeletonCount = defaultColumns.sm * 3
+    } else {
+      skeletonCount = defaultColumns.xs * 4
+    }
+
     return (
-      <div className="uniform-product-grid-loading">
-        <div className="spinner-border" role="status">
-          <span className="sr-only">Loading...</span>
-        </div>
+      <div className={`uniform-product-grid ${className}`}>
+        <ProductGridSkeleton count={skeletonCount} />
       </div>
     )
   }

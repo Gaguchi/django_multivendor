@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ConfirmationModal from '../../components/ConfirmationModal';
+import { ProductListSkeleton } from '../../components/Skeleton';
 import * as api from '../../services/api';
 import './All.css';
 
@@ -172,9 +173,7 @@ export default function All() {
       </ul>
       
       {loading ? (
-        <div className="flex justify-center items-center py-20">
-          <div className="text-tiny">Loading products...</div>
-        </div>
+        <ProductListSkeleton />
       ) : error ? (
         <div className="flex justify-center items-center py-20">
           <div className="text-tiny text-red">Error: {error}</div>
@@ -196,7 +195,7 @@ export default function All() {
                   />
                 </div>
                 <div className="title line-clamp-2 mb-0">
-                  <a href={`#`} className="body-text">
+                  <a href={`/editproduct/${product.id}`} className="body-text">
                     {product.name}
                   </a>
                 </div>

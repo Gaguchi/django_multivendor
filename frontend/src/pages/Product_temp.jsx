@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import axios from 'axios'
+import { ProductDetailSkeleton } from '../components/Skeleton'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorMessage from '../components/ErrorMessage'
 
 export default function Product() {
   const [selectedImage, setSelectedImage] = useState(0)
@@ -30,9 +33,21 @@ export default function Product() {
     fetchProduct()
   }, [id])
 
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error: {error}</div>
-  if (!product) return <div>Product not found</div>
+  if (loading) return (
+    <div className="container py-5">
+      <ProductDetailSkeleton />
+    </div>
+  )
+  if (error) return (
+    <div className="container py-5">
+      <ErrorMessage error={error} title="Failed to Load Product" />
+    </div>
+  )
+  if (!product) return (
+    <div className="container py-5">
+      <ErrorMessage error="Product not found" title="Product Not Found" />
+    </div>
+  )
 
   // Extract image URLs from the product.images array
   const imageUrls = product.images ? product.images.map(img => img.file) : []

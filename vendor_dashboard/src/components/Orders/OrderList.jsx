@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useVendorOrders } from '../../contexts/VendorOrderContext';
+import { OrderRowSkeleton } from '../Skeleton';
 import PollingStatus from './PollingStatus';
 
 export default function OrderList() {
@@ -112,12 +113,40 @@ export default function OrderList() {
 
   if (!isVendorLoaded) {
     return (
-      <div className="d-flex justify-content-center py-5">
-        <div className="text-center">
-          <div className="spinner-border text-primary mb-3" role="status">
-            <span className="visually-hidden">Loading...</span>
+      <div className="order-list">
+        <div className="skeleton-container">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <Skeleton variant="text" width="200px" height="2rem" className="mb-2" />
+              <Skeleton variant="text" width="300px" />
+            </div>
           </div>
-          <p className="text-muted">Loading vendor information...</p>
+          
+          <div className="d-flex gap-2 mb-4">
+            {Array.from({ length: 4 }, (_, index) => (
+              <Skeleton key={index} variant="rectangular" width="100px" height="40px" />
+            ))}
+          </div>
+          
+          <div className="table-responsive">
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th><Skeleton variant="text" width="100px" /></th>
+                  <th><Skeleton variant="text" width="120px" /></th>
+                  <th><Skeleton variant="text" width="80px" /></th>
+                  <th><Skeleton variant="text" width="80px" /></th>
+                  <th><Skeleton variant="text" width="100px" /></th>
+                  <th><Skeleton variant="text" width="80px" /></th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 8 }, (_, index) => (
+                  <OrderRowSkeleton key={index} />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
@@ -125,9 +154,49 @@ export default function OrderList() {
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
+      <div className="order-list">
+        <div className="skeleton-container">
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <h2>Orders</h2>
+              <p className="text-muted">Manage your customer orders</p>
+            </div>
+          </div>
+          
+          <div className="d-flex gap-2 mb-4">
+            <button className={`btn ${filter === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}>
+              All Orders
+            </button>
+            <button className={`btn ${filter === 'Paid' ? 'btn-primary' : 'btn-outline-primary'}`}>
+              Paid
+            </button>
+            <button className={`btn ${filter === 'Shipped' ? 'btn-primary' : 'btn-outline-primary'}`}>
+              Shipped
+            </button>
+            <button className={`btn ${filter === 'Delivered' ? 'btn-primary' : 'btn-outline-primary'}`}>
+              Delivered
+            </button>
+          </div>
+          
+          <div className="table-responsive">
+            <table className="table table-hover">
+              <thead>
+                <tr>
+                  <th>Order #</th>
+                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Items</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from({ length: 6 }, (_, index) => (
+                  <OrderRowSkeleton key={index} />
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );

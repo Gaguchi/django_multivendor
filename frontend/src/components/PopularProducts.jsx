@@ -2,6 +2,7 @@ import { useProducts } from '../hooks/useProducts'
 import ProductCard from '../elements/ProductCard'
 import LoadingSpinner from './LoadingSpinner'
 import ErrorMessage from './ErrorMessage'
+import { ProductGridSkeleton } from './Skeleton'
 
 export default function PopularProducts() {
   const {
@@ -14,7 +15,14 @@ export default function PopularProducts() {
   })
 
   if (isLoading) {
-    return <LoadingSpinner />
+    return (
+      <div className="products-section section-padding">
+        <div className="container">
+          <h2 className="section-title">Popular Products</h2>
+          <ProductGridSkeleton count={8} />
+        </div>
+      </div>
+    )
   }
 
   if (isError) {

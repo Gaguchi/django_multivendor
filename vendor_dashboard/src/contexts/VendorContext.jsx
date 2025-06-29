@@ -52,31 +52,69 @@ export function VendorProvider({ children }) {
     }
   };
 
-  // Initialize vendor profile on mount if user is authenticated
+  // Initialize vendor profile with better race condition handling
   useEffect(() => {
-    const token = getToken();
-    // Add a small delay to ensure authentication system is ready
+    let timeoutId;
+    
     const initializeProfile = async () => {
-      // Double-check authentication status
-      if (token && isAuthenticated() && !vendor && !loading && !initialized) {
+      const token = getToken();
+      const authenticated = isAuthenticated();
+      
+      // If not authenticated, mark as initialized immediately
+      if (!token || !authenticated) {
+        setInitialized(true);
+        return;
+      }
+      
+      // If already have vendor data, mark as initialized
+      if (vendor && !initialized) {
+        setInitialized(true);
+        return;
+      }
+      
+      // If already loading or initialized, don't start another fetch
+      if (loading || initialized) {
+        return;
+      }
+      
+      // Only fetch if we have authentication and don't have vendor data
+      if (token && authenticated && !vendor) {
         try {
           await fetchVendorProfile();
         } catch (error) {
-          // Silently handle error - it will be shown in UI if needed
           console.warn('Initial vendor profile fetch failed:', error);
+          // Don't prevent the app from loading, just mark as initialized
+          setInitialized(true);
         }
-      } else if (!token || !isAuthenticated()) {
-        setInitialized(true); // Mark as initialized if not authenticated
-      } else if (vendor && !initialized) {
-        // If we somehow have vendor data but not marked as initialized
-        setInitialized(true);
       }
     };
 
-    // Add a longer delay to ensure the auth system is fully ready
-    const timer = setTimeout(initializeProfile, 250);
-    return () => clearTimeout(timer);
-  }, []); // Empty dependency array - only run on mount
+    // Use a timeout to ensure authentication system is ready
+    // But also listen for authentication changes
+    timeoutId = setTimeout(initializeProfile, 100);
+    
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, []); // Only run on mount
+  
+  // Watch for authentication state changes
+  useEffect(() => {
+    const token = getToken();
+    const authenticated = isAuthenticated();
+    
+    // If we lose authentication, clear vendor data and mark as initialized
+    if (!token || !authenticated) {
+      if (vendor || vendorId) {
+        setVendor(null);
+        setVendorIdState(null);
+        clearVendorId();
+      }
+      if (!initialized) {
+        setInitialized(true);
+      }
+    }
+  }, [vendor, vendorId, initialized]);
 
   // Clear vendor data
   const clearVendor = () => {

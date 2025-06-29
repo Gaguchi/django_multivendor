@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import SearchBox from '../components/Search/SearchBox'
 import AISearchButton from '../components/Search/AISearchButton'
+import { SearchResultsSkeleton } from '../components/Skeleton'
+import LoadingSpinner from '../components/LoadingSpinner'
+import ErrorMessage from '../components/ErrorMessage'
 
 export default function SearchResults() {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -271,10 +274,7 @@ export default function SearchResults() {
 
                 {/* Loading State */}
                 {loading && (
-                    <div className="loading-container">
-                        <div className="spinner-large"></div>
-                        <p>Searching products...</p>
-                    </div>
+                    <SearchResultsSkeleton />
                 )}
 
                 {/* Error State */}

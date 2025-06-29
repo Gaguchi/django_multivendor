@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useCart } from "../contexts/CartContext"
 import Total from "../components/Cart/Total"
+import { CartItemSkeleton } from "../components/Skeleton"
+import LoadingSpinner from "../components/LoadingSpinner"
 
 export default function Cart() {
   const { cart, loading, updateCartItem, removeFromCart, refreshCart } = useCart()
@@ -116,7 +118,45 @@ export default function Cart() {
   }
 
   if (loading) {
-    return <div className="container py-5 text-center">Loading cart...</div>
+    return (
+      <div className="container py-5">
+        <ul className="checkout-progress-bar d-flex justify-content-center flex-wrap">
+          <li className="active">
+            <a href="/cart">Shopping Cart</a>
+          </li>
+          <li>
+            <a href="/checkout">Checkout</a>
+          </li>
+        </ul>
+        <div className="row">
+          <div className="col-lg-8">
+            <div className="cart-table-container">
+              <table className="table table-cart">
+                <thead>
+                  <tr>
+                    <th className="thumbnail-col" />
+                    <th className="product-col">Product</th>
+                    <th className="price-col">Price</th>
+                    <th className="qty-col">Quantity</th>
+                    <th className="text-right">Subtotal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 3 }, (_, index) => (
+                    <CartItemSkeleton key={index} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="col-lg-4">
+            <div className="cart-summary">
+              <LoadingSpinner text="Loading cart..." />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!cart || cart.items?.length === 0) {

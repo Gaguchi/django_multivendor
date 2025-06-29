@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useVendorOrders } from '../../contexts/VendorOrderContext';
+import { OrderDetailSkeleton } from '../Skeleton';
 
 export default function OrderDetail() {
   const { orderNumber } = useParams();
@@ -68,26 +69,11 @@ export default function OrderDetail() {
   };
 
   if (!isVendorLoaded) {
-    return (
-      <div className="d-flex justify-content-center py-5">
-        <div className="text-center">
-          <div className="spinner-border text-primary mb-3" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-          <p className="text-muted">Loading vendor information...</p>
-        </div>
-      </div>
-    );
+    return <OrderDetailSkeleton />;
   }
 
   if (loading) {
-    return (
-      <div className="d-flex justify-content-center py-5">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-      </div>
-    );
+    return <OrderDetailSkeleton />;
   }
 
   if (error) {
