@@ -32,7 +32,7 @@ django_multivendor/
 │   │   └── AI_SEARCH_DOCUMENTATION.md
 │   ├── testing/                    # Testing strategies
 │   ├── api/                        # API documentation
-│   ├── LLM_DOCUMENTATION.md        # LLM integration
+│   ├── LLM_DOCUMENTATION.md        # SUMMARY FOR LLMS
 │   └── README.md                   # 🎯 Main documentation index
 │
 ├── backend/                        # Django backend (unchanged)

@@ -433,21 +433,8 @@ export const clearVendorId = () => {
 let enhancedTokenManager = null;
 let useEnhancedAuth = false;
 
-try {
-  // Attempt to load enhanced token management
-  import('./enhancedAuth.js').then(module => {
-    enhancedTokenManager = module.tokenManager;
-    useEnhancedAuth = true;
-    console.log('✅ Enhanced token management loaded');
-    
-    // Migrate existing tokens to enhanced system
-    migrateToEnhancedAuth();
-  }).catch(error => {
-    console.log('⚠️ Enhanced auth not available, using legacy system:', error.message);
-  });
-} catch (error) {
-  console.log('⚠️ Could not load enhanced auth, using legacy system');
-}
+// Simple flag to prevent multiple initialization attempts
+let enhancedAuthInitialized = false;
 
 // Migration function to move from legacy to enhanced auth
 function migrateToEnhancedAuth() {
@@ -479,6 +466,29 @@ function migrateToEnhancedAuth() {
     console.error('❌ Token migration failed:', error);
   }
 }
+
+// Function to safely try enhanced auth without blocking
+const tryEnhancedAuth = () => {
+  if (enhancedAuthInitialized) return;
+  enhancedAuthInitialized = true;
+  
+  // Use setTimeout to make this completely non-blocking
+  setTimeout(async () => {
+    try {
+      const module = await import('./enhancedAuth.js');
+      enhancedTokenManager = module.tokenManager;
+      useEnhancedAuth = true;
+      console.log('✅ Enhanced token management loaded');
+      migrateToEnhancedAuth();
+    } catch (error) {
+      console.log('⚠️ Enhanced auth not available, using legacy system');
+      // Silently fall back to legacy - this is expected in many cases
+    }
+  }, 0);
+};
+
+// Start enhanced auth initialization in background (completely non-blocking)
+tryEnhancedAuth();
 
 // Enhanced function wrappers that use enhanced auth when available
 export const enhancedRefreshToken = async () => {
@@ -558,7 +568,32 @@ export const enhancedDebugTokenStatus = () => {
   };
 };
 
-// Export the enhanced versions
+// Enhanced wrapper functions for token management
+export const enhancedSetToken = (token, refreshToken, userData) => {
+  try {
+    if (useEnhancedAuth && enhancedTokenManager) {
+      return enhancedTokenManager.setTokens(token, refreshToken, userData);
+    }
+  } catch (error) {
+    console.error('Enhanced setToken failed, falling back to legacy:', error);
+  }
+  // Fall back to legacy function
+  return setTokenBase(token, refreshToken, userData);
+};
+
+export const enhancedClearToken = () => {
+  try {
+    if (useEnhancedAuth && enhancedTokenManager) {
+      return enhancedTokenManager.clearTokens();
+    }
+  } catch (error) {
+    console.error('Enhanced clearToken failed, falling back to legacy:', error);
+  }
+  // Fall back to legacy function
+  return clearTokenBase();
+};
+
+// Export the enhanced versions with proper names for backward compatibility
 export { enhancedSetToken as setToken, enhancedClearToken as clearToken };
 
 // Export enhanced token manager reference for direct access
