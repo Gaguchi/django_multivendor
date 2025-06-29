@@ -67,11 +67,14 @@ export function VendorProvider({ children }) {
         }
       } else if (!token || !isAuthenticated()) {
         setInitialized(true); // Mark as initialized if not authenticated
+      } else if (vendor && !initialized) {
+        // If we somehow have vendor data but not marked as initialized
+        setInitialized(true);
       }
     };
 
-    // Add a small delay to ensure the auth system is ready
-    const timer = setTimeout(initializeProfile, 100);
+    // Add a longer delay to ensure the auth system is fully ready
+    const timer = setTimeout(initializeProfile, 250);
     return () => clearTimeout(timer);
   }, []); // Empty dependency array - only run on mount
 

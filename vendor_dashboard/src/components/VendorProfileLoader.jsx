@@ -8,7 +8,8 @@ export default function VendorProfileLoader({ children }) {
 
   useEffect(() => {
     const token = getToken();
-    if (token && !isVendorLoaded() && !loading && !hasFetchAttempted && initialized) {
+    // Only attempt fetch if we're authenticated, initialized, not already loading, and haven't attempted yet
+    if (token && initialized && !isVendorLoaded() && !loading && !hasFetchAttempted) {
       setHasFetchAttempted(true);
       fetchVendorProfile().catch(() => {
         // Error is already handled in context

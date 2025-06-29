@@ -61,82 +61,119 @@
     position: relative;
     width: 150px; /* Adjust as needed */
     height: 150px; /* Adjust as needed */
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    background-color: #f8f9fa;
+}
+
+.image-preview-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
 }
 
 .image-preview-item img.preview-image-tag {
     max-width: 100%;
     max-height: 100%;
     object-fit: cover;
+    width: 100%;
+    height: 100%;
 }
 
 /* Styling for image actions (remove, set thumbnail) */
 .image-preview-item .image-actions {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 8px;
+    right: 8px;
     display: flex;
     flex-direction: column; /* Stack buttons vertically */
-    gap: 5px; /* Space between buttons */
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for better visibility */
-    padding: 5px;
-    border-radius: 3px;
-    opacity: 0; /* Hidden by default */
-    transition: opacity 0.3s ease;
-}
-
-.image-preview-item:hover .image-actions {
-    opacity: 1; /* Show on hover */
+    gap: 6px; /* Space between buttons */
+    z-index: 10;
 }
 
 .image-preview-item .btn-remove-image,
 .image-preview-item .btn-set-thumbnail {
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.95);
     color: #333;
-    border: 1px solid #ccc;
-    padding: 3px 6px;
+    border: 1px solid #ddd;
+    padding: 6px 8px;
     cursor: pointer;
-    border-radius: 3px;
-    font-size: 0.8em;
+    border-radius: 50%;
+    font-size: 0.9em;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 32px;
+    height: 32px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.image-preview-item .btn-remove-image:hover,
+.image-preview-item .btn-remove-image {
+    background-color: rgba(220, 53, 69, 0.9);
+    color: white;
+    border-color: #dc3545;
+}
+
+.image-preview-item .btn-remove-image:hover {
+    background-color: #dc3545;
+    transform: scale(1.1);
+}
+
+.image-preview-item .btn-set-thumbnail {
+    background-color: rgba(255, 193, 7, 0.9);
+    color: #333;
+    border-color: #ffc107;
+}
+
 .image-preview-item .btn-set-thumbnail:hover {
-    background-color: #f0f0f0;
-    border-color: #bbb;
+    background-color: #ffc107;
+    transform: scale(1.1);
 }
 
-.image-preview-item .btn-remove-image i {
+.image-preview-item .btn-remove-image i,
+.image-preview-item .btn-set-thumbnail i {
     font-size: 1em; /* Adjust icon size if needed */
 }
 
 
-/* Styling for thumbnail indication */
+/* Enhanced styling for thumbnail indication */
 .image-preview-item.thumbnail {
-    border: 3px solid #007bff; /* Highlight color for thumbnail */
-    box-shadow: 0 0 10px rgba(0,123,255,0.5);
+    border: 3px solid #28a745; /* Green highlight for thumbnail */
+    box-shadow: 0 0 15px rgba(40, 167, 69, 0.4);
+    background-color: #f8fff9;
+}
+
+.image-preview-item .thumbnail-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 6px 8px;
+    text-align: center;
+    font-size: 0.75em;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .image-preview-item .thumbnail-badge {
-    position: absolute;
-    bottom: 5px;
-    left: 5px;
-    background-color: #007bff;
-    color: white;
-    padding: 3px 7px;
-    border-radius: 3px;
-    font-size: 0.75em;
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.image-preview-item .thumbnail-badge i {
+    font-size: 0.9em;
 }
 
 /* General utility classes if needed elsewhere, or keep them specific */
@@ -192,5 +229,26 @@
 }
 
 .icon-close:before {
-  content: "\f00d"; /* Example FontAwesome close icon */
+  content: "×"; /* Simple × character for close */
+}
+
+.icon-star:before {
+  content: "★"; /* Simple star character */
+}
+
+/* Fallback for missing icons - use Unicode symbols */
+.icon-close {
+  font-family: Arial, sans-serif;
+}
+
+.icon-star {
+  font-family: Arial, sans-serif;
+}
+
+.icon-upload-cloud {
+  font-family: Arial, sans-serif;
+}
+
+.icon-upload-cloud:before {
+  content: "☁"; /* Cloud symbol */
 }

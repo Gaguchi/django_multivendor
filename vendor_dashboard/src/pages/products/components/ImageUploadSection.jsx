@@ -3,6 +3,16 @@ import './ImageUploadSection.css'; // We'll create this file for custom styles
 
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
 
+// Debug utility to log thumbnail state
+const debugThumbnailState = (context, managedImages, selectedThumbnailId) => {
+    console.log(`ImageUploadSection [${context}]:`, {
+        imageCount: managedImages.length,
+        selectedThumbnailId,
+        thumbnailExists: managedImages.some(img => img.id === selectedThumbnailId),
+        imageIds: managedImages.map(img => img.id)
+    });
+};
+
 export default function ImageUploadSection({ 
     initialImages = [], 
     onImagesChange 
@@ -54,6 +64,7 @@ export default function ImageUploadSection({
             }
             
             console.log("ImageUploadSection: Updating managed images from", currentManagedImages.length, "to", processedImages.length);
+            debugThumbnailState("Before updating managed images", currentManagedImages, selectedThumbnailId);
             
             // Clean up old blob URLs before replacing
             currentManagedImages.forEach(img => {
@@ -134,6 +145,10 @@ export default function ImageUploadSection({
     };
 
     const removeImage = (idToRemove) => {
+        // Add confirmation dialog
+        const confirmRemoval = window.confirm('Are you sure you want to remove this image?');
+        if (!confirmRemoval) return;
+
         setManagedImages(prevImages => {
             const imageToRemove = prevImages.find(img => img.id === idToRemove);
             if (imageToRemove && imageToRemove.preview.startsWith('blob:') && !imageToRemove.isExternal) {
@@ -142,15 +157,25 @@ export default function ImageUploadSection({
             
             const updatedImages = prevImages.filter(img => img.id !== idToRemove);
             
+            // Handle thumbnail selection when removing current thumbnail
             if (selectedThumbnailId === idToRemove) {
-                setSelectedThumbnailId(updatedImages.length > 0 ? updatedImages[0].id : null);
+                const newThumbnailId = updatedImages.length > 0 ? updatedImages[0].id : null;
+                setSelectedThumbnailId(newThumbnailId);
+                console.log("ImageUploadSection: Thumbnail removed, setting new thumbnail:", newThumbnailId);
             }
             return updatedImages;
         });
     };
 
     const handleSetThumbnail = (idToSet) => {
+        console.log("ImageUploadSection: Setting thumbnail to:", idToSet);
         setSelectedThumbnailId(idToSet);
+        
+        // Provide user feedback
+        const image = managedImages.find(img => img.id === idToSet);
+        if (image) {
+            console.log("ImageUploadSection: Thumbnail successfully set for image:", image.id);
+        }
     };
 
     const handleDragOver = (e) => {
@@ -177,9 +202,16 @@ export default function ImageUploadSection({
         // Add safety check to prevent React error #31
         if (typeof onImagesChange === 'function') {
             try {
-                onImagesChange({ managedImages, selectedThumbnailId });
+                const imageData = { 
+                    managedImages, 
+                    selectedThumbnailId,
+                    thumbnailImage: managedImages.find(img => img.id === selectedThumbnailId) || null
+                };
+                console.log("ImageUploadSection: Calling onImagesChange with:", imageData);
+                onImagesChange(imageData);
             } catch (error) {
                 console.error('Error in onImagesChange callback:', error);
+                // Don't throw the error, just log it to prevent breaking the component
             }
         }
     }, [managedImages, selectedThumbnailId]); // Remove onImagesChange from dependencies to prevent loops
@@ -245,6 +277,11 @@ export default function ImageUploadSection({
                                         src={image.preview} 
                                         alt={`Preview ${image.file ? image.file.name : image.id}`}
                                         className="preview-image-tag"
+                                        onLoad={() => console.log("ImageUploadSection: Image loaded:", image.id)}
+                                        onError={(e) => {
+                                            console.error("ImageUploadSection: Image failed to load:", image.id, e);
+                                            e.target.style.display = 'none';
+                                        }}
                                     />
                                     <div className="image-actions">
                                         <button 
@@ -264,15 +301,17 @@ export default function ImageUploadSection({
                                                 title="Set as thumbnail"
                                                 aria-label={`Set image ${image.file ? image.file.name : image.id} as thumbnail`}
                                             >
-                                                Set Thumbnail
+                                                <i className="icon-star" />
                                             </button>
                                         )}
-                                        {selectedThumbnailId === image.id && (
-                                            <span className="thumbnail-badge" aria-label="Current thumbnail">
-                                                Thumbnail
-                                            </span>
-                                        )}
                                     </div>
+                                    {selectedThumbnailId === image.id && (
+                                        <div className="thumbnail-indicator">
+                                            <span className="thumbnail-badge" aria-label="Current thumbnail">
+                                                <i className="icon-star" /> THUMBNAIL
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
