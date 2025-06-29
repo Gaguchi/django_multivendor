@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://127.0.0.1:8000'; // Changed localhost to 127.0.0.1
+const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://api.bazro.ge';
 
 // Create the API instance
 const api = axios.create({

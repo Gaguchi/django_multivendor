@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { login } from '../services/api';
 import { setToken, debugTokenStatus } from '../utils/auth';
+import { useVendor } from '../contexts/VendorContext';
 
 export default function Login() {
+    const { fetchVendorProfile } = useVendor();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -112,6 +114,15 @@ export default function Login() {
             console.log('User type:', userType);
             
             if (userType === 'vendor') {
+                // Fetch vendor profile to get vendor ID
+                try {
+                    await fetchVendorProfile();
+                    console.log('Vendor profile fetched successfully');
+                } catch (vendorError) {
+                    console.error('Failed to fetch vendor profile:', vendorError);
+                    // Continue anyway, the vendor context will handle this
+                }
+                
                 // Redirect to dashboard
                 console.log('User is a vendor, redirecting to dashboard');
                 navigate('/');

@@ -290,6 +290,29 @@ class VendorViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def profile(self, request):
+        """Get vendor profile information for the authenticated user"""
+        try:
+            vendor = Vendor.objects.get(user=request.user)
+            serializer = VendorSerializer(vendor)
+            return Response({
+                'vendor': serializer.data,
+                'vendor_id': vendor.id,
+                'user': {
+                    'id': request.user.id,
+                    'username': request.user.username,
+                    'email': request.user.email,
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name
+                }
+            })
+        except Vendor.DoesNotExist:
+            return Response(
+                {"error": "Vendor profile not found"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+
     @action(detail=True, methods=['get'])
     def products(self, request, pk=None):
         """Get products for a specific vendor"""

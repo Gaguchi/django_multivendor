@@ -79,6 +79,52 @@ class Order(models.Model):
         self.payment_clearance_status = 'Held'
         self.save()
 
+    def get_vendors(self):
+        """Get all vendors associated with this order"""
+        return Vendor.objects.filter(
+            vendorproduct__orderitem__order=self
+        ).distinct()
+
+    def can_vendor_access(self, vendor):
+        """Check if a vendor can access this order (has items in the order)"""
+        return self.items.filter(product__vendor=vendor).exists()
+
+    def get_vendor_items(self, vendor):
+        """Get order items for a specific vendor"""
+        return self.items.filter(product__vendor=vendor)
+
+    def get_vendor_total(self, vendor):
+        """Get total amount for a specific vendor's items"""
+        vendor_items = self.get_vendor_items(vendor)
+        return sum(item.total_price for item in vendor_items)
+
+    def mark_as_shipped_by_vendor(self, vendor):
+        """Mark order as shipped for a specific vendor"""
+        if not self.can_vendor_access(vendor):
+            return False
+        
+        # Only update to shipped if currently paid
+        if self.status == 'Paid':
+            self.status = 'Shipped'
+            self.updated_at = timezone.now()
+            self.save()
+            return True
+        return False
+
+    def mark_as_delivered_by_vendor(self, vendor):
+        """Mark order as delivered for a specific vendor"""
+        if not self.can_vendor_access(vendor):
+            return False
+        
+        # Only update to delivered if currently shipped
+        if self.status == 'Shipped':
+            self.status = 'Delivered'
+            self.delivered_at = timezone.now()
+            self.updated_at = timezone.now()
+            self.save()
+            return True
+        return False
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(VendorProduct, on_delete=models.CASCADE)  # Changed from Product to VendorProduct

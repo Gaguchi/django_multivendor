@@ -3,6 +3,8 @@ import Default from "../pages/Default";
 import All from "../pages/products/All";
 import Add from '../pages/products/Add';
 import Edit from '../pages/products/Edit';
+import Orders from '../pages/Orders';
+import VendorProfileLoader from './VendorProfileLoader';
 
 export default function MainContent() {
     return (
@@ -13,12 +15,15 @@ export default function MainContent() {
             <div className="main-content-inner">
               {/* main-content-wrap */}
               <div className="main-content-wrap">
-                <Routes>
-                  <Route path="/" element={<Default />} />
-                  <Route path="/products" element={<All />} />
-                  <Route path="/addproduct" element={<Add />} />
-                  <Route path="/editproduct/:id" element={<Edit />} />
-                </Routes>
+                <VendorProfileLoader>
+                  <Routes>
+                    <Route path="/" element={<Default />} />
+                    <Route path="/products" element={<All />} />
+                    <Route path="/addproduct" element={<Add />} />
+                    <Route path="/editproduct/:id" element={<Edit />} />
+                    <Route path="/orders/*" element={<Orders />} />
+                  </Routes>
+                </VendorProfileLoader>
               </div>
               {/* /main-content-wrap */}
             </div>

@@ -1,6 +1,7 @@
 const TOKEN_KEY = 'admin_access_token';
 const REFRESH_TOKEN_KEY = 'admin_refresh_token';
 const USER_DATA_KEY = 'admin_user_data';
+const VENDOR_ID_KEY = 'admin_vendor_id';
 
 // Add a debug function to check token status
 export const debugTokenStatus = () => {
@@ -61,6 +62,7 @@ export const clearToken = () => {
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(REFRESH_TOKEN_KEY);
   localStorage.removeItem(USER_DATA_KEY);
+  localStorage.removeItem(VENDOR_ID_KEY);
 };
 
 export const isAuthenticated = () => {
@@ -223,4 +225,24 @@ export const refreshToken = async () => {
     
     return false;
   }
+};
+
+// Vendor ID management
+export const getVendorId = () => {
+  const vendorId = localStorage.getItem(VENDOR_ID_KEY);
+  console.log('Getting vendor ID from localStorage:', vendorId);
+  return vendorId;
+};
+
+export const setVendorId = (vendorId) => {
+  console.log('Setting vendor ID in localStorage:', vendorId);
+  if (vendorId) {
+    localStorage.setItem(VENDOR_ID_KEY, vendorId.toString());
+  } else {
+    localStorage.removeItem(VENDOR_ID_KEY);
+  }
+};
+
+export const clearVendorId = () => {
+  localStorage.removeItem(VENDOR_ID_KEY);
 };

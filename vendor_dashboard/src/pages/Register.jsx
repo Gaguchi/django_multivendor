@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { registerVendor, getCategories, checkEmailAvailability } from '../services/api';
-import { setToken } from '../utils/auth';
+import { setToken, setVendorId } from '../utils/auth';
+import { useVendor } from '../contexts/VendorContext';
 import './Register.css';
 
 export default function Register() {
+    const { fetchVendorProfile } = useVendor();
     const [currentStep, setCurrentStep] = useState(1);
     const [categories, setCategories] = useState([]);
     const [formData, setFormData] = useState({
@@ -320,6 +322,18 @@ export default function Register() {
                     vendor: response.vendor
                 }
             );
+
+            // Store vendor ID and fetch full vendor profile
+            if (response.vendor && response.vendor.id) {
+                setVendorId(response.vendor.id);
+                try {
+                    await fetchVendorProfile();
+                    console.log('Vendor profile set up successfully');
+                } catch (vendorError) {
+                    console.error('Failed to fetch vendor profile after registration:', vendorError);
+                    // Continue anyway, the vendor context will handle this
+                }
+            }
 
             // Redirect to dashboard
             navigate('/');

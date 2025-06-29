@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import OAuthCallback from './components/OAuthCallback';
 import ProtectedRoute from './components/ProtectedRoute';
+import { VendorProvider } from './contexts/VendorContext';
 import { isAuthenticated, isVendor } from './utils/auth';
 import './assets/css/custom.css'; // Import custom CSS for menu fixes
 
@@ -185,38 +186,43 @@ function App() {
   }
 
   return (
-    <Router>
-      <Routes>
-        <Route 
-          path="/login" 
-          element={isAuthorized ? <Navigate to="/" /> : <Login />} 
-        />
-        <Route 
-          path="/register" 
-          element={isAuthorized ? <Navigate to="/" /> : <Register />} 
-        />
-        <Route 
-          path="/auth/callback" 
-          element={<OAuthCallback />} 
-        />
-        <Route 
-          path="/" 
-          element={
-            <ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/*" 
-          element={
-            <ProtectedRoute>
-              <MainLayout />
-            </ProtectedRoute>
-          } 
-        />
-      </Routes>
-    </Router>
+    <VendorProvider>
+      <Router future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true
+      }}>
+        <Routes>
+          <Route 
+            path="/login" 
+            element={isAuthorized ? <Navigate to="/" /> : <Login />} 
+          />
+          <Route 
+            path="/register" 
+            element={isAuthorized ? <Navigate to="/" /> : <Register />} 
+          />
+          <Route 
+            path="/auth/callback" 
+            element={<OAuthCallback />} 
+          />
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/*" 
+            element={
+              <ProtectedRoute>
+                <MainLayout />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </Router>
+    </VendorProvider>
   );
 }
 

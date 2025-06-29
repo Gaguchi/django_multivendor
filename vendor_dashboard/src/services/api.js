@@ -1,7 +1,7 @@
-import { getToken, refreshToken, clearToken } from '../utils/auth';
+import { getToken, refreshToken, clearToken, getVendorId } from '../utils/auth';
 
 // API URL with fallback to local development server if not specified in env
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://127.0.0.1:8000';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://api.bazro.ge';
 console.log('API URL configured as:', API_URL);
 
 async function handleResponse(response) {
@@ -19,10 +19,11 @@ async function handleResponse(response) {
   if (response.status === 401) {
     console.log('Received 401 Unauthorized, URL:', response.url);
     
-    // Only attempt token refresh if this isn't a login or token-related request
+    // Don't attempt token refresh for vendor endpoints or auth-related endpoints
     if (!response.url.includes('/login/') && 
         !response.url.includes('/token/') && 
-        !response.url.includes('/auth/')) {
+        !response.url.includes('/auth/') &&
+        !response.url.includes('/vendor')) {
       
       console.log('Token expired, attempting to refresh...');
       const refreshed = await refreshToken();
@@ -55,6 +56,105 @@ async function handleResponse(response) {
     throw new Error(error.detail || error.message || `API Error: ${response.status}`);
   } catch {
     throw new Error(`Network error: ${response.statusText || response.status}`);
+  }
+}
+
+// --- Order Management Functions ---
+
+// Get vendor orders with optional filters
+export async function getVendorOrders(filters = {}) {
+  try {
+    const queryParams = new URLSearchParams();
+    
+    if (filters.status) {
+      queryParams.append('status', filters.status);
+    }
+    if (filters.limit) {
+      queryParams.append('limit', filters.limit);
+    }
+    
+    const url = `${API_URL}/api/orders/vendor/${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
+    
+    // For vendor endpoints, only use master token authentication
+    const headers = {
+      'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN,
+      'Accept': 'application/json'
+    };
+    
+    // Add vendor ID header if available
+    const vendorId = getVendorId();
+    if (vendorId) {
+      headers['X-Vendor-ID'] = vendorId;
+    }
+    
+    // Debug logging
+    console.log('Making vendor orders request to:', url);
+    console.log('Request headers:', {
+      'X-Master-Token': headers['X-Master-Token'] ? 'Present' : 'Missing',
+      'X-Vendor-ID': headers['X-Vendor-ID'] || 'Missing'
+    });
+    
+    const response = await fetch(url, { headers });
+    
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('Error fetching vendor orders:', error);
+    throw error;
+  }
+}
+
+// Get specific order details for vendor
+export async function getVendorOrderDetail(orderNumber) {
+  try {
+    // For vendor endpoints, only use master token authentication
+    const headers = {
+      'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN,
+      'Accept': 'application/json'
+    };
+    
+    // Add vendor ID header if available
+    const vendorId = getVendorId();
+    if (vendorId) {
+      headers['X-Vendor-ID'] = vendorId;
+    }
+    
+    const response = await fetch(`${API_URL}/api/orders/${orderNumber}/vendor-detail/`, {
+      headers
+    });
+    
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('Error fetching vendor order detail:', error);
+    throw error;
+  }
+}
+
+// Update order status (vendor action)
+export async function updateOrderStatus(orderNumber, status) {
+  try {
+    // For vendor endpoints, only use master token authentication
+    const headers = {
+      'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    };
+    
+    // Add vendor ID header if available
+    const vendorId = getVendorId();
+    if (vendorId) {
+      headers['X-Vendor-ID'] = vendorId;
+    }
+    
+    const response = await fetch(`${API_URL}/api/orders/${orderNumber}/update-status/`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({ status })
+    });
+    
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    throw error;
   }
 }
 
@@ -510,6 +610,24 @@ export async function checkEmailAvailability(email) {
     return data; // Should return { available: true/false }
   } catch (error) {
     console.error('Email availability check error:', error);
+    throw error;
+  }
+}
+
+// Get vendor profile information
+export async function getVendorProfile() {
+  try {
+    const response = await fetch(`${API_URL}/api/vendors/profile/`, {
+      headers: {
+        'Authorization': `Bearer ${getToken()}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    });
+    
+    return await handleResponse(response);
+  } catch (error) {
+    console.error('Error fetching vendor profile:', error);
     throw error;
   }
 }

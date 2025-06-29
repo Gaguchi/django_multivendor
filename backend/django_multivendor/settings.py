@@ -115,6 +115,7 @@ if is_package_installed('corsheaders'):
         'x-requested-with',
         'x-master-token',  # Add this header to allow master token authentication
         'x-guest-session-key',  # Add this header to allow guest session key
+        'x-vendor-id',  # Add this header to allow vendor ID in order management
     ]
 
     CORS_ALLOW_CREDENTIALS = True
@@ -131,8 +132,12 @@ if is_package_installed('corsheaders'):
     CORS_ALLOWED_ORIGINS = [
         'https://localhost:5173',
         'http://localhost:5173',
+        'https://localhost:5174',
+        'http://localhost:5174',
         'https://127.0.0.1:5173',
         'http://127.0.0.1:5173',
+        'https://127.0.0.1:5174',
+        'http://127.0.0.1:5174',
         'https://api.bazro.ge',
         'http://api.bazro.ge',
         'https://shop.bazro.ge',
@@ -360,7 +365,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
 
 # Override the default callback URL
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'https://localhost:5173/auth/callback'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'https://shop.bazro.ge/auth/callback'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # Add Facebook OAuth Settings
@@ -418,8 +423,12 @@ CSRF_TRUSTED_ORIGINS = [
 CORS_ALLOWED_ORIGINS = [
     'https://localhost:5173',
     'http://localhost:5173',
+    'https://localhost:5174',
+    'http://localhost:5174',
     'https://127.0.0.1:5173',
     'http://127.0.0.1:5173',
+    'https://127.0.0.1:5174',
+    'http://127.0.0.1:5174',
     'https://api.bazro.ge',
     'http://api.bazro.ge',
     'https://shop.bazro.ge',
@@ -457,6 +466,7 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
     'x-master-token',  # Add this header to allow master token authentication
     'x-guest-session-key',  # Add this header to allow guest session key
+    'x-vendor-id',  # Add this header to allow vendor ID in order management
 ]
 
 # AI Search Configuration

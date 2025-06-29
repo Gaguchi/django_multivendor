@@ -3,10 +3,15 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from vendors.authentication import MasterTokenAuthentication
+from vendors.models import Vendor
 from django.utils import timezone
 import uuid
 from .models import Order, OrderItem
-from .serializers import OrderSerializer, OrderItemSerializer, OrderTrackingSerializer
+from .serializers import (
+    OrderSerializer, OrderItemSerializer, OrderTrackingSerializer,
+    VendorOrderSerializer, VendorOrderStatusUpdateSerializer
+)
 from vendors.models import VendorProduct
 
 class OrderViewSet(viewsets.ModelViewSet):
@@ -127,4 +132,145 @@ class OrderViewSet(viewsets.ModelViewSet):
             return Response(
                 {'detail': 'Order not found'},
                 status=status.HTTP_404_NOT_FOUND
+            )
+
+    @action(detail=False, methods=['get'], 
+            authentication_classes=[MasterTokenAuthentication],
+            permission_classes=[],
+            url_path='vendor')
+    def vendor_orders(self, request):
+        """
+        Get orders for the authenticated vendor (using master token + vendor ID)
+        """
+        try:
+            # Get vendor from request (set by MasterTokenAuthentication)
+            vendor = getattr(request, 'vendor', None)
+            if not vendor:
+                return Response(
+                    {'error': 'Vendor authentication required. Please provide X-Vendor-ID header.'}, 
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
+            # Get orders that contain items from this vendor
+            orders = Order.objects.filter(
+                items__product__vendor=vendor
+            ).distinct().order_by('-created_at')
+
+            # Apply filters
+            status_filter = request.query_params.get('status')
+            if status_filter:
+                orders = orders.filter(status=status_filter)
+
+            # Pagination
+            limit = request.query_params.get('limit')
+            if limit:
+                try:
+                    limit = int(limit)
+                    orders = orders[:limit]
+                except ValueError:
+                    pass
+
+            serializer = VendorOrderSerializer(
+                orders, 
+                many=True, 
+                context={'vendor': vendor, 'request': request}
+            )
+            return Response(serializer.data)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    @action(detail=True, methods=['get'], 
+            authentication_classes=[MasterTokenAuthentication],
+            permission_classes=[],
+            url_path='vendor-detail')
+    def vendor_order_detail(self, request, order_number=None):
+        """
+        Get detailed order view for vendor
+        """
+        try:
+            vendor = getattr(request, 'vendor', None)
+            if not vendor:
+                return Response(
+                    {'error': 'Vendor authentication required. Please provide X-Vendor-ID header.'}, 
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
+            order = get_object_or_404(Order, order_number=order_number)
+            
+            if not order.can_vendor_access(vendor):
+                return Response(
+                    {'error': 'You do not have access to this order'}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
+            serializer = VendorOrderSerializer(
+                order, 
+                context={'vendor': vendor, 'request': request}
+            )
+            return Response(serializer.data)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    @action(detail=True, methods=['post'], 
+            authentication_classes=[MasterTokenAuthentication],
+            permission_classes=[],
+            url_path='update-status')
+    def update_status(self, request, order_number=None):
+        """
+        Update order status by vendor
+        """
+        try:
+            vendor = getattr(request, 'vendor', None)
+            if not vendor:
+                return Response(
+                    {'error': 'Vendor authentication required. Please provide X-Vendor-ID header.'}, 
+                    status=status.HTTP_401_UNAUTHORIZED
+                )
+
+            order = get_object_or_404(Order, order_number=order_number)
+            
+            serializer = VendorOrderStatusUpdateSerializer(
+                data=request.data,
+                context={'order': order, 'vendor': vendor}
+            )
+            
+            if serializer.is_valid():
+                new_status = serializer.validated_data['status']
+                
+                # Update order status based on vendor action
+                if new_status == 'Shipped':
+                    success = order.mark_as_shipped_by_vendor(vendor)
+                elif new_status == 'Delivered':
+                    success = order.mark_as_delivered_by_vendor(vendor)
+                else:
+                    return Response(
+                        {'error': 'Invalid status update'}, 
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                
+                if success:
+                    return Response({
+                        'status': 'Order status updated successfully',
+                        'new_status': order.status
+                    })
+                else:
+                    return Response(
+                        {'error': 'Could not update order status'}, 
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            return Response(
+                {'error': str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
