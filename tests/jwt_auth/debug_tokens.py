@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Debug script to understand token issues with the live API
+Essential JWT Token Test - Consolidated and Working
+Tests login and token refresh against live API
 """
 
 import requests
@@ -10,7 +11,7 @@ import base64
 from datetime import datetime
 import urllib3
 
-# Disable SSL warnings
+# Disable SSL warnings for testing
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 API_BASE_URL = "https://api.bazro.ge"
@@ -18,14 +19,11 @@ API_BASE_URL = "https://api.bazro.ge"
 def decode_jwt_payload(token):
     """Decode JWT payload without verification"""
     try:
-        # JWT tokens have 3 parts: header.payload.signature
         parts = token.split('.')
         if len(parts) != 3:
             return None
         
-        # Decode the payload (second part)
         payload = parts[1]
-        # Add padding if needed
         payload += '=' * (4 - len(payload) % 4)
         decoded = base64.urlsafe_b64decode(payload)
         return json.loads(decoded)
@@ -53,8 +51,8 @@ def test_login_and_tokens():
             print(f"\n📝 Testing account {i+1}: {account['username']}")
             
             response = session.post(
-                f"{API_BASE_URL}/api/users/login/",
-                json={"login": account['username'], "password": account['password']},
+                f"{API_BASE_URL}/api/token/",
+                json=account,
                 verify=False,
                 timeout=30
             )
@@ -131,4 +129,5 @@ def test_login_and_tokens():
     return False
 
 if __name__ == "__main__":
-    test_login_and_tokens()
+    success = test_login_and_tokens()
+    exit(0 if success else 1)
