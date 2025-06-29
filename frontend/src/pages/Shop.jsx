@@ -1,24 +1,84 @@
+import { useState, useEffect, useRef } from 'react'
 import { useProducts } from '../hooks/useProducts'
+import { useCategories } from '../hooks/useCategories'
+import { useVendors } from '../hooks/useVendors'
 import ProductGrid from '../elements/ProductGrid'
-import Sidebar from '../components/Shop/Sidebar'
+import FunctionalSidebar from '../components/Shop/FunctionalSidebar'
 import { SearchResultsSkeleton } from '../components/Skeleton'
-import { useEffect, useRef } from 'react'
 
 export default function Products() {
+  const [filters, setFilters] = useState({})
+  const [sortBy, setSortBy] = useState('menu_order')
+  const [showCount, setShowCount] = useState(12)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
   const { 
     data, 
     isLoading, 
     error, 
     fetchNextPage, 
     hasNextPage, 
-    isFetchingNextPage 
-  } = useProducts()
+    isFetchingNextPage,
+    refetch
+  } = useProducts({ 
+    filters: {
+      ...filters,
+      ordering: sortBy,
+      page_size: showCount
+    }
+  })
+
+  const { data: categories, isLoading: categoriesLoading } = useCategories()
+  const { data: vendors, isLoading: vendorsLoading } = useVendors()
   
   // Flatten all pages into a single array of products
   const products = data?.pages?.flatMap(page => page.results) || []
   
   const observerRef = useRef()
   const loadMoreRef = useRef()
+
+  // Handle filter changes
+  const handleFiltersChange = (newFilters) => {
+    console.log('Filters changed:', newFilters) // Debug log
+    
+    // Map sidebar filters to API parameters
+    const apiFilters = {}
+    
+    // Categories filter
+    if (newFilters.categories && newFilters.categories.length > 0) {
+      apiFilters.category = newFilters.categories.join(',')
+    }
+    
+    // Brands filter
+    if (newFilters.brands && newFilters.brands.length > 0) {
+      apiFilters.vendor = newFilters.brands.join(',')
+    }
+    
+    // Price filters
+    if (newFilters.priceMin) {
+      apiFilters.price_min = newFilters.priceMin
+    }
+    if (newFilters.priceMax) {
+      apiFilters.price_max = newFilters.priceMax
+    }
+    
+    setFilters(apiFilters)
+  }
+
+  // Handle sort change
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort)
+  }
+
+  // Handle show count change
+  const handleShowCountChange = (newCount) => {
+    setShowCount(newCount)
+  }
+
+  // Toggle sidebar on mobile
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen)
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -107,14 +167,59 @@ export default function Products() {
         </nav>
         <div className="row">
           <div className="col-lg-9">
+            {/* Active Filters Display */}
+            {Object.keys(filters).length > 0 && (
+              <div className="active-filters mb-3">
+                <div className="d-flex flex-wrap align-items-center gap-2">
+                  <span className="fw-bold me-2">Active Filters:</span>
+                  {Object.entries(filters).map(([key, value]) => (
+                    <span key={key} className="badge bg-primary">
+                      {key}: {value}
+                      <button 
+                        className="btn-close btn-close-white btn-sm ms-1"
+                        onClick={() => {
+                          const newFilters = { ...filters }
+                          delete newFilters[key]
+                          setFilters(newFilters)
+                        }}
+                      ></button>
+                    </span>
+                  ))}
+                  <button 
+                    className="btn btn-outline-secondary btn-sm"
+                    onClick={() => setFilters({})}
+                  >
+                    Clear All
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Products count and loading info */}
+            <div className="products-info mb-3">
+              <div className="d-flex justify-content-between align-items-center">
+                <span className="text-muted">
+                  {data?.pages?.[0]?.count ? `${data.pages[0].count} products found` : ''}
+                  {isLoading && ' (Loading...)'}
+                </span>
+                {error && (
+                  <span className="text-danger">
+                    <i className="icon-exclamation-triangle me-1"></i>
+                    {error.message}
+                  </span>
+                )}
+              </div>
+            </div>
+
             <nav
               className="toolbox sticky-header"
               data-sticky-options="{'mobile': true}"
             >
               <div className="toolbox-left">
-                <a
-                  href="category-infinite-scroll.html#"
+                <button
+                  type="button"
                   className="sidebar-toggle"
+                  onClick={toggleSidebar}
                 >
                   <svg
                     data-name="Layer 3"
@@ -146,17 +251,22 @@ export default function Products() {
                     />
                   </svg>
                   <span>Filter</span>
-                </a>
+                </button>
                 <div className="toolbox-item toolbox-sort">
                   <label>Sort By:</label>
                   <div className="select-custom">
-                    <select name="orderby" className="form-control" defaultValue="menu_order">
+                    <select 
+                      name="orderby" 
+                      className="form-control" 
+                      value={sortBy}
+                      onChange={(e) => handleSortChange(e.target.value)}
+                    >
                       <option value="menu_order">Default sorting</option>
                       <option value="popularity">Sort by popularity</option>
                       <option value="rating">Sort by average rating</option>
-                      <option value="date">Sort by newness</option>
+                      <option value="-created_at">Sort by newness</option>
                       <option value="price">Sort by price: low to high</option>
-                      <option value="price-desc">Sort by price: high to low</option>
+                      <option value="-price">Sort by price: high to low</option>
                     </select>
                   </div>
                   {/* End .select-custom */}
@@ -168,7 +278,12 @@ export default function Products() {
                 <div className="toolbox-item toolbox-show">
                   <label>Show:</label>
                   <div className="select-custom">
-                    <select name="count" className="form-control" defaultValue={12}>
+                    <select 
+                      name="count" 
+                      className="form-control" 
+                      value={showCount}
+                      onChange={(e) => handleShowCountChange(parseInt(e.target.value))}
+                    >
                       <option value={12}>12</option>
                       <option value={24}>24</option>
                       <option value={36}>36</option>
@@ -224,7 +339,17 @@ export default function Products() {
             </div>
 
           </div>
-          <Sidebar />
+          
+          <FunctionalSidebar
+            onFiltersChange={handleFiltersChange}
+            currentFilters={filters}
+            categories={categories}
+            brands={vendors}
+            loading={categoriesLoading || vendorsLoading}
+            isOpen={sidebarOpen}
+            onClose={() => setSidebarOpen(false)}
+            className={sidebarOpen ? 'show' : ''}
+          />
         </div>
         {/* End .row */}
       </div>
