@@ -79,6 +79,9 @@ if is_package_installed('django_extensions'):
 if is_package_installed('rest_framework_simplejwt.token_blacklist'):
     THIRD_PARTY_APPS.append('rest_framework_simplejwt.token_blacklist')
 
+if is_package_installed('channels'):
+    THIRD_PARTY_APPS.append('channels')
+
 # Combine all apps
 INSTALLED_APPS = INSTALLED_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 
@@ -182,6 +185,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'django_multivendor.wsgi.application'
+ASGI_APPLICATION = 'django_multivendor.asgi.application'
 
 
 # Database
@@ -474,3 +478,21 @@ OLLAMA_API_URL = 'http://localhost:11434/api/generate'
 OLLAMA_MODEL = 'gemma:7b'
 AI_SEARCH_DEBUG = True  # Set to False in production
 AI_SEARCH_CACHE_TIMEOUT = 3600  # 1 hour cache
+
+# Channel Layers Configuration for WebSocket Support
+if is_package_installed('channels'):
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {
+                "hosts": [("127.0.0.1", 6379)],
+            },
+        },
+    }
+else:
+    # In-memory channel layer for development (fallback)
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer"
+        }
+    }

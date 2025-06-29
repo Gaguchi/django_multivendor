@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useVendorOrders } from '../../contexts/VendorOrderContext';
+import PollingStatus from './PollingStatus';
 
 export default function OrderList() {
   const {
@@ -185,6 +186,9 @@ export default function OrderList() {
           </button>
         </div>
       </div>
+
+      {/* Real-time update status */}
+      <PollingStatus />
 
       {orders.length === 0 ? (
         <div className="text-center py-5">

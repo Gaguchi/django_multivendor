@@ -13,6 +13,7 @@ from .serializers import (
     VendorOrderSerializer, VendorOrderStatusUpdateSerializer
 )
 from vendors.models import VendorProduct
+from .notifications import send_order_status_update
 
 class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
@@ -257,6 +258,9 @@ class OrderViewSet(viewsets.ModelViewSet):
                     )
                 
                 if success:
+                    # Send real-time WebSocket notification
+                    send_order_status_update(order, vendor.id)
+                    
                     return Response({
                         'status': 'Order status updated successfully',
                         'new_status': order.status

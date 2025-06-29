@@ -6,3 +6,5 @@ django-admin-sortable2>=2.1.8
 djangorestframework-simplejwt>=5.2.2
 python-social-auth>=0.3.6
 django-filter>=23.2
+channels>=4.0.0
+channels-redis>=4.1.0

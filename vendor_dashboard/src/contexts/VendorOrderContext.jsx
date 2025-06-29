@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, useCallback } from 'react';
 import { getVendorOrders, getVendorOrderDetail, updateOrderStatus } from '../services/api';
 import { useVendor } from './VendorContext';
 
@@ -18,29 +18,128 @@ export function VendorOrderProvider({ children }) {
   const [currentOrder, setCurrentOrder] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [pollingEnabled, setPollingEnabled] = useState(true);
+  const [pollingInterval, setPollingInterval] = useState(30000); // 30 seconds default
+  
+  const pollIntervalRef = useRef(null);
+  const isPollingRef = useRef(false);
+  const currentFiltersRef = useRef({});
 
   // Fetch all orders for the vendor
-  const fetchOrders = async (filters = {}) => {
+  const fetchOrders = useCallback(async (filters = {}, silent = false) => {
     if (!isVendorLoaded) {
-      setError('Vendor information not loaded. Please try again.');
+      if (!silent) {
+        setError('Vendor information not loaded. Please try again.');
+      }
       return;
     }
 
     try {
-      setLoading(true);
-      setError(null);
+      if (!silent) {
+        setLoading(true);
+        setError(null);
+      }
+      
+      // Store current filters for polling
+      currentFiltersRef.current = filters;
+      
       const data = await getVendorOrders(filters);
-      setOrders(Array.isArray(data) ? data : []);
+      const newOrders = Array.isArray(data) ? data : [];
+      
+      // Check if orders have actually changed before updating state
+      const ordersChanged = JSON.stringify(orders) !== JSON.stringify(newOrders);
+      if (ordersChanged || !silent) {
+        setOrders(newOrders);
+        setLastUpdated(new Date());
+        
+        // Log updates for debugging
+        if (ordersChanged && silent) {
+          console.log('Orders updated via polling:', newOrders.length, 'orders');
+        }
+      }
     } catch (err) {
-      setError('Failed to fetch orders. Please try again.');
-      console.error('Error fetching vendor orders:', err);
+      if (!silent) {
+        setError('Failed to fetch orders. Please try again.');
+        console.error('Error fetching vendor orders:', err);
+      } else {
+        // For polling errors, just log them without disrupting the UI
+        console.warn('Polling error (non-critical):', err.message);
+      }
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
     }
-  };
+  }, [isVendorLoaded, orders]);
+
+  // Polling functions
+  const startPolling = useCallback(() => {
+    if (!pollingEnabled || isPollingRef.current || !isVendorLoaded) {
+      return;
+    }
+    
+    console.log('Starting order polling every', pollingInterval / 1000, 'seconds');
+    isPollingRef.current = true;
+    
+    pollIntervalRef.current = setInterval(() => {
+      if (isVendorLoaded && pollingEnabled) {
+        fetchOrders(currentFiltersRef.current, true); // Silent polling
+      }
+    }, pollingInterval);
+  }, [pollingEnabled, pollingInterval, isVendorLoaded, fetchOrders]);
+
+  const stopPolling = useCallback(() => {
+    if (pollIntervalRef.current) {
+      console.log('Stopping order polling');
+      clearInterval(pollIntervalRef.current);
+      pollIntervalRef.current = null;
+      isPollingRef.current = false;
+    }
+  }, []);
+
+  const togglePolling = useCallback(() => {
+    setPollingEnabled(prev => {
+      const newValue = !prev;
+      if (newValue) {
+        startPolling();
+      } else {
+        stopPolling();
+      }
+      return newValue;
+    });
+  }, [startPolling, stopPolling]);
+
+  // Effect to handle polling lifecycle
+  useEffect(() => {
+    if (isVendorLoaded && pollingEnabled) {
+      startPolling();
+    } else {
+      stopPolling();
+    }
+
+    // Cleanup on unmount
+    return () => {
+      stopPolling();
+    };
+  }, [isVendorLoaded, pollingEnabled, startPolling, stopPolling]);
+
+  // Pause polling when tab is not visible (optimization)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopPolling();
+      } else if (pollingEnabled && isVendorLoaded) {
+        startPolling();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [pollingEnabled, isVendorLoaded, startPolling, stopPolling]);
 
   // Fetch a specific order by order number
-  const fetchOrderDetail = async (orderNumber) => {
+  const fetchOrderDetail = useCallback(async (orderNumber) => {
     if (!orderNumber) {
       setCurrentOrder(null);
       return;
@@ -54,45 +153,87 @@ export function VendorOrderProvider({ children }) {
     try {
       setLoading(true);
       setError(null);
+      
+      console.log(`[VendorOrderContext] Fetching order detail for: ${orderNumber}`);
+      
       const data = await getVendorOrderDetail(orderNumber);
       setCurrentOrder(data);
+      
     } catch (err) {
       setError('Failed to fetch order details. Please try again.');
       console.error(`Error fetching order ${orderNumber}:`, err);
+      
+      // If order not found or access denied, clear current order
+      if (err.status === 404 || err.status === 403) {
+        setCurrentOrder(null);
+      }
+      
     } finally {
       setLoading(false);
     }
-  };
+  }, [isVendorLoaded]);
 
-  // Update order status (mark as shipped/delivered)
-  const updateStatus = async (orderNumber, status) => {
+  // Update order status (mark as shipped/delivered) with optimistic updates
+  const updateStatus = useCallback(async (orderNumber, status) => {
     if (!isVendorLoaded) {
       setError('Vendor information not loaded. Please try again.');
       return { success: false, error: 'Vendor information not loaded' };
     }
 
+    // Optimistic update: immediately update the UI
+    const previousOrders = [...orders];
+    const previousCurrentOrder = currentOrder ? { ...currentOrder } : null;
+    
+    // Update the order in the list immediately
+    const optimisticOrders = orders.map(order => {
+      if (order.order_number === orderNumber) {
+        return { 
+          ...order, 
+          status: status,
+          updated_at: new Date().toISOString(),
+          can_update_status: status !== 'Delivered' // Update button availability
+        };
+      }
+      return order;
+    });
+    
+    setOrders(optimisticOrders);
+    
+    // Update current order if it's the one being updated
+    if (currentOrder && currentOrder.order_number === orderNumber) {
+      setCurrentOrder({
+        ...currentOrder,
+        status: status,
+        updated_at: new Date().toISOString(),
+        can_update_status: status !== 'Delivered'
+      });
+    }
+
     try {
-      setLoading(true);
       setError(null);
       
       const result = await updateOrderStatus(orderNumber, status);
       
-      // Refresh orders list and current order if needed
-      await fetchOrders();
+      // Backend update successful - refresh to get the latest data
+      await fetchOrders(currentFiltersRef.current, true); // Silent refresh
       if (currentOrder && currentOrder.order_number === orderNumber) {
         await fetchOrderDetail(orderNumber);
       }
       
-      return { success: true, message: result.status || 'Status updated successfully' };
+      return { success: true, message: result.message || 'Status updated successfully' };
     } catch (err) {
+      // Rollback optimistic update on error
+      setOrders(previousOrders);
+      if (previousCurrentOrder) {
+        setCurrentOrder(previousCurrentOrder);
+      }
+      
       const errorMessage = err.message || 'Failed to update order status. Please try again.';
       setError(errorMessage);
       console.error(`Error updating order ${orderNumber} status:`, err);
       return { success: false, error: errorMessage };
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [isVendorLoaded, orders, currentOrder, fetchOrders, fetchOrderDetail]);
 
   // Helper function to get status badge color
   const getStatusColor = (status) => {
@@ -175,6 +316,9 @@ export function VendorOrderProvider({ children }) {
     currentOrder,
     loading,
     error,
+    lastUpdated,
+    pollingEnabled,
+    pollingInterval,
     vendor,
     vendorId,
     isVendorLoaded,
@@ -188,7 +332,12 @@ export function VendorOrderProvider({ children }) {
     fetchRecentOrders,
     fetchOrdersByStatus,
     clearCurrentOrder,
-    clearError
+    clearError,
+    // Polling controls
+    startPolling,
+    stopPolling,
+    togglePolling,
+    setPollingInterval
   };
 
   return (

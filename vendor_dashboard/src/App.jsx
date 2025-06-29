@@ -192,12 +192,12 @@ function App() {
         v7_relativeSplatPath: true
       }}>
         <Routes>
-          <Route 
-            path="/login" 
-            element={isAuthorized ? <Navigate to="/" /> : <Login />} 
-          />
-          <Route 
-            path="/register" 
+            <Route 
+              path="/login" 
+              element={isAuthorized ? <Navigate to="/" /> : <Login />} 
+            />
+            <Route 
+              path="/register" 
             element={isAuthorized ? <Navigate to="/" /> : <Register />} 
           />
           <Route 
