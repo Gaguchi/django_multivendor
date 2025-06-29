@@ -109,7 +109,7 @@ export default function OrderList() {
     return buttons;
   };
 
-  if (!isVendorLoaded()) {
+  if (!isVendorLoaded) {
     return (
       <div className="d-flex justify-content-center py-5">
         <div className="text-center">

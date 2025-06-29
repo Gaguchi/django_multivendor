@@ -28579,3 +28579,17 @@ UnboundLocalError: cannot access local variable 'thumbnail_filename_from_request
 [2025-06-29 13:17:04,284] ERROR log Internal Server Error: /api/orders/detail/vendor-detail/
 [2025-06-29 13:17:04,381] ERROR log Internal Server Error: /api/orders/detail/vendor-detail/
 [2025-06-29 13:17:04,381] ERROR log Internal Server Error: /api/orders/detail/vendor-detail/
+[2025-06-29 13:18:02,414] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:18:02,414] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:18:02,501] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:18:02,501] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:18:15,062] ERROR log Internal Server Error: /api/orders/detail/vendor-detail/
+[2025-06-29 13:18:15,062] ERROR log Internal Server Error: /api/orders/detail/vendor-detail/
+[2025-06-29 13:18:16,764] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:18:16,764] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:18:16,853] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:18:16,853] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:19:46,857] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:19:46,857] ERROR log Internal Server Error: /api/orders/tracking/vendor-detail/
+[2025-06-29 13:36:50,681] WARNING log Not Found: /favicon.ico
+[2025-06-29 13:36:50,681] WARNING log Not Found: /favicon.ico

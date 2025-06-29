@@ -156,16 +156,6 @@ export default function SideMenu() {
                           <div className="text">Order list</div>
                         </Link>
                       </li>
-                      <li className="sub-menu-item">
-                        <Link to="/orders/detail">
-                          <div className="text">Order detail</div>
-                        </Link>
-                      </li>
-                      <li className="sub-menu-item">
-                        <Link to="/orders/tracking">
-                          <div className="text">Order tracking</div>
-                        </Link>
-                      </li>
                     </ul>
                   </li>
                   <li className={`menu-item has-children ${expandedMenus['account'] ? 'active' : ''}`}>

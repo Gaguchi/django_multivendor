@@ -26,7 +26,7 @@ export default function OrderDetail() {
 
   useEffect(() => {
     // Only fetch order detail if vendor profile is loaded
-    if (orderNumber && isVendorLoaded()) {
+    if (orderNumber && isVendorLoaded) {
       fetchOrderDetail(orderNumber);
     }
     
@@ -67,7 +67,7 @@ export default function OrderDetail() {
     }));
   };
 
-  if (!isVendorLoaded()) {
+  if (!isVendorLoaded) {
     return (
       <div className="d-flex justify-content-center py-5">
         <div className="text-center">
