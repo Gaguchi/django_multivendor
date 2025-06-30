@@ -35,7 +35,7 @@ export default function AISearchButton() {
             {isSearchOpen && <AISearchModal onClose={closeSearch} />}
 
             {/* AI Search Button Styles */}
-            <style jsx>{`
+            <style>{`
                 .ai-search-btn {
                     display: flex;
                     align-items: center;

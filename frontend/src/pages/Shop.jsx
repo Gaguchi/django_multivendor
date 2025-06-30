@@ -1,16 +1,38 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useProducts } from '../hooks/useProducts'
 import { useCategories } from '../hooks/useCategories'
 import { useVendors } from '../hooks/useVendors'
 import ProductGrid from '../elements/ProductGrid'
 import Sidebar from '../components/Shop/Sidebar'
 import { SearchResultsSkeleton } from '../components/Skeleton'
+import ReactUpdateTracker from '../components/Debug/ReactUpdateTracker'
+import UpdateIndicator from '../components/Debug/UpdateIndicator'
+import DebugErrorBoundary from '../components/Debug/DebugErrorBoundary'
+import FilterTestHelper from '../components/Debug/FilterTestHelper'
 
 export default function Products() {
   const [filters, setFilters] = useState({})
   const [sortBy, setSortBy] = useState('menu_order')
   const [showCount, setShowCount] = useState(12)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  
+  // Price range state - will be dynamic based on products
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 })
+  
+  const [sidebarFilters, setSidebarFilters] = useState({
+    categories: [],
+    brands: [],
+    priceRange: [0, 1000]
+  })
+
+  // Memoize the query options to prevent unnecessary re-renders
+  const queryOptions = useMemo(() => ({
+    filters: {
+      ...filters,
+      ordering: sortBy,
+      page_size: showCount
+    }
+  }), [filters, sortBy, showCount])
 
   const { 
     data, 
@@ -19,27 +41,60 @@ export default function Products() {
     fetchNextPage, 
     hasNextPage, 
     isFetchingNextPage,
-    refetch
-  } = useProducts({ 
-    filters: {
-      ...filters,
-      ordering: sortBy,
-      page_size: showCount
-    }
-  })
+  } = useProducts(queryOptions)
 
   const { data: categories, isLoading: categoriesLoading } = useCategories()
   const { data: vendors, isLoading: vendorsLoading } = useVendors()
   
-  // Flatten all pages into a single array of products
-  const products = data?.pages?.flatMap(page => page.results) || []
+  // Memoize products to prevent unnecessary re-renders
+  const products = useMemo(() => {
+    return data?.pages?.flatMap(page => page.results) || []
+  }, [data?.pages])
   
   const observerRef = useRef()
   const loadMoreRef = useRef()
 
-  // Handle filter changes
-  const handleFiltersChange = (newFilters) => {
-    console.log('Shop handleFiltersChange called:', newFilters) // Debug log
+  // Calculate dynamic price range from products
+  useEffect(() => {
+    if (products.length > 0) {
+      const prices = products.map(product => parseFloat(product.price || 0)).filter(price => price > 0)
+      if (prices.length > 0) {
+        const minPrice = Math.floor(Math.min(...prices))
+        const maxPrice = Math.ceil(Math.max(...prices))
+        
+        // Only update price range if it's significantly different (avoid constant updates)
+        if (Math.abs(priceRange.min - minPrice) > 1 || Math.abs(priceRange.max - maxPrice) > 1) {
+          console.log('📊 Updating price range from products:', { minPrice, maxPrice })
+          setPriceRange({ min: minPrice, max: maxPrice })
+          
+          // Only update sidebar filters if they're at the default values (meaning user hasn't changed them)
+          if (sidebarFilters.priceRange[0] === 0 && sidebarFilters.priceRange[1] === 1000) {
+            console.log('🎯 Updating sidebar price range to match product range')
+            setSidebarFilters(prev => ({
+              ...prev,
+              priceRange: [minPrice, maxPrice]
+            }))
+          }
+        }
+      }
+    }
+  }, [products.length]) // Simplified dependency
+
+  // Handle filter changes with useCallback to prevent unnecessary re-renders
+  const handleFiltersChange = useCallback((newFilters) => {
+    console.log('🔄 Shop handleFiltersChange called:', newFilters)
+    console.log('📊 Current sidebar filters before update:', sidebarFilters)
+    console.log('🎯 Current API filters before update:', filters)
+    
+    // Prevent unnecessary updates if filters haven't actually changed
+    const hasChanged = JSON.stringify(sidebarFilters) !== JSON.stringify(newFilters)
+    if (!hasChanged) {
+      console.log('⏭️ Filters unchanged, skipping update')
+      return
+    }
+    
+    // Store the sidebar filters for passing back to sidebar (to maintain state)
+    setSidebarFilters(newFilters)
     
     // Map sidebar filters to API parameters
     const apiFilters = {}
@@ -55,31 +110,37 @@ export default function Products() {
     }
     
     // Price filters
-    if (newFilters.priceMin) {
+    if (newFilters.priceMin && newFilters.priceMin > priceRange.min) {
       apiFilters.price_min = newFilters.priceMin
     }
-    if (newFilters.priceMax) {
+    if (newFilters.priceMax && newFilters.priceMax < priceRange.max) {
       apiFilters.price_max = newFilters.priceMax
     }
     
-    console.log('Setting filters to:', apiFilters) // Debug log
+    console.log('✅ Setting API filters to:', apiFilters)
+    console.log('🎨 Setting sidebar filters to:', newFilters)
+    
     setFilters(apiFilters)
-  }
+    
+    console.log('✨ setFilters called - React Query should automatically refetch')
+  }, [sidebarFilters, filters, priceRange.min, priceRange.max])
 
   // Handle sort change
-  const handleSortChange = (newSort) => {
+  const handleSortChange = useCallback((newSort) => {
+    console.log('🔄 Sort changed to:', newSort)
     setSortBy(newSort)
-  }
+  }, [])
 
   // Handle show count change
-  const handleShowCountChange = (newCount) => {
+  const handleShowCountChange = useCallback((newCount) => {
+    console.log('🔄 Show count changed to:', newCount)
     setShowCount(newCount)
-  }
+  }, [])
 
   // Toggle sidebar on mobile
-  const toggleSidebar = () => {
+  const toggleSidebar = useCallback(() => {
     setSidebarOpen(!sidebarOpen)
-  }
+  }, [sidebarOpen])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -115,6 +176,11 @@ export default function Products() {
 
   return (
     <>
+      <DebugErrorBoundary>
+        <ReactUpdateTracker componentName="Shop" />
+        <UpdateIndicator componentName="Shop" />
+        <FilterTestHelper />
+      </DebugErrorBoundary>
       <div className="category-banner-container bg-gray">
         <div
           className="category-banner banner text-uppercase"
@@ -131,9 +197,15 @@ export default function Products() {
                   <br />
                   Deals
                 </h3>
-                <a href="category.html" className="btn btn-dark">
+                <button 
+                  className="btn btn-dark"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    // Add get yours functionality here if needed
+                  }}
+                >
                   Get Yours!
-                </a>
+                </button>
               </div>
               <div className="pl-lg-3 col-md-4 offset-md-0 offset-1 pt-3">
                 <div className="coupon-sale-content">
@@ -154,12 +226,26 @@ export default function Products() {
         <nav aria-label="breadcrumb" className="breadcrumb-nav">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <a href="demo4.html">
+              <button 
+                className="breadcrumb-link"
+                onClick={(e) => {
+                  e.preventDefault()
+                  // Navigate to home if needed
+                }}
+              >
                 <i className="icon-home" />
-              </a>
+              </button>
             </li>
             <li className="breadcrumb-item">
-              <a href="category-infinite-scroll.html#">Men</a>
+              <button 
+                className="breadcrumb-link"
+                onClick={(e) => {
+                  e.preventDefault()
+                  // Navigate to Men category if needed
+                }}
+              >
+                Men
+              </button>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
               Accessories
@@ -188,7 +274,14 @@ export default function Products() {
                   ))}
                   <button 
                     className="btn btn-outline-secondary btn-sm"
-                    onClick={() => setFilters({})}
+                    onClick={() => {
+                      setFilters({})
+                      setSidebarFilters({
+                        categories: [],
+                        brands: [],
+                        priceRange: [0, 1000]
+                      })
+                    }}
                   >
                     Clear All
                   </button>
@@ -294,20 +387,26 @@ export default function Products() {
                 </div>
                 {/* End .toolbox-item */}
                 <div className="toolbox-item layout-modes">
-                  <a
-                    href="category.html"
+                  <button
                     className="layout-btn btn-grid active"
                     title="Grid"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      // Handle grid view if needed
+                    }}
                   >
                     <i className="icon-mode-grid" />
-                  </a>
-                  <a
-                    href="category-list.html"
+                  </button>
+                  <button
                     className="layout-btn btn-list"
                     title="List"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      // Handle list view if needed
+                    }}
                   >
                     <i className="icon-mode-list" />
-                  </a>
+                  </button>
                 </div>
                 {/* End .layout-modes */}
               </div>
@@ -315,6 +414,7 @@ export default function Products() {
             </nav>
 
             <ProductGrid 
+              key={`grid-${JSON.stringify(filters)}-${products.length}`}
               products={products}
               loading={isLoading}
               error={error}
@@ -343,9 +443,10 @@ export default function Products() {
           
           <Sidebar
             onFiltersChange={handleFiltersChange}
-            currentFilters={filters}
+            currentFilters={sidebarFilters}
             categories={categories}
             brands={vendors}
+            priceRange={priceRange}
             loading={categoriesLoading || vendorsLoading}
             isOpen={sidebarOpen}
             onClose={() => setSidebarOpen(false)}

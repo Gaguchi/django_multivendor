@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, memo } from 'react'
 import { Range } from 'react-range'
 
-export default function Sidebar({ 
+const Sidebar = memo(function Sidebar({ 
   onFiltersChange, 
   currentFilters = {}, 
   categories = [],
@@ -19,22 +19,57 @@ export default function Sidebar({
     ...currentFilters
   })
 
+  // Local collapse states (instead of Bootstrap)
+  const [collapsedSections, setCollapsedSections] = useState({
+    categories: false,
+    brands: false,
+    price: false
+  })
+
   // Debounce timer for price changes
   const debounceTimerRef = useRef(null)
   const [isPriceUpdating, setIsPriceUpdating] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  // Toggle section collapse
+  const toggleSection = useCallback((section) => {
+    setCollapsedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }))
+  }, [])
 
   // Initialize filters from currentFilters prop when it changes
   useEffect(() => {
-    setLocalFilters({
-      categories: currentFilters.categories || [],
-      brands: currentFilters.brands || [],
-      priceRange: currentFilters.priceRange || [priceRange.min, priceRange.max],
-    })
-  }, [currentFilters, priceRange.min, priceRange.max])
+    console.log('🎯 Sidebar useEffect: currentFilters changed to:', currentFilters)
+    console.log('💰 Sidebar useEffect: priceRange is:', priceRange)
+    console.log('🚀 Sidebar useEffect: isInitialized is:', isInitialized)
+    
+    // Only reset local filters on first initialization or if currentFilters have actually changed
+    if (!isInitialized || (currentFilters && Object.keys(currentFilters).length > 0)) {
+      setLocalFilters({
+        categories: currentFilters.categories || [],
+        brands: currentFilters.brands || [],
+        priceRange: currentFilters.priceRange || [priceRange.min, priceRange.max],
+      })
+      setIsInitialized(true)
+    }
+  }, [currentFilters, isInitialized, priceRange.min, priceRange.max])
+
+  // Separate effect to handle priceRange updates (only for initial setup)
+  useEffect(() => {
+    if (!isInitialized && !currentFilters.priceRange) {
+      console.log('💰 Sidebar: Setting initial price range:', [priceRange.min, priceRange.max])
+      setLocalFilters(prev => ({
+        ...prev,
+        priceRange: [priceRange.min, priceRange.max]
+      }))
+    }
+  }, [priceRange.min, priceRange.max, isInitialized, currentFilters.priceRange])
 
   // Debounced function to update filters
   const debouncedUpdateFilters = useCallback((newFilters, immediate = false) => {
-    console.log('debouncedUpdateFilters called:', { newFilters, immediate }) // Debug log
+    console.log('debouncedUpdateFilters called:', { newFilters, immediate })
     
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current)
@@ -51,7 +86,7 @@ export default function Sidebar({
         priceMin: newFilters.priceRange[0],
         priceMax: newFilters.priceRange[1]
       }
-      console.log('Calling onFiltersChange immediately:', formattedFilters) // Debug log
+      console.log('Calling onFiltersChange immediately:', formattedFilters)
       onFiltersChange?.(formattedFilters)
     } else {
       // For price filters, debounce the update
@@ -66,7 +101,7 @@ export default function Sidebar({
           priceMin: newFilters.priceRange[0],
           priceMax: newFilters.priceRange[1]
         }
-        console.log('Calling onFiltersChange (debounced):', formattedFilters) // Debug log
+        console.log('Calling onFiltersChange (debounced):', formattedFilters)
         onFiltersChange?.(formattedFilters)
         setIsPriceUpdating(false)
       }, 300) // Reduced delay for better responsiveness
@@ -74,11 +109,11 @@ export default function Sidebar({
   }, [onFiltersChange])
 
   // Update filters and notify parent
-  const updateFilters = (newFilters, immediate = false) => {
+  const updateFilters = useCallback((newFilters, immediate = false) => {
     debouncedUpdateFilters(newFilters, immediate)
-  }
+  }, [debouncedUpdateFilters])
 
-  const toggleArrayFilter = (filterType, value) => {
+  const toggleArrayFilter = useCallback((filterType, value) => {
     const currentArray = localFilters[filterType] || []
     const newArray = currentArray.includes(value)
       ? currentArray.filter(item => item !== value)
@@ -88,32 +123,32 @@ export default function Sidebar({
       ...localFilters,
       [filterType]: newArray
     }, true) // Immediate update for non-price filters
-  }
+  }, [localFilters, updateFilters])
 
-  const handlePriceRangeChange = (values) => {
+  const handlePriceRangeChange = useCallback((values) => {
     updateFilters({
       ...localFilters,
       priceRange: values
     }, false) // Debounced update for price filters
-  }
+  }, [localFilters, updateFilters])
 
-  const handlePriceInputChange = (index, value) => {
+  const handlePriceInputChange = useCallback((index, value) => {
     const newRange = [...localFilters.priceRange]
     newRange[index] = value
     updateFilters({
       ...localFilters,
       priceRange: newRange
     }, false) // Debounced update for price inputs
-  }
+  }, [localFilters, updateFilters])
 
-  const clearAllFilters = () => {
+  const clearAllFilters = useCallback(() => {
     const emptyFilters = {
       categories: [],
       brands: [],
       priceRange: [priceRange.min, priceRange.max]
     }
     updateFilters(emptyFilters, true)
-  }
+  }, [priceRange.min, priceRange.max, updateFilters])
 
   // Cleanup debounce timer on unmount
   useEffect(() => {
@@ -124,12 +159,19 @@ export default function Sidebar({
     }
   }, [])
 
-  const hasActiveFilters = () => {
+  const hasActiveFilters = useCallback(() => {
     return localFilters.categories.length > 0 ||
            localFilters.brands.length > 0 ||
            localFilters.priceRange[0] > priceRange.min ||
            localFilters.priceRange[1] < priceRange.max
-  }
+  }, [localFilters, priceRange.min, priceRange.max])
+
+  console.log('🎨 Sidebar render:', { 
+    localFilters, 
+    hasActiveFilters: hasActiveFilters(),
+    isPriceUpdating,
+    renderTime: new Date().toISOString()
+  })
 
   return (
     <>
@@ -159,18 +201,16 @@ export default function Sidebar({
           {/* Categories Widget */}
           <div className="widget">
             <h3 className="widget-title">
-              <a
-                data-bs-toggle="collapse"
-                href="#widget-categories"
-                role="button"
-                aria-expanded="true"
-                aria-controls="widget-categories"
+              <button
+                className="widget-title collapse-toggle"
+                onClick={() => toggleSection('categories')}
+                type="button"
               >
                 Categories
-              </a>
+                <i className={`fas fa-chevron-${collapsedSections.categories ? 'down' : 'up'} ms-2`}></i>
+              </button>
               {localFilters.categories.length > 0 && (
-                <a
-                  href="#"
+                <button
                   className="clear-section"
                   onClick={(e) => {
                     e.preventDefault()
@@ -178,10 +218,10 @@ export default function Sidebar({
                   }}
                 >
                   Clear
-                </a>
+                </button>
               )}
             </h3>
-            <div className="collapse show" id="widget-categories">
+            <div className={`widget-collapse ${collapsedSections.categories ? 'collapsed' : 'expanded'}`}>
               <div className="widget-body">
                 {loading ? (
                   <div className="category-skeleton">
@@ -229,18 +269,16 @@ export default function Sidebar({
           {/* Brands Widget */}
           <div className="widget">
             <h3 className="widget-title">
-              <a
-                data-bs-toggle="collapse"
-                href="#widget-brands"
-                role="button"
-                aria-expanded="true"
-                aria-controls="widget-brands"
+              <button
+                className="collapse-toggle"
+                onClick={() => toggleSection('brands')}
+                type="button"
               >
                 Brands
-              </a>
+                <i className={`fas fa-chevron-${collapsedSections.brands ? 'down' : 'up'} ms-2`}></i>
+              </button>
               {localFilters.brands.length > 0 && (
-                <a
-                  href="#"
+                <button
                   className="clear-section"
                   onClick={(e) => {
                     e.preventDefault()
@@ -248,10 +286,10 @@ export default function Sidebar({
                   }}
                 >
                   Clear
-                </a>
+                </button>
               )}
             </h3>
-            <div className="collapse show" id="widget-brands">
+            <div className={`widget-collapse ${collapsedSections.brands ? 'collapsed' : 'expanded'}`}>
               <div className="widget-body">
                 {loading ? (
                   <div className="brand-skeleton">
@@ -291,18 +329,16 @@ export default function Sidebar({
           {/* Price Widget */}
           <div className="widget">
             <h3 className="widget-title">
-              <a
-                data-bs-toggle="collapse"
-                href="#widget-price"
-                role="button"
-                aria-expanded="true"
-                aria-controls="widget-price"
+              <button
+                className="collapse-toggle"
+                onClick={() => toggleSection('price')}
+                type="button"
               >
                 Price {isPriceUpdating && <span className="price-updating">⏳</span>}
-              </a>
+                <i className={`fas fa-chevron-${collapsedSections.price ? 'down' : 'up'} ms-2`}></i>
+              </button>
               {(localFilters.priceRange[0] > priceRange.min || localFilters.priceRange[1] < priceRange.max) && (
-                <a
-                  href="#"
+                <button
                   className="clear-section"
                   onClick={(e) => {
                     e.preventDefault()
@@ -310,10 +346,10 @@ export default function Sidebar({
                   }}
                 >
                   Clear
-                </a>
+                </button>
               )}
             </h3>
-            <div className="collapse show" id="widget-price">
+            <div className={`widget-collapse ${collapsedSections.price ? 'collapsed' : 'expanded'}`}>
               <div className="widget-body pb-0">
                 <div className="price-filter">
                   {/* Price Range Display */}
@@ -463,7 +499,15 @@ export default function Sidebar({
             <p>
               Subscribe to our newsletter and get exclusive offers and discounts delivered to your inbox.
             </p>
-            <a href="#" className="btn btn-primary btn-sm">Subscribe Now</a>
+            <button 
+              className="btn btn-primary btn-sm" 
+              onClick={(e) => {
+                e.preventDefault()
+                // Add subscribe functionality here if needed
+              }}
+            >
+              Subscribe Now
+            </button>
           </div>
         </div>
       </aside>
@@ -693,6 +737,83 @@ export default function Sidebar({
             margin: 0 8px 8px 8px;
           }
 
+          /* Button styles to replace anchor tags */
+          .collapse-toggle {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+          }
+
+          .collapse-toggle:hover {
+            color: inherit;
+          }
+
+          .breadcrumb-link {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+          }
+
+          .breadcrumb-link:hover {
+            color: inherit;
+          }
+
+          .layout-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+          }
+
+          .layout-btn:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+          }
+
+          .layout-btn.active {
+            background-color: rgba(0, 0, 0, 0.2);
+          }
+
+          /* Custom collapse functionality */
+          .widget-collapse {
+            transition: all 0.3s ease;
+          }
+
+          .widget-collapse.expanded {
+            max-height: none;
+            opacity: 1;
+          }
+
+          .widget-collapse.collapsed {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+          }
+
+          .clear-section {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            cursor: pointer;
+            color: #666;
+            text-decoration: none;
+            font-size: 12px;
+          }
+
+          .clear-section:hover {
+            color: #08C;
+          }
+
           .range-thumb-label {
             font-size: 10px;
             top: -25px;
@@ -701,4 +822,6 @@ export default function Sidebar({
       `}</style>
     </>
   )
-}
+})
+
+export default Sidebar
