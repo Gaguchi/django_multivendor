@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Skeleton from '../../Skeleton';
+import Skeleton from '../../../components/Skeleton';
 
 export default function ProductDetailsSection({ formData, onChange, categories = [], loading = false }) {
     const handleInputChange = (e) => {

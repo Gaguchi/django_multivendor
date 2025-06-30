@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { ImageUploadSkeleton } from '../../Skeleton';
+import { ImageUploadSkeleton } from '../../../components/Skeleton';
 import './ImageUploadSection.css'; // We'll create this file for custom styles
 
 const generateId = () => Date.now().toString(36) + Math.random().toString(36).substr(2);
