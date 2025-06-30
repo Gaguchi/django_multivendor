@@ -9,6 +9,7 @@ import ReactUpdateTracker from '../components/Debug/ReactUpdateTracker'
 import UpdateIndicator from '../components/Debug/UpdateIndicator'
 import DebugErrorBoundary from '../components/Debug/DebugErrorBoundary'
 import FilterTestHelper from '../components/Debug/FilterTestHelper'
+import '../test-instructions.js' // Load test instructions
 
 export default function Products() {
   const [filters, setFilters] = useState({})
@@ -176,11 +177,12 @@ export default function Products() {
 
   return (
     <>
-      <DebugErrorBoundary>
+      {/* Debug components temporarily disabled */}
+      {/* <DebugErrorBoundary>
         <ReactUpdateTracker componentName="Shop" />
         <UpdateIndicator componentName="Shop" />
-        <FilterTestHelper />
-      </DebugErrorBoundary>
+        <FilterTestHelper filters={filters} products={products} />
+      </DebugErrorBoundary> */}
       <div className="category-banner-container bg-gray">
         <div
           className="category-banner banner text-uppercase"

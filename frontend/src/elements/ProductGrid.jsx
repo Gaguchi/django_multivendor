@@ -143,9 +143,10 @@ const ProductGrid = memo(function ProductGrid({
         transition: 'all 0.3s ease', // Smooth transition for layout changes
       }}
     >
-      <DebugErrorBoundary>
+      {/* Debug components temporarily disabled */}
+      {/* <DebugErrorBoundary>
         <ReactUpdateTracker componentName="ProductGrid" />
-      </DebugErrorBoundary>
+      </DebugErrorBoundary> */}
       {productItems}
     </div>
   )

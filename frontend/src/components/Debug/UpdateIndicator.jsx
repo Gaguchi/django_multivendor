@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 /**
  * Visual indicator component that shows when React updates happen
@@ -8,36 +8,48 @@ export function UpdateIndicator({ componentName = 'Component' }) {
   const [updateCount, setUpdateCount] = useState(0)
   const [flashColor, setFlashColor] = useState('transparent')
   const [isPageReload, setIsPageReload] = useState(false)
+  const mountTime = useRef(Date.now())
+  const lastFlash = useRef(0)
 
   useEffect(() => {
-    // Check if this is a page reload
-    const reloadKey = `update_indicator_${componentName}`
-    const lastUpdate = sessionStorage.getItem(reloadKey)
     const now = Date.now()
     
-    // Consider it a reload if within 3 seconds and this is the first render
-    if (lastUpdate && (now - parseInt(lastUpdate)) < 3000 && updateCount === 0) {
-      setIsPageReload(true)
-      setFlashColor('#ff4444') // Red for page reload
-    } else if (updateCount === 0) {
-      setIsPageReload(false)
-      setFlashColor('#44ff44') // Green for initial mount
+    // Prevent too frequent updates (throttle to every 100ms)
+    if (now - lastFlash.current < 100) {
+      return
+    }
+    
+    lastFlash.current = now
+    
+    // Check if this is a page reload on first render only
+    if (updateCount === 0) {
+      const reloadKey = `update_indicator_${componentName}`
+      const lastUpdate = sessionStorage.getItem(reloadKey)
+      
+      if (lastUpdate && (now - parseInt(lastUpdate)) < 2000) {
+        setIsPageReload(true)
+        setFlashColor('#ff4444') // Red for page reload
+      } else {
+        setIsPageReload(false)
+        setFlashColor('#44ff44') // Green for initial mount
+      }
+      
+      sessionStorage.setItem(reloadKey, now.toString())
     } else {
+      // This is a re-render
       setIsPageReload(false)
       setFlashColor('#44ff44') // Green for React update
     }
-    
-    sessionStorage.setItem(reloadKey, now.toString())
     
     setUpdateCount(prev => prev + 1)
     
     // Flash effect
     const timer = setTimeout(() => {
       setFlashColor('transparent')
-    }, 800)
+    }, 600)
     
     return () => clearTimeout(timer)
-  }, [componentName]) // Remove updateCount from dependencies to prevent loops
+  })  // No dependencies - runs on every render but throttled
 
   return (
     <div
