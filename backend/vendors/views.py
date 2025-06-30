@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import serializers
 from django.db import transaction, IntegrityError
+from django.db.models import Q
 import logging
 from .models import Vendor, VendorProduct
 from .serializers import VendorSerializer, ProductSerializer, ProductListSerializer, ProductDetailSerializer
@@ -347,9 +348,15 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = VendorProduct.objects.select_related('vendor', 'category').all()
+        
+        # Apply filters for list view
         if self.action == 'list':
             # Optimize query for listings
             queryset = queryset.defer('description', 'video')
+            
+            # Apply filters from query parameters
+            queryset = self._apply_filters(queryset)
+            
         elif self.action == 'retrieve':
             # For detail view, prefetch frequently bought together products
             queryset = queryset.prefetch_related(
@@ -357,6 +364,77 @@ class ProductViewSet(viewsets.ModelViewSet):
                 'frequently_bought_together__category'
             )
         return queryset.order_by('-created_at')
+
+    def _apply_filters(self, queryset):
+        """Apply filters based on query parameters"""
+        # Category filter
+        category = self.request.query_params.get('category')
+        if category:
+            # Support both category ID and category name
+            if category.isdigit():
+                queryset = queryset.filter(category__id=category)
+            else:
+                # Multiple categories separated by comma
+                category_names = [name.strip() for name in category.split(',') if name.strip()]
+                if category_names:
+                    category_filter = Q()
+                    for name in category_names:
+                        category_filter |= Q(category__name__icontains=name)
+                    queryset = queryset.filter(category_filter)
+        
+        # Vendor/Brand filter
+        vendor = self.request.query_params.get('vendor')
+        if vendor:
+            # Support both vendor ID and vendor name
+            if vendor.isdigit():
+                queryset = queryset.filter(vendor__id=vendor)
+            else:
+                # Multiple vendors separated by comma
+                vendor_names = [name.strip() for name in vendor.split(',') if name.strip()]
+                if vendor_names:
+                    vendor_filter = Q()
+                    for name in vendor_names:
+                        vendor_filter |= Q(vendor__store_name__icontains=name) | Q(vendor__user__username__icontains=name)
+                    queryset = queryset.filter(vendor_filter)
+        
+        # Price range filters
+        price_min = self.request.query_params.get('price_min')
+        price_max = self.request.query_params.get('price_max')
+        
+        if price_min:
+            try:
+                queryset = queryset.filter(price__gte=float(price_min))
+            except ValueError:
+                pass  # Ignore invalid price_min values
+        
+        if price_max:
+            try:
+                queryset = queryset.filter(price__lte=float(price_max))
+            except ValueError:
+                pass  # Ignore invalid price_max values
+        
+        # Search query filter
+        search = self.request.query_params.get('search') or self.request.query_params.get('q')
+        if search:
+            search_words = [word.strip() for word in search.split() if len(word.strip()) > 2]
+            if search_words:
+                search_filter = Q()
+                for word in search_words:
+                    search_filter |= Q(name__icontains=word) | Q(description__icontains=word) | Q(tags__icontains=word) | Q(brand__icontains=word)
+                queryset = queryset.filter(search_filter)
+        
+        # Stock filter (only show products with stock by default)
+        show_out_of_stock = self.request.query_params.get('show_out_of_stock', 'false').lower() == 'true'
+        if not show_out_of_stock:
+            queryset = queryset.filter(stock__gt=0)
+        
+        # Ordering
+        ordering = self.request.query_params.get('ordering', '-created_at')
+        valid_orderings = ['price', '-price', 'name', '-name', 'created_at', '-created_at', 'rating', '-rating']
+        if ordering in valid_orderings:
+            queryset = queryset.order_by(ordering)
+        
+        return queryset
 
     def perform_create(self, serializer):
         """Set the vendor automatically based on the authenticated user"""

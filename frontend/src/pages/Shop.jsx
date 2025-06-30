@@ -3,7 +3,7 @@ import { useProducts } from '../hooks/useProducts'
 import { useCategories } from '../hooks/useCategories'
 import { useVendors } from '../hooks/useVendors'
 import ProductGrid from '../elements/ProductGrid'
-import FunctionalSidebar from '../components/Shop/FunctionalSidebar'
+import Sidebar from '../components/Shop/Sidebar'
 import { SearchResultsSkeleton } from '../components/Skeleton'
 
 export default function Products() {
@@ -39,7 +39,7 @@ export default function Products() {
 
   // Handle filter changes
   const handleFiltersChange = (newFilters) => {
-    console.log('Filters changed:', newFilters) // Debug log
+    console.log('Shop handleFiltersChange called:', newFilters) // Debug log
     
     // Map sidebar filters to API parameters
     const apiFilters = {}
@@ -62,6 +62,7 @@ export default function Products() {
       apiFilters.price_max = newFilters.priceMax
     }
     
+    console.log('Setting filters to:', apiFilters) // Debug log
     setFilters(apiFilters)
   }
 
@@ -340,7 +341,7 @@ export default function Products() {
 
           </div>
           
-          <FunctionalSidebar
+          <Sidebar
             onFiltersChange={handleFiltersChange}
             currentFilters={filters}
             categories={categories}

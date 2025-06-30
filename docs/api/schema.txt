@@ -1,0 +1,181 @@
+# Database Schema for Django Multivendor Ecommerce
+
+## 1. Users & Profiles
+
+### User (Django Built-in)
+- id (Primary Key, Auto)
+- username (String, unique)
+- email (String, unique)
+- password (Hashed string)
+- is_staff (Boolean)
+- is_active (Boolean)
+- is_superuser (Boolean)
+- date_joined (Datetime)
+- last_login (Datetime)
+
+### UserProfile (Optional)
+- id (Primary Key, Auto)
+- user (OneToOneField to User)
+- first_name (String)
+- last_name (String)
+- phone (String)
+- address (Text)
+- created_at (Datetime)
+- updated_at (Datetime)
+
+## 2. Vendors
+
+### Vendor
+- id (Primary Key, Auto)
+- user (OneToOneField to User)
+- store_name (String, unique)
+- description (Text)
+- contact_email (String)
+- phone (String)
+- address (Text)
+- logo (ImageField)
+- created_at (Datetime)
+- updated_at (Datetime)
+
+### VendorProduct
+- id (Primary Key, Auto)
+- vendor (ForeignKey to Vendor, related_name='vendor_products')
+- name (String)
+- description (Text)
+- sku (String)
+- price (Decimal, max_digits=10, decimal_places=2)
+- stock (PositiveInteger)
+- thumbnail (ImageField, optional)
+- image (ImageField, optional)
+- video (FileField, optional)
+
+## 3. Categories
+
+### Category
+- id (Primary Key, Auto)
+- name (String)
+- slug (String, unique)
+- parent_category (ForeignKey to self, null=True, blank=True)
+- created_at (Datetime)
+- updated_at (Datetime)
+
+## 4. Products
+
+### ProductImage (Optional)
+- id (Primary Key, Auto)
+- product (ForeignKey to VendorProduct)
+- image (ImageField)
+- alt_text (String)
+- is_default (Boolean)
+- created_at (Datetime)
+
+## 5. Orders
+
+### Order
+- id (Primary Key, Auto)
+- user (ForeignKey to User)
+- order_number (String, unique)
+- status (String, choices=[Pending, Paid, Shipped, Completed])
+- total_amount (Decimal, max_digits=10, decimal_places=2)
+- payment_method (String, choices=[Credit Card, PayPal, etc.])
+- shipping_address (Text)
+- billing_address (Text)
+- created_at (Datetime)
+- updated_at (Datetime)
+
+### OrderItem
+- id (Primary Key, Auto)
+- order (ForeignKey to Order)
+- product (ForeignKey to VendorProduct)
+- vendor (ForeignKey to Vendor)
+- quantity (Integer)
+- unit_price (Decimal, max_digits=10, decimal_places=2)
+- total_price (Decimal, max_digits=10, decimal_places=2)
+
+## 6. Cart
+
+### Cart
+- id (Primary Key, Auto)
+- user (ForeignKey to User, null=True, blank=True)
+- session_key (String, unique, null=True, blank=True)
+- created_at (Datetime)
+- updated_at (Datetime)
+
+### CartItem
+- id (Primary Key, Auto)
+- cart (ForeignKey to Cart)
+- product (ForeignKey to VendorProduct)
+- quantity (Integer, default=1)
+- unit_price (Decimal, max_digits=10, decimal_places=2)
+- total_price (Decimal, max_digits=10, decimal_places=2)
+- created_at (Datetime)
+- updated_at (Datetime)
+
+## 7. Reviews & Ratings
+
+### Review
+- id (Primary Key, Auto)
+- product (ForeignKey to VendorProduct)
+- user (ForeignKey to User)
+- rating (Integer, choices=1-5)
+- comment (Text)
+- created_at (Datetime)
+- updated_at (Datetime)
+
+## 8. Payments
+
+### Payment
+- id (Primary Key, Auto)
+- order (OneToOneField to Order)
+- amount (Decimal, max_digits=10, decimal_places=2)
+- provider (String, e.g., Stripe, PayPal)
+- transaction_id (String, unique)
+- status (String, choices=[Completed, Failed, Pending])
+- created_at (Datetime)
+
+## 9. Shipping / Fulfillment
+
+### Shipment
+- id (Primary Key, Auto)
+- order (ForeignKey to Order)
+- tracking_number (String, unique)
+- carrier (String, e.g., UPS, FedEx)
+- shipped_date (Datetime)
+- estimated_delivery_date (Datetime)
+- status (String, choices=[Shipped, In Transit, Delivered])
+- created_at (Datetime)
+- updated_at (Datetime)
+
+## 10. Vendor Payouts / Withdrawals
+
+### VendorPayout
+- id (Primary Key, Auto)
+- vendor (ForeignKey to Vendor)
+- amount (Decimal, max_digits=10, decimal_places=2)
+- status (String, choices=[Pending, Paid])
+- requested_at (Datetime)
+- paid_at (Datetime)
+- created_at (Datetime)
+- updated_at (Datetime)
+
+## 11. Product Variants / Options (Optional)
+
+### ProductVariant
+- id (Primary Key, Auto)
+- product (ForeignKey to VendorProduct)
+- name (String, e.g., Size - Large, Color - Red)
+- additional_price (Decimal, max_digits=10, decimal_places=2, optional)
+- stock (Integer)
+- created_at (Datetime)
+- updated_at (Datetime)
+
+## 12. Administration / Audit Trail (Optional)
+
+### AuditLog
+- id (Primary Key, Auto)
+- user (ForeignKey to User)
+- action (String, e.g., Created, Updated, Deleted)
+- model_name (String, e.g., Product, Vendor)
+- object_id (Integer)
+- timestamp (Datetime)
+- changes (Text)
