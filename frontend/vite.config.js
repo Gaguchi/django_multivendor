@@ -4,7 +4,13 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      babel: {
+        plugins: [
+          ['styled-jsx/babel']
+        ]
+      }
+    }),
   ],
   server: {
     port: 5173,
@@ -20,7 +26,6 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    include: ['jquery'],
     exclude: ['simple-line-icons'] // Exclude problematic assets
   },
   build: {
@@ -28,8 +33,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
-          ui: ['@tanstack/react-query', '@tanstack/react-virtual'],
-          jquery: ['jquery']
+          ui: ['@tanstack/react-query', '@tanstack/react-virtual']
         }
       }
     },

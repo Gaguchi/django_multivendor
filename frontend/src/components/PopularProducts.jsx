@@ -11,7 +11,10 @@ export default function PopularProducts() {
     isError,
     error
   } = useProducts({
-    pageSize: 8 // Limit to 8 products for popular section
+    filters: {
+      page_size: 8, // Limit to 8 products for popular section
+      ordering: '-rating' // Order by highest rating for popular products
+    }
   })
 
   if (isLoading) {

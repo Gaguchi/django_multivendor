@@ -1,6 +1,41 @@
 import { useState, useEffect, useCallback, useRef, memo } from 'react'
 import { Range } from 'react-range'
 
+// Custom comparison function for Sidebar memo
+function sidebarPropsAreEqual(prevProps, nextProps) {
+  // Compare primitive props
+  if (
+    prevProps.loading !== nextProps.loading ||
+    prevProps.className !== nextProps.className ||
+    prevProps.isOpen !== nextProps.isOpen
+  ) {
+    console.log('📂 Sidebar memo: Props changed (primitives)')
+    return false
+  }
+  
+  // Compare priceRange object
+  if (
+    prevProps.priceRange?.min !== nextProps.priceRange?.min ||
+    prevProps.priceRange?.max !== nextProps.priceRange?.max
+  ) {
+    console.log('📂 Sidebar memo: Props changed (priceRange)')
+    return false
+  }
+  
+  // Compare arrays
+  if (
+    JSON.stringify(prevProps.categories) !== JSON.stringify(nextProps.categories) ||
+    JSON.stringify(prevProps.brands) !== JSON.stringify(nextProps.brands) ||
+    JSON.stringify(prevProps.currentFilters) !== JSON.stringify(nextProps.currentFilters)
+  ) {
+    console.log('📂 Sidebar memo: Props changed (arrays/objects)')
+    return false
+  }
+  
+  console.log('📂 Sidebar memo: Props are equal, skipping re-render')
+  return true
+}
+
 const Sidebar = memo(function Sidebar({ 
   onFiltersChange, 
   currentFilters = {}, 
@@ -12,12 +47,33 @@ const Sidebar = memo(function Sidebar({
   isOpen = false,
   onClose = () => {}
 }) {
-  const [localFilters, setLocalFilters] = useState({
-    categories: [],
-    brands: [],
-    priceRange: [priceRange.min, priceRange.max],
-    ...currentFilters
+  // Track Sidebar renders
+  const renderCountRef = useRef(0)
+  renderCountRef.current++
+  
+  console.log('📂 Sidebar render:', {
+    renderCount: renderCountRef.current,
+    timestamp: new Date().toISOString(),
+    note: 'Sidebar should rarely re-render due to memoization',
+    warning: renderCountRef.current > 2 ? '⚠️ WARNING: Too many renders!' : '✅ Acceptable render count'
   })
+  const [localFilters, setLocalFilters] = useState(() => {
+    // Ensure price range is valid and within bounds
+    const validPriceRange = [
+      Math.max(priceRange.min, currentFilters.priceRange?.[0] || priceRange.min),
+      Math.min(priceRange.max, currentFilters.priceRange?.[1] || priceRange.max)
+    ]
+    
+    return {
+      categories: [],
+      brands: [],
+      ...currentFilters,
+      priceRange: validPriceRange // Always use validated price range
+    }
+  })
+
+  // Only adjust price range bounds if they become invalid (removed to prevent circular loops)
+  // Price range validation will be handled in the updateFilters function instead
 
   // Local collapse states (instead of Bootstrap)
   const [collapsedSections, setCollapsedSections] = useState({
@@ -39,79 +95,112 @@ const Sidebar = memo(function Sidebar({
     }))
   }, [])
 
-  // Initialize filters from currentFilters prop when it changes
+  // Initialize filters from currentFilters prop when component mounts
   useEffect(() => {
-    console.log('🎯 Sidebar useEffect: currentFilters changed to:', currentFilters)
-    console.log('💰 Sidebar useEffect: priceRange is:', priceRange)
-    console.log('🚀 Sidebar useEffect: isInitialized is:', isInitialized)
+    console.log('🎯 Sidebar useEffect: Initializing on mount')
     
-    // Only reset local filters on first initialization or if currentFilters have actually changed
-    if (!isInitialized || (currentFilters && Object.keys(currentFilters).length > 0)) {
-      setLocalFilters({
+    // Initialize only once on mount
+    if (!isInitialized) {
+      const initialFilters = {
         categories: currentFilters.categories || [],
         brands: currentFilters.brands || [],
         priceRange: currentFilters.priceRange || [priceRange.min, priceRange.max],
-      })
+      }
+      
+      console.log('📝 Sidebar: Setting initial filters:', initialFilters)
+      setLocalFilters(initialFilters)
       setIsInitialized(true)
     }
-  }, [currentFilters, isInitialized, priceRange.min, priceRange.max])
+  }, []) // Only run on mount - no dependencies to avoid loops
 
-  // Separate effect to handle priceRange updates (only for initial setup)
+  // Track if we initiated the last filter change to prevent circular updates
+  const isInternalUpdateRef = useRef(false)
+  
+  // Handle external filter changes from parent (after initialization)
   useEffect(() => {
-    if (!isInitialized && !currentFilters.priceRange) {
-      console.log('💰 Sidebar: Setting initial price range:', [priceRange.min, priceRange.max])
-      setLocalFilters(prev => ({
-        ...prev,
-        priceRange: [priceRange.min, priceRange.max]
-      }))
+    if (isInitialized && !isInternalUpdateRef.current) {
+      console.log('🔄 Sidebar: External filters changed, updating local filters')
+      const updatedFilters = {
+        categories: currentFilters.categories || [],
+        brands: currentFilters.brands || [],
+        priceRange: currentFilters.priceRange || [priceRange.min, priceRange.max],
+      }
+      setLocalFilters(updatedFilters)
+    } else if (isInternalUpdateRef.current) {
+      console.log('⏭️ Sidebar: Skipping external filter update (originated from internal change)')
+      isInternalUpdateRef.current = false // Reset flag
     }
-  }, [priceRange.min, priceRange.max, isInitialized, currentFilters.priceRange])
+  }, [
+    // Only depend on the stringified versions to avoid object reference changes
+    JSON.stringify(currentFilters.categories || []),
+    JSON.stringify(currentFilters.brands || []),
+    JSON.stringify(currentFilters.priceRange || [priceRange.min, priceRange.max]),
+    isInitialized,
+    priceRange.min,
+    priceRange.max
+  ])
 
-  // Debounced function to update filters
-  const debouncedUpdateFilters = useCallback((newFilters, immediate = false) => {
-    console.log('debouncedUpdateFilters called:', { newFilters, immediate })
+  // Update filters and notify parent - simplified to break circular dependency
+  const updateFilters = useCallback((newFiltersOrFunc, immediate = false) => {
+    let newFilters
+    if (typeof newFiltersOrFunc === 'function') {
+      setLocalFilters(prev => {
+        newFilters = newFiltersOrFunc(prev)
+        return newFilters
+      })
+    } else {
+      newFilters = newFiltersOrFunc
+      setLocalFilters(newFilters)
+    }
     
+    // Clear any existing timer
     if (debounceTimerRef.current) {
       clearTimeout(debounceTimerRef.current)
     }
 
+    // Ensure priceRange is always an array with fallback values and within bounds
+    const safePriceRange = priceRange || { min: 0, max: 1000 }
+    let validatedPriceRange = Array.isArray(newFilters.priceRange) ? newFilters.priceRange : [safePriceRange.min, safePriceRange.max]
+    
+    // Validate price range bounds
+    if (safePriceRange.min !== undefined && safePriceRange.max !== undefined) {
+      validatedPriceRange[0] = Math.max(safePriceRange.min, Math.min(validatedPriceRange[0], safePriceRange.max))
+      validatedPriceRange[1] = Math.min(safePriceRange.max, Math.max(validatedPriceRange[1], safePriceRange.min))
+    }
+    
+    const safeNewFilters = {
+      ...newFilters,
+      priceRange: validatedPriceRange
+    }
+
     if (immediate) {
-      // For non-price filters, update immediately
-      setLocalFilters(newFilters)
-      
-      // Don't update URL params to avoid page refresh
-      // Only notify parent component with formatted filters
+      // For non-price filters, notify parent immediately
       const formattedFilters = {
-        ...newFilters,
-        priceMin: newFilters.priceRange[0],
-        priceMax: newFilters.priceRange[1]
+        ...safeNewFilters,
+        priceMin: safeNewFilters.priceRange[0] || safePriceRange.min,
+        priceMax: safeNewFilters.priceRange[1] || safePriceRange.max
       }
       console.log('Calling onFiltersChange immediately:', formattedFilters)
+      isInternalUpdateRef.current = true // Mark as internal update
       onFiltersChange?.(formattedFilters)
     } else {
-      // For price filters, debounce the update
-      setLocalFilters(newFilters) // Update local state immediately for UI responsiveness
+      // For price filters, debounce only the parent notification
       setIsPriceUpdating(true)
       
       debounceTimerRef.current = setTimeout(() => {
-        // Don't update URL params to avoid page refresh
-        // Only notify parent component with formatted filters
+        // Only notify parent component with formatted filters (local state already updated)
         const formattedFilters = {
-          ...newFilters,
-          priceMin: newFilters.priceRange[0],
-          priceMax: newFilters.priceRange[1]
+          ...safeNewFilters,
+          priceMin: safeNewFilters.priceRange[0] || safePriceRange.min,
+          priceMax: safeNewFilters.priceRange[1] || safePriceRange.max
         }
         console.log('Calling onFiltersChange (debounced):', formattedFilters)
+        isInternalUpdateRef.current = true // Mark as internal update
         onFiltersChange?.(formattedFilters)
         setIsPriceUpdating(false)
-      }, 300) // Reduced delay for better responsiveness
+      }, 300)
     }
-  }, [onFiltersChange])
-
-  // Update filters and notify parent
-  const updateFilters = useCallback((newFilters, immediate = false) => {
-    debouncedUpdateFilters(newFilters, immediate)
-  }, [debouncedUpdateFilters])
+  }, [onFiltersChange, priceRange?.min, priceRange?.max])
 
   const toggleArrayFilter = useCallback((filterType, value) => {
     const currentArray = localFilters[filterType] || []
@@ -126,20 +215,41 @@ const Sidebar = memo(function Sidebar({
   }, [localFilters, updateFilters])
 
   const handlePriceRangeChange = useCallback((values) => {
-    updateFilters({
-      ...localFilters,
-      priceRange: values
-    }, false) // Debounced update for price filters
-  }, [localFilters, updateFilters])
+    // Validate values are within bounds
+    const validValues = [
+      Math.max(priceRange.min, Math.min(values[0], priceRange.max)),
+      Math.min(priceRange.max, Math.max(values[1], priceRange.min))
+    ]
+    
+    // Use functional update to avoid dependency on localFilters
+    updateFilters(prevFilters => ({
+      ...prevFilters,
+      priceRange: validValues
+    }), false) // Debounced update for price filters
+  }, [updateFilters, priceRange.min, priceRange.max])
 
   const handlePriceInputChange = useCallback((index, value) => {
-    const newRange = [...localFilters.priceRange]
-    newRange[index] = value
-    updateFilters({
-      ...localFilters,
-      priceRange: newRange
+    // Validate and clamp the value
+    const numValue = Math.max(0, parseInt(value) || 0)
+    
+    // Use functional update to avoid dependency on localFilters
+    updateFilters(prevFilters => {
+      const newRange = [...prevFilters.priceRange]
+      
+      if (index === 0) {
+        // Min value: should not exceed max value or priceRange.max
+        newRange[index] = Math.max(priceRange.min, Math.min(numValue, Math.min(newRange[1], priceRange.max)))
+      } else {
+        // Max value: should not be less than min value or below priceRange.min
+        newRange[index] = Math.min(priceRange.max, Math.max(numValue, Math.max(newRange[0], priceRange.min)))
+      }
+      
+      return {
+        ...prevFilters,
+        priceRange: newRange
+      }
     }, false) // Debounced update for price inputs
-  }, [localFilters, updateFilters])
+  }, [updateFilters, priceRange.min, priceRange.max])
 
   const clearAllFilters = useCallback(() => {
     const emptyFilters = {
@@ -187,6 +297,7 @@ const Sidebar = memo(function Sidebar({
             <div className="widget">
               <div className="widget-body">
                 <button 
+                  type="button"
                   className="btn btn-outline-primary btn-sm w-100"
                   onClick={clearAllFilters}
                 >
@@ -211,6 +322,7 @@ const Sidebar = memo(function Sidebar({
               </button>
               {localFilters.categories.length > 0 && (
                 <button
+                  type="button"
                   className="clear-section"
                   onClick={(e) => {
                     e.preventDefault()
@@ -279,6 +391,7 @@ const Sidebar = memo(function Sidebar({
               </button>
               {localFilters.brands.length > 0 && (
                 <button
+                  type="button"
                   className="clear-section"
                   onClick={(e) => {
                     e.preventDefault()
@@ -339,6 +452,7 @@ const Sidebar = memo(function Sidebar({
               </button>
               {(localFilters.priceRange[0] > priceRange.min || localFilters.priceRange[1] < priceRange.max) && (
                 <button
+                  type="button"
                   className="clear-section"
                   onClick={(e) => {
                     e.preventDefault()
@@ -389,50 +503,63 @@ const Sidebar = memo(function Sidebar({
                   
                   {/* Range Slider */}
                   <div className="price-range-slider mb-3">
-                    <Range
-                      step={1}
-                      min={priceRange.min}
-                      max={priceRange.max}
-                      values={localFilters.priceRange}
+                    {priceRange.min < priceRange.max && (
+                      <Range
+                        step={1}
+                        min={priceRange.min}
+                        max={priceRange.max}
+                        values={[
+                          Math.max(priceRange.min, Math.min(localFilters.priceRange[0], priceRange.max)),
+                          Math.min(priceRange.max, Math.max(localFilters.priceRange[1], priceRange.min))
+                        ]}
                       onChange={handlePriceRangeChange}
-                      renderTrack={({ props, children }) => (
-                        <div
-                          {...props}
-                          className="range-track"
-                          style={{
-                            ...props.style,
-                            height: '8px',
-                            width: '100%',
-                            backgroundColor: '#e9ecef',
-                            borderRadius: '4px',
-                            position: 'relative'
-                          }}
-                        >
-                          {children}
-                        </div>
-                      )}
-                      renderThumb={({ props, index }) => (
-                        <div
-                          {...props}
-                          className="range-thumb"
-                          style={{
-                            ...props.style,
-                            height: '24px',
-                            width: '24px',
-                            backgroundColor: '#08C',
-                            borderRadius: '50%',
-                            border: '3px solid white',
-                            boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-                            outline: 'none',
-                            cursor: 'pointer'
-                          }}
-                        >
-                          <div className="range-thumb-label">
-                            ${localFilters.priceRange[index]}
+                      renderTrack={({ props, children }) => {
+                        const { key, jsx, ...trackProps } = props
+                        return (
+                          <div
+                            {...trackProps}
+                            key={key}
+                            className="range-track"
+                            style={{
+                              ...trackProps.style,
+                              height: '8px',
+                              width: '100%',
+                              backgroundColor: '#e9ecef',
+                              borderRadius: '4px',
+                              position: 'relative'
+                            }}
+                          >
+                            {children}
                           </div>
-                        </div>
-                      )}
+                        )
+                      }}
+                      renderThumb={({ props, index }) => {
+                        const { key, jsx, ...thumbProps } = props
+                        return (
+                          <div
+                            {...thumbProps}
+                            key={key}
+                            className="range-thumb"
+                            style={{
+                              ...thumbProps.style,
+                              height: '24px',
+                              width: '24px',
+                              backgroundColor: '#08C',
+                              borderRadius: '50%',
+                              border: '3px solid white',
+                              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                              outline: 'none',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            <div className="range-thumb-label">
+                              ${localFilters.priceRange[index]}
+                            </div>
+                          </div>
+                        )
+                      }}
                     />
+                    )}
                   </div>
                   
                   {/* Quick price ranges */}
@@ -512,7 +639,7 @@ const Sidebar = memo(function Sidebar({
         </div>
       </aside>
 
-      <style jsx>{`
+      <style>{`
         .widget-title {
           display: flex;
           justify-content: space-between;
@@ -822,6 +949,6 @@ const Sidebar = memo(function Sidebar({
       `}</style>
     </>
   )
-})
+}, sidebarPropsAreEqual)
 
 export default Sidebar

@@ -367,7 +367,7 @@ export default function SearchBox({ className = '', placeholder = "Search produc
                         font-size: 13px;
                     }
                 }
-            `}</style>
+                `}</style>
         </div>
     )
 }

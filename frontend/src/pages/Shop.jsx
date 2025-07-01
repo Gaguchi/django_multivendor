@@ -1,40 +1,84 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useProducts } from '../hooks/useProducts'
 import { useCategories } from '../hooks/useCategories'
 import { useVendors } from '../hooks/useVendors'
-import ProductGrid from '../elements/ProductGrid'
-import Sidebar from '../components/Shop/Sidebar'
+import SimpleOptimizedSidebar from '../components/Shop/SimpleOptimizedSidebar'
+import ProductGridSection from '../components/Shop/ProductGridSection'
+import ShopHeader from '../components/Shop/ShopHeader'
+import ActiveFilters from '../components/Shop/ActiveFilters'
 import { SearchResultsSkeleton } from '../components/Skeleton'
 import ReactUpdateTracker from '../components/Debug/ReactUpdateTracker'
-import UpdateIndicator from '../components/Debug/UpdateIndicator'
+import RenderVisualizer from '../components/Debug/RenderVisualizer'
 import DebugErrorBoundary from '../components/Debug/DebugErrorBoundary'
-import FilterTestHelper from '../components/Debug/FilterTestHelper'
-import '../test-instructions.js' // Load test instructions
+import '../sidebar-test-instructions.js' // Load test instructions
 
-export default function Products() {
-  const [filters, setFilters] = useState({})
+function ShopPageContent() {
+  // Track renders for debugging
+  const renderCountRef = useRef(0)
+  const mountTimeRef = useRef(Date.now())
+  renderCountRef.current++
+
+  // Log renders (less frequently to reduce noise)
+  if (renderCountRef.current <= 3 || renderCountRef.current % 5 === 0) {
+    console.log('🛍️ Shop Page render:', { 
+      renderCount: renderCountRef.current,
+      timestamp: new Date().toISOString(),
+      warning: renderCountRef.current > 8 ? '⚠️ Too many renders!' : '✅ Normal'
+    })
+  }
+
+  // SINGLE SOURCE OF TRUTH: All filter state in one place
+  const [filterState, setFilterState] = useState({
+    selectedCategories: [],
+    selectedBrands: [],
+    minPrice: 0,
+    maxPrice: 1000
+  })
+
+  // UI state
   const [sortBy, setSortBy] = useState('menu_order')
   const [showCount, setShowCount] = useState(12)
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  
-  // Price range state - will be dynamic based on products
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 1000 })
-  
-  const [sidebarFilters, setSidebarFilters] = useState({
-    categories: [],
-    brands: [],
-    priceRange: [0, 1000]
-  })
 
-  // Memoize the query options to prevent unnecessary re-renders
-  const queryOptions = useMemo(() => ({
-    filters: {
-      ...filters,
-      ordering: sortBy,
-      page_size: showCount
+  // Memoize API query options to prevent unnecessary re-renders
+  const queryOptions = useMemo(() => {
+    const apiFilters = {}
+    
+    // Map filter state to API parameters
+    if (filterState.selectedCategories.length > 0) {
+      apiFilters.category = filterState.selectedCategories.join(',')
     }
-  }), [filters, sortBy, showCount])
+    if (filterState.selectedBrands.length > 0) {
+      apiFilters.vendor = filterState.selectedBrands.join(',')
+    }
+    if (filterState.minPrice > 0) {
+      apiFilters.price_min = filterState.minPrice
+    }
+    if (filterState.maxPrice < 1000) {
+      apiFilters.price_max = filterState.maxPrice
+    }
 
+    console.log('🔍 Shop: Query options memo updated:', { apiFilters, ordering: sortBy })
+    
+    return {
+      filters: {
+        ...apiFilters,
+        ordering: sortBy,
+        page_size: showCount
+      }
+    }
+  }, [
+    filterState.selectedCategories.length,
+    filterState.selectedCategories.join(','),
+    filterState.selectedBrands.length, 
+    filterState.selectedBrands.join(','),
+    filterState.minPrice,
+    filterState.maxPrice,
+    sortBy, 
+    showCount
+  ])
+
+  // Data fetching hooks
   const { 
     data, 
     isLoading, 
@@ -51,123 +95,175 @@ export default function Products() {
   const products = useMemo(() => {
     return data?.pages?.flatMap(page => page.results) || []
   }, [data?.pages])
-  
-  const observerRef = useRef()
-  const loadMoreRef = useRef()
 
-  // Calculate dynamic price range from products
-  useEffect(() => {
-    if (products.length > 0) {
-      const prices = products.map(product => parseFloat(product.price || 0)).filter(price => price > 0)
-      if (prices.length > 0) {
-        const minPrice = Math.floor(Math.min(...prices))
-        const maxPrice = Math.ceil(Math.max(...prices))
-        
-        // Only update price range if it's significantly different (avoid constant updates)
-        if (Math.abs(priceRange.min - minPrice) > 1 || Math.abs(priceRange.max - maxPrice) > 1) {
-          console.log('📊 Updating price range from products:', { minPrice, maxPrice })
-          setPriceRange({ min: minPrice, max: maxPrice })
-          
-          // Only update sidebar filters if they're at the default values (meaning user hasn't changed them)
-          if (sidebarFilters.priceRange[0] === 0 && sidebarFilters.priceRange[1] === 1000) {
-            console.log('🎯 Updating sidebar price range to match product range')
-            setSidebarFilters(prev => ({
-              ...prev,
-              priceRange: [minPrice, maxPrice]
-            }))
-          }
-        }
-      }
-    }
-  }, [products.length]) // Simplified dependency
+  // Price range from categories data
+  const priceRange = useMemo(() => ({
+    min: 0,
+    max: 1000 // Could be calculated from products if needed
+  }), [])
 
-  // Handle filter changes with useCallback to prevent unnecessary re-renders
-  const handleFiltersChange = useCallback((newFilters) => {
-    console.log('🔄 Shop handleFiltersChange called:', newFilters)
-    console.log('📊 Current sidebar filters before update:', sidebarFilters)
-    console.log('🎯 Current API filters before update:', filters)
-    
-    // Prevent unnecessary updates if filters haven't actually changed
-    const hasChanged = JSON.stringify(sidebarFilters) !== JSON.stringify(newFilters)
-    if (!hasChanged) {
-      console.log('⏭️ Filters unchanged, skipping update')
-      return
-    }
-    
-    // Store the sidebar filters for passing back to sidebar (to maintain state)
-    setSidebarFilters(newFilters)
-    
-    // Map sidebar filters to API parameters
-    const apiFilters = {}
-    
-    // Categories filter
-    if (newFilters.categories && newFilters.categories.length > 0) {
-      apiFilters.category = newFilters.categories.join(',')
-    }
-    
-    // Brands filter
-    if (newFilters.brands && newFilters.brands.length > 0) {
-      apiFilters.vendor = newFilters.brands.join(',')
-    }
-    
-    // Price filters
-    if (newFilters.priceMin && newFilters.priceMin > priceRange.min) {
-      apiFilters.price_min = newFilters.priceMin
-    }
-    if (newFilters.priceMax && newFilters.priceMax < priceRange.max) {
-      apiFilters.price_max = newFilters.priceMax
-    }
-    
-    console.log('✅ Setting API filters to:', apiFilters)
-    console.log('🎨 Setting sidebar filters to:', newFilters)
-    
-    setFilters(apiFilters)
-    
-    console.log('✨ setFilters called - React Query should automatically refetch')
-  }, [sidebarFilters, filters, priceRange.min, priceRange.max])
+  // FILTER CHANGE HANDLERS - Each updates only the relevant part of filter state
+  const handleCategoriesChange = useCallback((selectedCategories) => {
+    console.log('� Categories changed:', selectedCategories)
+    setFilterState(prev => ({
+      ...prev,
+      selectedCategories
+    }))
+  }, [])
 
-  // Handle sort change
+  const handleBrandsChange = useCallback((selectedBrands) => {
+    console.log('🏢 Brands changed:', selectedBrands)
+    setFilterState(prev => ({
+      ...prev,
+      selectedBrands
+    }))
+  }, [])
+
+  const handlePriceChange = useCallback((minPrice, maxPrice) => {
+    console.log('💰 Price changed:', { minPrice, maxPrice })
+    setFilterState(prev => ({
+      ...prev,
+      minPrice,
+      maxPrice
+    }))
+  }, [])
+
+  const handleClearAllFilters = useCallback(() => {
+    console.log('🧹 Clearing all filters')
+    setFilterState({
+      selectedCategories: [],
+      selectedBrands: [],
+      minPrice: 0,
+      maxPrice: 1000
+    })
+  }, [])
+
+  // OTHER UI HANDLERS
   const handleSortChange = useCallback((newSort) => {
-    console.log('🔄 Sort changed to:', newSort)
+    console.log('🔄 Sort changed:', newSort)
     setSortBy(newSort)
   }, [])
 
-  // Handle show count change
   const handleShowCountChange = useCallback((newCount) => {
-    console.log('🔄 Show count changed to:', newCount)
+    console.log('🔄 Show count changed:', newCount)
     setShowCount(newCount)
   }, [])
 
-  // Toggle sidebar on mobile
   const toggleSidebar = useCallback(() => {
-    setSidebarOpen(!sidebarOpen)
-  }, [sidebarOpen])
+    setSidebarOpen(prev => !prev)
+  }, [])
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage()
-        }
-      },
-      { threshold: 0.1 }
-    )
+  const closeSidebar = useCallback(() => {
+    setSidebarOpen(false)
+  }, [])
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current)
+  // Legacy filter handling for ActiveFilters component
+  const legacyFilters = useMemo(() => {
+    const filters = {}
+    if (filterState.selectedCategories.length > 0) {
+      filters.category = filterState.selectedCategories.join(',')
     }
-
-    observerRef.current = observer
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect()
-      }
+    if (filterState.selectedBrands.length > 0) {
+      filters.vendor = filterState.selectedBrands.join(',')
     }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
+    if (filterState.minPrice > 0) {
+      filters.price_min = filterState.minPrice
+    }
+    if (filterState.maxPrice < 1000) {
+      filters.price_max = filterState.maxPrice
+    }
+    return filters
+  }, [filterState])
+
+  const handleClearFilter = useCallback((filterKey) => {
+    console.log('❌ Clearing individual filter:', filterKey)
+    
+    if (filterKey === 'category') {
+      handleCategoriesChange([])
+    } else if (filterKey === 'vendor') {
+      handleBrandsChange([])
+    } else if (filterKey === 'price_min') {
+      handlePriceChange(0, filterState.maxPrice)
+    } else if (filterKey === 'price_max') {
+      handlePriceChange(filterState.minPrice, 1000)
+    }
+  }, [filterState.maxPrice, filterState.minPrice, handleCategoriesChange, handleBrandsChange, handlePriceChange])
+
+  // Memoize sidebar props to prevent unnecessary re-renders
+  const sidebarProps = useMemo(() => ({
+    // Data props
+    categories: categories || [],
+    brands: vendors || [],
+    priceRange,
+    
+    // Current filter values
+    selectedCategories: filterState.selectedCategories,
+    selectedBrands: filterState.selectedBrands,
+    minPrice: filterState.minPrice,
+    maxPrice: filterState.maxPrice,
+    
+    // Change handlers
+    onCategoriesChange: handleCategoriesChange,
+    onBrandsChange: handleBrandsChange,
+    onPriceChange: handlePriceChange,
+    onClearAll: handleClearAllFilters,
+    
+    // UI props
+    loading: categoriesLoading || vendorsLoading,
+    isOpen: sidebarOpen,
+    onClose: closeSidebar
+  }), [
+    categories,
+    vendors,
+    priceRange,
+    filterState,
+    handleCategoriesChange,
+    handleBrandsChange,
+    handlePriceChange,
+    handleClearAllFilters,
+    categoriesLoading,
+    vendorsLoading,
+    sidebarOpen,
+    closeSidebar
+  ])
+
+  // Memoize ProductGridSection props
+  const productGridProps = useMemo(() => ({
+    products,
+    isLoading,
+    error,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    sortBy,
+    showCount,
+    onSortChange: handleSortChange,
+    onShowCountChange: handleShowCountChange
+  }), [
+    products,
+    isLoading,
+    error,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    sortBy,
+    showCount,
+    handleSortChange,
+    handleShowCountChange
+  ])
+
+  // Memoize ActiveFilters props
+  const activeFiltersProps = useMemo(() => ({
+    filters: legacyFilters,
+    onClearFilter: handleClearFilter,
+    onClearAll: handleClearAllFilters
+  }), [legacyFilters, handleClearFilter, handleClearAllFilters])
 
   // Show skeleton loader on initial load
   if (isLoading && !products.length) {
+    if (renderCountRef.current <= 2) {
+      console.log('⏳ Shop: Showing initial loading skeleton')
+    }
     return (
       <div className="container">
         <SearchResultsSkeleton />
@@ -175,291 +271,52 @@ export default function Products() {
     )
   }
 
+  if (renderCountRef.current <= 3) {
+    console.log('🎨 Shop: Rendering main layout with', products.length, 'products')
+  }
+
   return (
     <>
-      {/* Debug components temporarily disabled */}
-      {/* <DebugErrorBoundary>
+      {/* Visual render tracking */}
+      <RenderVisualizer componentName="Shop" style={{ top: '10px', right: '10px' }} />
+      
+      {/* Debug components - SIMPLIFIED to reduce overhead */}
+      <DebugErrorBoundary>
         <ReactUpdateTracker componentName="Shop" />
-        <UpdateIndicator componentName="Shop" />
-        <FilterTestHelper filters={filters} products={products} />
-      </DebugErrorBoundary> */}
-      <div className="category-banner-container bg-gray">
-        <div
-          className="category-banner banner text-uppercase"
-          style={{
-            background:
-              'no-repeat 60%/cover url("src/assets/images/banners/banner-top.jpg")'
-          }}
-        >
-          <div className="container position-relative">
-            <div className="row">
-              <div className="pl-lg-5 pb-5 pb-md-0 col-md-5 col-xl-4 col-lg-4 offset-1">
-                <h3>
-                  Electronic
-                  <br />
-                  Deals
-                </h3>
-                <button 
-                  className="btn btn-dark"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    // Add get yours functionality here if needed
-                  }}
-                >
-                  Get Yours!
-                </button>
-              </div>
-              <div className="pl-lg-3 col-md-4 offset-md-0 offset-1 pt-3">
-                <div className="coupon-sale-content">
-                  <h4 className="m-b-1 coupon-sale-text bg-white text-transform-none">
-                    Exclusive COUPON
-                  </h4>
-                  <h5 className="mb-2 coupon-sale-text d-block ls-10 p-0">
-                    <i className="ls-0">UP TO</i>
-                    <b className="text-dark">$100</b> OFF
-                  </h5>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </DebugErrorBoundary>
+      
+      {/* Static header - should not re-render when filters change */}
+      <ShopHeader />
+      
       <div className="container">
-        <nav aria-label="breadcrumb" className="breadcrumb-nav">
-          <ol className="breadcrumb">
-            <li className="breadcrumb-item">
-              <button 
-                className="breadcrumb-link"
-                onClick={(e) => {
-                  e.preventDefault()
-                  // Navigate to home if needed
-                }}
-              >
-                <i className="icon-home" />
-              </button>
-            </li>
-            <li className="breadcrumb-item">
-              <button 
-                className="breadcrumb-link"
-                onClick={(e) => {
-                  e.preventDefault()
-                  // Navigate to Men category if needed
-                }}
-              >
-                Men
-              </button>
-            </li>
-            <li className="breadcrumb-item active" aria-current="page">
-              Accessories
-            </li>
-          </ol>
-        </nav>
         <div className="row">
+          {/* Main content - left side on desktop, first on mobile */}
           <div className="col-lg-9">
-            {/* Active Filters Display */}
-            {Object.keys(filters).length > 0 && (
-              <div className="active-filters mb-3">
-                <div className="d-flex flex-wrap align-items-center gap-2">
-                  <span className="fw-bold me-2">Active Filters:</span>
-                  {Object.entries(filters).map(([key, value]) => (
-                    <span key={key} className="badge bg-primary">
-                      {key}: {value}
-                      <button 
-                        className="btn-close btn-close-white btn-sm ms-1"
-                        onClick={() => {
-                          const newFilters = { ...filters }
-                          delete newFilters[key]
-                          setFilters(newFilters)
-                        }}
-                      ></button>
-                    </span>
-                  ))}
-                  <button 
-                    className="btn btn-outline-secondary btn-sm"
-                    onClick={() => {
-                      setFilters({})
-                      setSidebarFilters({
-                        categories: [],
-                        brands: [],
-                        priceRange: [0, 1000]
-                      })
-                    }}
-                  >
-                    Clear All
-                  </button>
-                </div>
-              </div>
-            )}
+            {/* Active Filters Display - only re-renders when filters change */}
+            <ActiveFilters {...activeFiltersProps} />
 
-            {/* Products count and loading info */}
-            <div className="products-info mb-3">
-              <div className="d-flex justify-content-between align-items-center">
-                <span className="text-muted">
-                  {data?.pages?.[0]?.count ? `${data.pages[0].count} products found` : ''}
-                  {isLoading && ' (Loading...)'}
-                </span>
-                {error && (
-                  <span className="text-danger">
-                    <i className="icon-exclamation-triangle me-1"></i>
-                    {error.message}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <nav
-              className="toolbox sticky-header"
-              data-sticky-options="{'mobile': true}"
-            >
-              <div className="toolbox-left">
-                <button
-                  type="button"
-                  className="sidebar-toggle"
-                  onClick={toggleSidebar}
-                >
-                  <svg
-                    data-name="Layer 3"
-                    id="Layer_3"
-                    viewBox="0 0 32 32"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <line x1={15} x2={26} y1={9} y2={9} className="cls-1" />
-                    <line x1={6} x2={9} y1={9} y2={9} className="cls-1" />
-                    <line x1={23} x2={26} y1={16} y2={16} className="cls-1" />
-                    <line x1={6} x2={17} y1={16} y2={16} className="cls-1" />
-                    <line x1={17} x2={26} y1={23} y2={23} className="cls-1" />
-                    <line x1={6} x2={11} y1={23} y2={23} className="cls-1" />
-                    <path
-                      d="M14.5,8.92A2.6,2.6,0,0,1,12,11.5,2.6,2.6,0,0,1,9.5,8.92a2.5,2.5,0,0,1,5,0Z"
-                      className="cls-2"
-                    />
-                    <path
-                      d="M22.5,15.92a2.5,2.5,0,1,1-5,0,2.5,2.5,0,0,1,5,0Z"
-                      className="cls-2"
-                    />
-                    <path
-                      d="M21,16a1,1,0,1,1-2,0,1,1,0,0,1,2,0Z"
-                      className="cls-3"
-                    />
-                    <path
-                      d="M16.5,22.92A2.6,2.6,0,0,1,14,25.5a2.6,2.6,0,0,1-2.5-2.58,2.5,2.5,0,0,1,5,0Z"
-                      className="cls-2"
-                    />
-                  </svg>
-                  <span>Filter</span>
-                </button>
-                <div className="toolbox-item toolbox-sort">
-                  <label>Sort By:</label>
-                  <div className="select-custom">
-                    <select 
-                      name="orderby" 
-                      className="form-control" 
-                      value={sortBy}
-                      onChange={(e) => handleSortChange(e.target.value)}
-                    >
-                      <option value="menu_order">Default sorting</option>
-                      <option value="popularity">Sort by popularity</option>
-                      <option value="rating">Sort by average rating</option>
-                      <option value="-created_at">Sort by newness</option>
-                      <option value="price">Sort by price: low to high</option>
-                      <option value="-price">Sort by price: high to low</option>
-                    </select>
-                  </div>
-                  {/* End .select-custom */}
-                </div>
-                {/* End .toolbox-item */}
-              </div>
-              {/* End .toolbox-left */}
-              <div className="toolbox-right">
-                <div className="toolbox-item toolbox-show">
-                  <label>Show:</label>
-                  <div className="select-custom">
-                    <select 
-                      name="count" 
-                      className="form-control" 
-                      value={showCount}
-                      onChange={(e) => handleShowCountChange(parseInt(e.target.value))}
-                    >
-                      <option value={12}>12</option>
-                      <option value={24}>24</option>
-                      <option value={36}>36</option>
-                    </select>
-                  </div>
-                  {/* End .select-custom */}
-                </div>
-                {/* End .toolbox-item */}
-                <div className="toolbox-item layout-modes">
-                  <button
-                    className="layout-btn btn-grid active"
-                    title="Grid"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      // Handle grid view if needed
-                    }}
-                  >
-                    <i className="icon-mode-grid" />
-                  </button>
-                  <button
-                    className="layout-btn btn-list"
-                    title="List"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      // Handle list view if needed
-                    }}
-                  >
-                    <i className="icon-mode-list" />
-                  </button>
-                </div>
-                {/* End .layout-modes */}
-              </div>
-              {/* End .toolbox-right */}
-            </nav>
-
-            <ProductGrid 
-              key={`grid-${JSON.stringify(filters)}-${products.length}`}
-              products={products}
-              loading={isLoading}
-              error={error}
-              defaultColumns={{
-                xs: 2,
-                sm: 2,
-                md: 3,
-                lg: 4,
-                xl: 4
-              }}
-              className="row product-ajax-grid scroll-load"
-            />
-            
-            {/* Infinite scroll trigger */}
-            <div ref={loadMoreRef} className="load-more-trigger" style={{ height: '20px', margin: '20px 0' }}>
-              {isFetchingNextPage && (
-                <div className="text-center">
-                  <div className="spinner-border" role="status">
-                    <span className="sr-only">Loading more products...</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
+            {/* Product Grid Section - only re-renders when products change */}
+            <ProductGridSection {...productGridProps} />
           </div>
           
-          <Sidebar
-            onFiltersChange={handleFiltersChange}
-            currentFilters={sidebarFilters}
-            categories={categories}
-            brands={vendors}
-            priceRange={priceRange}
-            loading={categoriesLoading || vendorsLoading}
-            isOpen={sidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-            className={sidebarOpen ? 'show' : ''}
-          />
+          {/* Sidebar - right side on desktop, second on mobile */}
+          <div className="col-lg-3">
+            <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
+              <SimpleOptimizedSidebar {...sidebarProps} />
+            </DebugErrorBoundary>
+          </div>
         </div>
-        {/* End .row */}
       </div>
-      {/* End .container */}
+      
       <div className="mb-3" />
-      {/* margin */}
     </>
   )
+}
+
+// Export ShopPageContent directly to eliminate potential wrapper issues
+// Wrap in React.memo to prevent unnecessary re-renders
+const MemoizedShopPageContent = React.memo(ShopPageContent)
+
+export default function ShopPage() {
+  return <MemoizedShopPageContent />
 }

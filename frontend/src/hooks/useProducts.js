@@ -1,24 +1,39 @@
+import React from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
+import { useMemo } from 'react'
 import api from '../services/api'
 
-export function useProducts(options = {}) {
+export function useProducts(options = {}, queryConfig = {}) {
+  console.log('🎣 useProducts hook called with options:', options)
+  
+  // Stable query configuration
+  const stableConfig = useMemo(() => ({
+    staleTime: 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    retry: 2,
+    retryDelay: (attemptIndex) => Math.min(500 * 2 ** attemptIndex, 5000),
+    ...queryConfig
+  }), [queryConfig])
+  
   return useInfiniteQuery({
-    queryKey: ['products', options],
-    queryFn: async ({ pageParam = 1 }) => {
-      try {
-        console.log('🔄 useProducts API call with params:', {
-          page: pageParam,
-          page_size: options.pageSize || 20,
-          ...options.filters
-        })
-        
-        const response = await api.get('/api/vendors/products/', {
-          headers: {
+      queryKey: ['products', options],
+      queryFn: async ({ pageParam = 1 }) => {
+        try {
+          console.log('🔄 useProducts API call with params:', {
+            page: pageParam,
+            page_size: options.filters?.page_size || 20,
+            ...options.filters
+          })
+          
+          const response = await api.get('/api/vendors/products/', {
+            headers: {
             'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN
           },
           params: {
             page: pageParam,
-            page_size: options.pageSize || 20,
+            page_size: options.filters?.page_size || 20,
             ...options.filters
           }
         })
@@ -53,11 +68,6 @@ export function useProducts(options = {}) {
         return undefined
       }
     },
-    staleTime: 1000, // Reduce stale time to ensure filters trigger fresh requests
-    gcTime: 5 * 60 * 1000, // Updated property name (cacheTime is deprecated)
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    retry: 2, // Reduce retries for faster response
-    retryDelay: (attemptIndex) => Math.min(500 * 2 ** attemptIndex, 5000),
+    ...stableConfig
   })
 }

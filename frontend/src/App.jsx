@@ -8,7 +8,7 @@ import Layout from './components/Layout'
 import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
 import AuthCallback from './pages/AuthCallback'
-import Products from './pages/Shop'
+import ShopPage from './pages/Shop'
 import Search from './pages/Search'
 import Wishlist from './pages/Wishlist'
 import Product from './pages/Product'
@@ -27,14 +27,18 @@ function AppContent() {
   const location = useLocation();
   
   // Initialize jQuery plugins once on route changes using only jQuerySimple
+  // Use a stable effect that doesn't interfere with component rendering
   useEffect(() => {
-    // Delay initialization to ensure DOM is ready
+    // Only re-initialize on actual route changes, not on query param changes
+    const pathname = location.pathname;
+    
     const timeoutId = setTimeout(() => {
+      console.log('🎭 App: Initializing jQuery for route:', pathname);
       initializePage();
-    }, 300);
+    }, 100); // Reduced delay to be less intrusive
     
     return () => clearTimeout(timeoutId);
-  }, [location.pathname]);
+  }, [location.pathname]); // Only depend on pathname, not search params
   
   return (
     <Routes>
@@ -42,7 +46,7 @@ function AppContent() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/shop" element={<Products />} />
+        <Route path="/shop" element={<ShopPage />} />
         <Route path="/search" element={<Search />} />
         <Route path="/product/:id" element={<Product />} /> 
         <Route path="/product_template" element={<ProductTemplate />} />

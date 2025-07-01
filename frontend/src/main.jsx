@@ -6,7 +6,18 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { AuthProvider } from './contexts/AuthContext'
 import App from './App' 
 
-const queryClient = new QueryClient()
+// Create a stable QueryClient instance to prevent unnecessary re-renders
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000,
+      gcTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      retry: 2,
+    },
+  },
+})
 
 const ErrorFallback = ({ error, resetErrorBoundary }) => (
   <div role="alert">

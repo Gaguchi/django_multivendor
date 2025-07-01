@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
 import { useAuth } from './AuthContext'
 import api from '../services/api'
 
@@ -42,7 +42,7 @@ export function CartProvider({ children }) {
     }, [user]) // Re-evaluate when user logs in or out
 
     // --- Fetch Cart based on Auth State --- 
-    const fetchCart = async () => {
+    const fetchCart = useCallback(async () => {
         try {
             setLoading(true)
             console.log('[CartContext] Fetching cart...', { user: !!user })
@@ -61,7 +61,7 @@ export function CartProvider({ children }) {
         } finally {
             setLoading(false)
         }
-    }
+    }, [user])
 
     // Fetch cart whenever the user logs in or out
     useEffect(() => {
@@ -108,7 +108,7 @@ export function CartProvider({ children }) {
 
     // --- Cart Actions (Unchanged) --- 
 
-    const addToCart = async (productId, quantity = 1) => {
+    const addToCart = useCallback(async (productId, quantity = 1) => {
         try {
             setLoading(true)
             console.log(`[CartContext] Adding item ${productId} (qty: ${quantity})`) 
@@ -163,10 +163,10 @@ export function CartProvider({ children }) {
             setLoading(false)
             throw error
         }
-    }
+    }, [user, cart, fetchCart])
 
     // Helper function to calculate cart totals
-    const calculateCartTotals = (items) => {
+    const calculateCartTotals = useCallback((items) => {
         if (!items || items.length === 0) {
             return { subtotal: 0, total: 0, totalItems: 0 }
         }
@@ -182,9 +182,37 @@ export function CartProvider({ children }) {
         const totalItems = items.reduce((sum, item) => sum + parseInt(item.quantity || 0), 0)
         
         return { subtotal, total, totalItems }
-    }
+    }, [])
 
-    const updateCartItem = async (productId, quantity) => {
+    const removeFromCart = useCallback(async (productId) => {
+        try {
+            console.log(`[CartContext] Removing item ${productId}`) 
+            
+            // Optimistically update the cart state first for instant UI feedback
+            if (cart && cart.items) {
+                const updatedItems = cart.items.filter(item => item.product.id !== productId)
+                const totals = calculateCartTotals(updatedItems)
+                
+                setCart(prevCart => ({
+                    ...prevCart,
+                    items: updatedItems,
+                    ...totals
+                }))
+            }
+
+            // Then update the backend
+            await api.delete(`/api/cart/items/${productId}/`)
+            
+            // No need to refetch the entire cart since we've already updated the state
+        } catch (error) {
+            console.error('[CartContext] Error removing from cart:', error)
+            // On error, refresh the cart to ensure consistency
+            await fetchCart()
+            throw error
+        }
+    }, [cart, calculateCartTotals, fetchCart])
+
+    const updateCartItem = useCallback(async (productId, quantity) => {
         try {
             console.log(`[CartContext] Updating item ${productId} to quantity ${quantity}`) 
             
@@ -239,37 +267,9 @@ export function CartProvider({ children }) {
             await fetchCart()
             throw error
         }
-    }
+    }, [cart, calculateCartTotals, fetchCart, removeFromCart])
 
-    const removeFromCart = async (productId) => {
-        try {
-            console.log(`[CartContext] Removing item ${productId}`) 
-            
-            // Optimistically update the cart state first for instant UI feedback
-            if (cart && cart.items) {
-                const updatedItems = cart.items.filter(item => item.product.id !== productId)
-                const totals = calculateCartTotals(updatedItems)
-                
-                setCart(prevCart => ({
-                    ...prevCart,
-                    items: updatedItems,
-                    ...totals
-                }))
-            }
-
-            // Then update the backend
-            await api.delete(`/api/cart/items/${productId}/`)
-            
-            // No need to refetch the entire cart since we've already updated the state
-        } catch (error) {
-            console.error('[CartContext] Error removing from cart:', error)
-            // On error, refresh the cart to ensure consistency
-            await fetchCart()
-            throw error
-        }
-    }
-
-    const clearCart = async () => {
+    const clearCart = useCallback(async () => {
         if (!cart || !cart.items || cart.items.length === 0) {
             return; // Nothing to clear
         }
@@ -291,9 +291,9 @@ export function CartProvider({ children }) {
         } finally {
             setLoading(false);
         }
-    };
+    }, [cart, fetchCart])
 
-    const forceRefreshCart = async () => {
+    const forceRefreshCart = useCallback(async () => {
         console.log('[CartContext] Force refreshing cart after merge...');
         setMergingCart(true);
         try {
@@ -301,9 +301,9 @@ export function CartProvider({ children }) {
         } finally {
             setMergingCart(false);
         }
-    };
+    }, [fetchCart])
 
-    const value = {
+    const value = useMemo(() => ({
         cart,
         loading: loading || mergingCart,
         addToCart,
@@ -315,7 +315,19 @@ export function CartProvider({ children }) {
         isGuestCart: !user && cart !== null && cart.items && cart.items.length > 0,
         mergingCart,
         guestSessionKey: !user ? guestSessionKey : null
-    }
+    }), [
+        cart,
+        loading,
+        mergingCart,
+        addToCart,
+        updateCartItem,
+        removeFromCart,
+        clearCart,
+        fetchCart,
+        forceRefreshCart,
+        user,
+        guestSessionKey
+    ])
 
     return (
         <CartContext.Provider value={value}>

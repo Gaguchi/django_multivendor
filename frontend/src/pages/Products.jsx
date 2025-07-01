@@ -1,12 +1,86 @@
+import { useState, useCallback, useMemo } from 'react'
 import { useProducts } from '../hooks/useProducts'
 import ProductGrid from '../elements/ProductGrid'
+import RenderTracker from '../components/Debug/RenderTracker'
 
 export default function Products() {
-  const { data, isLoading, error } = useProducts()
+  // Filter and sorting state
+  const [filters, setFilters] = useState({
+    ordering: 'menu_order',
+    page_size: 12,
+    category: null,
+    min_price: null,
+    max_price: null,
+    color: null,
+    size: null
+  })
+
+  console.log('🛍️ Products page render with filters:', filters)
+
+  // Memoize options for useProducts to prevent unnecessary re-renders
+  const queryOptions = useMemo(() => ({
+    filters: filters
+  }), [filters])
+
+  const { data, isLoading, error, refetch } = useProducts(queryOptions)
   const products = data?.pages?.[0]?.results || []
+
+  console.log('📦 Products data loaded:', { 
+    totalProducts: products.length, 
+    isLoading, 
+    hasError: !!error,
+    timestamp: new Date().toISOString()
+  })
+
+  // Filter update handlers
+  const handleSortChange = useCallback((event) => {
+    const newOrdering = event.target.value
+    console.log('🔄 Sort changed:', newOrdering)
+    setFilters(prev => ({ ...prev, ordering: newOrdering }))
+  }, [])
+
+  const handlePageSizeChange = useCallback((event) => {
+    const newPageSize = parseInt(event.target.value)
+    console.log('📄 Page size changed:', newPageSize)
+    setFilters(prev => ({ ...prev, page_size: newPageSize }))
+  }, [])
+
+  const handleCategoryFilter = useCallback((categoryId) => {
+    console.log('📂 Category filter changed:', categoryId)
+    setFilters(prev => ({ ...prev, category: categoryId }))
+  }, [])
+
+  const handlePriceFilter = useCallback((minPrice, maxPrice) => {
+    console.log('💰 Price filter changed:', { minPrice, maxPrice })
+    setFilters(prev => ({ ...prev, min_price: minPrice, max_price: maxPrice }))
+  }, [])
+
+  const handleColorFilter = useCallback((color) => {
+    console.log('🎨 Color filter changed:', color)
+    setFilters(prev => ({ ...prev, color: color }))
+  }, [])
+
+  const handleSizeFilter = useCallback((size) => {
+    console.log('📏 Size filter changed:', size)
+    setFilters(prev => ({ ...prev, size: size }))
+  }, [])
+
+  const clearAllFilters = useCallback(() => {
+    console.log('🧹 Clearing all filters')
+    setFilters({
+      ordering: 'menu_order',
+      page_size: 12,
+      category: null,
+      min_price: null,
+      max_price: null,
+      color: null,
+      size: null
+    })
+  }, [])
 
   return (
     <>
+      <RenderTracker componentName="Products Page" data={{ filterCount: Object.keys(filters).filter(key => filters[key] && filters[key] !== 'menu_order').length }} />
       <div className="category-banner-container bg-gray">
         <div
           className="category-banner banner text-uppercase"
@@ -103,13 +177,18 @@ export default function Products() {
                 <div className="toolbox-item toolbox-sort">
                   <label>Sort By:</label>
                   <div className="select-custom">
-                    <select name="orderby" className="form-control" defaultValue="menu_order">
+                    <select 
+                      name="orderby" 
+                      className="form-control" 
+                      value={filters.ordering}
+                      onChange={handleSortChange}
+                    >
                       <option value="menu_order">Default sorting</option>
                       <option value="popularity">Sort by popularity</option>
                       <option value="rating">Sort by average rating</option>
                       <option value="date">Sort by newness</option>
                       <option value="price">Sort by price: low to high</option>
-                      <option value="price-desc">Sort by price: high to low</option>
+                      <option value="-price">Sort by price: high to low</option>
                     </select>
                   </div>
                   {/* End .select-custom */}
@@ -121,7 +200,12 @@ export default function Products() {
                 <div className="toolbox-item toolbox-show">
                   <label>Show:</label>
                   <div className="select-custom">
-                    <select name="count" className="form-control" defaultValue={12}>
+                    <select 
+                      name="count" 
+                      className="form-control" 
+                      value={filters.page_size}
+                      onChange={handlePageSizeChange}
+                    >
                       <option value={12}>12</option>
                       <option value={24}>24</option>
                       <option value={36}>36</option>
@@ -193,11 +277,15 @@ export default function Products() {
                     <ul className="cat-list">
                       <li>
                         <a
-                          href="category-infinite-scroll.html#widget-category-1"
+                          href="#widget-category-1"
                           data-toggle="collapse"
                           role="button"
                           aria-expanded="true"
                           aria-controls="widget-category-1"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleCategoryFilter('accessories')
+                          }}
                         >
                           Accessories<span className="products-count">(3)</span>
                           <span className="toggle" />
@@ -205,22 +293,42 @@ export default function Products() {
                         <div className="collapse show" id="widget-category-1">
                           <ul className="cat-sublist">
                             <li>
-                              Caps<span className="products-count">(1)</span>
+                              <a 
+                                href="#" 
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  handleCategoryFilter('caps')
+                                }}
+                              >
+                                Caps<span className="products-count">(1)</span>
+                              </a>
                             </li>
                             <li>
-                              Watches<span className="products-count">(2)</span>
+                              <a 
+                                href="#" 
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  handleCategoryFilter('watches')
+                                }}
+                              >
+                                Watches<span className="products-count">(2)</span>
+                              </a>
                             </li>
                           </ul>
                         </div>
                       </li>
                       <li>
                         <a
-                          href="category-infinite-scroll.html#widget-category-2"
+                          href="#widget-category-2"
                           className="collapsed"
                           data-toggle="collapse"
                           role="button"
                           aria-expanded="false"
                           aria-controls="widget-category-2"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleCategoryFilter('dress')
+                          }}
                         >
                           Dress<span className="products-count">(4)</span>
                           <span className="toggle" />
@@ -228,20 +336,32 @@ export default function Products() {
                         <div className="collapse" id="widget-category-2">
                           <ul className="cat-sublist">
                             <li>
-                              Clothing
-                              <span className="products-count">(4)</span>
+                              <a 
+                                href="#" 
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  handleCategoryFilter('clothing')
+                                }}
+                              >
+                                Clothing
+                                <span className="products-count">(4)</span>
+                              </a>
                             </li>
                           </ul>
                         </div>
                       </li>
                       <li>
                         <a
-                          href="category-infinite-scroll.html#widget-category-3"
+                          href="#widget-category-3"
                           className="collapsed"
                           data-toggle="collapse"
                           role="button"
                           aria-expanded="false"
                           aria-controls="widget-category-3"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleCategoryFilter('electronics')
+                          }}
                         >
                           Electronics<span className="products-count">(2)</span>
                           <span className="toggle" />
@@ -249,23 +369,43 @@ export default function Products() {
                         <div className="collapse" id="widget-category-3">
                           <ul className="cat-sublist">
                             <li>
-                              Headphone
-                              <span className="products-count">(1)</span>
+                              <a 
+                                href="#" 
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  handleCategoryFilter('headphone')
+                                }}
+                              >
+                                Headphone
+                                <span className="products-count">(1)</span>
+                              </a>
                             </li>
                             <li>
-                              Watch<span className="products-count">(1)</span>
+                              <a 
+                                href="#" 
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  handleCategoryFilter('watch')
+                                }}
+                              >
+                                Watch<span className="products-count">(1)</span>
+                              </a>
                             </li>
                           </ul>
                         </div>
                       </li>
                       <li>
                         <a
-                          href="category-infinite-scroll.html#widget-category-4"
+                          href="#widget-category-4"
                           className="collapsed"
                           data-toggle="collapse"
                           role="button"
                           aria-expanded="false"
                           aria-controls="widget-category-4"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleCategoryFilter('fashion')
+                          }}
                         >
                           Fashion<span className="products-count">(6)</span>
                           <span className="toggle" />
@@ -273,16 +413,40 @@ export default function Products() {
                         <div className="collapse" id="widget-category-4">
                           <ul className="cat-sublist">
                             <li>
-                              Shoes<span className="products-count">(4)</span>
+                              <a 
+                                href="#" 
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  handleCategoryFilter('shoes')
+                                }}
+                              >
+                                Shoes<span className="products-count">(4)</span>
+                              </a>
                             </li>
                             <li>
-                              Bag<span className="products-count">(2)</span>
+                              <a 
+                                href="#" 
+                                onClick={(e) => {
+                                  e.preventDefault()
+                                  handleCategoryFilter('bag')
+                                }}
+                              >
+                                Bag<span className="products-count">(2)</span>
+                              </a>
                             </li>
                           </ul>
                         </div>
                       </li>
                       <li>
-                        <a href="category-infinite-scroll.html#">Music</a>
+                        <a 
+                          href="#" 
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleCategoryFilter('music')
+                          }}
+                        >
+                          Music
+                        </a>
                         <span className="products-count">(2)</span>
                       </li>
                     </ul>
@@ -296,7 +460,7 @@ export default function Products() {
                 <h3 className="widget-title">
                   <a
                     data-toggle="collapse"
-                    href="category-infinite-scroll.html#widget-body-3"
+                    href="#widget-body-3"
                     role="button"
                     aria-expanded="true"
                     aria-controls="widget-body-3"
@@ -306,16 +470,36 @@ export default function Products() {
                 </h3>
                 <div className="collapse show" id="widget-body-3">
                   <div className="widget-body pb-0">
-                    <form action="category-infinite-scroll.html#">
+                    <form onSubmit={(e) => {
+                      e.preventDefault()
+                      const formData = new FormData(e.target)
+                      const minPrice = formData.get('min_price')
+                      const maxPrice = formData.get('max_price')
+                      handlePriceFilter(minPrice, maxPrice)
+                    }}>
                       <div className="price-slider-wrapper">
-                        <div id="price-slider" />
-                        {/* End #price-slider */}
+                        {/* Price inputs for now, can be replaced with slider later */}
+                        <div className="price-inputs d-flex gap-2 mb-3">
+                          <input 
+                            type="number" 
+                            name="min_price"
+                            className="form-control"
+                            placeholder="Min"
+                            min="0"
+                          />
+                          <input 
+                            type="number" 
+                            name="max_price"
+                            className="form-control"
+                            placeholder="Max"
+                            min="0"
+                          />
+                        </div>
                       </div>
                       {/* End .price-slider-wrapper */}
                       <div className="filter-price-action d-flex align-items-center justify-content-between flex-wrap">
                         <div className="filter-price-text">
-                          Price:
-                          <span id="filter-price-range" />
+                          Price: ${filters.min_price || 0} - ${filters.max_price || '∞'}
                         </div>
                         {/* End .filter-price-text */}
                         <button type="submit" className="btn btn-primary">
@@ -334,7 +518,7 @@ export default function Products() {
                 <h3 className="widget-title">
                   <a
                     data-toggle="collapse"
-                    href="category-infinite-scroll.html#widget-body-4"
+                    href="#widget-body-4"
                     role="button"
                     aria-expanded="true"
                     aria-controls="widget-body-4"
@@ -345,34 +529,54 @@ export default function Products() {
                 <div className="collapse show" id="widget-body-4">
                   <div className="widget-body pb-0">
                     <ul className="config-swatch-list">
-                      <li className="active">
+                      <li className={filters.color === 'black' ? 'active' : ''}>
                         <a
-                          href="category-infinite-scroll.html#"
+                          href="#"
                           style={{ backgroundColor: "#000" }}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleColorFilter(filters.color === 'black' ? null : 'black')
+                          }}
                         />
                       </li>
-                      <li>
+                      <li className={filters.color === 'blue' ? 'active' : ''}>
                         <a
-                          href="category-infinite-scroll.html#"
+                          href="#"
                           style={{ backgroundColor: "#0188cc" }}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleColorFilter(filters.color === 'blue' ? null : 'blue')
+                          }}
                         />
                       </li>
-                      <li>
+                      <li className={filters.color === 'green' ? 'active' : ''}>
                         <a
-                          href="category-infinite-scroll.html#"
+                          href="#"
                           style={{ backgroundColor: "#81d742" }}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleColorFilter(filters.color === 'green' ? null : 'green')
+                          }}
                         />
                       </li>
-                      <li>
+                      <li className={filters.color === 'gray' ? 'active' : ''}>
                         <a
-                          href="category-infinite-scroll.html#"
+                          href="#"
                           style={{ backgroundColor: "#6085a5" }}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleColorFilter(filters.color === 'gray' ? null : 'gray')
+                          }}
                         />
                       </li>
-                      <li>
+                      <li className={filters.color === 'brown' ? 'active' : ''}>
                         <a
-                          href="category-infinite-scroll.html#"
+                          href="#"
                           style={{ backgroundColor: "#ab6e6e" }}
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleColorFilter(filters.color === 'brown' ? null : 'brown')
+                          }}
                         />
                       </li>
                     </ul>
@@ -386,7 +590,7 @@ export default function Products() {
                 <h3 className="widget-title">
                   <a
                     data-toggle="collapse"
-                    href="category-infinite-scroll.html#widget-body-5"
+                    href="#widget-body-5"
                     role="button"
                     aria-expanded="true"
                     aria-controls="widget-body-5"
@@ -397,17 +601,49 @@ export default function Products() {
                 <div className="collapse show" id="widget-body-5">
                   <div className="widget-body pb-0">
                     <ul className="config-size-list">
-                      <li className="active">
-                        <a href="category-infinite-scroll.html#">XL</a>
+                      <li className={filters.size === 'XL' ? 'active' : ''}>
+                        <a 
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleSizeFilter(filters.size === 'XL' ? null : 'XL')
+                          }}
+                        >
+                          XL
+                        </a>
                       </li>
-                      <li>
-                        <a href="category-infinite-scroll.html#">L</a>
+                      <li className={filters.size === 'L' ? 'active' : ''}>
+                        <a 
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleSizeFilter(filters.size === 'L' ? null : 'L')
+                          }}
+                        >
+                          L
+                        </a>
                       </li>
-                      <li>
-                        <a href="category-infinite-scroll.html#">M</a>
+                      <li className={filters.size === 'M' ? 'active' : ''}>
+                        <a 
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleSizeFilter(filters.size === 'M' ? null : 'M')
+                          }}
+                        >
+                          M
+                        </a>
                       </li>
-                      <li>
-                        <a href="category-infinite-scroll.html#">S</a>
+                      <li className={filters.size === 'S' ? 'active' : ''}>
+                        <a 
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            handleSizeFilter(filters.size === 'S' ? null : 'S')
+                          }}
+                        >
+                          S
+                        </a>
                       </li>
                     </ul>
                   </div>
@@ -416,6 +652,21 @@ export default function Products() {
                 {/* End .collapse */}
               </div>
               {/* End .widget */}
+              
+              {/* Clear filters button */}
+              {(filters.category || filters.min_price || filters.max_price || filters.color || filters.size || filters.ordering !== 'menu_order') && (
+                <div className="widget">
+                  <div className="widget-body">
+                    <button 
+                      className="btn btn-outline-primary w-100"
+                      onClick={clearAllFilters}
+                    >
+                      Clear All Filters
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div className="widget widget-featured">
                 <h3 className="widget-title">Featured</h3>
                 <div className="widget-body">
@@ -464,224 +715,7 @@ export default function Products() {
                         </div>
                         {/* End .product-details */}
                       </div>
-                      <div className="product-default left-details product-widget">
-                        <figure>
-                          <a href="product.html">
-                            <img
-                              src="src/assets/images/products/small/product-5.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                            <img
-                              src="src/assets/images/products/small/product-5-2.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                          </a>
-                        </figure>
-                        <div className="product-details">
-                          <h3 className="product-title">
-                            {" "}
-                            <a href="product.html">
-                              Casual Spring Blue Shoes
-                            </a>{" "}
-                          </h3>
-                          <div className="ratings-container">
-                            <div className="product-ratings">
-                              <span
-                                className="ratings"
-                                style={{ width: "100%" }}
-                              />
-                              {/* End .ratings */}
-                              <span className="tooltiptext tooltip-top" />
-                            </div>
-                            {/* End .product-ratings */}
-                          </div>
-                          {/* End .product-container */}
-                          <div className="price-box">
-                            <span className="product-price">$49.00</span>
-                          </div>
-                          {/* End .price-box */}
-                        </div>
-                        {/* End .product-details */}
-                      </div>
-                      <div className="product-default left-details product-widget">
-                        <figure>
-                          <a href="product.html">
-                            <img
-                              src="src/assets/images/products/small/product-6.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                            <img
-                              src="src/assets/images/products/small/product-6-2.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                          </a>
-                        </figure>
-                        <div className="product-details">
-                          <h3 className="product-title">
-                            {" "}
-                            <a href="product.html">
-                              Men Black Gentle Belt
-                            </a>{" "}
-                          </h3>
-                          <div className="ratings-container">
-                            <div className="product-ratings">
-                              <span
-                                className="ratings"
-                                style={{ width: "100%" }}
-                              />
-                              {/* End .ratings */}
-                              <span className="tooltiptext tooltip-top" />
-                            </div>
-                            {/* End .product-ratings */}
-                          </div>
-                          {/* End .product-container */}
-                          <div className="price-box">
-                            <span className="product-price">$49.00</span>
-                          </div>
-                          {/* End .price-box */}
-                        </div>
-                        {/* End .product-details */}
-                      </div>
-                    </div>
-                    {/* End .featured-col */}
-                    <div className="featured-col">
-                      <div className="product-default left-details product-widget">
-                        <figure>
-                          <a href="product.html">
-                            <img
-                              src="src/assets/images/products/small/product-1.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                            <img
-                              src="src/assets/images/products/small/product-1-2.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                          </a>
-                        </figure>
-                        <div className="product-details">
-                          <h3 className="product-title">
-                            {" "}
-                            <a href="product.html">
-                              Ultimate 3D Bluetooth Speaker
-                            </a>{" "}
-                          </h3>
-                          <div className="ratings-container">
-                            <div className="product-ratings">
-                              <span
-                                className="ratings"
-                                style={{ width: "100%" }}
-                              />
-                              {/* End .ratings */}
-                              <span className="tooltiptext tooltip-top" />
-                            </div>
-                            {/* End .product-ratings */}
-                          </div>
-                          {/* End .product-container */}
-                          <div className="price-box">
-                            <span className="product-price">$49.00</span>
-                          </div>
-                          {/* End .price-box */}
-                        </div>
-                        {/* End .product-details */}
-                      </div>
-                      <div className="product-default left-details product-widget">
-                        <figure>
-                          <a href="product.html">
-                            <img
-                              src="src/assets/images/products/small/product-2.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                            <img
-                              src="src/assets/images/products/small/product-2-2.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                          </a>
-                        </figure>
-                        <div className="product-details">
-                          <h3 className="product-title">
-                            {" "}
-                            <a href="product.html">
-                              Brown Women Casual HandBag
-                            </a>{" "}
-                          </h3>
-                          <div className="ratings-container">
-                            <div className="product-ratings">
-                              <span
-                                className="ratings"
-                                style={{ width: "100%" }}
-                              />
-                              {/* End .ratings */}
-                              <span className="tooltiptext tooltip-top" />
-                            </div>
-                            {/* End .product-ratings */}
-                          </div>
-                          {/* End .product-container */}
-                          <div className="price-box">
-                            <span className="product-price">$49.00</span>
-                          </div>
-                          {/* End .price-box */}
-                        </div>
-                        {/* End .product-details */}
-                      </div>
-                      <div className="product-default left-details product-widget">
-                        <figure>
-                          <a href="product.html">
-                            <img
-                              src="src/assets/images/products/small/product-3.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                            <img
-                              src="src/assets/images/products/small/product-3-2.jpg"
-                              width={75}
-                              height={75}
-                              alt="product"
-                            />
-                          </a>
-                        </figure>
-                        <div className="product-details">
-                          <h3 className="product-title">
-                            {" "}
-                            <a href="product.html">
-                              Circled Ultimate 3D Speaker
-                            </a>{" "}
-                          </h3>
-                          <div className="ratings-container">
-                            <div className="product-ratings">
-                              <span
-                                className="ratings"
-                                style={{ width: "100%" }}
-                              />
-                              {/* End .ratings */}
-                              <span className="tooltiptext tooltip-top" />
-                            </div>
-                            {/* End .product-ratings */}
-                          </div>
-                          {/* End .product-container */}
-                          <div className="price-box">
-                            <span className="product-price">$49.00</span>
-                          </div>
-                          {/* End .price-box */}
-                        </div>
-                        {/* End .product-details */}
-                      </div>
+                      {/* More featured products would go here */}
                     </div>
                     {/* End .featured-col */}
                   </div>

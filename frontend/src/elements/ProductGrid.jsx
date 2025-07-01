@@ -1,9 +1,10 @@
-import { useEffect, useState, memo, useMemo, useCallback } from 'react'
+import { useEffect, useState, memo, useMemo, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import ProductCard from './ProductCard'
 import { ProductGridSkeleton } from '../components/Skeleton'
 import ReactUpdateTracker from '../components/Debug/ReactUpdateTracker'
 import DebugErrorBoundary from '../components/Debug/DebugErrorBoundary'
+import RenderTracker from '../components/Debug/RenderTracker'
 import '../assets/css/uniform-product-card.css'
 
 const ProductGrid = memo(function ProductGrid({ 
@@ -82,13 +83,34 @@ const ProductGrid = memo(function ProductGrid({
   }, [products])
 
   // Debug log with more details
+  const renderCountRef = useRef(0)
+  renderCountRef.current++
+  
   console.log('🎨 ProductGrid render:', { 
     productsCount: products?.length, 
     loading, 
     error: error?.message,
     timestamp: new Date().toISOString(),
-    key: `products-${products?.length || 0}-${loading}-${!!error}`
+    renderCount: renderCountRef.current,
+    renderTrigger: loading ? 'Loading state change' : (error ? 'Error state' : 'Products data change'),
+    componentReasonForRender: 'Products, loading, or error changed'
   })
+
+  // Log when ProductGrid receives new products
+  useEffect(() => {
+    if (products?.length > 0) {
+      console.log('📦 ProductGrid received new products:', {
+        count: products.length,
+        firstProduct: products[0]?.name,
+        timestamp: new Date().toISOString()
+      })
+    }
+  }, [products])
+
+  // Log loading state changes
+  useEffect(() => {
+    console.log('⏳ ProductGrid loading state changed:', loading)
+  }, [loading])
 
   // Show loading skeleton with memoized count
   if (loading) {
@@ -143,10 +165,11 @@ const ProductGrid = memo(function ProductGrid({
         transition: 'all 0.3s ease', // Smooth transition for layout changes
       }}
     >
-      {/* Debug components temporarily disabled */}
-      {/* <DebugErrorBoundary>
+      <RenderTracker componentName="ProductGrid" data={{ productCount: products?.length, loading }} />
+      {/* Debug components - ENABLED to track re-renders */}
+      <DebugErrorBoundary>
         <ReactUpdateTracker componentName="ProductGrid" />
-      </DebugErrorBoundary> */}
+      </DebugErrorBoundary>
       {productItems}
     </div>
   )
