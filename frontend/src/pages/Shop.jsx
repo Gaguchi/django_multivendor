@@ -6,7 +6,6 @@ import SimpleOptimizedSidebar from '../components/Shop/SimpleOptimizedSidebar'
 import ProductGridSection from '../components/Shop/ProductGridSection'
 import ShopHeader from '../components/Shop/ShopHeader'
 import ActiveFilters from '../components/Shop/ActiveFilters'
-import { SearchResultsSkeleton } from '../components/Skeleton'
 import ReactUpdateTracker from '../components/Debug/ReactUpdateTracker'
 import RenderVisualizer from '../components/Debug/RenderVisualizer'
 import DebugErrorBoundary from '../components/Debug/DebugErrorBoundary'
@@ -68,10 +67,8 @@ function ShopPageContent() {
       }
     }
   }, [
-    filterState.selectedCategories.length,
-    filterState.selectedCategories.join(','),
-    filterState.selectedBrands.length, 
-    filterState.selectedBrands.join(','),
+    JSON.stringify(filterState.selectedCategories),
+    JSON.stringify(filterState.selectedBrands),
     filterState.minPrice,
     filterState.maxPrice,
     sortBy, 
@@ -216,7 +213,10 @@ function ShopPageContent() {
     categories,
     vendors,
     priceRange,
-    filterState,
+    filterState.selectedCategories,
+    filterState.selectedBrands,
+    filterState.minPrice,
+    filterState.maxPrice,
     handleCategoriesChange,
     handleBrandsChange,
     handlePriceChange,
@@ -259,14 +259,19 @@ function ShopPageContent() {
     onClearAll: handleClearAllFilters
   }), [legacyFilters, handleClearFilter, handleClearAllFilters])
 
-  // Show skeleton loader on initial load
-  if (isLoading && !products.length) {
+  // Show simple loading state instead of skeleton - ONLY on initial load
+  if (isLoading && !products.length && renderCountRef.current <= 3) {
     if (renderCountRef.current <= 2) {
-      console.log('⏳ Shop: Showing initial loading skeleton')
+      console.log('⏳ Shop: Showing simple loading state')
     }
     return (
       <div className="container">
-        <SearchResultsSkeleton />
+        <div className="text-center py-5">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+          <p className="mt-3">Loading products...</p>
+        </div>
       </div>
     )
   }
@@ -290,20 +295,20 @@ function ShopPageContent() {
       
       <div className="container">
         <div className="row">
-          {/* Main content - left side on desktop, first on mobile */}
+          {/* Sidebar - left side on desktop, first on mobile */}
+          <div className="col-lg-3">
+            <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
+              <SimpleOptimizedSidebar {...sidebarProps} />
+            </DebugErrorBoundary>
+          </div>
+          
+          {/* Main content - right side on desktop, second on mobile */}
           <div className="col-lg-9">
             {/* Active Filters Display - only re-renders when filters change */}
             <ActiveFilters {...activeFiltersProps} />
 
             {/* Product Grid Section - only re-renders when products change */}
             <ProductGridSection {...productGridProps} />
-          </div>
-          
-          {/* Sidebar - right side on desktop, second on mobile */}
-          <div className="col-lg-3">
-            <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
-              <SimpleOptimizedSidebar {...sidebarProps} />
-            </DebugErrorBoundary>
           </div>
         </div>
       </div>
@@ -313,10 +318,8 @@ function ShopPageContent() {
   )
 }
 
-// Export ShopPageContent directly to eliminate potential wrapper issues
-// Wrap in React.memo to prevent unnecessary re-renders
-const MemoizedShopPageContent = React.memo(ShopPageContent)
+// Export the memoized component directly to prevent unnecessary wrapper re-renders
+const MemoizedShop = React.memo(ShopPageContent)
+MemoizedShop.displayName = 'Shop'
 
-export default function ShopPage() {
-  return <MemoizedShopPageContent />
-}
+export default MemoizedShop

@@ -420,12 +420,6 @@ const SimpleOptimizedSidebar = memo(function SimpleOptimizedSidebar({
             </button>
           )}
 
-          {/* Clear filters section */}
-          <ClearFiltersSection 
-            onClearAll={onClearAll}
-            hasActiveFilters={hasActiveFilters}
-          />
-
           {/* Categories filter */}
           <CategoriesSection
             categories={categories}
@@ -456,6 +450,12 @@ const SimpleOptimizedSidebar = memo(function SimpleOptimizedSidebar({
 
           {/* Static sections that never change */}
           <StaticSections />
+
+          {/* Clear filters section - at the bottom */}
+          <ClearFiltersSection 
+            onClearAll={onClearAll}
+            hasActiveFilters={hasActiveFilters}
+          />
         </div>
       </aside>
     </>
