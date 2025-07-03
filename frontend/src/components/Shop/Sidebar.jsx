@@ -1,287 +1,459 @@
-import { useState, useEffect, useCallback, useRef, memo } from 'react'
+import React, { memo, useCallback, useState, useRef, useMemo, useEffect } from 'react'
 import { Range } from 'react-range'
 
-// Custom comparison function for Sidebar memo
-function sidebarPropsAreEqual(prevProps, nextProps) {
-  // Compare primitive props
-  if (
-    prevProps.loading !== nextProps.loading ||
-    prevProps.className !== nextProps.className ||
-    prevProps.isOpen !== nextProps.isOpen
-  ) {
-    console.log('📂 Sidebar memo: Props changed (primitives)')
-    return false
-  }
+// Individual filter sections - each memoized independently
+const CategoriesSection = memo(function CategoriesSection({ 
+  categories, 
+  selectedCategories, 
+  onCategoriesChange, 
+  collapsed, 
+  onToggleCollapse 
+}) {
+  const renderCount = useRef(0)
+  renderCount.current++
   
-  // Compare priceRange object
-  if (
-    prevProps.priceRange?.min !== nextProps.priceRange?.min ||
-    prevProps.priceRange?.max !== nextProps.priceRange?.max
-  ) {
-    console.log('📂 Sidebar memo: Props changed (priceRange)')
-    return false
-  }
-  
-  // Compare arrays
-  if (
-    JSON.stringify(prevProps.categories) !== JSON.stringify(nextProps.categories) ||
-    JSON.stringify(prevProps.brands) !== JSON.stringify(nextProps.brands) ||
-    JSON.stringify(prevProps.currentFilters) !== JSON.stringify(nextProps.currentFilters)
-  ) {
-    console.log('📂 Sidebar memo: Props changed (arrays/objects)')
-    return false
-  }
-  
-  console.log('📂 Sidebar memo: Props are equal, skipping re-render')
-  return true
-}
+  console.log('📁 CategoriesSection render:', { 
+    count: renderCount.current,
+    selectedCount: selectedCategories.length,
+    note: 'Should only render when categories or selection changes'
+  })
 
-const Sidebar = memo(function Sidebar({ 
-  onFiltersChange, 
-  currentFilters = {}, 
+  const handleCategoryChange = useCallback((categoryId) => {
+    const newSelection = selectedCategories.includes(categoryId)
+      ? selectedCategories.filter(id => id !== categoryId)
+      : [...selectedCategories, categoryId]
+    onCategoriesChange(newSelection)
+  }, [selectedCategories, onCategoriesChange])
+
+  if (!categories?.length) return null
+
+  return (
+    <div className="widget">
+      <h3 className="widget-title">
+        <a 
+          href="#" 
+          className={collapsed ? 'collapsed' : ''}
+          onClick={(e) => {
+            e.preventDefault()
+            onToggleCollapse()
+          }}
+        >
+          Product Categories
+        </a>
+      </h3>
+      <div className={`widget-body ${collapsed ? 'collapse' : ''}`}>
+        <ul className="cat-list">
+          {categories.map(category => (
+            <li key={category.id}>
+              <div className="d-flex justify-content-between align-items-center">
+                <label className="custom-checkbox mb-0">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(category.id)}
+                    onChange={() => handleCategoryChange(category.id)}
+                  />
+                  <span className="category-name">{category.name}</span>
+                </label>
+                <span className="products-count">({category.product_count || 0})</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}, (prevProps, nextProps) => {
+  // Only re-render if categories data or selection actually changed
+  return (
+    JSON.stringify(prevProps.categories) === JSON.stringify(nextProps.categories) &&
+    JSON.stringify(prevProps.selectedCategories) === JSON.stringify(nextProps.selectedCategories) &&
+    prevProps.collapsed === nextProps.collapsed
+  )
+})
+
+const BrandsSection = memo(function BrandsSection({ 
+  brands, 
+  selectedBrands, 
+  onBrandsChange, 
+  collapsed, 
+  onToggleCollapse 
+}) {
+  const renderCount = useRef(0)
+  renderCount.current++
+  
+  console.log('🏢 BrandsSection render:', { 
+    count: renderCount.current,
+    selectedCount: selectedBrands.length,
+    note: 'Should only render when brands or selection changes'
+  })
+
+  const handleBrandChange = useCallback((brandId) => {
+    const newSelection = selectedBrands.includes(brandId)
+      ? selectedBrands.filter(id => id !== brandId)
+      : [...selectedBrands, brandId]
+    onBrandsChange(newSelection)
+  }, [selectedBrands, onBrandsChange])
+
+  if (!brands?.length) return null
+
+  return (
+    <div className="widget">
+      <h3 className="widget-title">
+        <a 
+          href="#" 
+          className={collapsed ? 'collapsed' : ''}
+          onClick={(e) => {
+            e.preventDefault()
+            onToggleCollapse()
+          }}
+        >
+          Brands
+        </a>
+      </h3>
+      <div className={`widget-body ${collapsed ? 'collapse' : ''}`}>
+        <ul className="cat-list">
+          {brands.map(brand => (
+            <li key={brand.id}>
+              <div className="d-flex justify-content-between align-items-center">
+                <label className="custom-checkbox mb-0">
+                  <input
+                    type="checkbox"
+                    checked={selectedBrands.includes(brand.id)}
+                    onChange={() => handleBrandChange(brand.id)}
+                  />
+                  <span className="category-name">{brand.business_name}</span>
+                </label>
+                <span className="products-count">({brand.product_count || 0})</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  )
+}, (prevProps, nextProps) => {
+  // Only re-render if brands data or selection actually changed
+  return (
+    JSON.stringify(prevProps.brands) === JSON.stringify(nextProps.brands) &&
+    JSON.stringify(prevProps.selectedBrands) === JSON.stringify(nextProps.selectedBrands) &&
+    prevProps.collapsed === nextProps.collapsed
+  )
+})
+
+const PriceSection = memo(function PriceSection({ 
+  priceRange, 
+  minPrice, 
+  maxPrice, 
+  onPriceChange, 
+  collapsed, 
+  onToggleCollapse 
+}) {
+  const renderCount = useRef(0)
+  renderCount.current++
+  
+  console.log('💰 PriceSection render:', { 
+    count: renderCount.current,
+    currentRange: [minPrice, maxPrice],
+    note: 'Should only render when price range changes'
+  })
+
+  const [values, setValues] = useState([minPrice, maxPrice])
+  const debounceRef = useRef(null)
+
+  // Update local state when props change
+  React.useEffect(() => {
+    setValues([minPrice, maxPrice])
+  }, [minPrice, maxPrice])
+
+  const handleRangeChange = useCallback((newValues) => {
+    setValues(newValues)
+    
+    // Debounce the actual price change to prevent excessive API calls
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
+    debounceRef.current = setTimeout(() => {
+      onPriceChange(newValues[0], newValues[1])
+    }, 500)
+  }, [onPriceChange])
+
+  const handleInputChange = useCallback((index, value) => {
+    const numValue = parseInt(value) || 0
+    const newValues = [...values]
+    
+    if (index === 0) {
+      // Min price shouldn't exceed max price
+      newValues[0] = Math.min(numValue, values[1])
+    } else {
+      // Max price shouldn't be less than min price
+      newValues[1] = Math.max(numValue, values[0])
+    }
+    
+    setValues(newValues)
+    
+    // Debounce the actual price change
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current)
+    }
+    debounceRef.current = setTimeout(() => {
+      onPriceChange(newValues[0], newValues[1])
+    }, 500)
+  }, [values, onPriceChange])
+
+  return (
+    <div className="widget">
+      <h3 className="widget-title">
+        <a 
+          href="#" 
+          className={collapsed ? 'collapsed' : ''}
+          onClick={(e) => {
+            e.preventDefault()
+            onToggleCollapse()
+          }}
+        >
+          Price Range
+        </a>
+      </h3>
+      <div className={`widget-body ${collapsed ? 'collapse' : ''}`}>
+        <div className="price-range">
+          {/* Price inputs */}
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <div className="price-input-wrapper">
+              <label className="price-label">Min</label>
+              <input
+                type="number"
+                className="form-control form-control-sm price-input"
+                value={values[0]}
+                min={priceRange.min}
+                max={values[1]}
+                onChange={(e) => handleInputChange(0, e.target.value)}
+              />
+            </div>
+            <div className="price-separator">-</div>
+            <div className="price-input-wrapper">
+              <label className="price-label">Max</label>
+              <input
+                type="number"
+                className="form-control form-control-sm price-input"
+                value={values[1]}
+                min={values[0]}
+                max={priceRange.max}
+                onChange={(e) => handleInputChange(1, e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Range slider */}
+          <div className="price-slider-container mb-3">
+            <Range
+              values={values}
+              step={1}
+              min={priceRange.min}
+              max={priceRange.max}
+              onChange={handleRangeChange}
+              renderTrack={({ props, children }) => (
+                <div
+                  {...props}
+                  className="price-slider-track"
+                >
+                  {children}
+                </div>
+              )}
+              renderThumb={({ props, isDragged }) => (
+                <div
+                  {...props}
+                  className={`price-slider-thumb ${isDragged ? 'dragged' : ''}`}
+                />
+              )}
+            />
+          </div>
+
+          {/* Price display */}
+          <div className="price-display text-center">
+            <strong>${values[0]} - ${values[1]}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}, (prevProps, nextProps) => {
+  // Only re-render if price values actually changed
+  return (
+    prevProps.minPrice === nextProps.minPrice &&
+    prevProps.maxPrice === nextProps.maxPrice &&
+    prevProps.collapsed === nextProps.collapsed &&
+    JSON.stringify(prevProps.priceRange) === JSON.stringify(nextProps.priceRange)
+  )
+})
+
+const ClearFiltersSection = memo(function ClearFiltersSection({ onClearAll, hasActiveFilters }) {
+  const renderCount = useRef(0)
+  renderCount.current++
+  
+  console.log('🧹 ClearFiltersSection render:', { 
+    count: renderCount.current,
+    hasActiveFilters,
+    note: 'Should only render when hasActiveFilters changes'
+  })
+
+  if (!hasActiveFilters) return null
+
+  return (
+    <div className="widget clear-filters-widget">
+      <div className="widget-body">
+        <button 
+          className="btn btn-outline-danger btn-sm w-100 clear-filters-btn"
+          onClick={onClearAll}
+          title="Clear all active filters"
+        >
+          <i className="fas fa-broom me-2"></i>
+          Clear All Filters
+        </button>
+        <div className="clear-filters-help">
+          <small className="text-muted">
+            <i className="fas fa-info-circle me-1"></i>
+            Remove all active filters to see all products
+          </small>
+        </div>
+      </div>
+    </div>
+  )
+}, (prevProps, nextProps) => {
+  // Only re-render if hasActiveFilters changes
+  return prevProps.hasActiveFilters === nextProps.hasActiveFilters
+})
+
+// Static sections that never change
+const StaticSections = memo(function StaticSections() {
+  return (
+    <>
+      <div className="widget widget-recently-viewed">
+        <h3 className="widget-title">Recently Viewed</h3>
+        <div className="widget-body">
+          <div className="recently-viewed-products">
+            <div className="text-center text-muted py-3">
+              <small>Recently viewed products will appear here</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="widget widget-featured">
+        <h3 className="widget-title">Featured</h3>
+        <div className="widget-body">
+          <div className="featured-products">
+            <div className="text-center text-muted py-3">
+              <small>Featured products will appear here</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="widget widget-block">
+        <h3 className="widget-title">Special Offers</h3>
+        <h5>Get the best deals!</h5>
+        <p>
+          Subscribe to our newsletter and get exclusive offers and discounts delivered to your inbox.
+        </p>
+        <button className="btn btn-primary btn-sm">
+          Subscribe Now
+        </button>
+      </div>
+    </>
+  )
+})
+
+// Main sidebar component with proper memo comparison
+const Sidebar = memo(function Sidebar({
+  // Data props
   categories = [],
   brands = [],
   priceRange = { min: 0, max: 1000 },
+  
+  // Current filter values
+  selectedCategories = [],
+  selectedBrands = [],
+  minPrice = 0,
+  maxPrice = 1000,
+  
+  // Change handlers
+  onCategoriesChange,
+  onBrandsChange,
+  onPriceChange,
+  onClearAll,
+  
+  // UI props
   loading = false,
   className = '',
   isOpen = false,
   onClose = () => {}
 }) {
-  // Track Sidebar renders
-  const renderCountRef = useRef(0)
-  renderCountRef.current++
+  const renderCount = useRef(0)
+  const sidebarRef = useRef(null)
+  renderCount.current++
   
-  console.log('📂 Sidebar render:', {
-    renderCount: renderCountRef.current,
+  console.log('📋 Sidebar render:', {
+    count: renderCount.current,
     timestamp: new Date().toISOString(),
-    note: 'Sidebar should rarely re-render due to memoization',
-    warning: renderCountRef.current > 2 ? '⚠️ WARNING: Too many renders!' : '✅ Acceptable render count'
-  })
-  const [localFilters, setLocalFilters] = useState(() => {
-    // Ensure price range is valid and within bounds
-    const validPriceRange = [
-      Math.max(priceRange.min, currentFilters.priceRange?.[0] || priceRange.min),
-      Math.min(priceRange.max, currentFilters.priceRange?.[1] || priceRange.max)
-    ]
-    
-    return {
-      categories: [],
-      brands: [],
-      ...currentFilters,
-      priceRange: validPriceRange // Always use validated price range
-    }
+    note: 'MAIN SIDEBAR - Should render minimally',
+    warning: renderCount.current > 3 ? '⚠️ Too many renders!' : '✅ Good'
   })
 
-  // Only adjust price range bounds if they become invalid (removed to prevent circular loops)
-  // Price range validation will be handled in the updateFilters function instead
-
-  // Local collapse states (instead of Bootstrap)
-  const [collapsedSections, setCollapsedSections] = useState({
+  // Collapse state for each section
+  const [collapsed, setCollapsed] = useState({
     categories: false,
     brands: false,
     price: false
   })
 
-  // Debounce timer for price changes
-  const debounceTimerRef = useRef(null)
-  const [isPriceUpdating, setIsPriceUpdating] = useState(false)
-  const [isInitialized, setIsInitialized] = useState(false)
+  // Simple CSS-only sticky behavior - no JavaScript needed
+  // The sticky behavior is now handled entirely by CSS
 
-  // Toggle section collapse
-  const toggleSection = useCallback((section) => {
-    setCollapsedSections(prev => ({
+  // Handle section collapse
+  const toggleCollapse = useCallback((section) => {
+    setCollapsed(prev => ({
       ...prev,
       [section]: !prev[section]
     }))
   }, [])
 
-  // Initialize filters from currentFilters prop when component mounts
-  useEffect(() => {
-    console.log('🎯 Sidebar useEffect: Initializing on mount')
-    
-    // Initialize only once on mount
-    if (!isInitialized) {
-      const initialFilters = {
-        categories: currentFilters.categories || [],
-        brands: currentFilters.brands || [],
-        priceRange: currentFilters.priceRange || [priceRange.min, priceRange.max],
-      }
-      
-      console.log('📝 Sidebar: Setting initial filters:', initialFilters)
-      setLocalFilters(initialFilters)
-      setIsInitialized(true)
-    }
-  }, []) // Only run on mount - no dependencies to avoid loops
+  // Check if any filters are active
+  const hasActiveFilters = useMemo(() => {
+    return selectedCategories.length > 0 ||
+           selectedBrands.length > 0 ||
+           minPrice > priceRange.min ||
+           maxPrice < priceRange.max
+  }, [selectedCategories.length, selectedBrands.length, minPrice, maxPrice, priceRange])
 
-  // Track if we initiated the last filter change to prevent circular updates
-  const isInternalUpdateRef = useRef(false)
-  
-  // Handle external filter changes from parent (after initialization)
-  useEffect(() => {
-    if (isInitialized && !isInternalUpdateRef.current) {
-      console.log('🔄 Sidebar: External filters changed, updating local filters')
-      const updatedFilters = {
-        categories: currentFilters.categories || [],
-        brands: currentFilters.brands || [],
-        priceRange: currentFilters.priceRange || [priceRange.min, priceRange.max],
-      }
-      setLocalFilters(updatedFilters)
-    } else if (isInternalUpdateRef.current) {
-      console.log('⏭️ Sidebar: Skipping external filter update (originated from internal change)')
-      isInternalUpdateRef.current = false // Reset flag
-    }
-  }, [
-    // Only depend on the stringified versions to avoid object reference changes
-    JSON.stringify(currentFilters.categories || []),
-    JSON.stringify(currentFilters.brands || []),
-    JSON.stringify(currentFilters.priceRange || [priceRange.min, priceRange.max]),
-    isInitialized,
-    priceRange.min,
-    priceRange.max
-  ])
+  // Memoize section toggle handlers to prevent re-creation
+  const toggleCategoriesCollapse = useCallback(() => toggleCollapse('categories'), [toggleCollapse])
+  const toggleBrandsCollapse = useCallback(() => toggleCollapse('brands'), [toggleCollapse])
+  const togglePriceCollapse = useCallback(() => toggleCollapse('price'), [toggleCollapse])
 
-  // Update filters and notify parent - simplified to break circular dependency
-  const updateFilters = useCallback((newFiltersOrFunc, immediate = false) => {
-    let newFilters
-    if (typeof newFiltersOrFunc === 'function') {
-      setLocalFilters(prev => {
-        newFilters = newFiltersOrFunc(prev)
-        return newFilters
-      })
-    } else {
-      newFilters = newFiltersOrFunc
-      setLocalFilters(newFilters)
-    }
-    
-    // Clear any existing timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current)
-    }
+  // Use proper sidebar classes for styling
+  const sidebarClasses = `sidebar-shop ${className} ${isOpen ? 'show' : ''}`.trim()
 
-    // Ensure priceRange is always an array with fallback values and within bounds
-    const safePriceRange = priceRange || { min: 0, max: 1000 }
-    let validatedPriceRange = Array.isArray(newFilters.priceRange) ? newFilters.priceRange : [safePriceRange.min, safePriceRange.max]
-    
-    // Validate price range bounds
-    if (safePriceRange.min !== undefined && safePriceRange.max !== undefined) {
-      validatedPriceRange[0] = Math.max(safePriceRange.min, Math.min(validatedPriceRange[0], safePriceRange.max))
-      validatedPriceRange[1] = Math.min(safePriceRange.max, Math.max(validatedPriceRange[1], safePriceRange.min))
-    }
-    
-    const safeNewFilters = {
-      ...newFilters,
-      priceRange: validatedPriceRange
-    }
-
-    if (immediate) {
-      // For non-price filters, notify parent immediately
-      const formattedFilters = {
-        ...safeNewFilters,
-        priceMin: safeNewFilters.priceRange[0] || safePriceRange.min,
-        priceMax: safeNewFilters.priceRange[1] || safePriceRange.max
-      }
-      console.log('Calling onFiltersChange immediately:', formattedFilters)
-      isInternalUpdateRef.current = true // Mark as internal update
-      onFiltersChange?.(formattedFilters)
-    } else {
-      // For price filters, debounce only the parent notification
-      setIsPriceUpdating(true)
-      
-      debounceTimerRef.current = setTimeout(() => {
-        // Only notify parent component with formatted filters (local state already updated)
-        const formattedFilters = {
-          ...safeNewFilters,
-          priceMin: safeNewFilters.priceRange[0] || safePriceRange.min,
-          priceMax: safeNewFilters.priceRange[1] || safePriceRange.max
-        }
-        console.log('Calling onFiltersChange (debounced):', formattedFilters)
-        isInternalUpdateRef.current = true // Mark as internal update
-        onFiltersChange?.(formattedFilters)
-        setIsPriceUpdating(false)
-      }, 300)
-    }
-  }, [onFiltersChange, priceRange?.min, priceRange?.max])
-
-  const toggleArrayFilter = useCallback((filterType, value) => {
-    const currentArray = localFilters[filterType] || []
-    const newArray = currentArray.includes(value)
-      ? currentArray.filter(item => item !== value)
-      : [...currentArray, value]
-    
-    updateFilters({
-      ...localFilters,
-      [filterType]: newArray
-    }, true) // Immediate update for non-price filters
-  }, [localFilters, updateFilters])
-
-  const handlePriceRangeChange = useCallback((values) => {
-    // Validate values are within bounds
-    const validValues = [
-      Math.max(priceRange.min, Math.min(values[0], priceRange.max)),
-      Math.min(priceRange.max, Math.max(values[1], priceRange.min))
-    ]
-    
-    // Use functional update to avoid dependency on localFilters
-    updateFilters(prevFilters => ({
-      ...prevFilters,
-      priceRange: validValues
-    }), false) // Debounced update for price filters
-  }, [updateFilters, priceRange.min, priceRange.max])
-
-  const handlePriceInputChange = useCallback((index, value) => {
-    // Validate and clamp the value
-    const numValue = Math.max(0, parseInt(value) || 0)
-    
-    // Use functional update to avoid dependency on localFilters
-    updateFilters(prevFilters => {
-      const newRange = [...prevFilters.priceRange]
-      
-      if (index === 0) {
-        // Min value: should not exceed max value or priceRange.max
-        newRange[index] = Math.max(priceRange.min, Math.min(numValue, Math.min(newRange[1], priceRange.max)))
-      } else {
-        // Max value: should not be less than min value or below priceRange.min
-        newRange[index] = Math.min(priceRange.max, Math.max(numValue, Math.max(newRange[0], priceRange.min)))
-      }
-      
-      return {
-        ...prevFilters,
-        priceRange: newRange
-      }
-    }, false) // Debounced update for price inputs
-  }, [updateFilters, priceRange.min, priceRange.max])
-
-  const clearAllFilters = useCallback(() => {
-    const emptyFilters = {
-      categories: [],
-      brands: [],
-      priceRange: [priceRange.min, priceRange.max]
-    }
-    updateFilters(emptyFilters, true)
-  }, [priceRange.min, priceRange.max, updateFilters])
-
-  // Cleanup debounce timer on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current)
-      }
-    }
-  }, [])
-
-  const hasActiveFilters = useCallback(() => {
-    return localFilters.categories.length > 0 ||
-           localFilters.brands.length > 0 ||
-           localFilters.priceRange[0] > priceRange.min ||
-           localFilters.priceRange[1] < priceRange.max
-  }, [localFilters, priceRange.min, priceRange.max])
-
-  console.log('🎨 Sidebar render:', { 
-    localFilters, 
-    hasActiveFilters: hasActiveFilters(),
-    isPriceUpdating,
-    renderTime: new Date().toISOString()
-  })
+  if (loading) {
+    return (
+      <>
+        <div 
+          className={`sidebar-overlay ${isOpen ? 'show' : ''}`}
+          onClick={onClose}
+        />
+        <aside className={sidebarClasses}>
+          <div className="sidebar-wrapper sidebar-sticky" ref={sidebarRef}>
+            <div className="sidebar-content">
+              <div className="loading-placeholder">
+                <div className="skeleton-widget"></div>
+                <div className="skeleton-widget"></div>
+                <div className="skeleton-widget"></div>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </>
+    )
+  }
 
   return (
     <>
@@ -289,666 +461,595 @@ const Sidebar = memo(function Sidebar({
         className={`sidebar-overlay ${isOpen ? 'show' : ''}`}
         onClick={onClose}
       />
-      <aside className={`sidebar-shop col-lg-3 order-lg-first mobile-sidebar ${className} ${isOpen ? 'show' : ''}`}>
-        <div className="sidebar-wrapper">
-          
-          {/* Clear Filters */}
-          {hasActiveFilters() && (
-            <div className="widget">
-              <div className="widget-body">
-                <button 
-                  type="button"
-                  className="btn btn-outline-primary btn-sm w-100"
-                  onClick={clearAllFilters}
-                >
-                  <i className="icon-close me-2"></i>
-                  Clear All Filters
-                  {isPriceUpdating && <span className="ms-2">⏳</span>}
-                </button>
-              </div>
-            </div>
+      <aside className={sidebarClasses}>
+        <div className="sidebar-wrapper sidebar-sticky" ref={sidebarRef}>
+          {/* Mobile close button */}
+          {isOpen && (
+            <button className="sidebar-close" onClick={onClose}>
+              <i className="fas fa-times"></i>
+            </button>
           )}
 
-          {/* Categories Widget */}
-          <div className="widget">
-            <h3 className="widget-title">
-              <button
-                className="widget-title collapse-toggle"
-                onClick={() => toggleSection('categories')}
-                type="button"
-              >
-                Categories
-                <i className={`fas fa-chevron-${collapsedSections.categories ? 'down' : 'up'} ms-2`}></i>
-              </button>
-              {localFilters.categories.length > 0 && (
-                <button
-                  type="button"
-                  className="clear-section"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    updateFilters({ ...localFilters, categories: [] }, true)
-                  }}
-                >
-                  Clear
-                </button>
-              )}
-            </h3>
-            <div className={`widget-collapse ${collapsedSections.categories ? 'collapsed' : 'expanded'}`}>
-              <div className="widget-body">
-                {loading ? (
-                  <div className="category-skeleton">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <div key={index} className="skeleton-line mb-2"></div>
-                    ))}
-                  </div>
-                ) : (
-                  <ul className="cat-list">
-                    {categories.length > 0 ? (
-                      categories.map((category) => (
-                        <li key={category.id}>
-                          <label className="category-item">
-                            <input
-                              type="checkbox"
-                              checked={localFilters.categories.includes(String(category.id))}
-                              onChange={() => toggleArrayFilter('categories', String(category.id))}
-                            />
-                            <span className="category-name">{category.name}</span>
-                            {category.product_count && (
-                              <span className="products-count">({category.product_count})</span>
-                            )}
-                          </label>
-                        </li>
-                      ))
-                    ) : (
-                      <li>
-                        <label className="category-item">
-                          <input
-                            type="checkbox"
-                            checked={localFilters.categories.includes('electronics')}
-                            onChange={() => toggleArrayFilter('categories', 'electronics')}
-                          />
-                          <span className="category-name">Electronics</span>
-                          <span className="products-count">(15)</span>
-                        </label>
-                      </li>
-                    )}
-                  </ul>
-                )}
-              </div>
-            </div>
-          </div>
+          <div className="sidebar-content">
+            {/* Categories filter */}
+            <CategoriesSection
+              categories={categories}
+              selectedCategories={selectedCategories}
+              onCategoriesChange={onCategoriesChange}
+              collapsed={collapsed.categories}
+              onToggleCollapse={toggleCategoriesCollapse}
+            />
 
-          {/* Brands Widget */}
-          <div className="widget">
-            <h3 className="widget-title">
-              <button
-                className="collapse-toggle"
-                onClick={() => toggleSection('brands')}
-                type="button"
-              >
-                Brands
-                <i className={`fas fa-chevron-${collapsedSections.brands ? 'down' : 'up'} ms-2`}></i>
-              </button>
-              {localFilters.brands.length > 0 && (
-                <button
-                  type="button"
-                  className="clear-section"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    updateFilters({ ...localFilters, brands: [] }, true)
-                  }}
-                >
-                  Clear
-                </button>
-              )}
-            </h3>
-            <div className={`widget-collapse ${collapsedSections.brands ? 'collapsed' : 'expanded'}`}>
-              <div className="widget-body">
-                {loading ? (
-                  <div className="brand-skeleton">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <div key={index} className="skeleton-line mb-2"></div>
-                    ))}
-                  </div>
-                ) : (
-                  <ul className="cat-list">
-                    {brands && brands.length > 0 ? (
-                      brands.map((brand) => (
-                        <li key={brand.id || brand.name}>
-                          <label className="category-item">
-                            <input
-                              type="checkbox"
-                              checked={localFilters.brands.includes(String(brand.id || brand.name))}
-                              onChange={() => toggleArrayFilter('brands', String(brand.id || brand.name))}
-                            />
-                            <span className="category-name">{brand.store_name || brand.name}</span>
-                            {brand.product_count && (
-                              <span className="products-count">({brand.product_count})</span>
-                            )}
-                          </label>
-                        </li>
-                      ))
-                    ) : (
-                      <div className="text-muted small py-2">
-                        No brands available
-                      </div>
-                    )}
-                  </ul>
-                )}
-              </div>
-            </div>
-          </div>
+            {/* Brands filter */}
+            <BrandsSection
+              brands={brands}
+              selectedBrands={selectedBrands}
+              onBrandsChange={onBrandsChange}
+              collapsed={collapsed.brands}
+              onToggleCollapse={toggleBrandsCollapse}
+            />
 
-          {/* Price Widget */}
-          <div className="widget">
-            <h3 className="widget-title">
-              <button
-                className="collapse-toggle"
-                onClick={() => toggleSection('price')}
-                type="button"
-              >
-                Price {isPriceUpdating && <span className="price-updating">⏳</span>}
-                <i className={`fas fa-chevron-${collapsedSections.price ? 'down' : 'up'} ms-2`}></i>
-              </button>
-              {(localFilters.priceRange[0] > priceRange.min || localFilters.priceRange[1] < priceRange.max) && (
-                <button
-                  type="button"
-                  className="clear-section"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    updateFilters({ ...localFilters, priceRange: [priceRange.min, priceRange.max] }, true)
-                  }}
-                >
-                  Clear
-                </button>
-              )}
-            </h3>
-            <div className={`widget-collapse ${collapsedSections.price ? 'collapsed' : 'expanded'}`}>
-              <div className="widget-body pb-0">
-                <div className="price-filter">
-                  {/* Price Range Display */}
-                  <div className="price-range-display mb-3">
-                    <div className="d-flex justify-content-between align-items-center">
-                      <div className="price-input-wrapper">
-                        <label className="price-label">Min</label>
-                        <input
-                          type="number"
-                          className="form-control form-control-sm price-input"
-                          value={localFilters.priceRange[0]}
-                          min={priceRange.min}
-                          max={localFilters.priceRange[1]}
-                          onChange={(e) => {
-                            const value = Math.max(priceRange.min, Math.min(parseInt(e.target.value) || priceRange.min, localFilters.priceRange[1]))
-                            handlePriceInputChange(0, value)
-                          }}
-                        />
-                      </div>
-                      <div className="price-separator">-</div>
-                      <div className="price-input-wrapper">
-                        <label className="price-label">Max</label>
-                        <input
-                          type="number"
-                          className="form-control form-control-sm price-input"
-                          value={localFilters.priceRange[1]}
-                          min={localFilters.priceRange[0]}
-                          max={priceRange.max}
-                          onChange={(e) => {
-                            const value = Math.min(priceRange.max, Math.max(parseInt(e.target.value) || priceRange.max, localFilters.priceRange[0]))
-                            handlePriceInputChange(1, value)
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* Range Slider */}
-                  <div className="price-range-slider mb-3">
-                    {priceRange.min < priceRange.max && (
-                      <Range
-                        step={1}
-                        min={priceRange.min}
-                        max={priceRange.max}
-                        values={[
-                          Math.max(priceRange.min, Math.min(localFilters.priceRange[0], priceRange.max)),
-                          Math.min(priceRange.max, Math.max(localFilters.priceRange[1], priceRange.min))
-                        ]}
-                      onChange={handlePriceRangeChange}
-                      renderTrack={({ props, children }) => {
-                        const { key, jsx, ...trackProps } = props
-                        return (
-                          <div
-                            {...trackProps}
-                            key={key}
-                            className="range-track"
-                            style={{
-                              ...trackProps.style,
-                              height: '8px',
-                              width: '100%',
-                              backgroundColor: '#e9ecef',
-                              borderRadius: '4px',
-                              position: 'relative'
-                            }}
-                          >
-                            {children}
-                          </div>
-                        )
-                      }}
-                      renderThumb={({ props, index }) => {
-                        const { key, jsx, ...thumbProps } = props
-                        return (
-                          <div
-                            {...thumbProps}
-                            key={key}
-                            className="range-thumb"
-                            style={{
-                              ...thumbProps.style,
-                              height: '24px',
-                              width: '24px',
-                              backgroundColor: '#08C',
-                              borderRadius: '50%',
-                              border: '3px solid white',
-                              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-                              outline: 'none',
-                              cursor: 'pointer'
-                            }}
-                          >
-                            <div className="range-thumb-label">
-                              ${localFilters.priceRange[index]}
-                            </div>
-                          </div>
-                        )
-                      }}
-                    />
-                    )}
-                  </div>
-                  
-                  {/* Quick price ranges */}
-                  <div className="price-ranges">
-                    <div className="small mb-2 text-muted">Quick ranges:</div>
-                    <div className="d-flex flex-wrap gap-1">
-                      {[
-                        { label: 'Under $25', range: [priceRange.min, 25] },
-                        { label: '$25-$50', range: [25, 50] },
-                        { label: '$50-$100', range: [50, 100] },
-                        { label: '$100+', range: [100, priceRange.max] },
-                      ].map((rangeOption, index) => (
-                        <button
-                          key={index}
-                          className={`btn btn-sm ${
-                            localFilters.priceRange[0] === rangeOption.range[0] && 
-                            localFilters.priceRange[1] === rangeOption.range[1]
-                              ? 'btn-primary' 
-                              : 'btn-outline-secondary'
-                          }`}
-                          onClick={() => updateFilters({
-                            ...localFilters,
-                            priceRange: rangeOption.range
-                          }, false)}
-                        >
-                          {rangeOption.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+            {/* Price filter with Range slider */}
+            <PriceSection
+              priceRange={priceRange}
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              onPriceChange={onPriceChange}
+              collapsed={collapsed.price}
+              onToggleCollapse={togglePriceCollapse}
+            />
 
-          {/* Recently Viewed Widget */}
-          <div className="widget widget-recently-viewed">
-            <h3 className="widget-title">Recently Viewed</h3>
-            <div className="widget-body">
-              <div className="recently-viewed-products">
-                <div className="text-center text-muted py-3">
-                  <small>Recently viewed products will appear here</small>
-                </div>
-              </div>
-            </div>
-          </div>
+            {/* Clear filters section - moved to bottom as requested */}
+            <ClearFiltersSection 
+              onClearAll={onClearAll}
+              hasActiveFilters={hasActiveFilters}
+            />
 
-          {/* Featured Products Widget */}
-          <div className="widget widget-featured">
-            <h3 className="widget-title">Featured</h3>
-            <div className="widget-body">
-              <div className="featured-products">
-                <div className="text-center text-muted py-3">
-                  <small>Featured products will appear here</small>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Custom HTML Block */}
-          <div className="widget widget-block">
-            <h3 className="widget-title">Special Offers</h3>
-            <h5>Get the best deals!</h5>
-            <p>
-              Subscribe to our newsletter and get exclusive offers and discounts delivered to your inbox.
-            </p>
-            <button 
-              className="btn btn-primary btn-sm" 
-              onClick={(e) => {
-                e.preventDefault()
-                // Add subscribe functionality here if needed
-              }}
-            >
-              Subscribe Now
-            </button>
+            {/* Static sections that never change */}
+            <StaticSections />
           </div>
         </div>
       </aside>
-
-      <style>{`
-        .widget-title {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .widget-title .clear-section {
-          font-size: 12px;
-          color: #666;
-          cursor: pointer;
-          text-decoration: none;
-        }
-
-        .widget-title .clear-section:hover {
-          color: #08C;
-        }
-
-        .price-updating {
-          font-size: 12px;
-          margin-left: 5px;
-        }
-
-        .category-item {
-          display: flex;
-          align-items: center;
-          width: 100%;
-          padding: 8px 0;
-          cursor: pointer;
-          border: none;
-          background: none;
-          text-align: left;
-        }
-
-        .category-item input[type="checkbox"] {
-          margin-right: 8px;
-        }
-
-        .category-name {
-          flex: 1;
-          font-size: 14px;
-        }
-
-        .products-count {
-          font-size: 12px;
-          color: #666;
-        }
-
-        .price-range-display {
-          margin-bottom: 1rem;
-        }
-
-        .price-input-wrapper {
-          display: flex;
-          flex-direction: column;
-          width: 80px;
-        }
-
-        .price-label {
-          font-size: 12px;
-          color: #666;
-          margin-bottom: 4px;
-          font-weight: 500;
-        }
-
-        .price-input {
-          font-size: 13px;
-          padding: 0.375rem 0.5rem;
-          text-align: center;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-        }
-
-        .price-input:focus {
-          border-color: #08C;
-          box-shadow: 0 0 0 0.2rem rgba(8, 140, 204, 0.25);
-        }
-
-        .price-separator {
-          align-self: flex-end;
-          margin: 0 10px 8px 10px;
-          color: #666;
-          font-weight: 500;
-        }
-
-        .price-range-slider {
-          padding: 20px 10px 10px 10px;
-          position: relative;
-        }
-
-        .range-thumb {
-          position: relative;
-        }
-
-        .range-thumb-label {
-          position: absolute;
-          top: -30px;
-          left: 50%;
-          transform: translateX(-50%);
-          background: #333;
-          color: white;
-          padding: 2px 6px;
-          border-radius: 3px;
-          font-size: 11px;
-          white-space: nowrap;
-          opacity: 0;
-          transition: opacity 0.2s;
-          pointer-events: none;
-        }
-
-        .range-thumb:hover .range-thumb-label {
-          opacity: 1;
-        }
-
-        .range-thumb-label::after {
-          content: '';
-          position: absolute;
-          top: 100%;
-          left: 50%;
-          transform: translateX(-50%);
-          border: 4px solid transparent;
-          border-top-color: #333;
-        }
-
-        .range-track {
-          background: linear-gradient(to right, 
-            #e9ecef 0%, 
-            #e9ecef ${((localFilters.priceRange[0] - priceRange.min) / (priceRange.max - priceRange.min)) * 100}%, 
-            #08C ${((localFilters.priceRange[0] - priceRange.min) / (priceRange.max - priceRange.min)) * 100}%, 
-            #08C ${((localFilters.priceRange[1] - priceRange.min) / (priceRange.max - priceRange.min)) * 100}%, 
-            #e9ecef ${((localFilters.priceRange[1] - priceRange.min) / (priceRange.max - priceRange.min)) * 100}%, 
-            #e9ecef 100%) !important;
-          border-radius: 4px;
-          box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .price-ranges .btn-sm {
-          font-size: 11px;
-          padding: 0.25rem 0.5rem;
-        }
-
-        .skeleton-line {
-          height: 20px;
-          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-          background-size: 200% 100%;
-          animation: skeleton-loading 1.5s infinite;
-          border-radius: 4px;
-        }
-
-        @keyframes skeleton-loading {
-          0% {
-            background-position: 200% 0;
-          }
-          100% {
-            background-position: -200% 0;
-          }
-        }
-
-        .widget-title a {
-          text-decoration: none;
-          color: inherit;
-        }
-
-        .cat-list {
-          list-style: none;
-          padding: 0;
-        }
-
-        .cat-list li {
-          border-bottom: 1px solid #eee;
-          padding: 8px 0;
-        }
-
-        .cat-list li:last-child {
-          border-bottom: none;
-        }
-
-        @media (max-width: 991px) {
-          .mobile-sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 300px;
-            height: 100vh;
-            background: white;
-            z-index: 1050;
-            transition: left 0.3s ease;
-            overflow-y: auto;
-          }
-
-          .mobile-sidebar.show {
-            left: 0;
-          }
-
-          .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1040;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-          }
-
-          .sidebar-overlay.show {
-            opacity: 1;
-            visibility: visible;
-          }
-
-          .price-input-wrapper {
-            width: 70px;
-          }
-
-          .price-input {
-            font-size: 12px;
-            padding: 0.25rem 0.375rem;
-          }
-
-          .price-separator {
-            margin: 0 8px 8px 8px;
-          }
-
-          /* Button styles to replace anchor tags */
-          .collapse-toggle {
-            background: none;
-            border: none;
-            padding: 0;
-            font: inherit;
-            cursor: pointer;
-            color: inherit;
-            text-decoration: none;
-          }
-
-          .collapse-toggle:hover {
-            color: inherit;
-          }
-
-          .breadcrumb-link {
-            background: none;
-            border: none;
-            padding: 0;
-            font: inherit;
-            cursor: pointer;
-            color: inherit;
-            text-decoration: none;
-          }
-
-          .breadcrumb-link:hover {
-            color: inherit;
-          }
-
-          .layout-btn {
-            background: none;
-            border: none;
-            padding: 0.5rem;
-            cursor: pointer;
-            color: inherit;
-            text-decoration: none;
-          }
-
-          .layout-btn:hover {
-            background-color: rgba(0, 0, 0, 0.1);
-          }
-
-          .layout-btn.active {
-            background-color: rgba(0, 0, 0, 0.2);
-          }
-
-          /* Custom collapse functionality */
-          .widget-collapse {
-            transition: all 0.3s ease;
-          }
-
-          .widget-collapse.expanded {
-            max-height: none;
-            opacity: 1;
-          }
-
-          .widget-collapse.collapsed {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-          }
-
-          .clear-section {
-            background: none;
-            border: none;
-            padding: 0;
-            font: inherit;
-            cursor: pointer;
-            color: #666;
-            text-decoration: none;
-            font-size: 12px;
-          }
-
-          .clear-section:hover {
-            color: #08C;
-          }
-
-          .range-thumb-label {
-            font-size: 10px;
-            top: -25px;
-          }
-        }
-      `}</style>
     </>
   )
-}, sidebarPropsAreEqual)
+}, (prevProps, nextProps) => {
+  // Custom comparison function for optimal re-rendering
+  const keysToCompare = [
+    'loading', 'className', 'isOpen',
+    'minPrice', 'maxPrice'
+  ]
+  
+  // Check primitive props
+  for (const key of keysToCompare) {
+    if (prevProps[key] !== nextProps[key]) {
+      console.log(`📋 Sidebar memo: ${key} changed`)
+      return false
+    }
+  }
+  
+  // Check priceRange object
+  if (
+    prevProps.priceRange?.min !== nextProps.priceRange?.min ||
+    prevProps.priceRange?.max !== nextProps.priceRange?.max
+  ) {
+    console.log('📋 Sidebar memo: priceRange changed')
+    return false
+  }
+  
+  // Check arrays (using length + content comparison for performance)
+  const arrayProps = ['categories', 'brands', 'selectedCategories', 'selectedBrands']
+  for (const prop of arrayProps) {
+    const prevArray = prevProps[prop] || []
+    const nextArray = nextProps[prop] || []
+    
+    if (prevArray.length !== nextArray.length) {
+      console.log(`📋 Sidebar memo: ${prop} length changed`)
+      return false
+    }
+    
+    // For small arrays, do content comparison
+    if (prevArray.length < 100 && JSON.stringify(prevArray) !== JSON.stringify(nextArray)) {
+      console.log(`📋 Sidebar memo: ${prop} content changed`)
+      return false
+    }
+  }
+  
+  console.log('📋 Sidebar memo: Props equal, skipping render')
+  return true
+})
 
-export default Sidebar
+// Sidebar styles component - Dynamic height matching products grid
+const SidebarStyles = () => (
+  <style>{`
+    /* Dynamic sidebar height that matches the products grid section */
+    .sidebar-sticky {
+      position: sticky;
+      top: 20px;
+      /* Use container-relative sizing to match grid height */
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      
+      /* Advanced: Use CSS containment for better performance */
+      contain: layout style;
+    }
+
+    /* Container grid setup for dynamic height matching */
+    .shop-grid-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 30px;
+      align-items: start;
+      min-height: 600px; /* Minimum height to ensure proper sticky behavior */
+    }
+
+    .shop-grid-container .sidebar-column {
+      position: sticky;
+      top: 20px;
+      /* Match the height of the adjacent products column */
+      max-height: calc(100vh - 40px);
+      overflow: visible; /* Let the sidebar-sticky handle overflow */
+    }
+
+    .shop-grid-container .products-column {
+      min-height: 600px; /* Ensure minimum height for proper grid behavior */
+    }
+
+    /* Use CSS Grid minmax to ensure sidebar matches content height */
+    @supports (display: grid) {
+      .shop-grid-container {
+        grid-template-rows: 1fr;
+        grid-template-columns: minmax(280px, 300px) 1fr;
+      }
+      
+      .sidebar-sticky {
+        /* When grid is supported, use dynamic height calculation */
+        max-height: calc(100vh - 40px);
+        /* Use container height for better matching */
+        height: fit-content;
+      }
+    }
+
+    /* Enhanced grid layout for better alignment */
+    @media (min-width: 992px) {
+      .shop-grid-container {
+        grid-gap: 40px;
+        grid-template-columns: 300px 1fr;
+      }
+      
+      .products-column {
+        /* Ensure products column takes full remaining width */
+        width: 100%;
+        min-width: 0; /* Allow content to shrink if needed */
+      }
+    }
+
+    /* Alternative approach: Use CSS custom properties for dynamic height */
+    .products-grid-section {
+      /* Register the height as a CSS custom property */
+      --grid-height: auto;
+    }
+
+    .sidebar-sticky-dynamic {
+      position: sticky;
+      top: 20px;
+      /* Use the grid section height */
+      max-height: var(--grid-height, calc(100vh - 40px));
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* Responsive behavior for smaller screens */
+    @media (max-width: 991px) {
+      .shop-grid-container {
+        display: none !important; /* Hide grid on mobile */
+      }
+      
+      .sidebar-sticky,
+      .sidebar-sticky-dynamic {
+        position: static;
+        max-height: none;
+        overflow-y: visible;
+      }
+    }
+
+    /* Show grid only on desktop */
+    @media (min-width: 992px) {
+      .shop-grid-container.d-none.d-lg-grid {
+        display: grid !important;
+      }
+      
+      /* Hide the fallback row on desktop */
+      .row.d-lg-none {
+        display: none !important;
+      }
+    }
+
+    /* Enhanced scroll behavior for better UX */
+    .sidebar-sticky,
+    .sidebar-sticky-dynamic {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #c1c1c1 #f1f1f1;
+    }
+
+    .sidebar-content {
+      padding: 0;
+      /* Ensure content fits within dynamic height */
+      height: fit-content;
+    }
+
+    /* Ultra compact widget styling */
+    .widget {
+      margin-bottom: 8px;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      overflow: hidden;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      transition: box-shadow 0.2s ease;
+    }
+
+    .widget:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .widget-title {
+      margin: 0;
+      padding: 8px 12px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-bottom: 1px solid #e9ecef;
+      font-size: 13px;
+      position: relative;
+    }
+
+    .widget-title a {
+      color: #333;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .widget-title a:hover {
+      color: #007bff;
+    }
+
+    .widget-title a:after {
+      content: '▼';
+      font-size: 10px;
+      color: #666;
+      transition: transform 0.2s ease;
+    }
+
+    .widget-title a.collapsed:after {
+      transform: rotate(-90deg);
+    }
+
+    .widget-body {
+      padding: 8px 12px;
+    }
+
+    .widget-body.collapse {
+      display: none;
+    }
+
+    /* Compact checkbox styling */
+    .custom-checkbox {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      cursor: pointer;
+      padding: 3px 0;
+      border-bottom: 1px solid #f8f9fa;
+      font-size: 12px;
+      transition: background-color 0.15s ease;
+    }
+
+    .custom-checkbox:last-child {
+      border-bottom: none;
+    }
+
+    .custom-checkbox:hover {
+      background: #f8f9fa;
+      margin: 0 -6px;
+      padding-left: 6px;
+      padding-right: 6px;
+      border-radius: 4px;
+    }
+
+    .custom-checkbox input[type="checkbox"] {
+      margin-right: 6px;
+      transform: scale(0.9);
+    }
+
+    .category-name {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .products-count {
+      font-size: 10px;
+      color: #666;
+      background: #f1f3f4;
+      padding: 1px 4px;
+      border-radius: 8px;
+      font-weight: 500;
+      min-width: 18px;
+      text-align: center;
+    }
+
+    /* Compact price range styling */
+    .price-input-wrapper {
+      width: 65px;
+    }
+
+    .price-label {
+      font-size: 10px;
+      color: #666;
+      margin-bottom: 2px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .price-input {
+      font-size: 11px;
+      text-align: center;
+      font-weight: 500;
+      border: 1px solid #e9ecef;
+      border-radius: 4px;
+      transition: border-color 0.3s ease;
+      padding: 3px 4px;
+      height: 28px;
+    }
+
+    .price-input:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+    }
+
+    .price-separator {
+      align-self: center;
+      margin: 0 6px;
+      color: #666;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    /* Ultra compact range slider */
+    .price-slider-container {
+      padding: 8px 3px;
+      margin: 8px 0;
+    }
+
+    .price-slider-track {
+      height: 4px;
+      width: 100%;
+      background: #e9ecef;
+      border-radius: 2px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .price-slider-track:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+      border-radius: 2px;
+      z-index: 1;
+    }
+
+    .price-slider-thumb {
+      height: 14px;
+      width: 14px;
+      background: #007bff;
+      border: 2px solid white;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+      z-index: 2;
+      position: relative;
+    }
+
+    .price-slider-thumb:hover,
+    .price-slider-thumb.dragged {
+      background: #0056b3;
+      transform: scale(1.15);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .price-slider-thumb:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    }
+
+    .price-display {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #333;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #dee2e6;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Ultra compact clear filters section */
+    .clear-filters-widget {
+      border-top: 2px solid #e9ecef;
+      margin-top: 12px;
+      padding-top: 12px;
+      background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    }
+
+    .clear-filters-btn {
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: 2px solid #dc3545;
+      background: transparent;
+      color: #dc3545;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 6px;
+    }
+
+    .clear-filters-btn:hover {
+      background: #dc3545;
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2);
+    }
+
+    .clear-filters-help {
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .clear-filters-help small {
+      font-size: 10px;
+      color: #6c757d;
+    }
+
+    /* Loading placeholder compact */
+    .loading-placeholder {
+      padding: 10px;
+    }
+
+    .skeleton-widget {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      height: 60px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    /* Compact static sections */
+    .widget-recently-viewed,
+    .widget-featured,
+    .widget-block {
+      margin-bottom: 8px;
+    }
+
+    .widget-block h5 {
+      font-size: 13px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .widget-block p {
+      font-size: 11px;
+      line-height: 1.3;
+      margin-bottom: 8px;
+      color: #666;
+    }
+
+    .widget-block .btn {
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    /* Better scrollbar for the sticky sidebar */
+    .sidebar-sticky::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar-sticky::-webkit-scrollbar-track {
+      background: #f8f9fa;
+      border-radius: 3px;
+    }
+
+    .sidebar-sticky::-webkit-scrollbar-thumb {
+      background: #dee2e6;
+      border-radius: 3px;
+      transition: background 0.2s ease;
+    }
+
+    .sidebar-sticky::-webkit-scrollbar-thumb:hover {
+      background: #adb5bd;
+    }
+
+    /* Firefox scrollbar */
+    .sidebar-sticky {
+      scrollbar-width: thin;
+      scrollbar-color: #dee2e6 #f8f9fa;
+    }
+
+    /* Mobile responsive adjustments */
+    @media (max-width: 991px) {
+      .sidebar-sticky {
+        position: static;
+        top: 0;
+        max-height: none;
+        overflow-y: visible;
+      }
+
+      .widget-title {
+        padding: 10px 15px;
+      }
+
+      .widget-body {
+        padding: 10px 15px;
+      }
+
+      .custom-checkbox {
+        padding: 6px 0;
+        font-size: 13px;
+      }
+
+      .price-input-wrapper {
+        width: 70px;
+      }
+
+      .price-input {
+        font-size: 12px;
+        height: 32px;
+      }
+    }
+
+    /* Ensure sidebar doesn't interfere with main content */
+    @media (min-width: 992px) {
+      .sidebar-shop {
+        position: static;
+        width: 100%;
+        height: auto;
+        z-index: auto;
+      }
+      
+      .sidebar-overlay {
+        display: none;
+      }
+    }
+  `}</style>
+)
+
+// Enhanced Sidebar with styling
+const SidebarWithStyles = (props) => (
+  <>
+    <SidebarStyles />
+    <Sidebar {...props} />
+  </>
+)
+
+export default SidebarWithStyles

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useProducts } from '../hooks/useProducts'
 import { useCategories } from '../hooks/useCategories'
 import { useVendors } from '../hooks/useVendors'
-import SimpleOptimizedSidebar from '../components/Shop/SimpleOptimizedSidebar'
+import Sidebar from '../components/Shop/Sidebar'
 import ProductGridSection from '../components/Shop/ProductGridSection'
 import ShopHeader from '../components/Shop/ShopHeader'
 import ActiveFilters from '../components/Shop/ActiveFilters'
@@ -294,11 +294,31 @@ function ShopPageContent() {
       <ShopHeader />
       
       <div className="container">
-        <div className="row">
+        {/* Enhanced grid layout for dynamic sidebar height */}
+        <div className="shop-grid-container d-none d-lg-grid">
+          {/* Sidebar column with dynamic height */}
+          <div className="sidebar-column">
+            <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
+              <Sidebar {...sidebarProps} />
+            </DebugErrorBoundary>
+          </div>
+          
+          {/* Products column */}
+          <div className="products-column">
+            {/* Active Filters Display - only re-renders when filters change */}
+            <ActiveFilters {...activeFiltersProps} />
+
+            {/* Product Grid Section - only re-renders when products change */}
+            <ProductGridSection {...productGridProps} />
+          </div>
+        </div>
+
+        {/* Fallback Bootstrap grid for mobile and older browsers */}
+        <div className="row d-lg-none">
           {/* Sidebar - left side on desktop, first on mobile */}
           <div className="col-lg-3">
             <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
-              <SimpleOptimizedSidebar {...sidebarProps} />
+              <Sidebar {...sidebarProps} />
             </DebugErrorBoundary>
           </div>
           
