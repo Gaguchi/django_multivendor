@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useState, useRef, useMemo, useEffect } from 'react'
 import { Range } from 'react-range'
+import StickyBox from 'react-sticky-box'
 
 // Individual filter sections - each memoized independently
 const CategoriesSection = memo(function CategoriesSection({ 
@@ -161,7 +162,7 @@ const PriceSection = memo(function PriceSection({
   const debounceRef = useRef(null)
 
   // Update local state when props change
-  React.useEffect(() => {
+  useEffect(() => {
     setValues([minPrice, maxPrice])
   }, [minPrice, maxPrice])
 
@@ -406,8 +407,7 @@ const Sidebar = memo(function Sidebar({
     price: false
   })
 
-  // Simple CSS-only sticky behavior - no JavaScript needed
-  // The sticky behavior is now handled entirely by CSS
+  // StickyBox handles all sticky behavior - no JavaScript needed
 
   // Handle section collapse
   const toggleCollapse = useCallback((section) => {
@@ -462,15 +462,16 @@ const Sidebar = memo(function Sidebar({
         onClick={onClose}
       />
       <aside className={sidebarClasses}>
-        <div className="sidebar-wrapper sidebar-sticky" ref={sidebarRef}>
-          {/* Mobile close button */}
-          {isOpen && (
-            <button className="sidebar-close" onClick={onClose}>
-              <i className="fas fa-times"></i>
-            </button>
-          )}
+        {/* Mobile close button */}
+        {isOpen && (
+          <button className="sidebar-close" onClick={onClose}>
+            <i className="fas fa-times"></i>
+          </button>
+        )}
 
-          <div className="sidebar-content">
+        {/* StickyBox provides intelligent sticky behavior */}
+        <StickyBox offsetTop={20} offsetBottom={20}>
+          <div className="sidebar-content" ref={sidebarRef}>
             {/* Categories filter */}
             <CategoriesSection
               categories={categories}
@@ -508,7 +509,7 @@ const Sidebar = memo(function Sidebar({
             {/* Static sections that never change */}
             <StaticSections />
           </div>
-        </div>
+        </StickyBox>
       </aside>
     </>
   )
@@ -558,56 +559,30 @@ const Sidebar = memo(function Sidebar({
   return true
 })
 
-// Sidebar styles component - Dynamic height matching products grid
+// Sidebar styles component - Optimized for react-sticky-box
 const SidebarStyles = () => (
   <style>{`
-    /* Dynamic sidebar height that matches the products grid section */
-    .sidebar-sticky {
-      position: sticky;
-      top: 20px;
-      /* Use container-relative sizing to match grid height */
-      max-height: calc(100vh - 120px);
-      overflow-y: auto;
-      overflow-x: hidden;
-      
-      /* Advanced: Use CSS containment for better performance */
-      contain: layout style;
+    /* StickyBox handles sticky behavior - no CSS sticky needed */
+    .sidebar-content {
+      padding: 0;
+      /* Let StickyBox handle all positioning */
     }
 
-    /* Container grid setup for dynamic height matching */
+    /* Container grid setup for better layout */
     .shop-grid-container {
       display: grid;
       grid-template-columns: 280px 1fr;
       gap: 30px;
       align-items: start;
-      min-height: 600px; /* Minimum height to ensure proper sticky behavior */
+      min-height: 600px;
     }
 
     .shop-grid-container .sidebar-column {
-      position: sticky;
-      top: 20px;
-      /* Match the height of the adjacent products column */
-      max-height: calc(100vh - 40px);
-      overflow: visible; /* Let the sidebar-sticky handle overflow */
+      /* No sticky positioning needed - StickyBox handles it */
     }
 
     .shop-grid-container .products-column {
-      min-height: 600px; /* Ensure minimum height for proper grid behavior */
-    }
-
-    /* Use CSS Grid minmax to ensure sidebar matches content height */
-    @supports (display: grid) {
-      .shop-grid-container {
-        grid-template-rows: 1fr;
-        grid-template-columns: minmax(280px, 300px) 1fr;
-      }
-      
-      .sidebar-sticky {
-        /* When grid is supported, use dynamic height calculation */
-        max-height: calc(100vh - 40px);
-        /* Use container height for better matching */
-        height: fit-content;
-      }
+      min-height: 600px;
     }
 
     /* Enhanced grid layout for better alignment */
@@ -618,38 +593,15 @@ const SidebarStyles = () => (
       }
       
       .products-column {
-        /* Ensure products column takes full remaining width */
         width: 100%;
-        min-width: 0; /* Allow content to shrink if needed */
+        min-width: 0;
       }
-    }
-
-    /* Alternative approach: Use CSS custom properties for dynamic height */
-    .products-grid-section {
-      /* Register the height as a CSS custom property */
-      --grid-height: auto;
-    }
-
-    .sidebar-sticky-dynamic {
-      position: sticky;
-      top: 20px;
-      /* Use the grid section height */
-      max-height: var(--grid-height, calc(100vh - 40px));
-      overflow-y: auto;
-      overflow-x: hidden;
     }
 
     /* Responsive behavior for smaller screens */
     @media (max-width: 991px) {
       .shop-grid-container {
-        display: none !important; /* Hide grid on mobile */
-      }
-      
-      .sidebar-sticky,
-      .sidebar-sticky-dynamic {
-        position: static;
-        max-height: none;
-        overflow-y: visible;
+        display: none !important;
       }
     }
 
@@ -659,24 +611,9 @@ const SidebarStyles = () => (
         display: grid !important;
       }
       
-      /* Hide the fallback row on desktop */
       .row.d-lg-none {
         display: none !important;
       }
-    }
-
-    /* Enhanced scroll behavior for better UX */
-    .sidebar-sticky,
-    .sidebar-sticky-dynamic {
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      scrollbar-color: #c1c1c1 #f1f1f1;
-    }
-
-    .sidebar-content {
-      padding: 0;
-      /* Ensure content fits within dynamic height */
-      height: fit-content;
     }
 
     /* Ultra compact widget styling */
@@ -970,40 +907,34 @@ const SidebarStyles = () => (
       border-radius: 4px;
     }
 
-    /* Better scrollbar for the sticky sidebar */
-    .sidebar-sticky::-webkit-scrollbar {
+    /* Better scrollbar for the sidebar content */
+    .sidebar-content::-webkit-scrollbar {
       width: 6px;
     }
 
-    .sidebar-sticky::-webkit-scrollbar-track {
+    .sidebar-content::-webkit-scrollbar-track {
       background: #f8f9fa;
       border-radius: 3px;
     }
 
-    .sidebar-sticky::-webkit-scrollbar-thumb {
+    .sidebar-content::-webkit-scrollbar-thumb {
       background: #dee2e6;
       border-radius: 3px;
       transition: background 0.2s ease;
     }
 
-    .sidebar-sticky::-webkit-scrollbar-thumb:hover {
+    .sidebar-content::-webkit-scrollbar-thumb:hover {
       background: #adb5bd;
     }
 
     /* Firefox scrollbar */
-    .sidebar-sticky {
+    .sidebar-content {
       scrollbar-width: thin;
       scrollbar-color: #dee2e6 #f8f9fa;
     }
 
     /* Mobile responsive adjustments */
     @media (max-width: 991px) {
-      .sidebar-sticky {
-        position: static;
-        top: 0;
-        max-height: none;
-        overflow-y: visible;
-      }
 
       .widget-title {
         padding: 10px 15px;

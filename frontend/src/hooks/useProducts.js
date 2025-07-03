@@ -1,4 +1,3 @@
-import React from 'react'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import api from '../services/api'
