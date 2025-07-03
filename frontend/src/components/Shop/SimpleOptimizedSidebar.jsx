@@ -1,4 +1,5 @@
 import React, { memo, useCallback, useState, useRef, useMemo } from 'react'
+import { Range } from 'react-range'
 
 // Individual filter sections - each memoized independently
 const CategoriesSection = memo(function CategoriesSection({ 
@@ -156,41 +157,48 @@ const PriceSection = memo(function PriceSection({
     note: 'Should only render when price range changes'
   })
 
-  const [localMin, setLocalMin] = useState(minPrice)
-  const [localMax, setLocalMax] = useState(maxPrice)
+  const [values, setValues] = useState([minPrice, maxPrice])
   const debounceRef = useRef(null)
 
   // Update local state when props change
   React.useEffect(() => {
-    setLocalMin(minPrice)
-    setLocalMax(maxPrice)
+    setValues([minPrice, maxPrice])
   }, [minPrice, maxPrice])
 
-  const handleMinChange = useCallback((e) => {
-    const value = parseInt(e.target.value)
-    setLocalMin(value)
+  const handleRangeChange = useCallback((newValues) => {
+    setValues(newValues)
     
-    // Debounce the actual price change
+    // Debounce the actual price change to prevent excessive API calls
     if (debounceRef.current) {
       clearTimeout(debounceRef.current)
     }
     debounceRef.current = setTimeout(() => {
-      onPriceChange(value, localMax)
-    }, 300)
-  }, [localMax, onPriceChange])
+      onPriceChange(newValues[0], newValues[1])
+    }, 500)
+  }, [onPriceChange])
 
-  const handleMaxChange = useCallback((e) => {
-    const value = parseInt(e.target.value)
-    setLocalMax(value)
+  const handleInputChange = useCallback((index, value) => {
+    const numValue = parseInt(value) || 0
+    const newValues = [...values]
+    
+    if (index === 0) {
+      // Min price shouldn't exceed max price
+      newValues[0] = Math.min(numValue, values[1])
+    } else {
+      // Max price shouldn't be less than min price
+      newValues[1] = Math.max(numValue, values[0])
+    }
+    
+    setValues(newValues)
     
     // Debounce the actual price change
     if (debounceRef.current) {
       clearTimeout(debounceRef.current)
     }
     debounceRef.current = setTimeout(() => {
-      onPriceChange(localMin, value)
-    }, 300)
-  }, [localMin, onPriceChange])
+      onPriceChange(newValues[0], newValues[1])
+    }, 500)
+  }, [values, onPriceChange])
 
   return (
     <div className="widget">
@@ -208,16 +216,17 @@ const PriceSection = memo(function PriceSection({
       </h3>
       <div className={`widget-body ${collapsed ? 'collapse' : ''}`}>
         <div className="price-range">
+          {/* Price inputs */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <div className="price-input-wrapper">
               <label className="price-label">Min</label>
               <input
                 type="number"
                 className="form-control form-control-sm price-input"
-                value={localMin}
+                value={values[0]}
                 min={priceRange.min}
-                max={localMax}
-                onChange={handleMinChange}
+                max={values[1]}
+                onChange={(e) => handleInputChange(0, e.target.value)}
               />
             </div>
             <div className="price-separator">-</div>
@@ -226,15 +235,42 @@ const PriceSection = memo(function PriceSection({
               <input
                 type="number"
                 className="form-control form-control-sm price-input"
-                value={localMax}
-                min={localMin}
+                value={values[1]}
+                min={values[0]}
                 max={priceRange.max}
-                onChange={handleMaxChange}
+                onChange={(e) => handleInputChange(1, e.target.value)}
               />
             </div>
           </div>
+
+          {/* Range slider */}
+          <div className="price-slider-container mb-3">
+            <Range
+              values={values}
+              step={1}
+              min={priceRange.min}
+              max={priceRange.max}
+              onChange={handleRangeChange}
+              renderTrack={({ props, children }) => (
+                <div
+                  {...props}
+                  className="price-slider-track"
+                >
+                  {children}
+                </div>
+              )}
+              renderThumb={({ props, isDragged }) => (
+                <div
+                  {...props}
+                  className={`price-slider-thumb ${isDragged ? 'dragged' : ''}`}
+                />
+              )}
+            />
+          </div>
+
+          {/* Price display */}
           <div className="price-display text-center">
-            <strong>${localMin} - ${localMax}</strong>
+            <strong>${values[0]} - ${values[1]}</strong>
           </div>
         </div>
       </div>
@@ -553,6 +589,68 @@ const SidebarStyles = () => (
       font-weight: 500;
     }
 
+    /* Range slider styles */
+    .price-slider-container {
+      padding: 10px 5px;
+      margin: 10px 0;
+    }
+
+    .price-slider-track {
+      height: 6px;
+      width: 100%;
+      background: #e0e0e0;
+      border-radius: 3px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .price-slider-track:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #007bff 0%, #0056b3 100%);
+      border-radius: 3px;
+      z-index: 1;
+    }
+
+    .price-slider-thumb {
+      height: 18px;
+      width: 18px;
+      background: #007bff;
+      border: 2px solid white;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.2s ease;
+      z-index: 2;
+      position: relative;
+    }
+
+    .price-slider-thumb:hover,
+    .price-slider-thumb.dragged {
+      background: #0056b3;
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .price-slider-thumb:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    }
+
+    .price-display {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+      background: #f8f9fa;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #e9ecef;
+    }
+
     .skeleton-widget {
       height: 60px;
       background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -639,6 +737,16 @@ const SidebarStyles = () => (
         font-size: 18px;
         cursor: pointer;
         z-index: 10;
+      }
+
+      /* Mobile adjustments for slider */
+      .price-slider-container {
+        padding: 15px 10px;
+      }
+
+      .price-slider-thumb {
+        height: 20px;
+        width: 20px;
       }
     }
   `}</style>
