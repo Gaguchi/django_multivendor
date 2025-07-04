@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import { CartProvider } from './contexts/CartContext'
 import { WishlistProvider } from './contexts/WishlistContext'
 import { OrderProvider } from './contexts/OrderContext'
+import { ReviewProvider } from './contexts/ReviewContext'
 import Layout from './components/Layout'
 import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
@@ -20,6 +21,7 @@ import OrderConfirmation from './pages/OrderConfirmation'
 import Orders from './pages/Orders'
 import OrderDetail from './pages/OrderDetail'
 import OrderTracking from './pages/OrderTracking'
+import Reviews from './pages/Reviews'
 import IsolatedStickyTest from './pages/IsolatedStickyTest'
 import CartMergeNotification from './components/Cart/CartMergeNotification'
 import { initializePage } from './utils/jQuerySimple'
@@ -54,6 +56,7 @@ function AppContent() {
         <Route path="/account" element={<Account />} />
         <Route path="/account/orders" element={<Orders />} />
         <Route path="/account/orders/:orderNumber" element={<OrderDetail />} />
+        <Route path="/account/reviews" element={<Reviews />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
@@ -72,8 +75,10 @@ function App() {
       <CartProvider>
         <WishlistProvider>
           <OrderProvider>
-            <AppContent />
-            <CartMergeNotification />
+            <ReviewProvider>
+              <AppContent />
+              <CartMergeNotification />
+            </ReviewProvider>
           </OrderProvider>
         </WishlistProvider>
       </CartProvider>

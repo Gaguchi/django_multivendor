@@ -57,9 +57,9 @@ echo.
 echo All services started!
 echo.
 echo URLs:
-echo  - Backend API: http://localhost:8000/
-echo  - Customer Frontend: http://localhost:5173/
-echo  - Vendor Dashboard: http://localhost:5174/
+echo  - Backend API: https://api.bazro.ge/ (local: http://localhost:8000/)
+echo  - Customer Frontend: https://shop.bazro.ge/ (local: http://localhost:5173/)
+echo  - Vendor Dashboard: https://seller.bazro.ge/ (local: http://localhost:5174/)
 echo  - Ollama AI Server: http://localhost:11434/
 echo  - Cloudflare Tunnel: https://shop.bazro.ge, https://api.bazro.ge, https://seller.bazro.ge
 echo.

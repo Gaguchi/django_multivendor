@@ -138,6 +138,15 @@ export default function Account() {
                                             <span className="badge">2</span>
                                         </button>
                                     </li>
+                                    <li>
+                                        <a 
+                                            href="/account/reviews"
+                                            className="menu-item"
+                                        >
+                                            <i className="icon-star"></i>
+                                            <span>My Reviews</span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
 

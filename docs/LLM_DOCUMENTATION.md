@@ -343,6 +343,13 @@ Request Flow:
 Frontend (shop.bazro.ge) → Cloudflare → api.bazro.ge → localhost:8000
 ```
 
+**Production (Recommended)**:
+
+```
+Base URL: https://api.bazro.ge
+Full endpoint: https://api.bazro.ge/api/{endpoint}
+```
+
 **Development (Local)**:
 
 ```
@@ -350,7 +357,7 @@ Base URL: http://localhost:8000
 Full endpoint: http://localhost:8000/api/{endpoint}
 ```
 
-**Important**: All frontend applications are configured to use the Cloudflare tunnel domain (`https://api.bazro.ge`) even during development. The tunnel routes traffic to the local Django server.
+**Important**: All frontend applications and tests should use the production domain (`https://api.bazro.ge`) which routes through Cloudflare to the local Django server via tunnel.
 
 ### Authentication & Headers
 
@@ -1255,15 +1262,15 @@ python manage.py showmigrations
 
 ```bash
 # List all endpoints
-curl http://localhost:8000/api/endpoints/
+curl https://api.bazro.ge/api/endpoints/
 
 # Test authentication
-curl -X POST http://localhost:8000/api/users/login/ \
+curl -X POST https://api.bazro.ge/api/users/login/ \
   -H "Content-Type: application/json" \
   -d '{"username":"user@example.com","password":"password123"}'
 
 # Test authenticated endpoint
-curl -X GET http://localhost:8000/api/users/profile/ \
+curl -X GET https://api.bazro.ge/api/users/profile/ \
   -H "Authorization: Bearer <your-token>"
 ```
 
@@ -1432,9 +1439,9 @@ cloudflared tunnel info django-multivendor
 cloudflared tunnel --config cloudflared-config.yml validate
 
 # Test local services
-curl http://localhost:8000/api/
-curl http://localhost:5173
-curl http://localhost:5174
+curl https://api.bazro.ge/api/
+curl https://shop.bazro.ge
+curl https://seller.bazro.ge
 
 # Manual tunnel start with debug
 cloudflared tunnel --config cloudflared-config.yml --loglevel debug run django-multivendor

@@ -56,7 +56,7 @@ async def test_websocket_connection():
             return False
             
         # Try to connect to WebSocket
-        uri = f"ws://localhost:8000/ws/vendor/{vendor.id}/orders/"
+        uri = f"wss://api.bazro.ge/ws/vendor/{vendor.id}/orders/"
         print(f"🔌 Attempting to connect to: {uri}")
         
         async with websockets.connect(uri) as websocket:

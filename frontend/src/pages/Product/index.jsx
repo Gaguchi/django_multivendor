@@ -5,6 +5,7 @@ import Images from './Images'
 import { useCart } from '../../contexts/CartContext'
 import { useWishlist } from '../../contexts/WishlistContext'
 import { useAuth } from '../../contexts/AuthContext'
+import ProductReviews from '../../components/reviews/ProductReviews'
 import styles from './Product.module.css'
 
 export default function Product() {
@@ -703,123 +704,7 @@ export default function Product() {
                 {/* Reviews Tab */}
                 {activeTab === 'reviews' && (
                   <div className={`${styles.tabPane} active`}>
-                    <div className="reviews-section">
-                      {/* Review Summary Card */}
-                      <div className="card border-0 shadow-sm mb-4">
-                        <div className={`card-header ${styles.bgGradientWarning} text-white`}>
-                          <h5 className="mb-0">
-                            <i className="fas fa-star me-2"></i>
-                            Customer Reviews
-                          </h5>
-                        </div>
-                        <div className="card-body p-4">
-                          <div className="row align-items-center">
-                            <div className="col-md-4">
-                              <div className="rating-summary text-center">
-                                <div className="display-3 fw-bold text-warning mb-2">
-                                  {(product.average_rating || 0).toFixed(1)}
-                                </div>
-                                <div className="stars-large mb-3">
-                                  {renderStars(product.average_rating || 0)}
-                                </div>
-                                <div className="review-count text-muted">
-                                  Based on <strong>{product.review_count || 0}</strong> reviews
-                                </div>
-                              </div>
-                            </div>
-                            <div className="col-md-8">
-                              <div className={styles.ratingBreakdown}>
-                                <h6 className="mb-3">Rating Distribution</h6>
-                                {[5, 4, 3, 2, 1].map(rating => {
-                                  const percentage = Math.random() * 80; // Placeholder
-                                  const count = Math.floor(Math.random() * 50); // Placeholder
-                                  return (
-                                    <div key={rating} className={`${styles.ratingBarItem} d-flex align-items-center mb-2`}>
-                                      <div className="rating-label me-3" style={{ width: '80px' }}>
-                                        <span className="fw-medium">{rating}</span>
-                                        <i className="fas fa-star text-warning ms-1"></i>
-                                      </div>
-                                      <div className="progress flex-grow-1 me-3" style={{ height: '12px' }}>
-                                        <div 
-                                          className={`${styles.progressBar} bg-warning`} 
-                                          style={{ width: `${percentage}%` }}
-                                        ></div>
-                                      </div>
-                                      <span className="count-text text-muted" style={{ width: '50px' }}>
-                                        ({count})
-                                      </span>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Individual Reviews */}
-                      <div className="reviews-list">
-                        {product.reviews && product.reviews.length > 0 ? (
-                          <div className="row g-4">
-                            {product.reviews.map(review => (
-                              <div key={review.id} className="col-12">
-                                <div className={`${styles.reviewCard} card border-0 shadow-sm`}>
-                                  <div className="card-body p-4">
-                                    <div className="review-header d-flex justify-content-between align-items-start mb-3">
-                                      <div className="reviewer-info">
-                                        <div className="d-flex align-items-center gap-3">
-                                          <div className="reviewer-avatar">
-                                            <div className={`${styles.avatarCircle} bg-primary text-white d-flex align-items-center justify-content-center`}>
-                                              {(review.user_name || 'A').charAt(0).toUpperCase()}
-                                            </div>
-                                          </div>
-                                          <div>
-                                            <h6 className="mb-1 fw-bold">{review.user_name || 'Anonymous'}</h6>
-                                            <div className="d-flex align-items-center gap-2">
-                                              <div className={styles.reviewStars}>
-                                                {renderStars(review.rating)}
-                                              </div>
-                                              <span className="rating-value fw-bold text-primary">
-                                                {review.rating}
-                                              </span>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                      <div className="review-date text-muted small">
-                                        <i className="fas fa-calendar-alt me-1"></i>
-                                        {new Date(review.created_at).toLocaleDateString('en-US', {
-                                          year: 'numeric',
-                                          month: 'short',
-                                          day: 'numeric'
-                                        })}
-                                      </div>
-                                    </div>
-                                    <div className="review-content">
-                                      <p className="mb-0 text-dark">{review.comment}</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className={styles.noReviews}>
-                            <div className="card border-0 bg-light text-center py-5">
-                              <div className="card-body">
-                                <i className="fas fa-comments fs-1 text-muted mb-4"></i>
-                                <h5 className="text-muted mb-3">No reviews yet</h5>
-                                <p className="text-muted mb-4">Be the first to share your experience with this product!</p>
-                                <button className="btn btn-primary btn-lg">
-                                  <i className="fas fa-edit me-2"></i>
-                                  Write First Review
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <ProductReviews productId={product.id} />
                   </div>
                 )}
 

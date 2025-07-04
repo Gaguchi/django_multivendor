@@ -26,7 +26,7 @@ API Instructions
        Authorization: Bearer <access_token>
    - Example (using cURL):
        curl -H "Authorization: Bearer <access_token>" \
-            http://127.0.0.1:8000/api/products/
+            https://api.bazro.ge/api/products/
 
 4. Protected Endpoints
    - All views using JWTAuthentication require a valid token.
