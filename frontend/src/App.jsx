@@ -20,6 +20,7 @@ import OrderConfirmation from './pages/OrderConfirmation'
 import Orders from './pages/Orders'
 import OrderDetail from './pages/OrderDetail'
 import OrderTracking from './pages/OrderTracking'
+import IsolatedStickyTest from './pages/IsolatedStickyTest'
 import CartMergeNotification from './components/Cart/CartMergeNotification'
 import { initializePage } from './utils/jQuerySimple'
 
@@ -59,6 +60,7 @@ function AppContent() {
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/track" element={<OrderTracking />} />
         <Route path="/track/:orderNumber" element={<OrderTracking />} />
+        <Route path="/isolated-sticky-test" element={<IsolatedStickyTest />} />
       </Route>
     </Routes>
   );

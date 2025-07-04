@@ -1,0 +1,160 @@
+/* 
+ * STICKY SIDEBAR CSS FIXES - WORKING SOLUTION
+ * 
+ * Based on successful isolated test, these fixes apply the same CSS overrides
+ * that made sticky positioning work in IsolatedStickyTest.jsx
+ * 
+ * Key Fix: Direct element-level overrides matching the isolated test
+ */
+
+/* CRITICAL FIX: Apply the exact same overrides that worked in isolated test */
+.sticky-content {
+  /* These are the exact CSS properties from the working isolated test */
+  transform: none !important;
+  overflow: visible !important;
+  contain: none !important;
+  
+  /* Ensure sticky positioning works */
+  position: sticky !important;
+  top: 20px !important;
+  z-index: 10 !important;
+}
+
+/* Fix #1: Override problematic overflow-x settings on html/body */
+.sticky-fix-container {
+  /* Neutralize overflow-x hidden that breaks sticky */
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+.sticky-fix-container,
+.sticky-fix-container * {
+  /* Remove transform properties that create stacking contexts */
+  transform: none !important;
+  -webkit-transform: none !important;
+  -moz-transform: none !important;
+  -ms-transform: none !important;
+  -o-transform: none !important;
+  
+  /* Remove contain property if present */
+  contain: none !important;
+  
+  /* Ensure no perspective or transform-style issues */
+  perspective: none !important;
+  transform-style: flat !important;
+  -webkit-transform-style: flat !important;
+}
+
+/* Specific fixes for owl-carousel transforms that break sticky */
+.sticky-fix-container .owl-stage-outer {
+  -webkit-transform: none !important;
+  transform: none !important;
+  overflow: visible !important;
+}
+
+.sticky-fix-container .owl-carousel .owl-item,
+.sticky-fix-container .owl-carousel .owl-wrapper {
+  -webkit-transform: none !important;
+  -moz-transform: none !important;
+  -ms-transform: none !important;
+  transform: none !important;
+  backface-visibility: visible !important;
+  -webkit-backface-visibility: visible !important;
+  -moz-backface-visibility: visible !important;
+  -ms-backface-visibility: visible !important;
+}
+
+/* For the actual sticky element */
+.sticky-sidebar {
+  position: sticky !important;
+  top: 20px !important;
+  z-index: 10 !important;
+  
+  /* Ensure the sticky element itself has no problematic properties */
+  transform: none !important;
+  contain: none !important;
+  overflow: visible !important;
+}
+
+/* Apply fixes to body and html when needed */
+body.sticky-page-fix {
+  overflow-x: visible !important;
+}
+
+html.sticky-page-fix {
+  overflow-x: visible !important;
+}
+
+/* Backup approach: Create a completely isolated sticky environment */
+.sticky-environment {
+  /* Create a clean container with no interfering properties */
+  position: relative !important;
+  overflow: visible !important;
+  transform: none !important;
+  contain: none !important;
+  isolation: auto !important;
+}
+
+.sticky-environment .sticky-content {
+  position: sticky !important;
+  top: 20px !important;
+  display: block !important;
+  z-index: 999 !important;
+  
+  /* Reset any inherited problematic styles */
+  transform: none !important;
+  overflow: visible !important;
+  contain: none !important;
+  isolation: auto !important;
+}
+
+/* Debugging styles (remove in production) */
+.sticky-debug {
+  border: 2px solid red !important;
+  background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.sticky-debug::before {
+  content: "STICKY DEBUG" !important;
+  position: absolute !important;
+  top: -20px !important;
+  left: 0 !important;
+  background: red !important;
+  color: white !important;
+  padding: 2px 6px !important;
+  font-size: 10px !important;
+  z-index: 9999 !important;
+}
+
+/* EXACT WORKING SOLUTION: Copy the exact CSS from successful isolated test */
+.isolated-sticky-fix {
+  /* These are the EXACT properties that made sticky work in IsolatedStickyTest */
+  width: 300px;
+  position: sticky !important;
+  top: 20px !important;
+  height: fit-content;
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  
+  /* Critical CSS overrides that prevent global conflicts */
+  transform: none !important;
+  overflow: visible !important;
+  contain: none !important;
+}
+
+/* Alternative: More flexible version that preserves your styling */
+.shop-sticky-sidebar {
+  position: sticky !important;
+  top: 20px !important;
+  height: fit-content !important;
+  
+  /* The three critical overrides from isolated test */
+  transform: none !important;
+  overflow: visible !important;
+  contain: none !important;
+  
+  /* Ensure z-index works */
+  z-index: 10 !important;
+}

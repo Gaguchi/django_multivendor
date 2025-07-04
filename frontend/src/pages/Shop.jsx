@@ -9,7 +9,8 @@ import ActiveFilters from '../components/Shop/ActiveFilters'
 import ReactUpdateTracker from '../components/Debug/ReactUpdateTracker'
 import RenderVisualizer from '../components/Debug/RenderVisualizer'
 import DebugErrorBoundary from '../components/Debug/DebugErrorBoundary'
-import StickyBox from 'react-sticky-box'
+import { runStickyDiagnostics } from '../utils/stickyDiagnostics'
+import '../assets/css/sticky-fixes.css' // CSS fixes for sticky positioning
 import '../sidebar-test-instructions.js' // Load test instructions
 
 function ShopPageContent() {
@@ -98,92 +99,48 @@ function ShopPageContent() {
     max: 1000 // Could be calculated from products if needed
   }), [])
 
-  // StickyBox ref for forcing recalculation
-  const stickyBoxRef = useRef(null)
-
-  // Track product count to trigger StickyBox recalculation when content changes
+  // Track product count for minimal debugging
   const [lastProductCount, setLastProductCount] = useState(0)
 
-  // Effect to handle StickyBox recalculation when products change (infinite scroll)
+  // Simple product count tracking with height logging
   useEffect(() => {
     const currentProductCount = products?.length || 0
     
     if (currentProductCount !== lastProductCount) {
       setLastProductCount(currentProductCount)
       
-      // Force StickyBox to recalculate when product grid height changes
-      if (stickyBoxRef.current && typeof stickyBoxRef.current.recalculate === 'function') {
-        setTimeout(() => {
-          stickyBoxRef.current.recalculate()
-          console.log('🔄 StickyBox recalculated for', currentProductCount, 'products')
-        }, 100)
-      }
+      // Log height information to understand the dynamic growth issue
+      setTimeout(() => {
+        const sidebarEl = document.querySelector('[style*="position: sticky"]')
+        const contentEl = document.querySelector('[style*="flex: 1"]')
+        const productGrid = document.querySelector('.uniform-product-grid')
+        
+        console.log('📦 HEIGHT ANALYSIS:', {
+          productCount: currentProductCount,
+          sidebarHeight: sidebarEl ? sidebarEl.offsetHeight + 'px' : 'N/A',
+          contentHeight: contentEl ? contentEl.offsetHeight + 'px' : 'N/A', 
+          productGridHeight: productGrid ? productGrid.offsetHeight + 'px' : 'N/A',
+          timestamp: new Date().toISOString()
+        })
+      }, 100)
     }
   }, [products?.length, lastProductCount])
 
-  // Log column heights for debugging sticky behavior
+  // Apply CSS fixes to body/html for sticky positioning
   useEffect(() => {
-    const logColumnHeights = () => {
-      if (sidebarColumnRef.current && productsColumnRef.current) {
-        const sidebarHeight = sidebarColumnRef.current.scrollHeight
-        const productsHeight = productsColumnRef.current.scrollHeight
-        console.log('� Column Heights:', {
-          sidebar: `${sidebarHeight}px`,
-          products: `${productsHeight}px`,
-          difference: `${Math.abs(sidebarHeight - productsHeight)}px`,
-          productCount: products?.length || 0,
-          note: sidebarHeight < productsHeight ? 'Sidebar shorter (perfect for sticky)' : 'Sidebar taller'
-        })
-      }
-    }
-
-    // Log heights after render and when products change
-    const timer = setTimeout(logColumnHeights, 100)
+    // Add CSS classes to overcome global CSS issues
+    document.documentElement.classList.add('sticky-page-fix')
+    document.body.classList.add('sticky-page-fix')
     
-    // Log on window resize
-    window.addEventListener('resize', logColumnHeights)
+    console.log('✅ Applied sticky CSS fixes to document')
     
     return () => {
-      clearTimeout(timer)
-      window.removeEventListener('resize', logColumnHeights)
+      // Clean up on unmount
+      document.documentElement.classList.remove('sticky-page-fix')
+      document.body.classList.remove('sticky-page-fix')
+      console.log('🧹 Removed sticky CSS fixes from document')
     }
-  }, [products?.length]) // Re-run when products change
-
-  // Simplified scroll event logging for debugging sticky behavior  
-  useEffect(() => {
-    let scrollLogTimer = null
-    
-    const logScrollBehavior = () => {
-      if (sidebarColumnRef.current && productsColumnRef.current) {
-        const sidebarRect = sidebarColumnRef.current.getBoundingClientRect()
-        const windowScrollY = window.scrollY
-        
-        console.log('📜 Scroll Debug:', {
-          scrollY: `${windowScrollY}px`,
-          sidebarTop: `${Math.round(sidebarRect.top)}px`,
-          isSticking: sidebarRect.top <= 20 && sidebarRect.top >= 0 ? '✅ STICKY' : '❌ NOT STICKY',
-          productCount: products?.length || 0,
-          stickyBoxWorking: sidebarRect.top <= 20 ? '✅ Active' : '⚠️ Waiting'
-        })
-      }
-    }
-
-    const handleScroll = () => {
-      if (scrollLogTimer) clearTimeout(scrollLogTimer)
-      scrollLogTimer = setTimeout(logScrollBehavior, 200) // Reduced frequency
-    }
-
-    // Initial position log
-    setTimeout(logScrollBehavior, 100)
-    
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      if (scrollLogTimer) clearTimeout(scrollLogTimer)
-    }
-  }, [products?.length]) // Re-run when products change to update product count in logs
-
+  }, [])
   // FILTER CHANGE HANDLERS - Each updates only the relevant part of filter state
   const handleCategoriesChange = useCallback((selectedCategories) => {
     // console.log('📁 Categories changed:', selectedCategories)
@@ -360,69 +317,63 @@ function ShopPageContent() {
 
   return (
     <>
-      {/* Visual render tracking */}
-      <RenderVisualizer componentName="Shop" style={{ top: '10px', right: '10px' }} />
-      
-      {/* Debug components - SIMPLIFIED to reduce overhead */}
-      <DebugErrorBoundary>
-        <ReactUpdateTracker componentName="Shop" />
-      </DebugErrorBoundary>
-      
-      {/* Static header - should not re-render when filters change */}
+      {/* Static header */}
       <ShopHeader />
       
-      <div className="container">
-        {/* Desktop Layout with proper StickyBox container */}
-        <div className="row d-none d-lg-flex" style={{ alignItems: 'flex-start' }}>
-          {/* Sidebar column - must have proper container for StickyBox */}
-          <div className="col-lg-3" ref={sidebarColumnRef}>
-            <StickyBox 
-              ref={stickyBoxRef}
-              offsetTop={20} 
-              offsetBottom={20}
-              bottom={false}
-              key={`stickybox-${products?.length || 0}`}
-              onChangeMode={(oldMode, newMode) => {
-                console.log('🔄 StickyBox Mode Change:', { 
-                  from: oldMode, 
-                  to: newMode,
-                  productCount: products?.length || 0,
-                  timestamp: new Date().toISOString()
-                })
-              }}
-            >
-              <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
-                <Sidebar {...sidebarProps} />
-              </DebugErrorBoundary>
-            </StickyBox>
-          </div>
-          
-          {/* Products column - this will expand with infinite scroll */}
-          <div className="col-lg-9" ref={productsColumnRef}>
-            {/* Active Filters Display - only re-renders when filters change */}
-            <ActiveFilters {...activeFiltersProps} />
+      {/* CLEAN STRUCTURE MATCHING ISOLATED STICKY TEST */}
+      <div style={{ fontFamily: 'inherit', margin: 0, padding: 0 }}>
+        {/* Desktop Layout - Same structure as IsolatedStickyTest */}
+        <div className="d-none d-lg-block">
+          <div style={{ display: 'flex', gap: '20px', padding: '20px', maxWidth: '1400px', margin: '0 auto' }}>
+            {/* Sticky Sidebar - Exact same approach as IsolatedStickyTest */}
+            <div style={{
+              width: '300px',
+              position: 'sticky',
+              top: '20px',
+              height: 'fit-content',
+              background: '#fff',
+              border: '1px solid #dee2e6',
+              borderRadius: '8px',
+              padding: '20px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              // Critical CSS overrides that make sticky work (same as IsolatedStickyTest)
+              transform: 'none',
+              overflow: 'visible',
+              contain: 'none',
+              zIndex: 10
+            }}>
+              <Sidebar {...sidebarProps} />
+            </div>
 
-            {/* Product Grid Section - only re-renders when products change */}
-            <ProductGridSection {...productGridProps} />
+            {/* Main Content - Simple flex: 1 like IsolatedStickyTest */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              {/* Active Filters Display */}
+              <ActiveFilters {...activeFiltersProps} />
+
+              {/* Product Grid Section */}
+              <ProductGridSection {...productGridProps} />
+            </div>
           </div>
         </div>
 
-        {/* Mobile Layout */}
-        <div className="row d-lg-none">
-          {/* Sidebar - first on mobile */}
-          <div className="col-12">
-            <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
-              <Sidebar {...sidebarProps} />
-            </DebugErrorBoundary>
-          </div>
-          
-          {/* Main content - second on mobile */}
-          <div className="col-12">
-            {/* Active Filters Display - only re-renders when filters change */}
-            <ActiveFilters {...activeFiltersProps} />
+        {/* Mobile Layout - Bootstrap grid for responsive behavior */}
+        <div className="d-lg-none">
+          <div className="container">
+            <div className="row">
+              {/* Sidebar - first on mobile */}
+              <div className="col-12">
+                <Sidebar {...sidebarProps} />
+              </div>
+              
+              {/* Main content - second on mobile */}
+              <div className="col-12">
+                {/* Active Filters Display */}
+                <ActiveFilters {...activeFiltersProps} />
 
-            {/* Product Grid Section - only re-renders when products change */}
-            <ProductGridSection {...productGridProps} />
+                {/* Product Grid Section */}
+                <ProductGridSection {...productGridProps} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

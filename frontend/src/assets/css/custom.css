@@ -1,3 +1,244 @@
+/* ===== STICKY POSITIONING FIX FOR DYNAMIC CONTENT ===== */
+
+/* Fix for sticky positioning issue caused by overflow-x: hidden on html/body */
+/* WORKING SOLUTION: Apply the same global overrides that made isolated test work */
+html, body {
+    overflow-x: visible !important;
+    /* Ensure proper sticky behavior */
+    position: relative !important;
+}
+
+/* Ensure StickyBox and react-sticky-box work properly */
+html.sticky-page-fix, body.sticky-page-fix {
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+    /* Critical for sticky positioning with dynamic content */
+    position: relative !important;
+    height: auto !important;
+    min-height: 100vh !important;
+}
+
+/* Container fixes for sticky elements */
+.sticky-container, .sticky-fix-container, .sticky-environment {
+    overflow: visible !important;
+    position: relative !important;
+    /* Ensure proper height for infinite scroll */
+    min-height: fit-content !important;
+}
+
+/* ===== DYNAMIC CONTENT HEIGHT FIXES FOR STICKY POSITIONING ===== */
+
+/* Fix for product grid growing dynamically with infinite scroll */
+.products-grid-section {
+    /* Ensure the growing grid doesn't break sticky positioning */
+    min-height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.uniform-product-grid {
+    /* The actual product grid that grows */
+    flex: 1 !important;
+    min-height: fit-content !important;
+}
+
+/* Ensure the products column maintains proper flow for sticky */
+.col-lg-9.sticky-fix-container {
+    /* Allow infinite height growth while maintaining sticky context */
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Make sure the sidebar column has a proper reference height */
+.col-lg-3.sticky-fix-container {
+    position: relative !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    /* Critical: don't let the sidebar column grow with products */
+    max-height: none !important;
+}
+
+/* ===== CRITICAL FIX FOR DYNAMIC PRODUCT GRID GROWTH ===== */
+
+/* Force the product grid container to maintain proper sticky context */
+.col-lg-9.sticky-fix-container .products-grid-section {
+    /* Create a stable scrolling container for infinite scroll */
+    position: relative !important;
+    /* Allow height to grow but maintain sticky reference */
+    min-height: 100vh !important;
+    height: auto !important;
+    max-height: none !important;
+    /* Ensure proper flow for sticky calculation */
+    display: flex !important;
+    flex-direction: column !important;
+    /* Critical: ensure this doesn't interfere with sticky */
+    contain: none !important;
+    transform: none !important;
+}
+
+/* Ensure the actual product grid grows without breaking sticky */
+.col-lg-9.sticky-fix-container .uniform-product-grid {
+    /* Allow the grid to expand naturally */
+    flex: 1 1 auto !important;
+    min-height: fit-content !important;
+    height: auto !important;
+    /* Critical: ensure each height change recalculates sticky */
+    will-change: height !important;
+    contain: none !important;
+}
+
+/* Force sticky recalculation when product grid changes */
+@keyframes stickyRecalculate {
+    0% { transform: translateZ(0); }
+    100% { transform: translateZ(0); }
+}
+
+/* Apply recalculation when grid changes */
+.col-lg-9.sticky-fix-container .uniform-product-grid[data-products-changed] {
+    animation: stickyRecalculate 0.1s ease-out;
+}
+
+/* Ensure the sidebar maintains sticky behavior despite grid growth */
+.col-lg-3.sticky-fix-container .pure-css-sticky-sidebar,
+.col-lg-3.sticky-fix-container .sidebar-content,
+.col-lg-3.sticky-fix-container .shop-sticky-sidebar {
+    position: sticky !important;
+    top: 20px !important;
+    max-height: calc(100vh - 40px) !important;
+    overflow-y: auto !important;
+    overflow-x: visible !important;
+    z-index: 100 !important;
+    /* Critical for dynamic height changes */
+    will-change: auto !important;
+    contain: none !important;
+    transform: none !important;
+    /* Ensure sticky works with growing content */
+    align-self: flex-start !important;
+}
+
+/* ===== PURE CSS STICKY SOLUTION (WORKING FROM ISOLATED TEST) ===== */
+
+/* Apply the exact same CSS that makes isolated-sticky-test work */
+.pure-css-sticky-sidebar {
+    position: sticky !important;
+    top: 20px !important;
+    height: fit-content !important;
+    /* Critical CSS overrides to prevent global conflicts */
+    transform: none !important;
+    overflow: visible !important;
+    contain: none !important;
+    max-height: calc(100vh - 40px) !important;
+    overflow-y: auto !important;
+    z-index: 100 !important;
+    /* Ensure sticky works even with dynamic content */
+    will-change: auto !important;
+    backface-visibility: hidden !important;
+}
+
+/* Ensure parent containers support sticky positioning with dynamic content */
+.pure-css-sticky-sidebar-container {
+    overflow: visible !important;
+    position: relative !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    /* Critical for handling dynamic height changes */
+    contain: none !important;
+    transform: none !important;
+}
+
+/* ===== LEGACY CSS-ONLY STICKY FALLBACK (WORKING SOLUTION) ===== */
+
+/* Apply CSS sticky directly to sidebar content when StickyBox fails */
+.sidebar-shop .sidebar-content,
+.col-lg-3 .sidebar-content,
+.sidebar-column .sidebar-content {
+    position: sticky !important;
+    top: 20px !important;
+    max-height: calc(100vh - 40px) !important;
+    overflow-y: auto !important;
+    overflow-x: visible !important;
+    z-index: 100 !important;
+}
+
+/* Ensure the sidebar column allows sticky positioning */
+.col-lg-3.sticky-fix-container {
+    position: relative !important;
+    height: auto !important;
+    min-height: 100vh !important;
+}
+
+/* Force sticky behavior even when react-sticky-box fails */
+@media (min-width: 992px) {
+    .sidebar-shop .sidebar-content {
+        position: sticky !important;
+        top: 20px !important;
+        max-height: calc(100vh - 40px) !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    /* Target the exact sidebar structure in your shop page */
+    .col-lg-3.sticky-fix-container .sidebar-content,
+    .col-lg-3.sticky-fix-container .sidebar-shop,
+    .col-lg-3.sticky-fix-container aside {
+        position: sticky !important;
+        top: 20px !important;
+        max-height: calc(100vh - 40px) !important;
+        overflow-y: auto !important;
+        z-index: 100 !important;
+    }
+    
+    /* Fallback for any StickyBox wrapper */
+    .col-lg-3.sticky-fix-container > div {
+        position: sticky !important;
+        top: 20px !important;
+        max-height: calc(100vh - 40px) !important;
+        overflow-y: auto !important;
+    }
+    
+    /* Direct sticky class for emergency fallback */
+    .sticky-content, 
+    .sidebar-content.sticky-force,
+    aside.sticky-force {
+        position: sticky !important;
+        top: 20px !important;
+        max-height: calc(100vh - 40px) !important;
+        overflow-y: auto !important;
+        z-index: 100 !important;
+    }
+}
+
+/* REMOVED conflicting CSS - Let react-sticky-box handle positioning */
+/* .shop-sticky-sidebar - Removed to prevent conflicts with StickyBox */
+
+/* Ensure the products column can grow properly */
+.col-lg-9.sticky-fix-container {
+    /* Allow infinite height growth */
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100vh !important;
+}
+
+/* Fix for Bootstrap grid conflicting with sticky */
+.row.sticky-fix-container {
+    /* Ensure proper height calculation */
+    height: auto !important;
+    min-height: 100vh !important;
+    align-items: flex-start !important;
+}
+
+/* Override any theme CSS that might interfere */
+.container.sticky-environment {
+    /* Ensure container doesn't constrain sticky behavior */
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: relative !important;
+}
+
 .header-middle-icon {
     padding-left: 1.2rem;
 }
