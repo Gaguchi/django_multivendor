@@ -9,21 +9,20 @@ import ActiveFilters from '../components/Shop/ActiveFilters'
 import ReactUpdateTracker from '../components/Debug/ReactUpdateTracker'
 import RenderVisualizer from '../components/Debug/RenderVisualizer'
 import DebugErrorBoundary from '../components/Debug/DebugErrorBoundary'
+import StickyBox from 'react-sticky-box'
 import '../sidebar-test-instructions.js' // Load test instructions
 
 function ShopPageContent() {
   // Track renders for debugging
   const renderCountRef = useRef(0)
   const mountTimeRef = useRef(Date.now())
+  const sidebarColumnRef = useRef(null)
+  const productsColumnRef = useRef(null)
   renderCountRef.current++
 
   // Log renders (less frequently to reduce noise)
-  if (renderCountRef.current <= 3 || renderCountRef.current % 5 === 0) {
-    console.log('🛍️ Shop Page render:', { 
-      renderCount: renderCountRef.current,
-      timestamp: new Date().toISOString(),
-      warning: renderCountRef.current > 8 ? '⚠️ Too many renders!' : '✅ Normal'
-    })
+  if (renderCountRef.current === 1) {
+    console.log('🛍️ Shop Page initial render')
   }
 
   // SINGLE SOURCE OF TRUTH: All filter state in one place
@@ -39,7 +38,7 @@ function ShopPageContent() {
   const [showCount, setShowCount] = useState(12)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  // Memoize API query options to prevent unnecessary re-renders
+  // Memoize API query options to prevent unnecessary re-renders - MOVED UP
   const queryOptions = useMemo(() => {
     const apiFilters = {}
     
@@ -57,7 +56,7 @@ function ShopPageContent() {
       apiFilters.price_max = filterState.maxPrice
     }
 
-    console.log('🔍 Shop: Query options memo updated:', { apiFilters, ordering: sortBy })
+    // Removed excessive logging for performance
     
     return {
       filters: {
@@ -71,11 +70,11 @@ function ShopPageContent() {
     JSON.stringify(filterState.selectedBrands),
     filterState.minPrice,
     filterState.maxPrice,
-    sortBy, 
+    sortBy,
     showCount
   ])
 
-  // Data fetching hooks
+  // Data fetching hooks - NOW AFTER queryOptions is defined
   const { 
     data, 
     isLoading, 
@@ -99,9 +98,95 @@ function ShopPageContent() {
     max: 1000 // Could be calculated from products if needed
   }), [])
 
+  // StickyBox ref for forcing recalculation
+  const stickyBoxRef = useRef(null)
+
+  // Track product count to trigger StickyBox recalculation when content changes
+  const [lastProductCount, setLastProductCount] = useState(0)
+
+  // Effect to handle StickyBox recalculation when products change (infinite scroll)
+  useEffect(() => {
+    const currentProductCount = products?.length || 0
+    
+    if (currentProductCount !== lastProductCount) {
+      setLastProductCount(currentProductCount)
+      
+      // Force StickyBox to recalculate when product grid height changes
+      if (stickyBoxRef.current && typeof stickyBoxRef.current.recalculate === 'function') {
+        setTimeout(() => {
+          stickyBoxRef.current.recalculate()
+          console.log('🔄 StickyBox recalculated for', currentProductCount, 'products')
+        }, 100)
+      }
+    }
+  }, [products?.length, lastProductCount])
+
+  // Log column heights for debugging sticky behavior
+  useEffect(() => {
+    const logColumnHeights = () => {
+      if (sidebarColumnRef.current && productsColumnRef.current) {
+        const sidebarHeight = sidebarColumnRef.current.scrollHeight
+        const productsHeight = productsColumnRef.current.scrollHeight
+        console.log('� Column Heights:', {
+          sidebar: `${sidebarHeight}px`,
+          products: `${productsHeight}px`,
+          difference: `${Math.abs(sidebarHeight - productsHeight)}px`,
+          productCount: products?.length || 0,
+          note: sidebarHeight < productsHeight ? 'Sidebar shorter (perfect for sticky)' : 'Sidebar taller'
+        })
+      }
+    }
+
+    // Log heights after render and when products change
+    const timer = setTimeout(logColumnHeights, 100)
+    
+    // Log on window resize
+    window.addEventListener('resize', logColumnHeights)
+    
+    return () => {
+      clearTimeout(timer)
+      window.removeEventListener('resize', logColumnHeights)
+    }
+  }, [products?.length]) // Re-run when products change
+
+  // Simplified scroll event logging for debugging sticky behavior  
+  useEffect(() => {
+    let scrollLogTimer = null
+    
+    const logScrollBehavior = () => {
+      if (sidebarColumnRef.current && productsColumnRef.current) {
+        const sidebarRect = sidebarColumnRef.current.getBoundingClientRect()
+        const windowScrollY = window.scrollY
+        
+        console.log('📜 Scroll Debug:', {
+          scrollY: `${windowScrollY}px`,
+          sidebarTop: `${Math.round(sidebarRect.top)}px`,
+          isSticking: sidebarRect.top <= 20 && sidebarRect.top >= 0 ? '✅ STICKY' : '❌ NOT STICKY',
+          productCount: products?.length || 0,
+          stickyBoxWorking: sidebarRect.top <= 20 ? '✅ Active' : '⚠️ Waiting'
+        })
+      }
+    }
+
+    const handleScroll = () => {
+      if (scrollLogTimer) clearTimeout(scrollLogTimer)
+      scrollLogTimer = setTimeout(logScrollBehavior, 200) // Reduced frequency
+    }
+
+    // Initial position log
+    setTimeout(logScrollBehavior, 100)
+    
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      if (scrollLogTimer) clearTimeout(scrollLogTimer)
+    }
+  }, [products?.length]) // Re-run when products change to update product count in logs
+
   // FILTER CHANGE HANDLERS - Each updates only the relevant part of filter state
   const handleCategoriesChange = useCallback((selectedCategories) => {
-    console.log('� Categories changed:', selectedCategories)
+    // console.log('📁 Categories changed:', selectedCategories)
     setFilterState(prev => ({
       ...prev,
       selectedCategories
@@ -109,7 +194,7 @@ function ShopPageContent() {
   }, [])
 
   const handleBrandsChange = useCallback((selectedBrands) => {
-    console.log('🏢 Brands changed:', selectedBrands)
+    // console.log('🏢 Brands changed:', selectedBrands)
     setFilterState(prev => ({
       ...prev,
       selectedBrands
@@ -117,7 +202,7 @@ function ShopPageContent() {
   }, [])
 
   const handlePriceChange = useCallback((minPrice, maxPrice) => {
-    console.log('💰 Price changed:', { minPrice, maxPrice })
+    // console.log('💰 Price changed:', { minPrice, maxPrice })
     setFilterState(prev => ({
       ...prev,
       minPrice,
@@ -126,7 +211,7 @@ function ShopPageContent() {
   }, [])
 
   const handleClearAllFilters = useCallback(() => {
-    console.log('🧹 Clearing all filters')
+    // console.log('🧹 Clearing all filters')
     setFilterState({
       selectedCategories: [],
       selectedBrands: [],
@@ -137,12 +222,12 @@ function ShopPageContent() {
 
   // OTHER UI HANDLERS
   const handleSortChange = useCallback((newSort) => {
-    console.log('🔄 Sort changed:', newSort)
+    // console.log('🔄 Sort changed:', newSort)
     setSortBy(newSort)
   }, [])
 
   const handleShowCountChange = useCallback((newCount) => {
-    console.log('🔄 Show count changed:', newCount)
+    // console.log('🔄 Show count changed:', newCount)
     setShowCount(newCount)
   }, [])
 
@@ -173,7 +258,7 @@ function ShopPageContent() {
   }, [filterState])
 
   const handleClearFilter = useCallback((filterKey) => {
-    console.log('❌ Clearing individual filter:', filterKey)
+    // console.log('❌ Clearing individual filter:', filterKey)
     
     if (filterKey === 'category') {
       handleCategoriesChange([])
@@ -261,9 +346,6 @@ function ShopPageContent() {
 
   // Show simple loading state instead of skeleton - ONLY on initial load
   if (isLoading && !products.length && renderCountRef.current <= 3) {
-    if (renderCountRef.current <= 2) {
-      console.log('⏳ Shop: Showing simple loading state')
-    }
     return (
       <div className="container">
         <div className="text-center py-5">
@@ -274,10 +356,6 @@ function ShopPageContent() {
         </div>
       </div>
     )
-  }
-
-  if (renderCountRef.current <= 3) {
-    console.log('🎨 Shop: Rendering main layout with', products.length, 'products')
   }
 
   return (
@@ -294,17 +372,33 @@ function ShopPageContent() {
       <ShopHeader />
       
       <div className="container">
-        {/* Enhanced grid layout for dynamic sidebar height */}
-        <div className="shop-grid-container d-none d-lg-grid">
-          {/* Sidebar column with dynamic height */}
-          <div className="sidebar-column">
-            <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
-              <Sidebar {...sidebarProps} />
-            </DebugErrorBoundary>
+        {/* Desktop Layout with proper StickyBox container */}
+        <div className="row d-none d-lg-flex" style={{ alignItems: 'flex-start' }}>
+          {/* Sidebar column - must have proper container for StickyBox */}
+          <div className="col-lg-3" ref={sidebarColumnRef}>
+            <StickyBox 
+              ref={stickyBoxRef}
+              offsetTop={20} 
+              offsetBottom={20}
+              bottom={false}
+              key={`stickybox-${products?.length || 0}`}
+              onChangeMode={(oldMode, newMode) => {
+                console.log('🔄 StickyBox Mode Change:', { 
+                  from: oldMode, 
+                  to: newMode,
+                  productCount: products?.length || 0,
+                  timestamp: new Date().toISOString()
+                })
+              }}
+            >
+              <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
+                <Sidebar {...sidebarProps} />
+              </DebugErrorBoundary>
+            </StickyBox>
           </div>
           
-          {/* Products column */}
-          <div className="products-column">
+          {/* Products column - this will expand with infinite scroll */}
+          <div className="col-lg-9" ref={productsColumnRef}>
             {/* Active Filters Display - only re-renders when filters change */}
             <ActiveFilters {...activeFiltersProps} />
 
@@ -313,17 +407,17 @@ function ShopPageContent() {
           </div>
         </div>
 
-        {/* Fallback Bootstrap grid for mobile and older browsers */}
+        {/* Mobile Layout */}
         <div className="row d-lg-none">
-          {/* Sidebar - left side on desktop, first on mobile */}
-          <div className="col-lg-3">
+          {/* Sidebar - first on mobile */}
+          <div className="col-12">
             <DebugErrorBoundary fallback={<div className="alert alert-danger">Sidebar error - check console</div>}>
               <Sidebar {...sidebarProps} />
             </DebugErrorBoundary>
           </div>
           
-          {/* Main content - right side on desktop, second on mobile */}
-          <div className="col-lg-9">
+          {/* Main content - second on mobile */}
+          <div className="col-12">
             {/* Active Filters Display - only re-renders when filters change */}
             <ActiveFilters {...activeFiltersProps} />
 

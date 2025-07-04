@@ -1,6 +1,5 @@
 import React, { memo, useCallback, useState, useRef, useMemo, useEffect } from 'react'
 import { Range } from 'react-range'
-import StickyBox from 'react-sticky-box'
 
 // Individual filter sections - each memoized independently
 const CategoriesSection = memo(function CategoriesSection({ 
@@ -10,14 +9,7 @@ const CategoriesSection = memo(function CategoriesSection({
   collapsed, 
   onToggleCollapse 
 }) {
-  const renderCount = useRef(0)
-  renderCount.current++
-  
-  console.log('📁 CategoriesSection render:', { 
-    count: renderCount.current,
-    selectedCount: selectedCategories.length,
-    note: 'Should only render when categories or selection changes'
-  })
+  // Removed excessive console logging for performance
 
   const handleCategoryChange = useCallback((categoryId) => {
     const newSelection = selectedCategories.includes(categoryId)
@@ -79,14 +71,7 @@ const BrandsSection = memo(function BrandsSection({
   collapsed, 
   onToggleCollapse 
 }) {
-  const renderCount = useRef(0)
-  renderCount.current++
-  
-  console.log('🏢 BrandsSection render:', { 
-    count: renderCount.current,
-    selectedCount: selectedBrands.length,
-    note: 'Should only render when brands or selection changes'
-  })
+  // Removed excessive console logging for performance
 
   const handleBrandChange = useCallback((brandId) => {
     const newSelection = selectedBrands.includes(brandId)
@@ -149,14 +134,7 @@ const PriceSection = memo(function PriceSection({
   collapsed, 
   onToggleCollapse 
 }) {
-  const renderCount = useRef(0)
-  renderCount.current++
-  
-  console.log('💰 PriceSection render:', { 
-    count: renderCount.current,
-    currentRange: [minPrice, maxPrice],
-    note: 'Should only render when price range changes'
-  })
+  // Removed excessive console logging for performance
 
   const [values, setValues] = useState([minPrice, maxPrice])
   const debounceRef = useRef(null)
@@ -288,14 +266,7 @@ const PriceSection = memo(function PriceSection({
 })
 
 const ClearFiltersSection = memo(function ClearFiltersSection({ onClearAll, hasActiveFilters }) {
-  const renderCount = useRef(0)
-  renderCount.current++
-  
-  console.log('🧹 ClearFiltersSection render:', { 
-    count: renderCount.current,
-    hasActiveFilters,
-    note: 'Should only render when hasActiveFilters changes'
-  })
+  // Removed excessive console logging for performance
 
   if (!hasActiveFilters) return null
 
@@ -389,16 +360,9 @@ const Sidebar = memo(function Sidebar({
   isOpen = false,
   onClose = () => {}
 }) {
-  const renderCount = useRef(0)
   const sidebarRef = useRef(null)
-  renderCount.current++
   
-  console.log('📋 Sidebar render:', {
-    count: renderCount.current,
-    timestamp: new Date().toISOString(),
-    note: 'MAIN SIDEBAR - Should render minimally',
-    warning: renderCount.current > 3 ? '⚠️ Too many renders!' : '✅ Good'
-  })
+  // Removed excessive console logging for performance
 
   // Collapse state for each section
   const [collapsed, setCollapsed] = useState({
@@ -407,7 +371,7 @@ const Sidebar = memo(function Sidebar({
     price: false
   })
 
-  // StickyBox handles all sticky behavior - no JavaScript needed
+  // Sticky behavior is handled by parent StickyBox wrapper in Shop.jsx
 
   // Handle section collapse
   const toggleCollapse = useCallback((section) => {
@@ -469,47 +433,45 @@ const Sidebar = memo(function Sidebar({
           </button>
         )}
 
-        {/* StickyBox provides intelligent sticky behavior */}
-        <StickyBox offsetTop={20} offsetBottom={20}>
-          <div className="sidebar-content" ref={sidebarRef}>
-            {/* Categories filter */}
-            <CategoriesSection
-              categories={categories}
-              selectedCategories={selectedCategories}
-              onCategoriesChange={onCategoriesChange}
-              collapsed={collapsed.categories}
-              onToggleCollapse={toggleCategoriesCollapse}
-            />
+        {/* Sidebar content - sticky behavior handled by parent StickyBox */}
+        <div className="sidebar-content" ref={sidebarRef}>
+          {/* Categories filter */}
+          <CategoriesSection
+            categories={categories}
+            selectedCategories={selectedCategories}
+            onCategoriesChange={onCategoriesChange}
+            collapsed={collapsed.categories}
+            onToggleCollapse={toggleCategoriesCollapse}
+          />
 
-            {/* Brands filter */}
-            <BrandsSection
-              brands={brands}
-              selectedBrands={selectedBrands}
-              onBrandsChange={onBrandsChange}
-              collapsed={collapsed.brands}
-              onToggleCollapse={toggleBrandsCollapse}
-            />
+          {/* Brands filter */}
+          <BrandsSection
+            brands={brands}
+            selectedBrands={selectedBrands}
+            onBrandsChange={onBrandsChange}
+            collapsed={collapsed.brands}
+            onToggleCollapse={toggleBrandsCollapse}
+          />
 
-            {/* Price filter with Range slider */}
-            <PriceSection
-              priceRange={priceRange}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-              onPriceChange={onPriceChange}
-              collapsed={collapsed.price}
-              onToggleCollapse={togglePriceCollapse}
-            />
+          {/* Price filter with Range slider */}
+          <PriceSection
+            priceRange={priceRange}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            onPriceChange={onPriceChange}
+            collapsed={collapsed.price}
+            onToggleCollapse={togglePriceCollapse}
+          />
 
-            {/* Clear filters section - moved to bottom as requested */}
-            <ClearFiltersSection 
-              onClearAll={onClearAll}
-              hasActiveFilters={hasActiveFilters}
-            />
+          {/* Clear filters section - moved to bottom as requested */}
+          <ClearFiltersSection 
+            onClearAll={onClearAll}
+            hasActiveFilters={hasActiveFilters}
+          />
 
-            {/* Static sections that never change */}
-            <StaticSections />
-          </div>
-        </StickyBox>
+          {/* Static sections that never change */}
+          <StaticSections />
+        </div>
       </aside>
     </>
   )
@@ -523,7 +485,6 @@ const Sidebar = memo(function Sidebar({
   // Check primitive props
   for (const key of keysToCompare) {
     if (prevProps[key] !== nextProps[key]) {
-      console.log(`📋 Sidebar memo: ${key} changed`)
       return false
     }
   }
@@ -533,7 +494,6 @@ const Sidebar = memo(function Sidebar({
     prevProps.priceRange?.min !== nextProps.priceRange?.min ||
     prevProps.priceRange?.max !== nextProps.priceRange?.max
   ) {
-    console.log('📋 Sidebar memo: priceRange changed')
     return false
   }
   
@@ -544,28 +504,25 @@ const Sidebar = memo(function Sidebar({
     const nextArray = nextProps[prop] || []
     
     if (prevArray.length !== nextArray.length) {
-      console.log(`📋 Sidebar memo: ${prop} length changed`)
       return false
     }
     
     // For small arrays, do content comparison
     if (prevArray.length < 100 && JSON.stringify(prevArray) !== JSON.stringify(nextArray)) {
-      console.log(`📋 Sidebar memo: ${prop} content changed`)
       return false
     }
   }
   
-  console.log('📋 Sidebar memo: Props equal, skipping render')
   return true
 })
 
 // Sidebar styles component - Optimized for react-sticky-box
 const SidebarStyles = () => (
   <style>{`
-    /* StickyBox handles sticky behavior - no CSS sticky needed */
+    /* Sidebar content styling - sticky behavior handled by parent StickyBox */
     .sidebar-content {
       padding: 0;
-      /* Let StickyBox handle all positioning */
+      /* Parent StickyBox handles all positioning */
     }
 
     /* Container grid setup for better layout */
@@ -578,7 +535,7 @@ const SidebarStyles = () => (
     }
 
     .shop-grid-container .sidebar-column {
-      /* No sticky positioning needed - StickyBox handles it */
+      /* No positioning needed - parent StickyBox handles sticky behavior */
     }
 
     .shop-grid-container .products-column {

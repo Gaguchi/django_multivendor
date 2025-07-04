@@ -3,7 +3,8 @@ import { useMemo } from 'react'
 import api from '../services/api'
 
 export function useProducts(options = {}, queryConfig = {}) {
-  console.log('🎣 useProducts hook called with options:', options)
+  // Reduced logging to minimize noise
+  // console.log('🎣 useProducts hook called with options:', options)
   
   // Stable query configuration
   const stableConfig = useMemo(() => ({
@@ -20,11 +21,12 @@ export function useProducts(options = {}, queryConfig = {}) {
       queryKey: ['products', options],
       queryFn: async ({ pageParam = 1 }) => {
         try {
-          console.log('🔄 useProducts API call with params:', {
-            page: pageParam,
-            page_size: options.filters?.page_size || 20,
-            ...options.filters
-          })
+          // Reduced logging to minimize noise in console
+          // console.log('🔄 useProducts API call with params:', {
+          //   page: pageParam,
+          //   page_size: options.filters?.page_size || 20,
+          //   ...options.filters
+          // })
           
           const response = await api.get('/api/vendors/products/', {
             headers: {
@@ -37,7 +39,8 @@ export function useProducts(options = {}, queryConfig = {}) {
           }
         })
         
-        console.log('✅ useProducts API response:', response.data)
+        // Reduced logging to minimize noise
+        // console.log('✅ useProducts API response:', response.data)
         return response.data
       } catch (error) {
         console.error('❌ useProducts API error:', error)

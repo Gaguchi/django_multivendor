@@ -12,14 +12,16 @@ Successfully implemented `react-sticky-box` for the Shop sidebar to provide prof
 npm install react-sticky-box
 ```
 
-### 2. Sidebar Implementation
+### 2. StickyBox Implementation
 
-- **File**: `frontend/src/components/Shop/Sidebar.jsx`
+- **File**: `frontend/src/pages/Shop.jsx` (Layout Level)
 - **Key Changes**:
-  - Imported `StickyBox` from `react-sticky-box`
-  - Wrapped sidebar content in `<StickyBox offsetTop={20} offsetBottom={20}>`
-  - Removed all custom JavaScript sticky logic
-  - Cleaned up CSS to remove custom sticky rules
+  - Imported `StickyBox` from `react-sticky-box` in Shop.jsx
+  - Wrapped sidebar in `<StickyBox offsetTop={20} offsetBottom={20}>` at the layout level
+  - Removed StickyBox from inside Sidebar.jsx component
+  - Sidebar.jsx now only contains the filter content
+
+**IMPORTANT**: StickyBox is applied at the layout level in `Shop.jsx`, not inside the `Sidebar` component. This ensures the entire sidebar sticks as a unit while the products grid scrolls independently.
 
 ### 3. Layout Structure
 
@@ -30,7 +32,9 @@ The sidebar is used in two layouts in `Shop.jsx`:
 ```jsx
 <div className="shop-grid-container d-none d-lg-grid">
   <div className="sidebar-column">
-    <Sidebar {...sidebarProps} />
+    <StickyBox offsetTop={20} offsetBottom={20}>
+      <Sidebar {...sidebarProps} />
+    </StickyBox>
   </div>
   <div className="products-column">
     <ActiveFilters {...activeFiltersProps} />
@@ -44,7 +48,9 @@ The sidebar is used in two layouts in `Shop.jsx`:
 ```jsx
 <div className="row d-lg-none">
   <div className="col-lg-3">
-    <Sidebar {...sidebarProps} />
+    <StickyBox offsetTop={20} offsetBottom={20}>
+      <Sidebar {...sidebarProps} />
+    </StickyBox>
   </div>
   <div className="col-lg-9">
     <ActiveFilters {...activeFiltersProps} />
@@ -55,13 +61,20 @@ The sidebar is used in two layouts in `Shop.jsx`:
 
 ### 4. StickyBox Configuration
 
+**Applied at Layout Level in Shop.jsx:**
+
 ```jsx
 <StickyBox offsetTop={20} offsetBottom={20}>
-  <div className="sidebar-content" ref={sidebarRef}>
-    {/* Sidebar content */}
-  </div>
+  <Sidebar {...sidebarProps} />
 </StickyBox>
 ```
+
+**Why Layout Level?**
+
+- The entire sidebar sticks as a cohesive unit
+- Sidebar content scrolls alongside the products grid
+- Better user experience for filter interactions
+- Proper separation of concerns (layout vs content)
 
 ### 5. Key Benefits
 
