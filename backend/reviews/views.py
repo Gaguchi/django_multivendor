@@ -52,6 +52,12 @@ class ReviewViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def reviewable_items(self, request):
         """Get items that can be reviewed by the current user"""
+        print(f"[INFO] ===== REVIEWABLE ITEMS REQUEST RECEIVED =====")
+        print(f"[INFO] Request method: {request.method}")
+        print(f"[INFO] Request path: {request.path}")
+        print(f"[INFO] User authenticated: {request.user.is_authenticated}")
+        print(f"[INFO] Query params: {request.GET}")
+        
         try:
             user = request.user
             print(f"[DEBUG] User requesting reviewable items: {user.username} (ID: {user.id})")
@@ -93,11 +99,20 @@ class ReviewViewSet(viewsets.ModelViewSet):
                 reviewable_items = [item for item in reviewable_items if item['can_review']]
             
             print(f"[DEBUG] Returning {len(reviewable_items)} reviewable items")
+            
+            print(f"[INFO] About to serialize {len(reviewable_items)} items")
             serializer = ReviewableItemSerializer(reviewable_items, many=True)
-            return Response(serializer.data)
+            serialized_data = serializer.data
+            print(f"[INFO] Serialization completed successfully")
+            print(f"[INFO] ===== REVIEWABLE ITEMS REQUEST COMPLETED =====")
+            
+            return Response(serialized_data)
             
         except Exception as e:
             print(f"[ERROR] Error in reviewable_items: {str(e)}")
+            print(f"[ERROR] Exception type: {type(e).__name__}")
+            import traceback
+            print(f"[ERROR] Full traceback: {traceback.format_exc()}")
             return Response({'error': 'Failed to get reviewable items'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=False, methods=['get'], url_path='can-review/(?P<product_id>[^/.]+)')

@@ -35,14 +35,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     def get_product_image(self, obj):
         try:
-            # Get the primary image of the product
-            primary_image = obj.product.product_images.filter(is_primary=True).first()
-            if primary_image and hasattr(primary_image, 'image') and primary_image.image:
-                return primary_image.image.url
-            # Fallback to first image
+            # Get the first image of the product (ordered by position)
             first_image = obj.product.product_images.first()
-            if first_image and hasattr(first_image, 'image') and first_image.image:
-                return first_image.image.url
+            if first_image and hasattr(first_image, 'file') and first_image.file:
+                return first_image.file.url
             # Fallback to thumbnail if available
             if hasattr(obj.product, 'thumbnail') and obj.product.thumbnail:
                 return obj.product.thumbnail.url
@@ -108,14 +104,10 @@ class ReviewableItemSerializer(serializers.Serializer):
 
     def get_product_image(self, product):
         try:
-            # Get the primary image of the product
-            primary_image = product.product_images.filter(is_primary=True).first()
-            if primary_image and hasattr(primary_image, 'image') and primary_image.image:
-                return primary_image.image.url
-            # Fallback to first image
+            # Get the first image of the product (ordered by position)
             first_image = product.product_images.first()
-            if first_image and hasattr(first_image, 'image') and first_image.image:
-                return first_image.image.url
+            if first_image and hasattr(first_image, 'file') and first_image.file:
+                return first_image.file.url
             # Fallback to thumbnail if available
             if hasattr(product, 'thumbnail') and product.thumbnail:
                 return product.thumbnail.url
