@@ -107,9 +107,9 @@ html.sticky-page-fix, body.sticky-page-fix {
 .col-lg-3.sticky-fix-container .shop-sticky-sidebar {
     position: sticky !important;
     top: 20px !important;
-    max-height: calc(100vh - 40px) !important;
-    overflow-y: auto !important;
-    overflow-x: visible !important;
+    /* Remove max-height and overflow restrictions to show full content */
+    height: auto !important;
+    overflow: visible !important;
     z-index: 100 !important;
     /* Critical for dynamic height changes */
     will-change: auto !important;
@@ -130,8 +130,7 @@ html.sticky-page-fix, body.sticky-page-fix {
     transform: none !important;
     overflow: visible !important;
     contain: none !important;
-    max-height: calc(100vh - 40px) !important;
-    overflow-y: auto !important;
+    /* Remove max-height and overflow restrictions to show full content */
     z-index: 100 !important;
     /* Ensure sticky works even with dynamic content */
     will-change: auto !important;
@@ -157,9 +156,9 @@ html.sticky-page-fix, body.sticky-page-fix {
 .sidebar-column .sidebar-content {
     position: sticky !important;
     top: 20px !important;
-    max-height: calc(100vh - 40px) !important;
-    overflow-y: auto !important;
-    overflow-x: visible !important;
+    /* Remove max-height and overflow restrictions to show full content */
+    height: auto !important;
+    overflow: visible !important;
     z-index: 100 !important;
 }
 
@@ -175,9 +174,9 @@ html.sticky-page-fix, body.sticky-page-fix {
     .sidebar-shop .sidebar-content {
         position: sticky !important;
         top: 20px !important;
-        max-height: calc(100vh - 40px) !important;
-        overflow-y: auto !important;
-        -webkit-overflow-scrolling: touch !important;
+        /* Remove max-height and overflow restrictions to show full content */
+        height: auto !important;
+        overflow: visible !important;
     }
     
     /* Target the exact sidebar structure in your shop page */
@@ -186,8 +185,9 @@ html.sticky-page-fix, body.sticky-page-fix {
     .col-lg-3.sticky-fix-container aside {
         position: sticky !important;
         top: 20px !important;
-        max-height: calc(100vh - 40px) !important;
-        overflow-y: auto !important;
+        /* Remove max-height and overflow restrictions to show full content */
+        height: auto !important;
+        overflow: visible !important;
         z-index: 100 !important;
     }
     
@@ -195,8 +195,9 @@ html.sticky-page-fix, body.sticky-page-fix {
     .col-lg-3.sticky-fix-container > div {
         position: sticky !important;
         top: 20px !important;
-        max-height: calc(100vh - 40px) !important;
-        overflow-y: auto !important;
+        /* Remove max-height and overflow restrictions to show full content */
+        height: auto !important;
+        overflow: visible !important;
     }
     
     /* Direct sticky class for emergency fallback */
@@ -205,8 +206,9 @@ html.sticky-page-fix, body.sticky-page-fix {
     aside.sticky-force {
         position: sticky !important;
         top: 20px !important;
-        max-height: calc(100vh - 40px) !important;
-        overflow-y: auto !important;
+        /* Remove max-height and overflow restrictions to show full content */
+        height: auto !important;
+        overflow: visible !important;
         z-index: 100 !important;
     }
 }

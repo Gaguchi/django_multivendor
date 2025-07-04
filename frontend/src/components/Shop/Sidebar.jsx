@@ -519,9 +519,26 @@ const Sidebar = memo(function Sidebar({
 // Sidebar styles component - Optimized for react-sticky-box
 const SidebarStyles = () => (
   <style>{`
-    /* Sidebar content styling - sticky behavior handled by parent StickyBox */
+    /* Sidebar main container - ensure no height restrictions */
+    .sidebar-shop, aside.sidebar-shop {
+      height: auto;
+      max-height: none;
+      overflow: visible;
+    }
+
+    /* Sidebar wrapper - ensure no height restrictions */
+    .sidebar-wrapper, .sidebar-sticky {
+      height: auto;
+      max-height: none;
+      overflow: visible;
+    }
+
+    /* Sidebar content styling - no height restrictions for full visibility */
     .sidebar-content {
       padding: 0;
+      height: auto;
+      max-height: none;
+      overflow: visible;
       /* Parent StickyBox handles all positioning */
     }
 
@@ -864,30 +881,11 @@ const SidebarStyles = () => (
       border-radius: 4px;
     }
 
-    /* Better scrollbar for the sidebar content */
-    .sidebar-content::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .sidebar-content::-webkit-scrollbar-track {
-      background: #f8f9fa;
-      border-radius: 3px;
-    }
-
-    .sidebar-content::-webkit-scrollbar-thumb {
-      background: #dee2e6;
-      border-radius: 3px;
-      transition: background 0.2s ease;
-    }
-
-    .sidebar-content::-webkit-scrollbar-thumb:hover {
-      background: #adb5bd;
-    }
-
-    /* Firefox scrollbar */
+    /* Removed internal scrollbar - sidebar should always show full content */
     .sidebar-content {
-      scrollbar-width: thin;
-      scrollbar-color: #dee2e6 #f8f9fa;
+      height: auto;
+      max-height: none;
+      overflow: visible;
     }
 
     /* Mobile responsive adjustments */
