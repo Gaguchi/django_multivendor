@@ -2,13 +2,20 @@ import { useEffect, useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useOrder } from '../contexts/OrderContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useReview } from '../contexts/ReviewContext';
+import { useToast } from '../contexts/ToastContext';
+import WriteReview from '../components/reviews/WriteReview';
 
 export default function OrderDetail() {
   const { orderNumber } = useParams();
   const { currentOrder, loading, error, fetchOrderById, cancelOrder, getStatusColor } = useOrder();
   const { user } = useAuth();
+  const { canReviewProduct, hasReviewedProduct } = useReview();
+  const { showSuccess, showError } = useToast();
   const navigate = useNavigate();
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+  const [showWriteReview, setShowWriteReview] = useState(null);
+  const [reviewEligibility, setReviewEligibility] = useState({});
 
   // Update screen width on resize
   useEffect(() => {
@@ -27,44 +34,48 @@ export default function OrderDetail() {
     };
   }, [orderNumber, user]);
 
-  // Function to truncate product name based on screen size
-  const truncateName = (name) => {
-    if (!name) return '';
+  // Check review eligibility for delivered items
+  useEffect(() => {
+    if (currentOrder && currentOrder.status === 'Delivered' && currentOrder.items) {
+      checkReviewEligibility();
+    }
+  }, [currentOrder]);
+
+  const checkReviewEligibility = async () => {
+    if (!currentOrder?.items) return;
     
-    // Set max length based on screen width
-    let maxLength = 10; // Default max length
+    const eligibility = {};
     
-    if (screenWidth < 576) {
-      maxLength = 16; // Mobile
-    } else if (screenWidth < 768) {
-      maxLength = 20; // Small tablets
-    } else if (screenWidth < 992) {
-      maxLength = 25; // Tablets
-    } else if (screenWidth < 1200) {
-      maxLength = 30; // Small desktop
-    } else {
-      maxLength = 40; // Desktop
+    for (const item of currentOrder.items) {
+      try {
+        const canReview = await canReviewProduct(item.product.id);
+        const hasReviewed = await hasReviewedProduct(item.product.id);
+        
+        eligibility[item.product.id] = {
+          canReview: canReview && !hasReviewed,
+          hasReviewed
+        };
+      } catch (error) {
+        console.error(`Error checking review eligibility for product ${item.product.id}:`, error);
+        eligibility[item.product.id] = {
+          canReview: false,
+          hasReviewed: false
+        };
+      }
     }
     
-    return name.length > maxLength ? `${name.substring(0, maxLength)}...` : name;
+    setReviewEligibility(eligibility);
   };
 
-  // Format date helper using native JavaScript
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        hour12: true
-      });
-    } catch (error) {
-      return dateString;
-    }
+  const handleWriteReview = (item) => {
+    setShowWriteReview(item);
+  };
+
+  const handleReviewSubmitted = async () => {
+    setShowWriteReview(null);
+    showSuccess('Review submitted successfully!');
+    // Refresh review eligibility
+    await checkReviewEligibility();
   };
 
   const handleCancelOrder = async () => {
@@ -73,8 +84,9 @@ export default function OrderDetail() {
     if (window.confirm('Are you sure you want to cancel this order?')) {
       const success = await cancelOrder(currentOrder.order_number);
       if (success) {
-        // Show success message (could use a toast notification here)
-        alert('Order cancelled successfully');
+        showSuccess('Order cancelled successfully');
+      } else {
+        showError('Failed to cancel order. Please try again.');
       }
     }
   };
@@ -253,6 +265,16 @@ export default function OrderDetail() {
                     ${parseFloat(item.total_price).toFixed(2)}
                   </div>
                 </div>
+                {currentOrder.status === 'Delivered' && reviewEligibility[item.product.id] && reviewEligibility[item.product.id].canReview && (
+                  <div className="review-action">
+                    <button 
+                      className="btn btn-sm btn-primary"
+                      onClick={() => handleWriteReview(item)}
+                    >
+                      {reviewEligibility[item.product.id].hasReviewed ? 'Edit Review' : 'Write Review'}
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -273,6 +295,14 @@ export default function OrderDetail() {
           </div>
         </div>
       </div>
+
+      {showWriteReview && (
+        <WriteReview 
+          orderItem={showWriteReview} 
+          onClose={() => setShowWriteReview(null)} 
+          onReviewSubmitted={handleReviewSubmitted}
+        />
+      )}
 
       <style jsx>{`
         /* Responsive typography classes */
@@ -492,6 +522,33 @@ export default function OrderDetail() {
           }
         }
       `}</style>
+
+      {/* Write Review Modal */}
+      {showWriteReview && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Write Review</h5>
+                <button 
+                  type="button" 
+                  className="btn-close" 
+                  onClick={() => setShowWriteReview(null)}
+                ></button>
+              </div>
+              <div className="modal-body">
+                <WriteReview
+                  productId={showWriteReview.product.id}
+                  productName={showWriteReview.product.name}
+                  productImage={showWriteReview.product.thumbnail}
+                  orderId={currentOrder.id}
+                  onReviewSubmitted={handleReviewSubmitted}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

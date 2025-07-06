@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useReview } from '../contexts/ReviewContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import WriteReview from '../components/reviews/WriteReview';
 import LoadingSpinner from '../components/LoadingSpinner';
 import AuthDebugger from '../components/AuthDebugger';
@@ -19,12 +20,15 @@ export default function Reviews() {
   } = useReview();
   
   const { user, loading: authLoading } = useAuth();
+  const { showSuccess, showError } = useToast();
   const navigate = useNavigate();
   
   const [reviewableItems, setReviewableItems] = useState([]);
   const [activeTab, setActiveTab] = useState('reviewable');
   const [showWriteReview, setShowWriteReview] = useState(null);
   const [editingReview, setEditingReview] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterRating, setFilterRating] = useState('');
 
   useEffect(() => {
     console.log('Reviews page: user state changed:', user);
@@ -94,7 +98,10 @@ export default function Reviews() {
     if (window.confirm('Are you sure you want to delete this review? This action cannot be undone.')) {
       const success = await deleteReview(reviewId);
       if (success) {
+        showSuccess('Review deleted successfully');
         await loadReviewableItems(); // Refresh reviewable items
+      } else {
+        showError('Failed to delete review. Please try again.');
       }
     }
   };
@@ -103,6 +110,7 @@ export default function Reviews() {
     setShowWriteReview(null);
     setEditingReview(null);
     await loadReviewableItems(); // Refresh reviewable items
+    showSuccess('Review action completed successfully!');
   };
 
   const formatDate = (dateString) => {
@@ -131,6 +139,16 @@ export default function Reviews() {
     }
     return stars;
   };
+
+  // Filter reviewable items and user reviews based on search
+  const filteredReviewableItems = reviewableItems.filter(item => 
+    item.product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredUserReviews = userReviews.filter(review => 
+    review.product_name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    (filterRating === '' || review.rating.toString() === filterRating)
+  );
 
   if (!user) {
     return (
@@ -166,6 +184,56 @@ export default function Reviews() {
           ></button>
         </div>
       )}
+
+      {/* Search and Filter */}
+      <div className="mb-4">
+        <div className="input-group">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search products or reviews..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button className="btn btn-primary" type="button">
+            <i className="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+
+      {/* Search and Filter Controls */}
+      <div className="row mb-4">
+        <div className="col-md-6">
+          <div className="input-group">
+            <span className="input-group-text">
+              <i className="fas fa-search"></i>
+            </span>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        </div>
+        {activeTab === 'existing' && (
+          <div className="col-md-6">
+            <select
+              className="form-select"
+              value={filterRating}
+              onChange={(e) => setFilterRating(e.target.value)}
+            >
+              <option value="">All Ratings</option>
+              <option value="5">5 Stars</option>
+              <option value="4">4 Stars</option>
+              <option value="3">3 Stars</option>
+              <option value="2">2 Stars</option>
+              <option value="1">1 Star</option>
+            </select>
+          </div>
+        )}
+      </div>
 
       {/* Tabs */}
       <ul className="nav nav-tabs mb-4">
@@ -215,7 +283,7 @@ export default function Reviews() {
             </div>
           ) : (
             <>
-              {reviewableItems.length === 0 ? (
+              {filteredReviewableItems.length === 0 ? (
                 <div className="card">
                   <div className="card-body text-center py-5">
                     <i className="fas fa-box-open fa-3x text-muted mb-3"></i>
@@ -230,7 +298,7 @@ export default function Reviews() {
                 </div>
               ) : (
                 <div className="row">
-                  {reviewableItems.map((item) => (
+                  {filteredReviewableItems.map((item) => (
                     <div key={`${item.order_number}-${item.product.id}`} className="col-md-6 mb-4">
                       <div className="card h-100">
                         <div className="card-body">
@@ -297,19 +365,43 @@ export default function Reviews() {
             </div>
           ) : (
             <>
-              {userReviews.length === 0 ? (
+              {filteredUserReviews.length === 0 ? (
                 <div className="card">
                   <div className="card-body text-center py-5">
-                    <i className="fas fa-comment-alt fa-3x text-muted mb-3"></i>
-                    <h5>No reviews yet</h5>
-                    <p className="text-muted">
-                      Your product reviews will appear here once you start writing them.
-                    </p>
+                    {searchTerm || filterRating ? (
+                      <>
+                        <i className="fas fa-search fa-3x text-muted mb-3"></i>
+                        <h5>No matching reviews found</h5>
+                        <p className="text-muted">
+                          No reviews found matching your current search criteria.
+                        </p>
+                        <button 
+                          className="btn btn-outline-primary me-2"
+                          onClick={() => setSearchTerm('')}
+                        >
+                          Clear Search
+                        </button>
+                        <button 
+                          className="btn btn-outline-secondary"
+                          onClick={() => setFilterRating('')}
+                        >
+                          Clear Filter
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-comment-alt fa-3x text-muted mb-3"></i>
+                        <h5>No reviews yet</h5>
+                        <p className="text-muted">
+                          Your product reviews will appear here once you start writing them.
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               ) : (
                 <div className="row">
-                  {userReviews.map((review) => (
+                  {filteredUserReviews.map((review) => (
                     <div key={review.id} className="col-lg-6 mb-4">
                       <div className="card h-100">
                         <div className="card-body">

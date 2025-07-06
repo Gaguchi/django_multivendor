@@ -5,6 +5,7 @@ import { CartProvider } from './contexts/CartContext'
 import { WishlistProvider } from './contexts/WishlistContext'
 import { OrderProvider } from './contexts/OrderContext'
 import { ReviewProvider } from './contexts/ReviewContext'
+import { ToastProvider } from './contexts/ToastContext'
 import Layout from './components/Layout'
 import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
@@ -76,8 +77,10 @@ function App() {
         <WishlistProvider>
           <OrderProvider>
             <ReviewProvider>
-              <AppContent />
-              <CartMergeNotification />
+              <ToastProvider>
+                <AppContent />
+                <CartMergeNotification />
+              </ToastProvider>
             </ReviewProvider>
           </OrderProvider>
         </WishlistProvider>

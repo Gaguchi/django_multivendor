@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useReview } from '../../contexts/ReviewContext';
 import { useAuth } from '../../contexts/AuthContext';
+import { useToast } from '../../contexts/ToastContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function WriteReview({ 
@@ -13,6 +14,7 @@ export default function WriteReview({
 }) {
   const { createReview, updateReview, loading, error, setError } = useReview();
   const { user } = useAuth();
+  const { showSuccess, showError } = useToast();
   const navigate = useNavigate();
 
   const [rating, setRating] = useState(existingReview?.rating || 0);
@@ -101,12 +103,12 @@ export default function WriteReview({
     }
     
     if (rating === 0) {
-      setError('Please select a rating');
+      showError('Please select a rating');
       return;
     }
     
     if (comment.trim().length < 10) {
-      setError('Please write at least 10 characters in your review');
+      showError('Please write at least 10 characters in your review');
       return;
     }
 
@@ -126,6 +128,13 @@ export default function WriteReview({
         result = await createReview(reviewData);
       }
       
+      // Show success message using Toast
+      const message = existingReview 
+        ? 'Review updated successfully!' 
+        : 'Review submitted successfully! Thank you for sharing your feedback.';
+      
+      showSuccess(message, 4000);
+      
       if (onReviewSubmitted) {
         onReviewSubmitted(result);
       }
@@ -140,6 +149,7 @@ export default function WriteReview({
       
     } catch (err) {
       console.error('Error submitting review:', err);
+      showError('Failed to submit review. Please try again.');
     }
   };
 

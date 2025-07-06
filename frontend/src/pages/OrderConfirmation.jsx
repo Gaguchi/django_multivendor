@@ -62,9 +62,20 @@ export default function OrderConfirmation() {
                 <Link to="/account/orders" className="btn btn-primary mr-2 mb-2">
                   View My Orders
                 </Link>
-                <Link to="/" className="btn btn-outline-primary mb-2">
+                <Link to="/" className="btn btn-outline-primary mr-2 mb-2">
                   Continue Shopping
                 </Link>
+              </div>
+
+              <div className="mt-4 text-center">
+                <div className="alert alert-info">
+                  <i className="fas fa-info-circle me-2"></i> 
+                  <strong>What's Next?</strong>
+                  <p className="mb-0 mt-2">
+                    Once your order is delivered, you'll be able to write reviews for your purchased items. 
+                    Your feedback helps other customers make informed decisions!
+                  </p>
+                </div>
               </div>
             </div>
           </div>

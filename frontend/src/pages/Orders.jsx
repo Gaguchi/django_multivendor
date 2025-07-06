@@ -2,12 +2,14 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useOrder } from '../contexts/OrderContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import { OrderSkeleton } from '../components/Skeleton';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Orders() {
   const { orders, loading, error, fetchOrders, cancelOrder, getStatusColor } = useOrder();
   const { user } = useAuth();
+  const { showSuccess, showError } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -35,7 +37,12 @@ export default function Orders() {
 
   const handleCancelOrder = async (orderNumber) => {
     if (window.confirm('Are you sure you want to cancel this order?')) {
-      await cancelOrder(orderNumber);
+      const success = await cancelOrder(orderNumber);
+      if (success) {
+        showSuccess('Order cancelled successfully');
+      } else {
+        showError('Failed to cancel order. Please try again.');
+      }
     }
   };
 
@@ -128,6 +135,14 @@ export default function Orders() {
                   >
                     View
                   </Link>
+                  {order.status === 'Delivered' && (
+                    <Link 
+                      to="/account/reviews"
+                      className="btn btn-sm btn-success mr-2"
+                    >
+                      Reviews
+                    </Link>
+                  )}
                   {order.status === 'Pending' && (
                     <button 
                       className="btn btn-sm btn-outline-danger"

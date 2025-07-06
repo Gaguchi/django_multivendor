@@ -145,6 +145,7 @@ export default function Account() {
                                         >
                                             <i className="icon-star"></i>
                                             <span>My Reviews</span>
+                                            <span className="badge">New</span>
                                         </a>
                                     </li>
                                 </ul>

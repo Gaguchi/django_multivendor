@@ -97,6 +97,11 @@ export default function ProductReviews({ productId }) {
               <span className="h5 mb-0 me-2">{averageRating.toFixed(1)}</span>
               <span className="text-muted">({totalReviews} review{totalReviews !== 1 ? 's' : ''})</span>
             </div>
+            {totalReviews > 0 && (
+              <small className="text-muted">
+                {Math.round((reviews.filter(r => r.rating >= 4).length / totalReviews) * 100)}% of customers recommend this product
+              </small>
+            )}
           </div>
           <div className="col-md-6 text-md-end">
             {user && canReview && !hasReviewed && (

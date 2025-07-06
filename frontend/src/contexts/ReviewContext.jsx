@@ -241,6 +241,23 @@ export function ReviewProvider({ children }) {
     }
   };
 
+  // Auto-refresh user reviews when user changes
+  useEffect(() => {
+    if (user) {
+      fetchUserReviews();
+    }
+  }, [user]);
+
+  // Clear error after 5 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
   const value = {
     reviews,
     userReviews,
