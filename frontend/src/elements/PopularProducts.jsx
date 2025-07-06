@@ -21,6 +21,7 @@ export default function PopularProducts() {
             name: p.name,
             category: p.category_name || p.vendor_name || 'Category', // Fallback to 'Category' if both are missing
             price: parseFloat(p.price),
+            old_price: p.old_price ? parseFloat(p.old_price) : null,
             stock: p.stock,
             rating: p.rating || 0
           }))}

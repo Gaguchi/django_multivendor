@@ -18,7 +18,6 @@
 /* We're now setting grid-template-columns dynamically in the component */
 
 .uniform-product-cell {
-  height: 100%;
   display: flex;
   overflow: visible; /* Allow fire icon to extend outside cell */
   margin: 5px; /* Add margin to create space for fire icon overflow */

@@ -40,14 +40,14 @@ export default function Specials() {
               xs: 2,
               sm: 3,
               md: 4,
-              lg: 6,
+              lg: 5,
               xl: 6
             }}
             defaultLimit={{
               xs: 4,
               sm: 6,
               md: 4,
-              lg: 6,
+              lg: 5,
               xl: 6
             }}
             className="product-grid"

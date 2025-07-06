@@ -97,7 +97,16 @@ export default function ForYou() {
         <div className="col-md-8">
           <div className="custom-products bg-white rounded">
             <ProductGrid 
-              products={products} // Skip first product as it's in countdown section
+              products={products.map(p => ({
+                id: p.id,
+                thumbnail: p.thumbnail,
+                name: p.name,
+                category: p.category_name || p.vendor_name || 'Category',
+                price: parseFloat(p.price),
+                old_price: p.old_price ? parseFloat(p.old_price) : null,
+                stock: p.stock,
+                rating: p.rating || 0
+              }))}
               loading={isLoading}
               error={error}
               defaultColumns={{

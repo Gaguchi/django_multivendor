@@ -47,7 +47,7 @@ const ProductGrid = memo(function ProductGrid({
     }
     
     setGridTemplateColumns(`repeat(${columns}, 1fr)`)
-    setCurrentLimit(limit)
+    setCurrentLimit(limit || null) // Use null if no limit specified for this breakpoint
   }, [defaultColumns, defaultLimit])
   
   useEffect(() => {
@@ -84,6 +84,13 @@ const ProductGrid = memo(function ProductGrid({
     const limitedProducts = currentLimit && currentLimit > 0 
       ? products.slice(0, currentLimit) 
       : products
+    
+    console.log('🔢 ProductGrid limiting products:', {
+      totalProducts: products.length,
+      currentLimit,
+      limitedCount: limitedProducts.length,
+      screenWidth: window.innerWidth
+    })
     
     return limitedProducts.map(product => (
       <div className="uniform-product-cell" key={product.id}>
