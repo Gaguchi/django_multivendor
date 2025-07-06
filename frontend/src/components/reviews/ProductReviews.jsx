@@ -3,7 +3,7 @@ import { useReview } from '../../contexts/ReviewContext';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '../LoadingSpinner';
 
-export default function ProductReviews({ productId }) {
+export default function ProductReviews({ productId, onReviewChange }) {
   const { fetchProductReviews, canReviewProduct, hasReviewedProduct } = useReview();
   const { user } = useAuth();
   const [reviews, setReviews] = useState([]);
@@ -23,6 +23,25 @@ export default function ProductReviews({ productId }) {
     }
   }, [productId, user]);
 
+  // Handle escape key for modal
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && selectedReview) {
+        closeReviewModal();
+      }
+    };
+
+    if (selectedReview) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = '';
+    };
+  }, [selectedReview]);
+
   const loadReviews = async () => {
     try {
       setLoading(true);
@@ -34,6 +53,15 @@ export default function ProductReviews({ productId }) {
       console.error('Error loading reviews:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const refreshReviewsAndProduct = async () => {
+    // Refresh reviews
+    await loadReviews();
+    // Refresh product data (rating and review count)
+    if (onReviewChange) {
+      await onReviewChange();
     }
   };
 
@@ -75,8 +103,10 @@ export default function ProductReviews({ productId }) {
 
   const openReviewModal = (review) => {
     setSelectedReview(review);
-    const modal = new bootstrap.Modal(document.getElementById('reviewModal'));
-    modal.show();
+  };
+
+  const closeReviewModal = () => {
+    setSelectedReview(null);
   };
 
   if (loading) {
@@ -228,58 +258,69 @@ export default function ProductReviews({ productId }) {
       )}
 
       {/* Review Modal */}
-      <div className="modal fade" id="reviewModal" tabIndex="-1">
-        <div className="modal-dialog modal-lg">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Review Details</h5>
-              <button type="button" className="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div className="modal-body">
-              {selectedReview && (
-                <div>
-                  <div className="d-flex align-items-center mb-3">
-                    <div className="me-2">{renderStars(selectedReview.rating)}</div>
-                    <strong className="me-2">{selectedReview.user_name || 'Anonymous User'}</strong>
-                    <small className="text-muted">{formatDate(selectedReview.created_at)}</small>
-                  </div>
-                  
-                  <p className="mb-3">{selectedReview.comment}</p>
-                  
-                  {/* Full Media Gallery */}
-                  {(selectedReview.images?.length > 0 || selectedReview.videos?.length > 0) && (
-                    <div className="review-media-gallery">
-                      <h6>Media</h6>
-                      <div className="row">
-                        {selectedReview.images?.map((image, index) => (
-                          <div key={index} className="col-md-4 mb-3">
-                            <img
-                              src={image.image}
-                              alt="Review"
-                              className="img-fluid rounded"
-                              style={{ maxHeight: '200px', objectFit: 'cover', width: '100%' }}
-                            />
-                          </div>
-                        ))}
-                        {selectedReview.videos?.map((video, index) => (
-                          <div key={index} className="col-md-4 mb-3">
-                            <video
-                              src={video.video}
-                              controls
-                              className="img-fluid rounded"
-                              style={{ maxHeight: '200px', objectFit: 'cover', width: '100%' }}
-                            />
-                          </div>
-                        ))}
-                      </div>
+      {selectedReview && (
+        <div 
+          className="modal fade show d-block" 
+          tabIndex="-1"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+          onClick={closeReviewModal}
+        >
+          <div className="modal-dialog modal-lg">
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h5 className="modal-title">Review Details</h5>
+                <button 
+                  type="button" 
+                  className="btn-close" 
+                  onClick={closeReviewModal}
+                ></button>
+              </div>
+              <div className="modal-body">
+                {selectedReview && (
+                  <div>
+                    <div className="d-flex align-items-center mb-3">
+                      <div className="me-2">{renderStars(selectedReview.rating)}</div>
+                      <strong className="me-2">{selectedReview.user_name || 'Anonymous User'}</strong>
+                      <small className="text-muted">{formatDate(selectedReview.created_at)}</small>
                     </div>
-                  )}
-                </div>
-              )}
+                    
+                    <p className="mb-3">{selectedReview.comment}</p>
+                    
+                    {/* Full Media Gallery */}
+                    {(selectedReview.images?.length > 0 || selectedReview.videos?.length > 0) && (
+                      <div className="review-media-gallery">
+                        <h6>Media</h6>
+                        <div className="row">
+                          {selectedReview.images?.map((image, index) => (
+                            <div key={index} className="col-md-4 mb-3">
+                              <img
+                                src={image.image}
+                                alt="Review"
+                                className="img-fluid rounded"
+                                style={{ maxHeight: '200px', objectFit: 'cover', width: '100%' }}
+                              />
+                            </div>
+                          ))}
+                          {selectedReview.videos?.map((video, index) => (
+                            <div key={index} className="col-md-4 mb-3">
+                              <video
+                                src={video.video}
+                                controls
+                                className="img-fluid rounded"
+                                style={{ maxHeight: '200px', objectFit: 'cover', width: '100%' }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       <style jsx>{`
         .review-thumbnail:hover {

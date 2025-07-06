@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { useQueryClient } from '@tanstack/react-query';
 import api from '../services/api';
 
 const ReviewContext = createContext();
@@ -18,6 +19,17 @@ export function ReviewProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Invalidate product queries when reviews change
+  const invalidateProductQueries = () => {
+    // Invalidate all product-related queries to refresh rating and review count
+    queryClient.invalidateQueries({ queryKey: ['products'] });
+    queryClient.invalidateQueries({ queryKey: ['hot-products'] });
+    queryClient.invalidateQueries({ queryKey: ['featured-products'] });
+    queryClient.invalidateQueries({ queryKey: ['latest-products'] });
+    queryClient.invalidateQueries({ queryKey: ['search-products'] });
+  };
 
   // Fetch reviews for a specific product
   const fetchProductReviews = async (productId) => {
@@ -95,6 +107,9 @@ export function ReviewProvider({ children }) {
       // Refresh user reviews
       await fetchUserReviews();
       
+      // Invalidate product queries to refresh ratings
+      invalidateProductQueries();
+      
       return response.data;
     } catch (err) {
       const errorMessage = err.response?.data?.non_field_errors?.[0] || 
@@ -151,6 +166,9 @@ export function ReviewProvider({ children }) {
       // Refresh user reviews
       await fetchUserReviews();
       
+      // Invalidate product queries to refresh ratings
+      invalidateProductQueries();
+      
       return response.data;
     } catch (err) {
       const errorMessage = err.response?.data?.non_field_errors?.[0] || 
@@ -174,6 +192,9 @@ export function ReviewProvider({ children }) {
       
       // Refresh user reviews
       await fetchUserReviews();
+      
+      // Invalidate product queries to refresh ratings
+      invalidateProductQueries();
       
       return true;
     } catch (err) {

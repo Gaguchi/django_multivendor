@@ -71,6 +71,31 @@ export default function OrderDetail() {
     setShowWriteReview(item);
   };
 
+  const handleCloseModal = () => {
+    setShowWriteReview(null);
+  };
+
+  // Handle escape key for modal
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && showWriteReview) {
+        handleCloseModal();
+      }
+    };
+
+    if (showWriteReview) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      // Restore body scroll
+      document.body.style.overflow = '';
+    };
+  }, [showWriteReview]);
+
   const handleReviewSubmitted = async () => {
     setShowWriteReview(null);
     showSuccess('Review submitted successfully!');
@@ -525,15 +550,19 @@ export default function OrderDetail() {
 
       {/* Write Review Modal */}
       {showWriteReview && (
-        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg">
+        <div 
+          className="modal show d-block" 
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }}
+          onClick={handleCloseModal}
+        >
+          <div className="modal-dialog modal-lg" onClick={(e) => e.stopPropagation()}>
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title">Write Review</h5>
                 <button 
                   type="button" 
                   className="btn-close" 
-                  onClick={() => setShowWriteReview(null)}
+                  onClick={handleCloseModal}
                 ></button>
               </div>
               <div className="modal-body">

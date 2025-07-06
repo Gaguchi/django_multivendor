@@ -93,11 +93,11 @@
 }
 
 /* Remove the hover effect that shows the buttons since they're always visible now */
-.uniform-product-card:hover .uniform-btn-group {
-  /* This is no longer needed as buttons are always visible */
-  /* opacity: 1;
-  transform: translateX(0); */
-}
+/* .uniform-product-card:hover .uniform-btn-group {
+  This is no longer needed as buttons are always visible
+  opacity: 1;
+  transform: translateX(0);
+} */
 
 .uniform-btn {
   padding: 8px;
@@ -156,6 +156,7 @@
   overflow: hidden;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -169,6 +170,27 @@
   margin-bottom: 10px;
 }
 
+.stars-display {
+  align-items: center;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.stars i {
+  font-size: 12px;
+}
+
+.review-count {
+  font-size: 11px;
+  color: #666;
+  white-space: nowrap;
+}
+
+/* Legacy CSS approach (kept for backward compatibility) */
 .uniform-stars-container {
   position: relative;
   display: inline-block;

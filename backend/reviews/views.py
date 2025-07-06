@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.db.models import Q
 from .models import Review, ReviewImage, ReviewVideo
@@ -155,7 +155,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
         
         return Response({'has_reviewed': has_reviewed})
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def product_reviews(self, request):
         """Get all reviews for a specific product"""
         product_id = request.query_params.get('product_id')

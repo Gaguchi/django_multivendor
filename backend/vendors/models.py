@@ -112,6 +112,21 @@ class VendorProduct(models.Model):
             self.tags = ', '.join([tag.strip() for tag in tags_list if tag.strip()])
         else:
             self.tags = ''
+    
+    @property
+    def average_rating(self):
+        """Calculate average rating from all reviews for this product"""
+        reviews = self.reviews.all()
+        if reviews.exists():
+            from django.db.models import Avg
+            avg = reviews.aggregate(avg_rating=Avg('rating'))['avg_rating']
+            return round(float(avg or 0), 1)
+        return 0.0
+    
+    @property
+    def review_count(self):
+        """Get total number of reviews for this product"""
+        return self.reviews.count()
 
 class ProductImage(models.Model):
     product = models.ForeignKey(

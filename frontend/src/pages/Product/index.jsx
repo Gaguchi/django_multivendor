@@ -29,37 +29,38 @@ export default function Product() {
   const [checkedProducts, setCheckedProducts] = useState({})
   const [totalComboPrice, setTotalComboPrice] = useState(0)
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        // Add the master token to headers
-        const config = {
-          headers: {
-            'X-Master-Token': 'your-super-secret-token'
-          }
+  const fetchProduct = async () => {
+    try {
+      setLoading(true)
+      // Add the master token to headers
+      const config = {
+        headers: {
+          'X-Master-Token': 'your-super-secret-token'
         }
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/vendors/products/${id}/`, config)
-        setProduct(response.data)
-        
-        // Initialize all companion products as checked
-        if (response.data.frequently_bought_together && response.data.frequently_bought_together.length > 0) {
-          const initialCheckedState = {}
-          // The main product is always checked
-          initialCheckedState[response.data.id] = true
-          
-          // All companion products start as checked
-          response.data.frequently_bought_together.forEach(item => {
-            initialCheckedState[item.id] = true
-          })
-          setCheckedProducts(initialCheckedState)
-        }
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
       }
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/vendors/products/${id}/`, config)
+      setProduct(response.data)
+      
+      // Initialize all companion products as checked
+      if (response.data.frequently_bought_together && response.data.frequently_bought_together.length > 0) {
+        const initialCheckedState = {}
+        // The main product is always checked
+        initialCheckedState[response.data.id] = true
+        
+        // All companion products start as checked
+        response.data.frequently_bought_together.forEach(item => {
+          initialCheckedState[item.id] = true
+        })
+        setCheckedProducts(initialCheckedState)
+      }
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchProduct()
   }, [id])
 
@@ -704,7 +705,7 @@ export default function Product() {
                 {/* Reviews Tab */}
                 {activeTab === 'reviews' && (
                   <div className={`${styles.tabPane} active`}>
-                    <ProductReviews productId={product.id} />
+                    <ProductReviews productId={product.id} onReviewChange={fetchProduct} />
                   </div>
                 )}
 

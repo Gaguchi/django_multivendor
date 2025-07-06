@@ -18,6 +18,25 @@ export default function ReviewDisplay({ productId, showWriteReview = false }) {
     loadReviews();
   }, [productId, fetchProductReviews]);
 
+  // Handle escape key for modal
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && selectedMedia) {
+        closeMediaModal();
+      }
+    };
+
+    if (selectedMedia) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = '';
+    };
+  }, [selectedMedia]);
+
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
     try {

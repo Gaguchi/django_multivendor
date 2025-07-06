@@ -61,12 +61,15 @@ class ProductListSerializer(serializers.ModelSerializer):
     # And that Category model is imported or accessible.
     category_name = serializers.CharField(source='category.name', read_only=True, allow_null=True, default=None)
     images = ProductImageSerializer(many=True, read_only=True, source='product_images') # Added to show images in list
+    average_rating = serializers.ReadOnlyField()
+    review_count = serializers.ReadOnlyField()
 
     class Meta:
         model = VendorProduct
         fields = [
             'id', 'name', 'price', 'old_price', 'thumbnail', 'vendor_name', 'rating', 
-            'category_name', 'is_hot', 'stock', 'images', 'created_at', 'tags'
+            'category_name', 'is_hot', 'stock', 'images', 'created_at', 'tags',
+            'average_rating', 'review_count'
         ]
 
 # Fix: Define the ComboProductSerializer before it's used
@@ -74,6 +77,8 @@ class ComboProductSerializer(serializers.ModelSerializer):
     """Simple serializer for products in combos/frequently bought together"""
     vendor_name = serializers.CharField(source='vendor.store_name', read_only=True)
     tags_list = serializers.SerializerMethodField()
+    average_rating = serializers.ReadOnlyField()
+    review_count = serializers.ReadOnlyField()
     
     class Meta:
         model = VendorProduct
@@ -85,7 +90,9 @@ class ComboProductSerializer(serializers.ModelSerializer):
             'vendor_name',
             'rating',
             'tags',
-            'tags_list'
+            'tags_list',
+            'average_rating',
+            'review_count'
         ]
     
     def get_tags_list(self, obj):
@@ -98,13 +105,15 @@ class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)  # For reading full category details
     category_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)  # For writing category ID
     tags_list = serializers.SerializerMethodField()
+    average_rating = serializers.ReadOnlyField()
+    review_count = serializers.ReadOnlyField()
     
     class Meta:
         model = VendorProduct
         fields = [
             'id', 'name', 'sku', 'price', 'old_price', 'stock', 'description',
             'thumbnail', 'secondaryImage', 'vendor', 'images', 'rating', 'is_hot', 'created_at',
-            'category', 'category_id', 'brand', 'tags', 'tags_list'  # Added tags field
+            'category', 'category_id', 'brand', 'tags', 'tags_list', 'average_rating', 'review_count'
         ]
     
     def get_tags_list(self, obj):
@@ -323,13 +332,16 @@ class ProductDetailSerializer(serializers.ModelSerializer):
     category_id = serializers.IntegerField(write_only=True, required=False, allow_null=True)
     frequently_bought_together = ComboProductSerializer(many=True, read_only=True)
     tags_list = serializers.SerializerMethodField()
+    average_rating = serializers.ReadOnlyField()
+    review_count = serializers.ReadOnlyField()
     
     class Meta:
         model = VendorProduct
         fields = [
             'id', 'name', 'sku', 'price', 'old_price', 'stock', 'description',
             'thumbnail', 'secondaryImage', 'vendor', 'images', 'rating', 'is_hot', 'created_at',
-            'category', 'category_id', 'brand', 'tags', 'tags_list', 'frequently_bought_together'
+            'category', 'category_id', 'brand', 'tags', 'tags_list', 'frequently_bought_together',
+            'average_rating', 'review_count'
         ]
     
     def get_tags_list(self, obj):

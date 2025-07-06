@@ -6,6 +6,7 @@ import { WishlistProvider } from './contexts/WishlistContext'
 import { OrderProvider } from './contexts/OrderContext'
 import { ReviewProvider } from './contexts/ReviewContext'
 import { ToastProvider } from './contexts/ToastContext'
+import { initModalCleanup } from './utils/modalCleanup'
 import Layout from './components/Layout'
 import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
@@ -29,6 +30,11 @@ import { initializePage } from './utils/jQuerySimple'
 
 function AppContent() {
   const location = useLocation();
+  
+  // Initialize modal cleanup on app start
+  useEffect(() => {
+    initModalCleanup();
+  }, []);
   
   // Initialize jQuery plugins once on route changes using only jQuerySimple
   // Use a stable effect that doesn't interfere with component rendering

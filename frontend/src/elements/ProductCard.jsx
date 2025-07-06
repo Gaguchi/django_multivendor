@@ -73,11 +73,64 @@ export default function ProductCard({
     category,
     price,
     old_price,
-    is_hot = false 
+    is_hot = false,
+    average_rating = 0,
+    review_count = 0
   } = product;
 
-  // Convert rating to number or default to 0
-  const rating = Number(product.rating) || 0
+  // Use the live average_rating from the API, fallback to the old rating field
+  const rating = Number(average_rating) || Number(product.rating) || 0
+
+  // Debug logging - temporary to check data
+  if (id) {
+    console.log('ProductCard Data for:', {
+      productId: id,
+      productName: name,
+      average_rating,
+      rating,
+      review_count,
+      originalRating: product.rating,
+      productDataKeys: Object.keys(product)
+    });
+  }
+
+  // Render star rating similar to Product page
+  const renderStars = () => {
+    const stars = []
+    
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        // Full star
+        stars.push(
+          <i 
+            key={i} 
+            className="fas fa-star" 
+            style={{color: '#ffa41c', fontSize: '14px', marginRight: '2px'}}
+          ></i>
+        )
+      } else if (i - 0.5 <= rating) {
+        // Half star
+        stars.push(
+          <i 
+            key={i} 
+            className="fas fa-star-half-alt" 
+            style={{color: '#ffa41c', fontSize: '14px', marginRight: '2px'}}
+          ></i>
+        )
+      } else {
+        // Empty star
+        stars.push(
+          <i 
+            key={i} 
+            className="far fa-star" 
+            style={{color: '#ddd', fontSize: '14px', marginRight: '2px'}}
+          ></i>
+        )
+      }
+    }
+    
+    return stars
+  }
 
   // Calculate sale percentage if old_price exists
   const salePercentage = old_price ? 
@@ -147,8 +200,14 @@ export default function ProductCard({
           
           {/* Ratings */}
           <div className="uniform-ratings">
-            <div className="uniform-stars-container">
-              <div className="uniform-stars-fill" style={{ width: `${rating * 20}%` }}></div>
+            <div className="stars-display d-flex align-items-center">
+              <div className="stars me-2">
+                {renderStars()}
+              </div>
+              <span className="review-count text-muted small">
+                {rating > 0 && `${rating.toFixed(1)} `}
+                {review_count > 0 ? `(${review_count})` : '(0)'}
+              </span>
             </div>
           </div>
           
@@ -211,6 +270,14 @@ ProductCard.propTypes = {
       PropTypes.string
     ]),
     rating: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ]),
+    average_rating: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string
+    ]),
+    review_count: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string
     ]),
