@@ -18,29 +18,37 @@ const ProductGrid = memo(function ProductGrid({
     md: 3, // tablet
     lg: 4, // desktop
     xl: 4  // desktop large
-  }
+  },
+  defaultLimit = null // Optional limit for number of products to show per breakpoint
 }) {
   const [gridTemplateColumns, setGridTemplateColumns] = useState('')
+  const [currentLimit, setCurrentLimit] = useState(null)
   
   // Memoized resize handler to prevent unnecessary re-renders
   const handleResize = useCallback(() => {
     const width = window.innerWidth
-    let columns
+    let columns, limit
     
     if (width >= 1200) {
       columns = defaultColumns.xl
+      limit = defaultLimit?.xl
     } else if (width >= 992) {
       columns = defaultColumns.lg 
+      limit = defaultLimit?.lg
     } else if (width >= 768) {
       columns = defaultColumns.md
+      limit = defaultLimit?.md
     } else if (width >= 576) {
       columns = defaultColumns.sm
+      limit = defaultLimit?.sm
     } else {
       columns = defaultColumns.xs
+      limit = defaultLimit?.xs
     }
     
     setGridTemplateColumns(`repeat(${columns}, 1fr)`)
-  }, [defaultColumns])
+    setCurrentLimit(limit)
+  }, [defaultColumns, defaultLimit])
   
   useEffect(() => {
     handleResize() // Initialize on component mount
@@ -72,7 +80,12 @@ const ProductGrid = memo(function ProductGrid({
   const productItems = useMemo(() => {
     if (!products || products.length === 0) return []
     
-    return products.map(product => (
+    // Apply current limit if specified
+    const limitedProducts = currentLimit && currentLimit > 0 
+      ? products.slice(0, currentLimit) 
+      : products
+    
+    return limitedProducts.map(product => (
       <div className="uniform-product-cell" key={product.id}>
         <ProductCard 
           product={product}
@@ -80,7 +93,7 @@ const ProductGrid = memo(function ProductGrid({
         />
       </div>
     ))
-  }, [products])
+  }, [products, currentLimit])
 
   // Debug log with more details
   const renderCountRef = useRef(0)
@@ -188,6 +201,13 @@ ProductGrid.propTypes = {
   error: PropTypes.object,
   className: PropTypes.string,
   defaultColumns: PropTypes.shape({
+    xs: PropTypes.number,
+    sm: PropTypes.number,
+    md: PropTypes.number,
+    lg: PropTypes.number,
+    xl: PropTypes.number
+  }),
+  defaultLimit: PropTypes.shape({
     xs: PropTypes.number,
     sm: PropTypes.number,
     md: PropTypes.number,

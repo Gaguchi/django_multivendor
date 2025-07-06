@@ -34,11 +34,11 @@ export default function PopularProducts() {
             xl: 6
           }}
           defaultLimit={{
-            xs: 6,
-            sm: 6,
-            md: 6,
-            lg: 8,
-            xl: 6
+            xs: 4,  // Show 4 products on mobile (2 rows)
+            sm: 6,  // Show 6 products on small tablets (3 rows)
+            md: 6,  // Show 6 products on tablets (2 rows)
+            lg: 8,  // Show 8 products on desktop (2 rows)
+            xl: 12  // Show 12 products on large desktop (2 rows)
           }}
           className="popular-products-grid"
         />
