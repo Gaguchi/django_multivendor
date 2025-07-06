@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { useCart } from '../contexts/CartContext'
 import { useWishlist } from '../contexts/WishlistContext'
+import FireIcon from '../assets/images/svgs/Fire.svg'
 
 export default function ProductCard({ 
   product, 
@@ -152,11 +153,12 @@ export default function ProductCard({
               style={{ backgroundImage: `url(${imageUrl})` }}
             ></div>
             
-            {/* Labels for hot items and sales */}
-            <div className="uniform-product-labels">
-              {(isHot || is_hot) && <span className="product-label uniform-hot-label">HOT</span>}
-              {salePercentage && <span className="product-label uniform-sale-label">-{salePercentage}%</span>}
-            </div>
+            {/* Labels for sales */}
+            {salePercentage && (
+              <div className="uniform-product-labels">
+                <span className="product-label uniform-sale-label">-{salePercentage}%</span>
+              </div>
+            )}
           </Link>
           
           {/* Quick action buttons */}
@@ -183,6 +185,17 @@ export default function ProductCard({
                 )}
                 </div>
               </div>
+              
+        {/* Fire icon for hot products - positioned outside image container */}
+        {(isHot || is_hot) && (
+          <div className="fire-icon-container">
+            <img 
+              src={FireIcon} 
+              alt="Hot Product" 
+              className="fire-icon"
+            />
+          </div>
+        )}
               
               {/* Product details section */}
         <div className="uniform-product-details">

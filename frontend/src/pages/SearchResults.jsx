@@ -5,6 +5,7 @@ import AISearchButton from '../components/Search/AISearchButton'
 import { SearchResultsSkeleton } from '../components/Skeleton'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorMessage from '../components/ErrorMessage'
+import FireIcon from '../assets/images/svgs/Fire.svg'
 
 export default function SearchResults() {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -345,7 +346,9 @@ export default function SearchResults() {
                                                 </div>
                                             )}
                                             {product.is_hot && (
-                                                <span className="hot-badge">HOT</span>
+                                                <span className="hot-badge">
+                                                    <img src={FireIcon} alt="Hot Product" style={{width: '16px', height: '16px'}} />
+                                                </span>
                                             )}
                                         </div>
                                         

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import FireIcon from '../../assets/images/svgs/Fire.svg'
 
 export default function AISearchModal({ onClose }) {
     const [searchQuery, setSearchQuery] = useState('')
@@ -277,7 +278,9 @@ export default function AISearchModal({ onClose }) {
                                                         </div>
                                                     )}
                                                     {product.is_hot && (
-                                                        <span className="hot-badge">HOT</span>
+                                                        <span className="hot-badge">
+                                                            <img src={FireIcon} alt="Hot Product" style={{width: '16px', height: '16px'}} />
+                                                        </span>
                                                     )}
                                                 </div>
                                                 <div className="product-info">

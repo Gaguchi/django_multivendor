@@ -2,6 +2,17 @@
 .uniform-product-grid {
   width: 100%;
   margin: 0 auto;
+  padding: 20px; /* Increased padding to prevent fire icon clipping */
+  overflow: visible; /* Allow fire icons to extend outside grid */
+}
+
+/* Ensure parent containers also allow overflow */
+.products-grid-section,
+.col-lg-9,
+.row,
+.container,
+.shop-grid-container .products-column {
+  overflow: visible !important;
 }
 
 /* We're now setting grid-template-columns dynamically in the component */
@@ -9,6 +20,8 @@
 .uniform-product-cell {
   height: 100%;
   display: flex;
+  overflow: visible; /* Allow fire icon to extend outside cell */
+  margin: 5px; /* Add margin to create space for fire icon overflow */
 }
 
 /* Loading state */
