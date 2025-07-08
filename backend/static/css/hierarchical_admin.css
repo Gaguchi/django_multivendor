@@ -7,9 +7,22 @@
     line-height: 1.4;
 }
 
+.field-get_hierarchical_name a {
+    transition: background-color 0.2s ease;
+    padding: 2px 4px;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.field-get_hierarchical_name a:hover {
+    background-color: #f0f8ff;
+    text-decoration: none;
+}
+
 .field-get_hierarchical_name .level-0 {
     font-weight: bold;
     color: #2e7d32;
+    font-size: 14px;
 }
 
 .field-get_hierarchical_name .level-1 {
@@ -209,4 +222,50 @@
 .hierarchical-category-help .level-example {
     margin-left: 10px;
     font-family: monospace;
+}
+
+/* Admin messages styling */
+.messagelist .success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.messagelist .warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.messagelist .warning a {
+    color: #856404;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* Button styling for hierarchical view toggle */
+.hierarchical-view-btn {
+    background-color: #417690 !important;
+    border-color: #417690 !important;
+    color: white !important;
+    padding: 8px 12px !important;
+    text-decoration: none !important;
+    border-radius: 4px !important;
+    margin-left: 10px !important;
+    display: inline-block !important;
+}
+
+.hierarchical-view-btn:hover {
+    background-color: #2c5aa0 !important;
+    border-color: #2c5aa0 !important;
+}
+
+.view-indicator {
+    background-color: #28a745 !important;
+    color: white !important;
+    padding: 8px 12px !important;
+    border-radius: 4px !important;
+    font-size: 13px !important;
+    margin-left: 10px !important;
+    display: inline-block !important;
 }

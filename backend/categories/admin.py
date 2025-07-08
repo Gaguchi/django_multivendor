@@ -23,22 +23,36 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     list_filter = ['parent_category']
     list_editable = ['display_order']
-    ordering = ['display_order', 'name']
+    # Note: No default ordering - we use custom hierarchical ordering in get_queryset
     
     def changelist_view(self, request, extra_context=None):
         """Override changelist view to add hierarchical ordering message"""
         from django.contrib import messages
+        from django.http import HttpResponseRedirect
+        from django.urls import reverse
         
-        # Check if user is using sorting parameters that break hierarchical view
-        if any(key in request.GET for key in ['o']) and 'q' not in request.GET:
+        search_query = request.GET.get('q', '').strip()
+        # Check if there are meaningful sort parameters (not empty)
+        sort_param = request.GET.get('o', '').strip()
+        has_sort_params = bool(sort_param)
+        
+        # Show appropriate messages based on current view state
+        if search_query:
             messages.info(request, 
-                "🌳 To view categories in hierarchical tree order, remove the sorting by clicking on "
-                "the column headers or visit the page without sort parameters."
+                "🔍 Search results are shown in alphabetical order. "
+                "Clear the search to see the hierarchical tree structure."
             )
-        elif 'q' not in request.GET:
+        elif has_sort_params:
+            messages.warning(request, 
+                "🔄 Custom sorting is active - this overrides the hierarchical tree view. "
+                "<a href='?' style='color: #fff; text-decoration: underline;'>Click here to see the hierarchical tree view</a> "
+                "or remove sorting by clicking column headers again."
+            )
+        else:
             messages.success(request, 
                 "🌳 Categories are displayed in hierarchical tree order. "
-                "Root categories (📁) are shown first, followed by their subcategories."
+                "Root categories (📁) are shown first, followed by their subcategories. "
+                "Use search or column sorting to change the display order."
             )
         
         return super().changelist_view(request, extra_context)
@@ -47,9 +61,14 @@ class CategoryAdmin(admin.ModelAdmin):
         """Override to apply hierarchical ordering"""
         queryset = super().get_queryset(request).select_related('parent_category').prefetch_related('subcategories')
         
-        # Apply hierarchical ordering unless there's a search query
-        # (we exclude search because it would be confusing to show hierarchical order for search results)
-        if 'q' not in request.GET or not request.GET.get('q', '').strip():
+        # Check if there are sorting parameters or search query
+        search_query = request.GET.get('q', '').strip()
+        # Check if there are meaningful sort parameters (not empty)
+        sort_param = request.GET.get('o', '').strip()
+        has_sort_params = bool(sort_param)
+        
+        # Apply hierarchical ordering only when there's no search and no explicit sorting
+        if not search_query and not has_sort_params:
             # Get all categories and organize them hierarchically
             all_categories = list(queryset.all())
             ordered_categories = self._get_hierarchical_order(all_categories)
