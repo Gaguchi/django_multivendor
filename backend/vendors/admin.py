@@ -139,49 +139,68 @@ class VendorProductAdmin(SortableAdminBase, admin.ModelAdmin):
     get_category_hierarchical.admin_order_field = 'category__name'
     
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        """Customize the category dropdown to show hierarchical names with enhanced formatting"""
+        """Customize the category dropdown to show hierarchical names with proper indentation"""
         if db_field.name == "category":
-            # Create hierarchical choices with better formatting
-            choices = [('', '--- Select Category ---')]  # Better empty choice
+            # Use the same hierarchical ordering logic as CategoryAdmin
+            from categories.admin import CategoryAdmin
+            from django.contrib.admin.sites import AdminSite
             
-            def add_category_choices(categories, level=0):
-                for category in categories:
-                    # Create visual hierarchy with different symbols for each level
-                    if level == 0:
-                        prefix = "📁 "  # Root folder icon
-                    elif level == 1:
-                        prefix = "├── "  # Branch
-                    elif level == 2:
-                        prefix = "│   ├── "  # Sub-branch
-                    else:
-                        prefix = "│   " * (level - 1) + "├── "  # Deeper levels
-                    
-                    # Add product count for context
-                    product_count = category.product_count
-                    count_info = f" ({product_count} products)" if product_count > 0 else " (0 products)"
-                    
-                    display_name = f"{prefix}{category.name}{count_info}"
-                    choices.append((category.id, display_name))
-                    
-                    # Add children recursively
-                    children = Category.objects.filter(parent_category=category).order_by('display_order', 'name')
-                    if children:
-                        add_category_choices(children, level + 1)
+            # Create a temporary CategoryAdmin instance to use its methods
+            temp_category_admin = CategoryAdmin(Category, AdminSite())
             
-            # Start with root categories
-            root_categories = Category.objects.filter(parent_category=None).order_by('display_order', 'name')
-            add_category_choices(root_categories)
+            # Get all categories in hierarchical order
+            all_categories = list(Category.objects.select_related('parent_category').prefetch_related('subcategories'))
+            ordered_categories = temp_category_admin._get_hierarchical_order(all_categories)
             
-            # Create custom widget with enhanced styling
-            kwargs["widget"] = forms.Select(
-                choices=choices,
-                attrs={
-                    'class': 'hierarchical-select',
-                    'style': 'font-family: monospace; font-size: 13px; width: 100%;'
-                }
-            )
-            # Don't set queryset as we're using custom choices
-            kwargs.pop('queryset', None)
+            # Set the queryset to maintain the hierarchical order
+            # We'll create the queryset with preserved order
+            if ordered_categories:
+                from django.db.models import Case, When
+                ordered_ids = [cat.id for cat in ordered_categories]
+                preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(ordered_ids)])
+                kwargs['queryset'] = Category.objects.filter(id__in=ordered_ids).annotate(ordering=preserved).order_by('ordering')
+            else:
+                kwargs['queryset'] = Category.objects.none()
+            
+            # Create a custom widget that will render hierarchical display names
+            widget_attrs = {
+                'class': 'hierarchical-select vendor-category-select',
+                'data-hierarchical': 'true'
+            }
+            
+            # Create custom choices with proper text-based indentation that works in option tags
+            field = super().formfield_for_foreignkey(db_field, request, **kwargs)
+            
+            # Modify the field to use hierarchical display
+            original_choices = list(field.choices)
+            hierarchical_choices = [('', '--- Select Category ---')]
+            
+            for category in ordered_categories:
+                level = temp_category_admin.get_category_level(category)
+                
+                # Use simple indentation that works in HTML option tags
+                indent = "    " * level  # 4 spaces per level
+                
+                # Use simple ASCII characters that display properly in dropdowns
+                if level == 0:
+                    prefix = "□ "  # Simple box for root
+                elif level == 1:
+                    prefix = "├─ "  # Simple branch
+                else:
+                    prefix = "└─ "  # Simple end branch for deeper levels
+                
+                # Add product count for context
+                product_count = getattr(category, 'product_count', 0)
+                context_info = f" ({product_count})" if product_count > 0 else ""
+                
+                display_name = f"{indent}{prefix}{category.name}{context_info}"
+                hierarchical_choices.append((category.id, display_name))
+            
+            # Apply the custom choices to the field
+            field.choices = hierarchical_choices
+            field.widget.attrs.update(widget_attrs)
+            
+            return field
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
     def get_form(self, request, obj=None, **kwargs):

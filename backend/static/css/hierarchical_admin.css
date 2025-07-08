@@ -118,6 +118,32 @@
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
+/* VendorProduct category dropdown specific styling */
+.vendor-category-select {
+    font-family: 'Courier New', monospace !important;
+    font-size: 13px !important;
+    line-height: 1.4;
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.vendor-category-select option {
+    font-family: 'Courier New', monospace !important;
+    font-size: 13px !important;
+    padding: 4px 8px;
+    line-height: 1.6;
+}
+
+/* Ensure proper spacing for hierarchical options */
+.vendor-category-select option[value=""] {
+    font-weight: bold;
+    font-style: italic;
+    color: #6c757d;
+}
+
 /* VendorProduct category breadcrumb display */
 .field-get_category_hierarchical {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -268,4 +294,174 @@
     font-size: 13px !important;
     margin-left: 10px !important;
     display: inline-block !important;
+}
+
+/* Vendor Product Category Dropdown Enhancements */
+.vendor-category-select {
+    font-family: 'Courier New', monospace !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    padding: 8px 12px !important;
+    border: 2px solid #ddd !important;
+    border-radius: 6px !important;
+    background-color: #fff !important;
+    min-height: 200px !important;
+    transition: all 0.3s ease !important;
+}
+
+.vendor-category-select:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    outline: none !important;
+}
+
+.vendor-category-select option {
+    padding: 4px 8px !important;
+    line-height: 1.5 !important;
+    background-color: #fff !important;
+    color: #333 !important;
+}
+
+.vendor-category-select option:hover {
+    background-color: #f8f9fa !important;
+}
+
+.vendor-category-select option[value=""] {
+    font-style: italic !important;
+    color: #6c757d !important;
+    background-color: #f8f9fa !important;
+    font-weight: bold !important;
+}
+
+/* Category dropdown wrapper */
+.category-dropdown-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.category-search {
+    width: 100% !important;
+    padding: 8px 12px !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    font-size: 14px !important;
+    margin-bottom: 5px !important;
+    transition: border-color 0.3s ease !important;
+}
+
+.category-search:focus {
+    border-color: #007bff !important;
+    outline: none !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+.category-info {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 6px !important;
+    padding: 12px !important;
+    margin-top: 8px !important;
+    font-size: 13px !important;
+    color: #495057 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.category-info i {
+    color: #007bff !important;
+    margin-right: 5px !important;
+}
+
+/* Category breadcrumb in list view */
+.category-breadcrumb {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 12px;
+    margin-top: 4px;
+    color: #6c757d;
+    line-height: 1.4;
+}
+
+.breadcrumb-separator {
+    color: #007bff;
+    font-weight: bold;
+    margin: 0 6px;
+}
+
+.no-category {
+    color: #dc3545;
+    font-style: italic;
+    font-weight: 500;
+}
+
+/* Attribute management buttons */
+.attribute-management-buttons {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+}
+
+.attribute-management-buttons .btn {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+}
+
+/* Success messages */
+.category-success-message {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Product combo info */
+.combo-info {
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Enhanced hierarchical select for all admin forms */
+.hierarchical-select {
+    font-family: 'Courier New', monospace !important;
+    background: linear-gradient(to bottom, #fff 0%, #f9f9f9 100%) !important;
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 6px !important;
+    padding: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.hierarchical-select:focus {
+    border-color: #007bff !important;
+    background: #fff !important;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.25) !important;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .vendor-category-select {
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+    }
+    
+    .category-search {
+        font-size: 12px !important;
+        padding: 6px 8px !important;
+    }
+    
+    .category-info {
+        font-size: 11px !important;
+        padding: 8px !important;
+    }
 }
