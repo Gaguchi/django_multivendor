@@ -15,6 +15,43 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
+    @property
+    def product_count(self):
+        """Get count of products in this category and all its subcategories"""
+        from vendors.models import VendorProduct
+        
+        # Get all descendant categories (including self)
+        descendant_ids = self.get_descendants_and_self()
+        
+        # Count products in any of these categories
+        return VendorProduct.objects.filter(category_id__in=descendant_ids).count()
+    
+    def get_descendants_and_self(self):
+        """Get IDs of this category and all its descendants"""
+        result = [self.id]
+        
+        # Get direct children
+        children = Category.objects.filter(parent_category=self)
+        for child in children:
+            result.extend(child.get_descendants_and_self())
+        
+        return result
+    
+    def get_root_category(self):
+        """Get the root category for this category"""
+        if self.parent_category is None:
+            return self
+        return self.parent_category.get_root_category()
+    
+    def get_breadcrumb_path(self):
+        """Get the full path from root to this category"""
+        path = []
+        current = self
+        while current:
+            path.insert(0, current)
+            current = current.parent_category
+        return path
+    
     def save(self, *args, **kwargs):
         # Auto-generate slug if not provided
         if not self.slug:

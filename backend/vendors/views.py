@@ -367,20 +367,43 @@ class ProductViewSet(viewsets.ModelViewSet):
 
     def _apply_filters(self, queryset):
         """Apply filters based on query parameters"""
-        # Category filter
+        # Category filter - includes all descendant categories
         category = self.request.query_params.get('category')
         if category:
+            from categories.models import Category
             # Support both category ID and category name
             if category.isdigit():
-                queryset = queryset.filter(category__id=category)
+                try:
+                    category_obj = Category.objects.get(id=category)
+                    # Get all descendant category IDs (including self)
+                    descendant_ids = category_obj.get_descendants_and_self()
+                    queryset = queryset.filter(category__id__in=descendant_ids)
+                except Category.DoesNotExist:
+                    pass
             else:
                 # Multiple categories separated by comma
-                category_names = [name.strip() for name in category.split(',') if name.strip()]
-                if category_names:
-                    category_filter = Q()
-                    for name in category_names:
-                        category_filter |= Q(category__name__icontains=name)
-                    queryset = queryset.filter(category_filter)
+                category_identifiers = [item.strip() for item in category.split(',') if item.strip()]
+                if category_identifiers:
+                    all_descendant_ids = []
+                    
+                    for identifier in category_identifiers:
+                        if identifier.isdigit():
+                            # It's a category ID
+                            try:
+                                category_obj = Category.objects.get(id=identifier)
+                                all_descendant_ids.extend(category_obj.get_descendants_and_self())
+                            except Category.DoesNotExist:
+                                continue
+                        else:
+                            # It's a category name - find by name and include descendants
+                            categories = Category.objects.filter(name__icontains=identifier)
+                            for cat in categories:
+                                all_descendant_ids.extend(cat.get_descendants_and_self())
+                    
+                    if all_descendant_ids:
+                        # Remove duplicates
+                        all_descendant_ids = list(set(all_descendant_ids))
+                        queryset = queryset.filter(category__id__in=all_descendant_ids)
         
         # Vendor/Brand filter
         vendor = self.request.query_params.get('vendor')

@@ -527,9 +527,27 @@ def regular_search(request):
         if search_query:
             products = products.filter(search_query)
         
-        # Apply category filter
+        # Apply category filter - includes all descendant categories
         if category:
-            products = products.filter(category__name__icontains=category)
+            from categories.models import Category
+            try:
+                # If category is a digit, treat it as ID
+                if category.isdigit():
+                    category_obj = Category.objects.get(id=category)
+                    descendant_ids = category_obj.get_descendants_and_self()
+                    products = products.filter(category__id__in=descendant_ids)
+                else:
+                    # If category is a name, find by name and include descendants
+                    category_obj = Category.objects.filter(name__icontains=category).first()
+                    if category_obj:
+                        descendant_ids = category_obj.get_descendants_and_self()
+                        products = products.filter(category__id__in=descendant_ids)
+                    else:
+                        # Fallback to original name-based filtering if no exact match
+                        products = products.filter(category__name__icontains=category)
+            except Category.DoesNotExist:
+                # Fallback to original name-based filtering
+                products = products.filter(category__name__icontains=category)
         
         # Calculate relevance score for sorting
         if search_words:

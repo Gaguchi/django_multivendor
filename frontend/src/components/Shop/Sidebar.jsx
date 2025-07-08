@@ -1,68 +1,8 @@
 import React, { memo, useCallback, useState, useRef, useMemo, useEffect } from 'react'
 import { Range } from 'react-range'
+import HierarchicalCategoriesFilter from './FilterSections/HierarchicalCategoriesFilter'
 
 // Individual filter sections - each memoized independently
-const CategoriesSection = memo(function CategoriesSection({ 
-  categories, 
-  selectedCategories, 
-  onCategoriesChange, 
-  collapsed, 
-  onToggleCollapse 
-}) {
-  // Removed excessive console logging for performance
-
-  const handleCategoryChange = useCallback((categoryId) => {
-    const newSelection = selectedCategories.includes(categoryId)
-      ? selectedCategories.filter(id => id !== categoryId)
-      : [...selectedCategories, categoryId]
-    onCategoriesChange(newSelection)
-  }, [selectedCategories, onCategoriesChange])
-
-  if (!categories?.length) return null
-
-  return (
-    <div className="widget">
-      <h3 className="widget-title">
-        <a 
-          href="#" 
-          className={collapsed ? 'collapsed' : ''}
-          onClick={(e) => {
-            e.preventDefault()
-            onToggleCollapse()
-          }}
-        >
-          Product Categories
-        </a>
-      </h3>
-      <div className={`widget-body ${collapsed ? 'collapse' : ''}`}>
-        <ul className="cat-list">
-          {categories.map(category => (
-            <li key={category.id}>
-              <div className="d-flex justify-content-between align-items-center">
-                <label className="custom-checkbox mb-0">
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.includes(category.id)}
-                    onChange={() => handleCategoryChange(category.id)}
-                  />
-                  <span className="category-name">{category.name}</span>
-                </label>
-                <span className="products-count">({category.product_count || 0})</span>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}, (prevProps, nextProps) => {
-  // Only re-render if categories data or selection actually changed
-  return (
-    JSON.stringify(prevProps.categories) === JSON.stringify(nextProps.categories) &&
-    JSON.stringify(prevProps.selectedCategories) === JSON.stringify(nextProps.selectedCategories) &&
-    prevProps.collapsed === nextProps.collapsed
-  )
-})
 
 const BrandsSection = memo(function BrandsSection({ 
   brands, 
@@ -435,8 +375,8 @@ const Sidebar = memo(function Sidebar({
 
         {/* Sidebar content - sticky behavior handled by parent StickyBox */}
         <div className="sidebar-content" ref={sidebarRef}>
-          {/* Categories filter */}
-          <CategoriesSection
+          {/* Hierarchical Categories filter */}
+          <HierarchicalCategoriesFilter
             categories={categories}
             selectedCategories={selectedCategories}
             onCategoriesChange={onCategoriesChange}

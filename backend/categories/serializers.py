@@ -30,10 +30,11 @@ class AttributeGroupSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     subcategories = serializers.SerializerMethodField()
     attribute_groups = AttributeGroupSerializer(many=True, read_only=True)
+    product_count = serializers.ReadOnlyField()
     
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'parent_category', 'subcategories', 'attribute_groups', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'slug', 'parent_category', 'subcategories', 'attribute_groups', 'product_count', 'created_at', 'updated_at']
         read_only_fields = ['created_at', 'updated_at']
 
     def get_subcategories(self, obj):
@@ -56,10 +57,11 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
     """Detailed category serializer with attribute groups"""
     subcategories = serializers.SerializerMethodField()
     attribute_groups = AttributeGroupWithoutCategorySerializer(many=True, read_only=True)
+    product_count = serializers.ReadOnlyField()
     
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'parent_category', 'subcategories', 'attribute_groups', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'slug', 'parent_category', 'subcategories', 'attribute_groups', 'product_count', 'created_at', 'updated_at']
         read_only_fields = ['created_at', 'updated_at']
 
     def get_subcategories(self, obj):
