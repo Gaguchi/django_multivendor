@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import path
 from django import forms
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from .models import Vendor, VendorProduct, ProductImage, ProductAttributeValue
 from adminsortable2.admin import SortableInlineAdminMixin, SortableAdminBase, SortableAdminMixin
 from categories.models import Attribute, AttributeGroup, AttributeOption, Category
@@ -131,12 +132,13 @@ class VendorProductAdmin(SortableAdminBase, admin.ModelAdmin):
             
             return format_html(
                 '{} <div class="category-breadcrumb">{}</div>',
-                level_badge,
-                breadcrumb_html
+                mark_safe(level_badge),
+                mark_safe(breadcrumb_html)
             )
         return format_html('<span class="no-category">No Category</span>')
     get_category_hierarchical.short_description = 'Category Path'
     get_category_hierarchical.admin_order_field = 'category__name'
+    get_category_hierarchical.allow_tags = True
     
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         """Customize the category dropdown to show hierarchical names with proper indentation"""
