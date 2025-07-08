@@ -3,9 +3,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import path
 from django import forms
+from django.utils.html import format_html
 from .models import Vendor, VendorProduct, ProductImage, ProductAttributeValue
 from adminsortable2.admin import SortableInlineAdminMixin, SortableAdminBase, SortableAdminMixin
-from categories.models import Attribute, AttributeGroup, AttributeOption
+from categories.models import Attribute, AttributeGroup, AttributeOption, Category
 from django.db.models import Prefetch
 from django.contrib import messages
 
@@ -85,7 +86,7 @@ class VendorProductAdminForm(forms.ModelForm):
 class VendorProductAdmin(SortableAdminBase, admin.ModelAdmin):
     form = VendorProductAdminForm
     inlines = [ProductImageInline, ProductAttributeValueInline, ProductComboInline]
-    list_display = ['name', 'vendor', 'price', 'stock', 'category', 'is_hot', 'display_order', 'has_combos']
+    list_display = ['name', 'vendor', 'price', 'stock', 'get_category_hierarchical', 'is_hot', 'display_order', 'has_combos']
     list_filter = ['vendor', 'category', 'is_hot']
     search_fields = ['name', 'sku', 'description']
     readonly_fields = ['created_at']
@@ -106,6 +107,82 @@ class VendorProductAdmin(SortableAdminBase, admin.ModelAdmin):
     
     class Media:
         js = ('js/vendor_product_admin.js', 'js/product_combo_admin.js')
+        css = {
+            'all': ('css/hierarchical_admin.css',)
+        }
+    
+    def get_category_hierarchical(self, obj):
+        """Display category with hierarchical path and visual enhancements"""
+        if obj.category:
+            breadcrumb = obj.category.get_breadcrumb_path()
+            path_parts = []
+            for i, cat in enumerate(breadcrumb):
+                if i == len(breadcrumb) - 1:  # Last category (current)
+                    path_parts.append(f'<strong>{cat.name}</strong>')
+                else:
+                    path_parts.append(cat.name)
+            
+            # Create a styled breadcrumb path
+            breadcrumb_html = ' <span class="breadcrumb-separator">›</span> '.join(path_parts)
+            
+            # Add level indicator
+            level = len(breadcrumb) - 1
+            level_badge = f'<span class="level-badge level-{level}">L{level}</span>'
+            
+            return format_html(
+                '{} <div class="category-breadcrumb">{}</div>',
+                level_badge,
+                breadcrumb_html
+            )
+        return format_html('<span class="no-category">No Category</span>')
+    get_category_hierarchical.short_description = 'Category Path'
+    get_category_hierarchical.admin_order_field = 'category__name'
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        """Customize the category dropdown to show hierarchical names with enhanced formatting"""
+        if db_field.name == "category":
+            # Create hierarchical choices with better formatting
+            choices = [('', '--- Select Category ---')]  # Better empty choice
+            
+            def add_category_choices(categories, level=0):
+                for category in categories:
+                    # Create visual hierarchy with different symbols for each level
+                    if level == 0:
+                        prefix = "📁 "  # Root folder icon
+                    elif level == 1:
+                        prefix = "├── "  # Branch
+                    elif level == 2:
+                        prefix = "│   ├── "  # Sub-branch
+                    else:
+                        prefix = "│   " * (level - 1) + "├── "  # Deeper levels
+                    
+                    # Add product count for context
+                    product_count = category.product_count
+                    count_info = f" ({product_count} products)" if product_count > 0 else " (0 products)"
+                    
+                    display_name = f"{prefix}{category.name}{count_info}"
+                    choices.append((category.id, display_name))
+                    
+                    # Add children recursively
+                    children = Category.objects.filter(parent_category=category).order_by('display_order', 'name')
+                    if children:
+                        add_category_choices(children, level + 1)
+            
+            # Start with root categories
+            root_categories = Category.objects.filter(parent_category=None).order_by('display_order', 'name')
+            add_category_choices(root_categories)
+            
+            # Create custom widget with enhanced styling
+            kwargs["widget"] = forms.Select(
+                choices=choices,
+                attrs={
+                    'class': 'hierarchical-select',
+                    'style': 'font-family: monospace; font-size: 13px; width: 100%;'
+                }
+            )
+            # Don't set queryset as we're using custom choices
+            kwargs.pop('queryset', None)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
     
     def get_form(self, request, obj=None, **kwargs):
         request._obj_ = obj

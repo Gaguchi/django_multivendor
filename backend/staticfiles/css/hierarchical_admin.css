@@ -1,0 +1,212 @@
+/* Hierarchical Admin Styles */
+
+/* Category list display styles with enhanced tree structure */
+.field-get_hierarchical_name {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.field-get_hierarchical_name .level-0 {
+    font-weight: bold;
+    color: #2e7d32;
+}
+
+.field-get_hierarchical_name .level-1 {
+    color: #1976d2;
+    font-weight: 600;
+}
+
+.field-get_hierarchical_name .level-2 {
+    color: #f57c00;
+}
+
+.field-get_hierarchical_name .level-3 {
+    color: #7b1fa2;
+}
+
+.field-get_hierarchical_name .children-indicator {
+    font-size: 10px;
+    color: #6c757d;
+    background: #f8f9fa;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-left: 6px;
+}
+
+/* Level badge styling */
+.level-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    margin-right: 8px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.level-badge.level-0 {
+    background-color: #28a745;
+}
+
+.level-badge.level-1 {
+    background-color: #007bff;
+}
+
+.level-badge.level-2 {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.level-badge.level-3 {
+    background-color: #dc3545;
+}
+
+/* Children count styling */
+.children-count {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.children-count.has-children {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
+.children-count.no-children {
+    background-color: #f5f5f5;
+    color: #9e9e9e;
+}
+
+/* Parent category dropdown styles */
+.field-parent_category select option,
+.field-category select option {
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
+
+/* Enhanced hierarchical select styling */
+.hierarchical-select {
+    font-family: 'Courier New', monospace !important;
+    font-size: 13px !important;
+    padding: 8px 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    background-color: #fff;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.hierarchical-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* VendorProduct category breadcrumb display */
+.field-get_category_hierarchical {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.field-get_category_hierarchical .category-breadcrumb {
+    margin-top: 4px;
+    font-size: 12px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border-left: 3px solid #007bff;
+}
+
+.field-get_category_hierarchical .breadcrumb-separator {
+    color: #adb5bd;
+    margin: 0 6px;
+    font-weight: bold;
+}
+
+.field-get_category_hierarchical .no-category {
+    color: #dc3545;
+    font-style: italic;
+    background-color: #f8d7da;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+}
+
+/* Level indicator styles */
+.field-get_level {
+    text-align: center;
+    font-weight: bold;
+}
+
+.field-get_level .level-0 {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.field-get_level .level-1 {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.field-get_level .level-2 {
+    background-color: #fff3e0;
+    color: #f57c00;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.field-get_level .level-3 {
+    background-color: #f3e5f5;
+    color: #7b1fa2;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+/* Improve product count display */
+.field-product_count {
+    text-align: center;
+    font-weight: bold;
+    color: #424242;
+}
+
+/* Category form styles */
+.form-row .field-parent_category {
+    position: relative;
+}
+
+.form-row .field-parent_category select {
+    font-family: monospace;
+    font-size: 13px;
+}
+
+/* Admin changelist improvements */
+.admin-object-tools {
+    margin-bottom: 20px;
+}
+
+.hierarchical-category-help {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.hierarchical-category-help .legend {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.hierarchical-category-help .level-example {
+    margin-left: 10px;
+    font-family: monospace;
+}
