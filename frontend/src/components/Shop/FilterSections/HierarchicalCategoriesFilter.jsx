@@ -1,4 +1,5 @@
 import React, { memo, useCallback, useState, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './HierarchicalCategoriesFilter.css'
 
 const HierarchicalCategoriesFilter = memo(function HierarchicalCategoriesFilter({ 
@@ -9,21 +10,13 @@ const HierarchicalCategoriesFilter = memo(function HierarchicalCategoriesFilter(
   collapsed = false,
   onToggleCollapse = () => {}
 }) {
+  const navigate = useNavigate()
 
   // Track current navigation state
   const [currentView, setCurrentView] = useState({
     categories: [],
     breadcrumb: [],
     parentCategory: null
-  })
-
-  // Debug logging
-  console.log('🌳 HierarchicalCategoriesFilter render:', {
-    categoriesCount: categories.length,
-    selectedCount: selectedCategories.length,
-    currentViewCount: currentView.categories.length,
-    breadcrumb: currentView.breadcrumb.map(c => c.name),
-    timestamp: new Date().toISOString()
   })
 
   // Build category hierarchy from flat list
@@ -57,6 +50,17 @@ const HierarchicalCategoriesFilter = memo(function HierarchicalCategoriesFilter(
       .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
   }, [categories, categoryMap])
 
+  // Debug logging (after rootCategories is defined)
+  console.log('🌳 HierarchicalCategoriesFilter render:', {
+    categoriesCount: categories.length,
+    selectedCount: selectedCategories.length,
+    currentViewCount: currentView.categories.length,
+    breadcrumb: currentView.breadcrumb.map(c => c.name),
+    rootCategoriesCount: rootCategories.length,
+    categories: categories.slice(0, 3).map(c => ({ id: c.id, name: c.name, parent: c.parent_category })),
+    timestamp: new Date().toISOString()
+  })
+
   // Handle category selection/deselection
   const handleToggleCategory = useCallback((categoryId) => {
     const category = categoryMap.get(categoryId)
@@ -68,6 +72,13 @@ const HierarchicalCategoriesFilter = memo(function HierarchicalCategoriesFilter(
     
     onCategoriesChange(newCategories)
   }, [selectedCategories, onCategoriesChange, categoryMap])
+
+  // Handle category page navigation
+  const handleCategoryPageNavigation = useCallback((category) => {
+    if (category.slug) {
+      navigate(`/category/${category.slug}`)
+    }
+  }, [navigate])
 
   // Handle drilling down into a category
   const handleDrillDown = useCallback((category) => {
@@ -143,14 +154,15 @@ const HierarchicalCategoriesFilter = memo(function HierarchicalCategoriesFilter(
 
   // Initialize current view when categories load
   React.useEffect(() => {
-    if (categories.length > 0 && currentView.categories.length === 0) {
+    if (categories.length > 0 && rootCategories.length > 0) {
+      console.log('🔄 Initializing current view with root categories:', rootCategories.length)
       setCurrentView({
         categories: rootCategories,
         breadcrumb: [],
         parentCategory: null
       })
     }
-  }, [categories.length, currentView.categories.length, rootCategories])
+  }, [categories.length, rootCategories.length, rootCategories])
 
   if (loading) {
     return (
@@ -231,6 +243,34 @@ const HierarchicalCategoriesFilter = memo(function HierarchicalCategoriesFilter(
 
           {/* Current Level Categories */}
           <div className="cat-list hierarchical">
+            {/* Show parent category if we're in a subcategory */}
+            {currentView.parentCategory && (
+              <div className="category-row parent-category">
+                <label className="category-item">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(currentView.parentCategory.id)}
+                    onChange={() => handleToggleCategory(currentView.parentCategory.id)}
+                    tabIndex="-1"
+                  />
+                  <span className="category-name">
+                    <i className="icon-arrow-up"></i>
+                    {currentView.parentCategory.name} (Parent)
+                  </span>
+                  <small className="products-count">({currentView.parentCategory.product_count || 0})</small>
+                </label>
+                <button 
+                  className="view-category-btn"
+                  onClick={() => handleCategoryPageNavigation(currentView.parentCategory)}
+                  title={`View ${currentView.parentCategory.name} category page`}
+                >
+                  <i className="icon-eye"></i>
+                  View
+                </button>
+              </div>
+            )}
+
+            {/* Current level categories (siblings if we're in a subcategory) */}
             {currentView.categories.map((category) => (
               <div key={category.id} className="category-row">
                 {/* Category Selection Checkbox */}
@@ -245,30 +285,50 @@ const HierarchicalCategoriesFilter = memo(function HierarchicalCategoriesFilter(
                   <small className="products-count">({category.product_count || 0})</small>
                 </label>
 
-                {/* Drill Down Button */}
-                {category.children && category.children.length > 0 && (
+                <div className="category-actions">
+                  {/* View Category Page Button */}
                   <button 
-                    className="drill-down-btn"
-                    onClick={() => handleDrillDown(category)}
-                    title={`View ${category.name} subcategories`}
+                    className="view-category-btn"
+                    onClick={() => handleCategoryPageNavigation(category)}
+                    title={`View ${category.name} category page`}
                   >
-                    <i className="icon-angle-right"></i>
-                    <span className="subcategory-count">
-                      {category.children.length} sub{category.children.length === 1 ? '' : 's'}
-                    </span>
+                    <i className="icon-eye"></i>
+                    View
                   </button>
-                )}
+
+                  {/* Drill Down Button */}
+                  {category.children && category.children.length > 0 && (
+                    <button 
+                      className="drill-down-btn"
+                      onClick={() => handleDrillDown(category)}
+                      title={`View ${category.name} subcategories`}
+                    >
+                      <i className="icon-angle-right"></i>
+                      <span className="subcategory-count">
+                        {category.children.length} sub{category.children.length === 1 ? '' : 's'}
+                      </span>
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
 
           {currentView.categories.length === 0 && (
             <div className="no-categories">
-              <p>No categories available</p>
-              {currentView.breadcrumb.length > 0 && (
-                <button onClick={handleResetView} className="btn-reset">
-                  Return to main categories
-                </button>
+              {loading ? (
+                <p>Loading categories...</p>
+              ) : categories.length === 0 ? (
+                <p>No categories available!</p>
+              ) : currentView.breadcrumb.length > 0 ? (
+                <>
+                  <p>No subcategories in this category</p>
+                  <button onClick={handleResetView} className="btn-reset">
+                    Return to main categories
+                  </button>
+                </>
+              ) : (
+                <p>Categories are loading...</p>
               )}
             </div>
           )}

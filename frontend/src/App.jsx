@@ -12,6 +12,7 @@ import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
 import AuthCallback from './pages/AuthCallback'
 import ShopPage from './pages/Shop'
+import CategoryPage from './pages/CategoryPage'
 import Search from './pages/Search'
 import Wishlist from './pages/Wishlist'
 import Product from './pages/Product'
@@ -57,6 +58,7 @@ function AppContent() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/shop" element={<ShopPage />} />
+        <Route path="/category/:categorySlug" element={<CategoryPage />} />
         <Route path="/search" element={<Search />} />
         <Route path="/product/:id" element={<Product />} /> 
         <Route path="/product_template" element={<ProductTemplate />} />
