@@ -12,24 +12,44 @@ const Categories = memo(function Categories({
 }) {
   const navigate = useNavigate()
 
-  // Track current navigation state
-  const [currentView, setCurrentView] = useState({
-    categories: [],
-    breadcrumb: [],
-    parentCategory: null
-  })
+  // Track expanded categories and selected category for tree navigation
+  const [expandedCategories, setExpandedCategories] = useState(new Set())
+  const [selectedCategory, setSelectedCategory] = useState(null)
 
-  // Build category hierarchy from flat list
-  const categoryMap = useMemo(() => {
+  // Build category hierarchy with smart filtering: only show categories that have products in their tree
+  const categoryTree = useMemo(() => {
+    console.log('🌳 Building category tree:', {
+      totalCategories: categories.length,
+      sampleCategories: categories.slice(0, 5).map(c => ({ 
+        id: c.id, 
+        name: c.name, 
+        parent_category: c.parent_category,
+        product_count: c.product_count
+      })),
+      allParentValues: [...new Set(categories.map(c => c.parent_category))].slice(0, 10),
+      // Check if any categories have null parent
+      categoriesWithNullParent: categories.filter(c => !c.parent_category).length,
+      // Check parent IDs that don't exist in our dataset
+      orphanedCategories: categories.filter(c => 
+        c.parent_category && !categories.find(parent => parent.id === c.parent_category)
+      ).slice(0, 5).map(c => ({ id: c.id, name: c.name, missingParent: c.parent_category }))
+    })
+
+    if (categories.length === 0) {
+      return { map: new Map(), rootCategories: [] }
+    }
+
+    // Step 1: Create map of all categories
     const map = new Map()
     categories.forEach(category => {
       map.set(category.id, {
         ...category,
-        children: []
+        children: [],
+        hasProductsInTree: false // Will be calculated
       })
     })
     
-    // Build parent-child relationships
+    // Step 2: Build parent-child relationships
     categories.forEach(category => {
       if (category.parent_category) {
         const parent = map.get(category.parent_category)
@@ -39,26 +59,139 @@ const Categories = memo(function Categories({
       }
     })
     
-    return map
+    // Step 3: Calculate which categories have products in their tree (recursive)
+    const calculateHasProductsInTree = (category) => {
+      // Has direct products
+      if (category.product_count > 0) {
+        category.hasProductsInTree = true
+        return true
+      }
+      
+      // Check children recursively
+      let hasProductsInChildren = false
+      for (const child of category.children) {
+        if (calculateHasProductsInTree(child)) {
+          hasProductsInChildren = true
+        }
+      }
+      
+      category.hasProductsInTree = hasProductsInChildren
+      return hasProductsInChildren
+    }
+    
+    // Step 4: Find root categories - handle case where parent categories are missing from API response
+    const existingCategoryIds = new Set(categories.map(c => c.id))
+    
+    const rootCategories = categories
+      .filter(cat => {
+        // No parent category (true root)
+        if (!cat.parent_category) return true
+        // Parent category doesn't exist in our dataset (treat as root)
+        if (!existingCategoryIds.has(cat.parent_category)) return true
+        return false
+      })
+      .map(cat => map.get(cat.id))
+      .filter(Boolean)
+    
+    console.log('🔍 ROOT DETECTION DEBUG:', {
+      totalCategories: categories.length,
+      existingIds: Array.from(existingCategoryIds).slice(0, 10),
+      referencedParentIds: [...new Set(categories.map(c => c.parent_category).filter(Boolean))].slice(0, 10),
+      missingParentIds: [...new Set(categories.map(c => c.parent_category).filter(Boolean))]
+        .filter(parentId => !existingCategoryIds.has(parentId)).slice(0, 10),
+      detectedRoots: rootCategories.map(c => ({ id: c.id, name: c.name, parent: c.parent_category }))
+    })
+    
+    // Step 5: Calculate hasProductsInTree for all categories (improved algorithm)
+    // Apply to all root categories (this will cascade down to children)
+    rootCategories.forEach(root => calculateHasProductsInTree(root))
+    
+    // Step 6: Filter to only show root categories that have products in their tree
+    let visibleRootCategories = rootCategories
+      .filter(cat => cat.hasProductsInTree)
+      .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
+      .slice(0, 15)
+    
+    // FALLBACK: If no categories have products, show the first few categories anyway
+    // This might happen if product counts are not properly calculated or all are zero
+    if (visibleRootCategories.length === 0 && rootCategories.length > 0) {
+      console.log('⚠️ FALLBACK: No categories with products found, showing first few categories anyway')
+      visibleRootCategories = rootCategories
+        .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
+        .slice(0, 8) // Show fewer in fallback mode
+    }
+    
+    console.log('🌱 Category tree built:', {
+      totalCount: categories.length,
+      rootCount: visibleRootCategories.length,
+      rootNames: visibleRootCategories.map(c => c.name),
+      firstFewWithCounts: visibleRootCategories.slice(0, 5).map(c => ({ 
+        name: c.name, 
+        count: c.product_count,
+        hasChildren: c.children?.length > 0,
+        hasProductsInTree: c.hasProductsInTree
+      })),
+      // Debug info
+      allRootCandidates: rootCategories.map(c => ({ 
+        id: c.id, 
+        name: c.name, 
+        parent: c.parent_category,
+        hasProductsInTree: c.hasProductsInTree,
+        productCount: c.product_count
+      })),
+      filteredOutRoots: rootCategories.filter(cat => !cat.hasProductsInTree).map(c => c.name),
+      // NEW: Check if ANY category has products
+      categoriesWithProducts: categories.filter(c => c.product_count > 0).map(c => ({ 
+        id: c.id, 
+        name: c.name, 
+        count: c.product_count 
+      })),
+      totalProductsInAllCategories: categories.reduce((sum, c) => sum + (c.product_count || 0), 0)
+    })
+    
+    return { map, rootCategories: visibleRootCategories }
   }, [categories])
 
-  // Get root categories
-  const rootCategories = useMemo(() => {
-    return categories
-      .filter(cat => !cat.parent_category)
-      .map(cat => categoryMap.get(cat.id))
-      .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
-  }, [categories, categoryMap])
+  // Extract data from tree structure
+  const { map: categoryMap, rootCategories } = categoryTree
 
-  // Debug logging (after rootCategories is defined)
+  // Debug logging
   console.log('🌳 Categories render:', {
     categoriesCount: categories.length,
     selectedCount: selectedCategories.length,
-    currentViewCount: currentView.categories.length,
-    breadcrumb: currentView.breadcrumb.map(c => c.name),
     rootCategoriesCount: rootCategories.length,
+    expandedCount: expandedCategories.size,
     categories: categories.slice(0, 3).map(c => ({ id: c.id, name: c.name, parent: c.parent_category })),
     timestamp: new Date().toISOString()
+  })
+
+  // DETAILED DEBUG: What's in rootCategories?
+  console.log('🔍 DETAILED Categories Debug:', {
+    loading,
+    categoriesLength: categories.length,
+    rootCategoriesLength: rootCategories.length,
+    rootCategoriesArray: rootCategories,
+    categoriesData: categories.slice(0, 2),
+    conditionCheck: {
+      isLoading: loading,
+      hasRootCategories: rootCategories.length > 0,
+      willShowTree: !loading && rootCategories.length > 0
+    }
+  })
+
+  // DETAILED RENDER LOGIC DEBUG
+  console.log('🎯 RENDER LOGIC DEBUG:', {
+    loading: loading,
+    rootCategoriesLength: rootCategories.length,
+    rootCategoriesArray: rootCategories.slice(0, 3).map(cat => ({
+      id: cat.id,
+      name: cat.name,
+      product_count: cat.product_count,
+      hasChildren: cat.children?.length > 0
+    })),
+    willShowLoading: loading,
+    willShowTree: !loading && rootCategories.length > 0,
+    willShowNoCategories: !loading && rootCategories.length === 0
   })
 
   // Handle category selection/deselection
@@ -80,89 +213,95 @@ const Categories = memo(function Categories({
     }
   }, [navigate])
 
-  // Handle drilling down into a category
-  const handleDrillDown = useCallback((category) => {
-    if (!category.children || category.children.length === 0) return
-
-    setCurrentView({
-      categories: category.children.sort((a, b) => (a.display_order || 0) - (b.display_order || 0)),
-      breadcrumb: [...currentView.breadcrumb, category],
-      parentCategory: category
+  // Handle tree expand/collapse
+  const handleToggleExpand = useCallback((categoryId) => {
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(categoryId)) {
+        newSet.delete(categoryId)
+      } else {
+        newSet.add(categoryId)
+      }
+      return newSet
     })
-  }, [currentView.breadcrumb])
+  }, [])
 
-  // Handle going back up the hierarchy
-  const handleGoBack = useCallback(() => {
-    if (currentView.breadcrumb.length === 0) return
-
-    const newBreadcrumb = [...currentView.breadcrumb]
-    newBreadcrumb.pop() // Remove last item
-    
-    if (newBreadcrumb.length === 0) {
-      // Back to root
-      setCurrentView({
-        categories: rootCategories,
-        breadcrumb: [],
-        parentCategory: null
-      })
-    } else {
-      // Back to parent
-      const parent = newBreadcrumb[newBreadcrumb.length - 1]
-      setCurrentView({
-        categories: parent.children.sort((a, b) => (a.display_order || 0) - (b.display_order || 0)),
-        breadcrumb: newBreadcrumb,
-        parentCategory: parent
-      })
-    }
-  }, [currentView.breadcrumb, rootCategories])
-
-  // Handle breadcrumb navigation
-  const handleBreadcrumbClick = useCallback((index) => {
-    if (index === -1) {
-      // Root clicked
-      setCurrentView({
-        categories: rootCategories,
-        breadcrumb: [],
-        parentCategory: null
-      })
-    } else {
-      // Specific breadcrumb level clicked
-      const newBreadcrumb = currentView.breadcrumb.slice(0, index + 1)
-      const targetCategory = newBreadcrumb[newBreadcrumb.length - 1]
-      
-      setCurrentView({
-        categories: targetCategory.children.sort((a, b) => (a.display_order || 0) - (b.display_order || 0)),
-        breadcrumb: newBreadcrumb,
-        parentCategory: targetCategory
-      })
-    }
-  }, [currentView.breadcrumb, rootCategories])
+  // Handle category selection for filtering
+  const handleCategorySelect = useCallback((category) => {
+    setSelectedCategory(category)
+    onCategoriesChange([category.id])
+  }, [onCategoriesChange])
 
   // Clear all category selections
   const handleClearCategories = useCallback(() => {
     onCategoriesChange([])
+    setSelectedCategory(null)
   }, [onCategoriesChange])
 
-  // Reset to root view
-  const handleResetView = useCallback(() => {
-    setCurrentView({
-      categories: rootCategories,
-      breadcrumb: [],
-      parentCategory: null
-    })
-  }, [rootCategories])
+  // Render a single category tree node
+  const renderCategoryNode = useCallback((category, level = 0) => {
+    const hasChildren = category.children && category.children.length > 0
+    const isExpanded = expandedCategories.has(category.id)
+    const isSelected = selectedCategories.includes(category.id)
+    const isCurrentCategory = selectedCategory?.id === category.id
 
-  // Initialize current view when categories load
-  React.useEffect(() => {
-    if (categories.length > 0 && rootCategories.length > 0) {
-      console.log('🔄 Initializing current view with root categories:', rootCategories.length)
-      setCurrentView({
-        categories: rootCategories,
-        breadcrumb: [],
-        parentCategory: null
-      })
-    }
-  }, [categories.length, rootCategories.length, rootCategories])
+    return (
+      <div key={category.id} className={`category-tree-node level-${level}`}>
+        <div className={`category-item ${isSelected ? 'selected' : ''} ${isCurrentCategory ? 'current' : ''}`}>
+          {/* Expand/Collapse Button */}
+          {hasChildren ? (
+            <button 
+              className="expand-toggle"
+              onClick={() => handleToggleExpand(category.id)}
+              aria-expanded={isExpanded}
+              title={isExpanded ? 'Collapse' : 'Expand'}
+            >
+              <i className={`icon-chevron-${isExpanded ? 'down' : 'right'}`}></i>
+            </button>
+          ) : (
+            <span className="no-children-spacer"></span>
+          )}
+
+          {/* Category Icon */}
+          <span className="category-icon">
+            {hasChildren ? '📁' : '📄'}
+          </span>
+
+          {/* Category Name and Count */}
+          <button 
+            className="category-name-btn"
+            onClick={() => handleCategorySelect(category)}
+            title={`Filter by ${category.name}`}
+          >
+            <span className="category-name">{category.name}</span>
+            <span className="product-count">({category.product_count || 0})</span>
+          </button>
+
+          {/* Action Buttons */}
+          <div className="category-actions">
+            <button 
+              className="view-category-btn"
+              onClick={() => handleCategoryPageNavigation(category)}
+              title={`View ${category.name} category page`}
+            >
+              <i className="icon-external-link"></i>
+            </button>
+          </div>
+        </div>
+
+        {/* Children (when expanded) */}
+        {hasChildren && isExpanded && (
+          <div className="category-children">
+            {category.children
+              .filter(child => child.hasProductsInTree) // Only show children that have products in their tree
+              .slice(0, 8) // Limit to 8 children for better UX
+              .map(child => renderCategoryNode(child, level + 1))
+            }
+          </div>
+        )}
+      </div>
+    )
+  }, [expandedCategories, selectedCategories, selectedCategory, handleToggleExpand, handleCategorySelect, handleCategoryPageNavigation])
 
   if (loading) {
     return (
@@ -203,135 +342,42 @@ const Categories = memo(function Categories({
       
       <div className={`widget-collapse ${collapsed ? 'collapsed' : 'expanded'}`}>
         <div className="widget-body">
-          
-          {/* Breadcrumb Navigation */}
-          <div className="category-breadcrumb">
-            <button 
-              className="breadcrumb-item root"
-              onClick={() => handleBreadcrumbClick(-1)}
-              title="Go to root categories"
-            >
-              <i className="icon-home"></i>
-              All Categories
-            </button>
-            
-            {currentView.breadcrumb.map((crumb, index) => (
-              <React.Fragment key={crumb.id}>
-                <i className="icon-angle-right breadcrumb-separator"></i>
-                <button 
-                  className="breadcrumb-item"
-                  onClick={() => handleBreadcrumbClick(index)}
-                  title={`Go to ${crumb.name}`}
-                >
-                  {crumb.name}
-                </button>
-              </React.Fragment>
-            ))}
-          </div>
-
-          {/* Back Button */}
-          {currentView.breadcrumb.length > 0 && (
-            <button 
-              className="category-back-btn"
-              onClick={handleGoBack}
-              title="Go back"
-            >
-              <i className="icon-arrow-left"></i>
-              Back
-            </button>
-          )}
-
-          {/* Current Level Categories */}
-          <div className="cat-list hierarchical">
-            {/* Show parent category if we're in a subcategory */}
-            {currentView.parentCategory && (
-              <div className="category-row parent-category">
-                <label className="category-item">
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.includes(currentView.parentCategory.id)}
-                    onChange={() => handleToggleCategory(currentView.parentCategory.id)}
-                    tabIndex="-1"
-                  />
-                  <span className="category-name">
-                    <i className="icon-arrow-up"></i>
-                    {currentView.parentCategory.name} (Parent)
-                  </span>
-                  <small className="products-count">({currentView.parentCategory.product_count || 0})</small>
-                </label>
-                <button 
-                  className="view-category-btn"
-                  onClick={() => handleCategoryPageNavigation(currentView.parentCategory)}
-                  title={`View ${currentView.parentCategory.name} category page`}
-                >
-                  <i className="icon-eye"></i>
-                  View
-                </button>
+          {/* Category Tree */}
+          <div className="category-tree">
+            {(() => {
+              console.log('🚨 FINAL RENDER DECISION:', {
+                loading,
+                rootCategoriesLength: rootCategories.length,
+                categoriesLength: categories.length,
+                hasAnyProducts: categories.some(c => c.product_count > 0),
+                decision: loading ? 'SHOW_LOADING' : 
+                         rootCategories.length > 0 ? 'SHOW_TREE' : 
+                         categories.length === 0 ? 'NO_CATEGORIES_AVAILABLE' : 'NO_CATEGORIES_WITH_PRODUCTS',
+                firstFewCategories: categories.slice(0, 3).map(c => ({ 
+                  id: c.id, 
+                  name: c.name, 
+                  hasProducts: c.product_count > 0,
+                  count: c.product_count 
+                }))
+              })
+              return null
+            })()}
+            {loading ? (
+              <div className="no-categories">
+                <p>Processing categories...</p>
+              </div>
+            ) : rootCategories.length > 0 ? (
+              rootCategories.map(category => renderCategoryNode(category, 0))
+            ) : (
+              <div className="no-categories">
+                {categories.length === 0 ? (
+                  <p>No categories available!</p>
+                ) : (
+                  <p>No categories with products found!</p>
+                )}
               </div>
             )}
-
-            {/* Current level categories (siblings if we're in a subcategory) */}
-            {currentView.categories.map((category) => (
-              <div key={category.id} className="category-row">
-                {/* Category Selection Checkbox */}
-                <label className="category-item">
-                  <input
-                    type="checkbox"
-                    checked={selectedCategories.includes(category.id)}
-                    onChange={() => handleToggleCategory(category.id)}
-                    tabIndex="-1"
-                  />
-                  <span className="category-name">{category.name}</span>
-                  <small className="products-count">({category.product_count || 0})</small>
-                </label>
-
-                <div className="category-actions">
-                  {/* View Category Page Button */}
-                  <button 
-                    className="view-category-btn"
-                    onClick={() => handleCategoryPageNavigation(category)}
-                    title={`View ${category.name} category page`}
-                  >
-                    <i className="icon-eye"></i>
-                    View
-                  </button>
-
-                  {/* Drill Down Button */}
-                  {category.children && category.children.length > 0 && (
-                    <button 
-                      className="drill-down-btn"
-                      onClick={() => handleDrillDown(category)}
-                      title={`View ${category.name} subcategories`}
-                    >
-                      <i className="icon-angle-right"></i>
-                      <span className="subcategory-count">
-                        {category.children.length} sub{category.children.length === 1 ? '' : 's'}
-                      </span>
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
           </div>
-
-          {currentView.categories.length === 0 && (
-            <div className="no-categories">
-              {loading ? (
-                <p>Loading categories...</p>
-              ) : categories.length === 0 ? (
-                <p>No categories available!</p>
-              ) : currentView.breadcrumb.length > 0 ? (
-                <>
-                  <p>No subcategories in this category</p>
-                  <button onClick={handleResetView} className="btn-reset">
-                    Return to main categories
-                  </button>
-                </>
-              ) : (
-                <p>Categories are loading...</p>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>
