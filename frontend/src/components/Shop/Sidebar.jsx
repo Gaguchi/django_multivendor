@@ -1,209 +1,9 @@
 import React, { memo, useCallback, useState, useRef, useMemo, useEffect } from 'react'
-import { Range } from 'react-range'
-import HierarchicalCategoriesFilter from './FilterSections/HierarchicalCategoriesFilter'
+import Categories from './FilterSections/Categories'
+import Brands from './FilterSections/Brands'
+import Price from './FilterSections/Price'
 
 // Individual filter sections - each memoized independently
-
-const BrandsSection = memo(function BrandsSection({ 
-  brands, 
-  selectedBrands, 
-  onBrandsChange, 
-  collapsed, 
-  onToggleCollapse 
-}) {
-  // Removed excessive console logging for performance
-
-  const handleBrandChange = useCallback((brandId) => {
-    const newSelection = selectedBrands.includes(brandId)
-      ? selectedBrands.filter(id => id !== brandId)
-      : [...selectedBrands, brandId]
-    onBrandsChange(newSelection)
-  }, [selectedBrands, onBrandsChange])
-
-  if (!brands?.length) return null
-
-  return (
-    <div className="widget">
-      <h3 className="widget-title">
-        <a 
-          href="#" 
-          className={collapsed ? 'collapsed' : ''}
-          onClick={(e) => {
-            e.preventDefault()
-            onToggleCollapse()
-          }}
-        >
-          Brands
-        </a>
-      </h3>
-      <div className={`widget-body ${collapsed ? 'collapse' : ''}`}>
-        <ul className="cat-list">
-          {brands.map(brand => (
-            <li key={brand.id}>
-              <div className="d-flex justify-content-between align-items-center">
-                <label className="custom-checkbox mb-0">
-                  <input
-                    type="checkbox"
-                    checked={selectedBrands.includes(brand.id)}
-                    onChange={() => handleBrandChange(brand.id)}
-                  />
-                  <span className="category-name">{brand.business_name}</span>
-                </label>
-                <span className="products-count">({brand.product_count || 0})</span>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}, (prevProps, nextProps) => {
-  // Only re-render if brands data or selection actually changed
-  return (
-    JSON.stringify(prevProps.brands) === JSON.stringify(nextProps.brands) &&
-    JSON.stringify(prevProps.selectedBrands) === JSON.stringify(nextProps.selectedBrands) &&
-    prevProps.collapsed === nextProps.collapsed
-  )
-})
-
-const PriceSection = memo(function PriceSection({ 
-  priceRange, 
-  minPrice, 
-  maxPrice, 
-  onPriceChange, 
-  collapsed, 
-  onToggleCollapse 
-}) {
-  // Removed excessive console logging for performance
-
-  const [values, setValues] = useState([minPrice, maxPrice])
-  const debounceRef = useRef(null)
-
-  // Update local state when props change
-  useEffect(() => {
-    setValues([minPrice, maxPrice])
-  }, [minPrice, maxPrice])
-
-  const handleRangeChange = useCallback((newValues) => {
-    setValues(newValues)
-    
-    // Debounce the actual price change to prevent excessive API calls
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current)
-    }
-    debounceRef.current = setTimeout(() => {
-      onPriceChange(newValues[0], newValues[1])
-    }, 500)
-  }, [onPriceChange])
-
-  const handleInputChange = useCallback((index, value) => {
-    const numValue = parseInt(value) || 0
-    const newValues = [...values]
-    
-    if (index === 0) {
-      // Min price shouldn't exceed max price
-      newValues[0] = Math.min(numValue, values[1])
-    } else {
-      // Max price shouldn't be less than min price
-      newValues[1] = Math.max(numValue, values[0])
-    }
-    
-    setValues(newValues)
-    
-    // Debounce the actual price change
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current)
-    }
-    debounceRef.current = setTimeout(() => {
-      onPriceChange(newValues[0], newValues[1])
-    }, 500)
-  }, [values, onPriceChange])
-
-  return (
-    <div className="widget">
-      <h3 className="widget-title">
-        <a 
-          href="#" 
-          className={collapsed ? 'collapsed' : ''}
-          onClick={(e) => {
-            e.preventDefault()
-            onToggleCollapse()
-          }}
-        >
-          Price Range
-        </a>
-      </h3>
-      <div className={`widget-body ${collapsed ? 'collapse' : ''}`}>
-        <div className="price-range">
-          {/* Price inputs */}
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <div className="price-input-wrapper">
-              <label className="price-label">Min</label>
-              <input
-                type="number"
-                className="form-control form-control-sm price-input"
-                value={values[0]}
-                min={priceRange.min}
-                max={values[1]}
-                onChange={(e) => handleInputChange(0, e.target.value)}
-              />
-            </div>
-            <div className="price-separator">-</div>
-            <div className="price-input-wrapper">
-              <label className="price-label">Max</label>
-              <input
-                type="number"
-                className="form-control form-control-sm price-input"
-                value={values[1]}
-                min={values[0]}
-                max={priceRange.max}
-                onChange={(e) => handleInputChange(1, e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Range slider */}
-          <div className="price-slider-container mb-3">
-            <Range
-              values={values}
-              step={1}
-              min={priceRange.min}
-              max={priceRange.max}
-              onChange={handleRangeChange}
-              renderTrack={({ props, children }) => (
-                <div
-                  {...props}
-                  className="price-slider-track"
-                >
-                  {children}
-                </div>
-              )}
-              renderThumb={({ props, isDragged }) => (
-                <div
-                  {...props}
-                  className={`price-slider-thumb ${isDragged ? 'dragged' : ''}`}
-                />
-              )}
-            />
-          </div>
-
-          {/* Price display */}
-          <div className="price-display text-center">
-            <strong>${values[0]} - ${values[1]}</strong>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}, (prevProps, nextProps) => {
-  // Only re-render if price values actually changed
-  return (
-    prevProps.minPrice === nextProps.minPrice &&
-    prevProps.maxPrice === nextProps.maxPrice &&
-    prevProps.collapsed === nextProps.collapsed &&
-    JSON.stringify(prevProps.priceRange) === JSON.stringify(nextProps.priceRange)
-  )
-})
 
 const ClearFiltersSection = memo(function ClearFiltersSection({ onClearAll, hasActiveFilters }) {
   // Removed excessive console logging for performance
@@ -375,8 +175,8 @@ const Sidebar = memo(function Sidebar({
 
         {/* Sidebar content - sticky behavior handled by parent StickyBox */}
         <div className="sidebar-content" ref={sidebarRef}>
-          {/* Hierarchical Categories filter */}
-          <HierarchicalCategoriesFilter
+          {/* Categories filter */}
+          <Categories
             categories={categories}
             selectedCategories={selectedCategories}
             onCategoriesChange={onCategoriesChange}
@@ -385,7 +185,7 @@ const Sidebar = memo(function Sidebar({
           />
 
           {/* Brands filter */}
-          <BrandsSection
+          <Brands
             brands={brands}
             selectedBrands={selectedBrands}
             onBrandsChange={onBrandsChange}
@@ -394,7 +194,7 @@ const Sidebar = memo(function Sidebar({
           />
 
           {/* Price filter with Range slider */}
-          <PriceSection
+          <Price
             priceRange={priceRange}
             minPrice={minPrice}
             maxPrice={maxPrice}
