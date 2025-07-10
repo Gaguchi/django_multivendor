@@ -88,6 +88,19 @@ function ShopPageContent() {
   const { data: categories, isLoading: categoriesLoading } = useCategories()
   const { data: vendors, isLoading: vendorsLoading } = useVendors()
   
+  // DEBUG: Log what useCategories returns
+  console.log('🏪 Shop.jsx useCategories result:', {
+    categoriesLength: categories?.length || 0,
+    categoriesLoading,
+    firstFewCategories: categories?.slice(0, 3).map(c => ({
+      id: c.id,
+      name: c.name,
+      parent_category: c.parent_category,
+      hasSubcategories: c.subcategories?.length > 0
+    })) || [],
+    categoriesWithSubcategories: categories?.filter(c => c.subcategories?.length > 0).length || 0
+  })
+  
   // Memoize products to prevent unnecessary re-renders
   const products = useMemo(() => {
     return data?.pages?.flatMap(page => page.results) || []

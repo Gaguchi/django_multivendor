@@ -5,31 +5,76 @@ export function useCategories() {
   return useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      console.log('🔄 useCategories: Starting API call to /api/categories/')
+      console.log('🔄 useCategories: Starting API call to fetch ALL categories')
       console.log('🔄 useCategories: Master token:', import.meta.env.VITE_MASTER_TOKEN ? 'Present' : 'Missing')
       
       try {
-        const response = await api.get('/api/categories/', {
+        // First, get the first page to see total count
+        const firstResponse = await api.get('/api/categories/', {
           headers: {
             'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN
           }
         })
         
-        console.log('✅ useCategories: API response received:', {
-          status: response.status,
-          dataKeys: Object.keys(response.data),
-          hasResults: !!response.data.results,
-          resultsCount: response.data.results?.length || 0,
-          directDataLength: Array.isArray(response.data) ? response.data.length : 'not array'
+        console.log('✅ useCategories: First page response:', {
+          status: firstResponse.status,
+          count: firstResponse.data.count,
+          pageResults: firstResponse.data.results?.length || 0,
+          hasNext: !!firstResponse.data.next
         })
         
-        const categories = response.data.results || response.data
+        let allCategories = firstResponse.data.results || []
+        
+        // If there are more pages, fetch them all
+        if (firstResponse.data.next && firstResponse.data.count > allCategories.length) {
+          console.log('🔄 useCategories: Fetching all pages...')
+          
+          // Calculate how many more pages we need (assuming 10 per page)
+          const pageSize = allCategories.length
+          const totalPages = Math.ceil(firstResponse.data.count / pageSize)
+          
+          // Fetch remaining pages in parallel
+          const remainingPagePromises = []
+          for (let page = 2; page <= totalPages; page++) {
+            const promise = api.get('/api/categories/', {
+              params: { page },
+              headers: {
+                'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN
+              }
+            })
+            remainingPagePromises.push(promise)
+          }
+          
+          const remainingPages = await Promise.all(remainingPagePromises)
+          
+          // Combine all results
+          for (const pageResponse of remainingPages) {
+            if (pageResponse.data.results) {
+              allCategories = allCategories.concat(pageResponse.data.results)
+            }
+          }
+          
+          console.log('✅ useCategories: All pages fetched:', {
+            totalPages,
+            totalCategories: allCategories.length,
+            expectedTotal: firstResponse.data.count
+          })
+        }
+        
         console.log('✅ useCategories: Final categories:', {
-          count: categories.length,
-          firstFew: categories.slice(0, 3).map(c => ({ id: c.id, name: c.name, parent: c.parent_category }))
+          count: allCategories.length,
+          firstFew: allCategories.slice(0, 3).map(c => ({ 
+            id: c.id, 
+            name: c.name, 
+            parent: c.parent_category,
+            product_count: c.product_count,
+            hasSubcategories: c.subcategories?.length > 0
+          })),
+          categoriesWithProducts: allCategories.filter(c => c.product_count > 0).length,
+          categoriesWithSubcategories: allCategories.filter(c => c.subcategories?.length > 0).length
         })
         
-        return categories
+        return allCategories
       } catch (error) {
         console.error('❌ useCategories: API call failed:', {
           message: error.message,
