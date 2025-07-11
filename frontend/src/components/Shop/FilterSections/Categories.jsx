@@ -79,21 +79,32 @@ const Categories = memo(function Categories({
 
     // Convert API nested structure to our format recursively
     const convertCategory = (category, level = 0) => {
+      // First convert all children
+      const convertedChildren = (category.subcategories || []).map(subcategory => convertCategory(subcategory, level + 1))
+      
+      // Filter children to only include those with products in their tree
+      const filteredChildren = convertedChildren.filter(child => child.hasProductsInTree)
+      
+      // Check if this category or any of its descendants have products
+      const hasDirectProducts = (category.product_count || 0) > 0
+      const hasProductsInDescendants = filteredChildren.length > 0
+      const hasProductsInTree = hasDirectProducts || hasProductsInDescendants
+      
       const converted = {
         ...category,
-        children: (category.subcategories || []).map(subcategory => convertCategory(subcategory, level + 1)),
-        hasProductsInTree: true, // Show all categories for now since product counts are 0
+        children: filteredChildren,
+        hasProductsInTree,
         level: level
       }
       
-      console.log(`🔄 CONVERTING: "${category.name}" (${category.id}) at level ${level}, children: ${converted.children.length}`)
+      console.log(`🔄 CONVERTING: "${category.name}" (${category.id}) at level ${level}, direct: ${hasDirectProducts}, descendants: ${hasProductsInDescendants}, inTree: ${hasProductsInTree}, filteredChildren: ${filteredChildren.length}`)
       
       return converted
     }
 
     // Find root categories (those without parent_category or whose parent is not in the current dataset)
     const allCategoryIds = new Set(categories.map(c => c.id))
-    const rootCategories = categories
+    const allRootCategories = categories
       .filter(cat => {
         // No parent category (true root)
         if (!cat.parent_category) return true
@@ -102,6 +113,26 @@ const Categories = memo(function Categories({
         return false
       })
       .map(cat => convertCategory(cat, 0))
+    
+    // Filter root categories to only include those with products in their tree
+    const rootCategories = allRootCategories.filter(cat => cat.hasProductsInTree)
+    
+    console.log('🚮 FILTERING ROOT CATEGORIES:', {
+      allRootsBeforeFilter: allRootCategories.length,
+      rootsWithProducts: rootCategories.length,
+      filteredOutRoots: allRootCategories.filter(cat => !cat.hasProductsInTree).map(cat => ({
+        name: cat.name,
+        id: cat.id,
+        productCount: cat.product_count || 0,
+        hasProductsInTree: cat.hasProductsInTree
+      })),
+      keptRoots: rootCategories.map(cat => ({
+        name: cat.name,
+        id: cat.id,
+        productCount: cat.product_count || 0,
+        hasProductsInTree: cat.hasProductsInTree
+      }))
+    })
     
     console.log('🔍 ROOT CATEGORIES DETECTED:', {
       totalRoots: rootCategories.length,
