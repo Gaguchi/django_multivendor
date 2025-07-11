@@ -12,6 +12,7 @@ import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
 import AuthCallback from './pages/AuthCallback'
 import ShopPage from './pages/Shop'
+import BentoShop from './pages/BentoShop'
 import CategoryPage from './pages/CategoryPage'
 import Search from './pages/Search'
 import Wishlist from './pages/Wishlist'
@@ -57,7 +58,8 @@ function AppContent() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/shop" element={<ShopPage />} />
+        <Route path="/shop" element={<BentoShop />} />
+        <Route path="/shop/browse" element={<ShopPage />} />
         <Route path="/category/:categorySlug" element={<CategoryPage />} />
         <Route path="/search" element={<Search />} />
         <Route path="/product/:id" element={<Product />} /> 
