@@ -279,6 +279,216 @@
   }
 }
 
+/* Category Hierarchy Component Styles */
+.category-hierarchy {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.category-hierarchy-loading {
+  padding: 20px;
+  text-align: center;
+}
+
+/* Parent Chain Styles */
+.category-parent-chain {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 15px;
+}
+
+.category-parent-chain .breadcrumb {
+  margin-bottom: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.category-parent-chain .breadcrumb-item + .breadcrumb-item::before {
+  content: "›";
+  color: #6c757d;
+  font-weight: bold;
+}
+
+/* Current Category Styles */
+.current-category {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 15px;
+}
+
+.current-category-item {
+  border: 2px solid #007bff;
+  font-size: 1.1em;
+}
+
+.current-category-item strong {
+  color: #007bff;
+}
+
+/* Category List Styles */
+.category-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.category-item {
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.category-item:hover {
+  border-color: #007bff;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1);
+}
+
+.category-item.active {
+  background: #007bff !important;
+  color: white !important;
+  border-color: #0056b3 !important;
+  font-weight: 600;
+}
+
+.category-item.active .category-name,
+.category-item.active .category-count {
+  color: white !important;
+}
+
+.category-item.in-active-path {
+  background: #e3f2fd !important;
+  border-color: #1976d2 !important;
+  font-weight: 500;
+}
+
+.category-item.in-active-path .category-name {
+  color: #1976d2 !important;
+}
+
+.category-link {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: #fff;
+  min-height: 44px;
+  position: relative;
+}
+
+.category-item.active .category-link {
+  background-color: #e3f2fd;
+}
+
+.category-toggle {
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 12px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  margin-right: 8px;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.category-toggle:hover {
+  background-color: #f8f9fa;
+  color: #007bff;
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  min-width: 0;
+}
+
+.category-name {
+  font-weight: 500;
+  color: #333;
+  text-decoration: none;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.category-info:hover .category-name {
+  color: #007bff;
+}
+
+.category-count {
+  font-size: 0.85em;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 10px;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+/* Children styling */
+.category-children {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  margin-top: 8px;
+  padding-left: 0;
+  border-left: 2px solid #e9ecef;
+  margin-left: 16px;
+}
+
+.category-children .category-item {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.category-children .category-item:last-child {
+  border-bottom: none;
+}
+
+.category-children .category-link {
+  background: #f8f9fa;
+  padding-left: 40px;
+}
+
+.category-children .category-item:hover .category-link {
+  background: #e9ecef;
+}
+
+/* Hierarchy Section Styles */
+.category-hierarchy-section {
+  border-top: 1px solid #e9ecef;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.category-children-section,
+.category-siblings-section {
+  margin-top: 20px;
+}
+
+.category-children-section h6,
+.category-siblings-section h6 {
+  font-size: 0.9em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  margin-bottom: 10px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .widget.widget-categories.hierarchical {
@@ -306,6 +516,26 @@
     .category-children {
       padding-left: 12px;
     }
+  }
+
+  .category-hierarchy {
+    padding: 12px;
+  }
+  
+  .category-link {
+    padding: 6px 10px;
+  }
+  
+  .category-children .category-link {
+    padding-left: 30px;
+  }
+  
+  .category-name {
+    font-size: 0.9em;
+  }
+  
+  .category-count {
+    font-size: 0.75em;
   }
 }
 

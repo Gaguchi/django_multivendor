@@ -9,6 +9,13 @@ const Price = memo(function Price({
   collapsed = false, 
   onToggleCollapse 
 }) {
+  console.log('💰 PriceSection render:', {
+    priceRange: `${priceRange.min}-${priceRange.max}`,
+    currentValues: `${minPrice}-${maxPrice}`,
+    collapsed,
+    timestamp: new Date().toISOString()
+  })
+
   const [values, setValues] = useState([minPrice, maxPrice])
   const debounceRef = useRef(null)
 

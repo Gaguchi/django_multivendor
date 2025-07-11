@@ -9,71 +9,49 @@ export function useCategories() {
       console.log('🔄 useCategories: Master token:', import.meta.env.VITE_MASTER_TOKEN ? 'Present' : 'Missing')
       
       try {
-        // First, get the first page to see total count
-        const firstResponse = await api.get('/api/categories/', {
-          headers: {
-            'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN
-          }
-        })
+        // Force fetch ALL categories by getting each page
+        let allCategories = []
+        let page = 1
+        let hasMore = true
         
-        console.log('✅ useCategories: First page response:', {
-          status: firstResponse.status,
-          count: firstResponse.data.count,
-          pageResults: firstResponse.data.results?.length || 0,
-          hasNext: !!firstResponse.data.next
-        })
-        
-        let allCategories = firstResponse.data.results || []
-        
-        // If there are more pages, fetch them all
-        if (firstResponse.data.next && firstResponse.data.count > allCategories.length) {
-          console.log('🔄 useCategories: Fetching all pages...')
+        while (hasMore) {
+          console.log(`🔄 useCategories: Fetching page ${page}`)
           
-          // Calculate how many more pages we need (assuming 10 per page)
-          const pageSize = allCategories.length
-          const totalPages = Math.ceil(firstResponse.data.count / pageSize)
-          
-          // Fetch remaining pages in parallel
-          const remainingPagePromises = []
-          for (let page = 2; page <= totalPages; page++) {
-            const promise = api.get('/api/categories/', {
-              params: { page },
-              headers: {
-                'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN
-              }
-            })
-            remainingPagePromises.push(promise)
-          }
-          
-          const remainingPages = await Promise.all(remainingPagePromises)
-          
-          // Combine all results
-          for (const pageResponse of remainingPages) {
-            if (pageResponse.data.results) {
-              allCategories = allCategories.concat(pageResponse.data.results)
+          const response = await api.get('/api/categories/', {
+            params: { page },
+            headers: {
+              'X-Master-Token': import.meta.env.VITE_MASTER_TOKEN
             }
+          })
+          
+          console.log(`✅ useCategories: Page ${page} response:`, {
+            status: response.status,
+            count: response.data.count,
+            pageResults: response.data.results?.length || 0,
+            hasNext: !!response.data.next
+          })
+          
+          if (response.data.results) {
+            allCategories = allCategories.concat(response.data.results)
           }
           
-          console.log('✅ useCategories: All pages fetched:', {
-            totalPages,
-            totalCategories: allCategories.length,
-            expectedTotal: firstResponse.data.count
-          })
+          hasMore = !!response.data.next
+          page++
+          
+          // Safety limit to prevent infinite loops
+          if (page > 50) {
+            console.warn('🚨 useCategories: Reached page limit, stopping')
+            break
+          }
         }
         
-        console.log('✅ useCategories: Final categories:', {
-          count: allCategories.length,
-          firstFew: allCategories.slice(0, 3).map(c => ({ 
-            id: c.id, 
-            name: c.name, 
-            parent: c.parent_category,
-            product_count: c.product_count,
-            hasSubcategories: c.subcategories?.length > 0
-          })),
-          categoriesWithProducts: allCategories.filter(c => c.product_count > 0).length,
-          categoriesWithSubcategories: allCategories.filter(c => c.subcategories?.length > 0).length
+        console.log('✅ useCategories: All pages fetched:', {
+          totalPages: page - 1,
+          totalCategories: allCategories.length,
+          jewelryCategory: allCategories.find(c => c.slug === 'jewelry'),
+          categoriesWithProducts: allCategories.filter(c => c.product_count > 0).length
         })
-        
+
         return allCategories
       } catch (error) {
         console.error('❌ useCategories: API call failed:', {

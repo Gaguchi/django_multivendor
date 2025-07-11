@@ -6,7 +6,7 @@ import Price from './FilterSections/Price'
 // Individual filter sections - each memoized independently
 
 const ClearFiltersSection = memo(function ClearFiltersSection({ onClearAll, hasActiveFilters }) {
-  // Removed excessive console logging for performance
+  console.log('🧹 ClearFiltersSection render:', { hasActiveFilters })
 
   if (!hasActiveFilters) return null
 
@@ -102,7 +102,16 @@ const Sidebar = memo(function Sidebar({
 }) {
   const sidebarRef = useRef(null)
   
-  // Removed excessive console logging for performance
+  // Performance logging
+  console.log('📋 SimpleOptimizedSidebar render:', {
+    categoriesCount: categories.length,
+    brandsCount: brands.length,
+    selectedCategoriesCount: selectedCategories.length,
+    selectedBrandsCount: selectedBrands.length,
+    priceRange: `${minPrice}-${maxPrice}`,
+    loading,
+    timestamp: new Date().toISOString()
+  })
 
   // Collapse state for each section
   const [collapsed, setCollapsed] = useState({

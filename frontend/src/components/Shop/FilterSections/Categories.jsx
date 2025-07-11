@@ -1,5 +1,6 @@
 import React, { memo, useCallback, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { buildCategoryTree } from '../../../utils/categoryTreeBuilder'
 import './Categories.css'
 
 const Categories = memo(function Categories({ 
@@ -12,26 +13,17 @@ const Categories = memo(function Categories({
 }) {
   const navigate = useNavigate()
 
-  // DEBUG: Log categories prop at component level
-  console.log('🎯 Categories Component Render:', {
-    categoriesLength: categories.length,
-    loading,
-    hasCategories: categories.length > 0,
-    firstFewCategories: categories.slice(0, 3).map(c => ({
-      id: c.id,
-      name: c.name,
-      hasSubcategories: c.subcategories?.length > 0,
-      subcategoriesCount: c.subcategories?.length || 0
-    })),
-    timestamp: new Date().toISOString(),
-    // Force log the first category structure
-    firstCategoryStructure: categories[0] ? {
-      id: categories[0].id,
-      name: categories[0].name,
-      parent_category: categories[0].parent_category,
-      subcategories: categories[0].subcategories?.slice(0, 2) || []
-    } : null
-  })
+  // DEBUG: Log categories prop at component level (reduced logging)
+  const isFirstRender = React.useRef(true)
+  if (isFirstRender.current) {
+    console.log('🎯 Categories Component Initial Render:', {
+      categoriesLength: categories.length,
+      loading,
+      hasCategories: categories.length > 0,
+      timestamp: new Date().toISOString()
+    })
+    isFirstRender.current = false
+  }
 
   // Track expanded categories and selected category for tree navigation
   const [expandedCategories, setExpandedCategories] = useState(new Set())
@@ -47,178 +39,42 @@ const Categories = memo(function Categories({
   //   }
   // }, [categories])
 
-  // Build category hierarchy using API's nested structure
+  // Build category hierarchy using shared utility (optimized)
   const categoryTree = useMemo(() => {
-    console.log('🌳 Building category tree from API nested structure:', {
-      totalCategories: categories.length,
-      sampleCategories: categories.slice(0, 3).map(c => ({ 
-        id: c.id, 
-        name: c.name, 
-        parent_category: c.parent_category,
-        product_count: c.product_count,
-        subcategoriesCount: c.subcategories?.length || 0,
-        hasSubcategories: (c.subcategories?.length || 0) > 0
-      })),
-      // Check structure of API response
-      apiStructureCheck: {
-        hasSubcategoriesField: categories.some(c => c.subcategories !== undefined),
-        categoriesWithSubcategories: categories.filter(c => c.subcategories && c.subcategories.length > 0).slice(0, 5).map(c => ({
-          id: c.id,
-          name: c.name,
-          subcategoriesCount: c.subcategories.length,
-          subcategoryNames: c.subcategories.slice(0, 3).map(sub => sub.name)
-        })),
-        categoriesWithNullParent: categories.filter(c => !c.parent_category).length,
-        totalProductCount: categories.reduce((sum, c) => sum + (c.product_count || 0), 0)
-      }
-    })
-
     if (categories.length === 0) {
       return { map: new Map(), rootCategories: [] }
     }
 
-    // Convert API nested structure to our format recursively
-    const convertCategory = (category, level = 0) => {
-      // First convert all children
-      const convertedChildren = (category.subcategories || []).map(subcategory => convertCategory(subcategory, level + 1))
-      
-      // Filter children to only include those with products in their tree
-      const filteredChildren = convertedChildren.filter(child => child.hasProductsInTree)
-      
-      // Check if this category or any of its descendants have products
-      const hasDirectProducts = (category.product_count || 0) > 0
-      const hasProductsInDescendants = filteredChildren.length > 0
-      const hasProductsInTree = hasDirectProducts || hasProductsInDescendants
-      
-      const converted = {
-        ...category,
-        children: filteredChildren,
-        hasProductsInTree,
-        level: level
-      }
-      
-      console.log(`🔄 CONVERTING: "${category.name}" (${category.id}) at level ${level}, direct: ${hasDirectProducts}, descendants: ${hasProductsInDescendants}, inTree: ${hasProductsInTree}, filteredChildren: ${filteredChildren.length}`)
-      
-      return converted
-    }
-
-    // Find root categories (those without parent_category or whose parent is not in the current dataset)
-    const allCategoryIds = new Set(categories.map(c => c.id))
-    const allRootCategories = categories
-      .filter(cat => {
-        // No parent category (true root)
-        if (!cat.parent_category) return true
-        // Parent category doesn't exist in our current dataset (treat as root)
-        if (!allCategoryIds.has(cat.parent_category)) return true
-        return false
-      })
-      .map(cat => convertCategory(cat, 0))
-    
-    // Filter root categories to only include those with products in their tree
-    const rootCategories = allRootCategories.filter(cat => cat.hasProductsInTree)
-    
-    console.log('🚮 FILTERING ROOT CATEGORIES:', {
-      allRootsBeforeFilter: allRootCategories.length,
-      rootsWithProducts: rootCategories.length,
-      filteredOutRoots: allRootCategories.filter(cat => !cat.hasProductsInTree).map(cat => ({
-        name: cat.name,
-        id: cat.id,
-        productCount: cat.product_count || 0,
-        hasProductsInTree: cat.hasProductsInTree
-      })),
-      keptRoots: rootCategories.map(cat => ({
-        name: cat.name,
-        id: cat.id,
-        productCount: cat.product_count || 0,
-        hasProductsInTree: cat.hasProductsInTree
-      }))
+    const tree = buildCategoryTree(categories, {
+      debug: false, // Reduced debug logging
+      currentCategory: null,
+      showEmptyCategories: false
     })
-    
-    console.log('🔍 ROOT CATEGORIES DETECTED:', {
-      totalRoots: rootCategories.length,
-      rootNames: rootCategories.map(c => c.name),
-      rootsWithChildren: rootCategories.filter(c => c.children.length > 0).map(c => ({
-        name: c.name,
-        childrenCount: c.children.length,
-        childrenNames: c.children.slice(0, 3).map(child => child.name)
-      }))
-    })
-
-    // Create map for quick lookup
-    const map = new Map()
-    const addToMap = (category) => {
-      map.set(category.id, category)
-      category.children.forEach(addToMap)
-    }
-    rootCategories.forEach(addToMap)
 
     // Sort root categories and limit for better UX
-    const visibleRootCategories = rootCategories
+    const visibleRootCategories = tree.rootCategories
       .sort((a, b) => (a.display_order || 0) - (b.display_order || 0))
-      .slice(0, 10) // Show up to 10 root categories    
-    console.log('🌱 Category tree final result:', {
-      totalInputCategories: categories.length,
-      visibleRootCount: visibleRootCategories.length,
-      rootNames: visibleRootCategories.map(c => c.name),
-      treeStructure: visibleRootCategories.slice(0, 3).map(root => ({
-        root: { id: root.id, name: root.name, level: root.level },
-        children: root.children?.slice(0, 5).map(child => ({
-          id: child.id,
-          name: child.name,
-          level: child.level,
-          grandchildren: child.children?.slice(0, 3).map(gc => ({ 
-            id: gc.id, 
-            name: gc.name, 
-            level: gc.level 
-          })) || []
-        })) || []
-      }))
-    })
+      .slice(0, 10) // Show up to 10 root categories
 
-    return { map, rootCategories: visibleRootCategories }
+    return { map: tree.map, rootCategories: visibleRootCategories }
   }, [categories])
 
   // Extract data from tree structure
   const { map: categoryMap, rootCategories } = categoryTree
 
-  // Debug logging
-  console.log('🌳 Categories render:', {
-    categoriesCount: categories.length,
-    selectedCount: selectedCategories.length,
-    rootCategoriesCount: rootCategories.length,
-    expandedCount: expandedCategories.size,
-    categories: categories.slice(0, 3).map(c => ({ id: c.id, name: c.name, parent: c.parent_category })),
-    timestamp: new Date().toISOString()
-  })
+  // Simplified debug logging (only when needed)
+  const renderCount = React.useRef(0)
+  renderCount.current++
 
-  // DETAILED DEBUG: What's in rootCategories?
-  console.log('🔍 DETAILED Categories Debug:', {
-    loading,
-    categoriesLength: categories.length,
-    rootCategoriesLength: rootCategories.length,
-    rootCategoriesArray: rootCategories,
-    categoriesData: categories.slice(0, 2),
-    conditionCheck: {
-      isLoading: loading,
-      hasRootCategories: rootCategories.length > 0,
-      willShowTree: !loading && rootCategories.length > 0
-    }
-  })
-
-  // DETAILED RENDER LOGIC DEBUG
-  console.log('🎯 RENDER LOGIC DEBUG:', {
-    loading: loading,
-    rootCategoriesLength: rootCategories.length,
-    rootCategoriesArray: rootCategories.slice(0, 3).map(cat => ({
-      id: cat.id,
-      name: cat.name,
-      product_count: cat.product_count,
-      hasChildren: cat.children?.length > 0
-    })),
-    willShowLoading: loading,
-    willShowTree: !loading && rootCategories.length > 0,
-    willShowNoCategories: !loading && rootCategories.length === 0
-  })
+  // Only log excessive renders or issues
+  if (renderCount.current > 3) {
+    console.warn('⚠️ Categories excessive renders:', {
+      renderCount: renderCount.current,
+      categoriesCount: categories.length,
+      rootCategoriesCount: rootCategories.length,
+      timestamp: new Date().toISOString()
+    })
+  }
 
   // Handle category selection/deselection
   const handleToggleCategory = useCallback((categoryId) => {
@@ -241,15 +97,12 @@ const Categories = memo(function Categories({
 
   // Handle tree expand/collapse
   const handleToggleExpand = useCallback((categoryId) => {
-    console.log(`🔄 TOGGLE EXPAND for category ${categoryId}`)
     setExpandedCategories(prev => {
       const newSet = new Set(prev)
       if (newSet.has(categoryId)) {
         newSet.delete(categoryId)
-        console.log(`➖ COLLAPSED category ${categoryId}`)
       } else {
         newSet.add(categoryId)
-        console.log(`➕ EXPANDED category ${categoryId}`)
       }
       return newSet
     })
@@ -273,18 +126,6 @@ const Categories = memo(function Categories({
     const isExpanded = expandedCategories.has(category.id)
     const isSelected = selectedCategories.includes(category.id)
     const isCurrentCategory = selectedCategory?.id === category.id
-
-    // DEBUG: Log each node being rendered (only first few to reduce noise)
-    if (level === 0 || category.children?.length > 0) {
-      console.log(`🎨 RENDERING NODE:`, {
-        id: category.id,
-        name: category.name,
-        level,
-        hasChildren,
-        childrenCount: category.children?.length || 0,
-        isExpanded
-      })
-    }
 
     return (
       <div key={category.id} className={`category-tree-node level-${level}`}>
@@ -402,24 +243,6 @@ const Categories = memo(function Categories({
         <div className="widget-body">
           {/* Category Tree */}
           <div className="category-tree">
-            {(() => {
-              console.log('🚨 FINAL RENDER DECISION:', {
-                loading,
-                rootCategoriesLength: rootCategories.length,
-                categoriesLength: categories.length,
-                hasAnyProducts: categories.some(c => c.product_count > 0),
-                decision: loading ? 'SHOW_LOADING' : 
-                         rootCategories.length > 0 ? 'SHOW_TREE' : 
-                         categories.length === 0 ? 'NO_CATEGORIES_AVAILABLE' : 'NO_CATEGORIES_WITH_PRODUCTS',
-                firstFewCategories: categories.slice(0, 3).map(c => ({ 
-                  id: c.id, 
-                  name: c.name, 
-                  hasProducts: c.product_count > 0,
-                  count: c.product_count 
-                }))
-              })
-              return null
-            })()}
             {loading ? (
               <div className="no-categories">
                 <p>Processing categories...</p>

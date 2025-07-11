@@ -7,6 +7,13 @@ const Brands = memo(function Brands({
   collapsed = false, 
   onToggleCollapse 
 }) {
+  console.log('🏢 BrandsSection render:', {
+    brandsCount: brands.length,
+    selectedCount: selectedBrands.length,
+    collapsed,
+    timestamp: new Date().toISOString()
+  })
+
   const handleBrandChange = useCallback((brandId) => {
     const newSelection = selectedBrands.includes(brandId)
       ? selectedBrands.filter(id => id !== brandId)

@@ -2,8 +2,10 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import api from '../services/api'
+import { useCategories } from '../hooks/useCategories'
 import ProductGridSection from '../components/Shop/ProductGridSection'
 import Sidebar from '../components/Shop/Sidebar'
+import CategoryHierarchy from '../components/Shop/CategoryHierarchy'
 import StickyBox from 'react-sticky-box'
 
 const CategoryPage = () => {
@@ -32,14 +34,26 @@ const CategoryPage = () => {
     enabled: !!categorySlug
   })
 
-  // Fetch all categories for sidebar
-  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: async () => {
-      const response = await api.get('/api/categories/')
-      return response.data.results || response.data
-    }
-  })
+  // Fetch all categories for sidebar using optimized hook
+  const { data: categories = [], isLoading: categoriesLoading } = useCategories()
+
+  // Debug: Log categories data
+  useEffect(() => {
+    console.log('🔍 CategoryPage - Categories data:', {
+      categoriesLength: categories.length,
+      isLoading: categoriesLoading,
+      sampleCategories: categories.slice(0, 5).map(c => ({
+        id: c.id,
+        name: c.name,
+        slug: c.slug,
+        parent_category: c.parent_category,
+        product_count: c.product_count
+      })),
+      jewelryCategory: categories.find(c => c.slug === 'jewelry'),
+      categoriesWithProducts: categories.filter(c => c.product_count > 0).length,
+      timestamp: new Date().toISOString()
+    })
+  }, [categories, categoriesLoading])
 
   // Fetch vendors for sidebar
   const { data: vendors = [], isLoading: vendorsLoading } = useQuery({
@@ -304,6 +318,24 @@ const CategoryPage = () => {
           </nav>
         </div>
       </div>
+
+      {/* Category Hierarchy Section */}
+      {categoryData && categories.length > 0 && (
+        <div className="category-hierarchy-section py-4 bg-light">
+          <div className="container">
+            <div className="row">
+              <div className="col-12">
+                <CategoryHierarchy
+                  categories={categories}
+                  currentCategory={categoryData}
+                  loading={categoriesLoading}
+                  showProductCounts={true}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="page-content">
         <div className="container">
