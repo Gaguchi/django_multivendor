@@ -109,10 +109,10 @@ export default function SearchBox({ className = '', placeholder = "Search produc
                                 type="button"
                                 className={`ai-toggle ${isAIMode ? 'active' : ''}`}
                                 onClick={() => setIsAIMode(!isAIMode)}
-                                title={isAIMode ? 'Disable AI Search' : 'Enable AI Search'}
+                                title={isAIMode ? 'Disable GPT-4o AI Search' : 'Enable GPT-4o AI Search'}
                             >
-                                <i className="icon-cpu"></i>
-                                {isAIMode && <span className="ai-label">AI</span>}
+                                <i className="fas fa-robot"></i>
+                                {isAIMode && <span className="ai-label">4o</span>}
                             </button>
                         </div>
 
@@ -120,7 +120,7 @@ export default function SearchBox({ className = '', placeholder = "Search produc
                             type="search"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            placeholder={isAIMode ? "Ask AI anything..." : placeholder}
+                            placeholder={isAIMode ? "Ask GPT-4o anything..." : placeholder}
                             className="search-input"
                             autoComplete="off"
                         />

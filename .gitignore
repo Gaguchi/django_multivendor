@@ -1,9 +1,57 @@
+# Python
 venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+.Python
+env/
+.venv/
+
+# Node.js
 node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
 build/
-certificates/
+dist/
+
+# Django
 backend/db.sqlite3
 backend/debug.log
+*.sqlite3
+
+# Environment and secrets
+.env
+.env.local
+.env.production
+certificates/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
 memory.json
+debug.log
+
+# Legacy setup files (deprecated)
+setup_*.py
+setup_*.sh
+setup_*.bat
+!setup/setup_ai_search.sh
+!setup/setup_ai_search.bat

@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from vendors.models import VendorProduct
 from vendors.serializers import ProductListSerializer
 from .models import SearchLog, SearchResult
+from ai_search.gpt_service import gpt_ai_search_service
 import requests
 
 logger = logging.getLogger(__name__)
@@ -243,9 +244,7 @@ def search_products_by_tags(tags, limit=20):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def ai_search(request):
-    """AI-powered product search endpoint"""
-    start_time = time.time()
-    
+    """AI-powered product search endpoint using GPT-4o"""
     try:
         data = request.data
         query = data.get('query', '').strip()
@@ -256,74 +255,49 @@ def ai_search(request):
             }, status=status.HTTP_400_BAD_REQUEST)
         
         # Get user info for logging
-        user = request.user if request.user.is_authenticated else None
-        session_key = request.session.session_key
+        user_ip = request.META.get('REMOTE_ADDR')
+        user_agent = request.META.get('HTTP_USER_AGENT', '')
         
-        logger.info(f"AI Search query: '{query}' from user: {user or session_key}")
+        logger.info(f"AI Search query: '{query}' from IP: {user_ip}")
         
-        # Try AI tag extraction first
-        ai_tags = extract_tags_with_ai(query)
-        search_type = 'ai' if ai_tags else 'fallback'
-        
-        # Fallback to manual extraction if AI fails
-        if not ai_tags:
-            ai_tags = extract_tags_manual(query)
-            search_type = 'tag' if ai_tags else 'keyword'
-        
-        logger.info(f"Extracted tags: {ai_tags}")
-        
-        # Search products using tags
-        if ai_tags:
-            products, product_scores = search_products_by_tags(ai_tags)
-        else:
-            # Final fallback: simple keyword search
-            search_type = 'keyword'
-            products = VendorProduct.objects.filter(
-                Q(name__icontains=query) |
-                Q(description__icontains=query) |
-                Q(brand__icontains=query) |
-                Q(tags__icontains=query),
-                stock__gt=0
-            ).distinct()[:20]
-            product_scores = {}
-        
-        # Serialize products
-        serializer = ProductListSerializer(products, many=True)
-        
-        # Calculate processing time
-        processing_time = time.time() - start_time
-        
-        # Log search
-        search_log = SearchLog.objects.create(
-            user=user,
-            session_key=session_key,
+        # Use the new GPT AI search service
+        search_results = gpt_ai_search_service.search_products(
             query=query,
-            search_type=search_type,
-            results_count=len(products),
-            processing_time=processing_time
+            user_ip=user_ip,
+            user_agent=user_agent
         )
         
-        # Log individual results
-        for rank, product in enumerate(products, 1):
-            score_info = product_scores.get(product.id, {})
-            SearchResult.objects.create(
-                search_log=search_log,
-                product=product,
-                rank=rank,
-                relevance_score=score_info.get('score', 0),
-                matched_tags=json.dumps(score_info.get('matched_tags', []))
-            )
+        # Convert results to the expected format for frontend
+        products = []
+        for result in search_results.get('results', []):
+            # Ensure we have the expected fields
+            product_data = {
+                'id': result.get('id'),
+                'name': result.get('name'),
+                'description': result.get('description', ''),
+                'brand': result.get('brand', ''),
+                'price': result.get('price', 0),
+                'rating': result.get('rating', 0),
+                'vendor_name': result.get('vendor', ''),
+                'category': result.get('category', ''),
+                'match_score': result.get('match_score', 0),
+                'tags': result.get('tags', [])
+            }
+            products.append(product_data)
         
         response_data = {
-            'query': query,
-            'results_count': len(products),
-            'processing_time': round(processing_time, 3),
-            'search_type': search_type,
-            'extracted_tags': ai_tags,
-            'products': serializer.data
+            'query': search_results.get('query', query),
+            'results': products,
+            'results_count': search_results.get('total_count', len(products)),
+            'processing_time': search_results.get('response_time_ms', 0),
+            'search_type': search_results.get('search_method', 'gpt4o'),
+            'extracted_tags': search_results.get('relevant_tags', [])
         }
         
-        logger.info(f"Search completed: {len(products)} results in {processing_time:.3f}s")
+        if search_results.get('error'):
+            response_data['error'] = search_results['error']
+        
+        logger.info(f"AI Search completed: {len(products)} results in {search_results.get('response_time_ms', 0)}ms")
         
         return Response(response_data, status=status.HTTP_200_OK)
         

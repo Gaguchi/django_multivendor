@@ -21,14 +21,14 @@ export default function AISearchButton() {
             <button
                 className="ai-search-btn"
                 onClick={openSearch}
-                title="AI Search - Ask me anything!"
-                aria-label="Open AI Search"
+                title="GPT-4o AI Search - Ask me anything!"
+                aria-label="Open GPT-4o AI Search"
             >
                 <div className="ai-search-icon">
-                    <i className="icon-magnifier"></i>
-                    <span className="ai-badge">AI</span>
+                    <i className="fas fa-robot"></i>
+                    <span className="ai-badge">4o</span>
                 </div>
-                <span className="ai-search-text d-none d-lg-inline">Ask AI</span>
+                <span className="ai-search-text d-none d-lg-inline">Ask GPT-4o</span>
             </button>
 
             {/* AI Search Modal */}
@@ -80,12 +80,12 @@ export default function AISearchButton() {
                 .ai-badge {
                     position: absolute;
                     top: -6px;
-                    right: -8px;
+                    right: -12px;
                     background: #ff6b6b;
                     color: white;
-                    font-size: 9px;
+                    font-size: 8px;
                     font-weight: bold;
-                    padding: 1px 4px;
+                    padding: 2px 4px;
                     border-radius: 8px;
                     line-height: 1;
                     animation: pulse 2s infinite;

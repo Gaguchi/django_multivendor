@@ -213,7 +213,7 @@
     margin-bottom: 20px;
 }
 
-.results-header h4 {
+.results-info h4 {
     margin: 0 0 5px 0;
     font-size: 18px;
     font-weight: 600;
@@ -221,10 +221,81 @@
 }
 
 .search-query-display {
-    margin: 0;
+    margin: 0 0 15px 0;
     color: #6b7280;
     font-size: 14px;
     font-style: italic;
+}
+
+/* Search Method Information */
+.search-method-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.search-method-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.search-method-badge i {
+    font-size: 12px;
+}
+
+.relevant-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tags-label {
+    font-size: 11px;
+    color: #6b7280;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tag-chip {
+    background: #f3f4f6;
+    color: #374151;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid #e5e7eb;
+}
+
+.tag-more {
+    background: #e5e7eb;
+    color: #6b7280;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.search-timing {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #9ca3af;
+    font-size: 11px;
+}
+
+.search-timing i {
+    font-size: 10px;
 }
 
 .results-grid {
@@ -602,4 +673,71 @@
     .product-tags {
         justify-content: center;
     }
+}
+
+/* Search Meta Info */
+.search-meta-info {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--primary-color);
+    font-size: 0.9rem;
+}
+
+.search-method-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-right: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.search-method-badge.gpt {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.search-method-badge.manual {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.search-method-badge.keyword {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.relevant-tags {
+    margin-top: 8px;
+}
+
+.relevant-tags-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.relevant-tag {
+    background: #e5e7eb;
+    color: #374151;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.search-timing {
+    color: #6b7280;
+    font-size: 0.8rem;
+    margin-top: 4px;
 }

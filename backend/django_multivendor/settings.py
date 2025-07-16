@@ -15,6 +15,17 @@ from datetime import timedelta  # Ensure timedelta is imported
 import os
 import importlib.util
 
+# Load environment variables from .env file if available
+try:
+    from dotenv import load_dotenv
+    env_path = Path(__file__).resolve().parent.parent.parent / '.env'
+    if env_path.exists():
+        load_dotenv(env_path)
+        print(f"✅ Loaded environment variables from {env_path}")
+except ImportError:
+    # dotenv not installed, continue without it
+    pass
+
 # Helper function to check if a package is installed
 def is_package_installed(package_name):
     return importlib.util.find_spec(package_name) is not None
@@ -506,6 +517,10 @@ CORS_ALLOW_HEADERS = [
 ]
 
 # AI Search Configuration
+# GitHub Copilot API Configuration
+GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', None)  # Set your GitHub token in environment variables
+
+# Legacy Ollama configuration (kept for fallback)
 OLLAMA_API_URL = 'http://localhost:11434/api/generate'
 OLLAMA_MODEL = 'gemma:7b'
 AI_SEARCH_DEBUG = True  # Set to False in production

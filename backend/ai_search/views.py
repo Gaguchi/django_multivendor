@@ -7,7 +7,7 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 from django.db import models
 
-from .services import ai_search_service
+from .gpt_service import gpt_ai_search_service
 from .serializers import AISearchRequestSerializer, AISearchResponseSerializer
 from .models import SearchLog, ProductTag
 
@@ -28,7 +28,7 @@ def ai_search(request):
     user_agent = request.META.get('HTTP_USER_AGENT', '')
     
     # Perform search
-    search_results = ai_search_service.search_products(
+    search_results = gpt_ai_search_service.search_products(
         query=query,
         user_ip=user_ip,
         user_agent=user_agent
@@ -165,7 +165,7 @@ def health_check(request):
     
     try:
         # Test a simple search (this tests the full pipeline)
-        test_result = ai_search_service.search_products("test", user_ip="127.0.0.1")
+        test_result = gpt_ai_search_service.search_products("test", user_ip="127.0.0.1")
         health_status['search_working'] = test_result.get('total_count', 0) >= 0
         health_status['last_test_response_time'] = test_result.get('response_time_ms', 0)
     except Exception as e:

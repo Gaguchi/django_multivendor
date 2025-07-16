@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.conf import settings
 import os
 import sys
-from ai_search.services import ai_search_service
+from ai_search.gpt_service import gpt_ai_search_service
 
 
 class Command(BaseCommand):
@@ -53,7 +53,7 @@ class Command(BaseCommand):
             # Temporarily enable debug for this search
             original_debug = settings.AI_SEARCH_DEBUG
             settings.AI_SEARCH_DEBUG = True
-            ai_search_service.debug_mode = True
+            gpt_ai_search_service.debug_mode = True
 
         try:
             self.stdout.write(
@@ -62,24 +62,24 @@ class Command(BaseCommand):
 
             if tags_only:
                 # Just show the tag selection process
-                all_tags = ai_search_service.get_all_product_tags()
+                all_tags = gpt_ai_search_service.get_all_product_tags()
                 
                 if enable_ai:
-                    selected_tags = ai_search_service.select_relevant_tags_ai(query, all_tags)
+                    selected_tags = gpt_ai_search_service.select_relevant_tags_ai(query, all_tags)
                     if not selected_tags:
-                        selected_tags = ai_search_service.select_relevant_tags_manual(query, all_tags)
+                        selected_tags = gpt_ai_search_service.select_relevant_tags_manual(query, all_tags)
                         self.stdout.write(
                             self.style.WARNING('AI tag selection failed, using manual selection')
                         )
                 else:
-                    selected_tags = ai_search_service.select_relevant_tags_manual(query, all_tags)
+                    selected_tags = gpt_ai_search_service.select_relevant_tags_manual(query, all_tags)
                 
                 self.stdout.write(f'\nQuery: {query}')
                 self.stdout.write(f'Selected tags: {", ".join(selected_tags)}')
                 return
 
             # Perform the full search
-            results = ai_search_service.search_products(query)
+            results = gpt_ai_search_service.search_products(query)
 
             if results.get('error'):
                 raise CommandError(f'Search failed: {results["error"]}')
@@ -145,7 +145,7 @@ class Command(BaseCommand):
             # Restore original debug setting
             if debug_mode:
                 settings.AI_SEARCH_DEBUG = original_debug
-                ai_search_service.debug_mode = original_debug
+                gpt_ai_search_service.debug_mode = original_debug
 
         self.stdout.write(
             self.style.SUCCESS('\nSearch completed successfully!')

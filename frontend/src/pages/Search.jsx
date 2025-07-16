@@ -40,25 +40,31 @@ export default function Search() {
         setError('')
 
         try {
-            let apiUrl = ''
+            let response
             
             if (searchType === 'ai') {
-                // AI Search endpoint
-                apiUrl = `https://api.bazro.ge/api/ai-search/?q=${encodeURIComponent(query)}`
+                // GPT-4o AI Search endpoint (POST request)
+                response = await fetch('https://api.bazro.ge/api/ai/search/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'BazroShop-Frontend/1.0'
+                    },
+                    body: JSON.stringify({
+                        query: query.trim()
+                    })
+                })
             } else {
-                // Regular search endpoint
-                apiUrl = `https://api.bazro.ge/api/search/?q=${encodeURIComponent(query)}`
+                // Regular search endpoint (GET request)
+                const searchUrl = new URL(`https://api.bazro.ge/api/search/?q=${encodeURIComponent(query)}`)
+                if (category) searchUrl.searchParams.append('category', category)
+                if (filters.category) searchUrl.searchParams.append('category', filters.category)
+                if (filters.minPrice) searchUrl.searchParams.append('min_price', filters.minPrice)
+                if (filters.maxPrice) searchUrl.searchParams.append('max_price', filters.maxPrice)
+                if (filters.sortBy) searchUrl.searchParams.append('sort', filters.sortBy)
+                
+                response = await fetch(searchUrl.toString())
             }
-
-            // Add filters to URL
-            const searchUrl = new URL(apiUrl)
-            if (category) searchUrl.searchParams.append('category', category)
-            if (filters.category) searchUrl.searchParams.append('category', filters.category)
-            if (filters.minPrice) searchUrl.searchParams.append('min_price', filters.minPrice)
-            if (filters.maxPrice) searchUrl.searchParams.append('max_price', filters.maxPrice)
-            if (filters.sortBy) searchUrl.searchParams.append('sort', filters.sortBy)
-
-            const response = await fetch(searchUrl.toString())
             
             if (!response.ok) {
                 if (response.status === 404) {
@@ -138,6 +144,9 @@ export default function Search() {
                                     <>
                                         <i className="icon-cpu me-2 text-primary"></i>
                                         AI Search Results
+                                        <span className="badge bg-primary ms-2" style={{fontSize: '0.5em'}}>
+                                            Powered by GPT-4o
+                                        </span>
                                     </>
                                 ) : (
                                     <>
@@ -186,6 +195,9 @@ export default function Search() {
                                 <h5 className="card-title">
                                     <i className="icon-bulb me-2 text-warning"></i>
                                     AI Insights
+                                    <small className="text-muted ms-2" style={{fontSize: '0.7em'}}>
+                                        by GPT-4o
+                                    </small>
                                 </h5>
                                 <p className="card-text">{searchMeta.aiInsights}</p>
                             </div>
