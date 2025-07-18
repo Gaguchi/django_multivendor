@@ -82,7 +82,7 @@ class Order(models.Model):
     def get_vendors(self):
         """Get all vendors associated with this order"""
         return Vendor.objects.filter(
-            vendorproduct__orderitem__order=self
+            vendor_products__orderitem__order=self
         ).distinct()
 
     def can_vendor_access(self, vendor):

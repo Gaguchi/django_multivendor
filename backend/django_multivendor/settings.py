@@ -73,6 +73,7 @@ PROJECT_APPS = [
     'shipping',
     'search',  # AI search functionality
     'ai_search',  # AI-powered search with Ollama
+    'notifications',  # Notification system
 ]
 
 # Optional third-party apps, only added if installed

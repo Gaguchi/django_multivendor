@@ -21,3 +21,5 @@ django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. Y
 [2025-06-29 15:13:50,022] INFO views Token refresh attempt from IP: 127.0.0.1
 [2025-06-29 15:13:50,022] ERROR views Unexpected error during token refresh for IP 127.0.0.1: 'WSGIRequest' object has no attribute 'data'
 [2025-07-16 15:55:44,666] ERROR gpt_service Failed to get Copilot token: 401 - {"message":"Bad credentials","documentation_url":"https://docs.github.com/rest","status":"401"}
+[2025-07-17 21:46:30,762] INFO notifications Sent new order notification for ORDER-20250717214630 to vendor 5
+[2025-07-17 23:35:39,065] INFO notifications Sent new order notification for 4cf188c8b8 to vendor 2

@@ -8,6 +8,7 @@ import Register from './pages/Register';
 import OAuthCallback from './components/OAuthCallback';
 import ProtectedRoute from './components/ProtectedRoute';
 import { VendorProvider } from './contexts/VendorContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 import { isAuthenticated, isVendor, initializeTokenManagement, cleanupTokenManagement } from './utils/auth';
 import './assets/css/custom.css'; // Import custom CSS for menu fixes
 
@@ -211,41 +212,43 @@ function App() {
 
   return (
     <VendorProvider>
-      <Router future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true
-      }}>
-        <Routes>
-            <Route 
-              path="/login" 
-              element={isAuthorized ? <Navigate to="/" /> : <Login />} 
+      <NotificationProvider>
+        <Router future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true
+        }}>
+          <Routes>
+              <Route 
+                path="/login" 
+                element={isAuthorized ? <Navigate to="/" /> : <Login />} 
+              />
+              <Route 
+                path="/register" 
+              element={isAuthorized ? <Navigate to="/" /> : <Register />} 
             />
             <Route 
-              path="/register" 
-            element={isAuthorized ? <Navigate to="/" /> : <Register />} 
-          />
-          <Route 
-            path="/auth/callback" 
-            element={<OAuthCallback />} 
-          />
-          <Route 
-            path="/" 
-            element={
-              <ProtectedRoute>
-                <MainLayout />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/*" 
-            element={
-              <ProtectedRoute>
-                <MainLayout />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
-      </Router>
+              path="/auth/callback" 
+              element={<OAuthCallback />} 
+            />
+            <Route 
+              path="/" 
+              element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/*" 
+              element={
+                <ProtectedRoute>
+                  <MainLayout />
+                </ProtectedRoute>
+              } 
+            />
+          </Routes>
+        </Router>
+      </NotificationProvider>
     </VendorProvider>
   );
 }

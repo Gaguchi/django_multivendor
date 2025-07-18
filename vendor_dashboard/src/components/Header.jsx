@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { clearToken, getUserData } from '../utils/auth';
 import { useEffect } from 'react';
+import NotificationDropdown from './Notifications/NotificationDropdown';
 
 export default function Header() {
     const navigate = useNavigate();
@@ -382,96 +383,7 @@ export default function Header() {
                     </ul>
                   </div>
                 </div>
-                <div className="popup-wrap message type-header">
-                  <div className="dropdown">
-                    <button
-                      className="btn btn-secondary dropdown-toggle"
-                      type="button"
-                      id="dropdownMenuButton2"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <span className="header-item">
-                        <span className="text-tiny">1</span>
-                        <i className="icon-message-square" />
-                      </span>
-                    </button>
-                    <ul
-                      className="dropdown-menu dropdown-menu-end has-content"
-                      aria-labelledby="dropdownMenuButton2"
-                    >
-                      <li>
-                        <h6>Message</h6>
-                      </li>
-                      <li>
-                        <div className="message-item item-1">
-                          <div className="image">
-                            <i className="icon-noti-1" />
-                          </div>
-                          <div>
-                            <div className="body-title-2">
-                              Discount available
-                            </div>
-                            <div className="text-tiny">
-                              Morbi sapien massa, ultricies at rhoncus at,
-                              ullamcorper nec diam
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="message-item item-2">
-                          <div className="image">
-                            <i className="icon-noti-2" />
-                          </div>
-                          <div>
-                            <div className="body-title-2">
-                              Account has been verified
-                            </div>
-                            <div className="text-tiny">
-                              Mauris libero ex, iaculis vitae rhoncus et
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="message-item item-3">
-                          <div className="image">
-                            <i className="icon-noti-3" />
-                          </div>
-                          <div>
-                            <div className="body-title-2">
-                              Order shipped successfully
-                            </div>
-                            <div className="text-tiny">
-                              Integer aliquam eros nec sollicitudin sollicitudin
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="message-item item-4">
-                          <div className="image">
-                            <i className="icon-noti-4" />
-                          </div>
-                          <div>
-                            <div className="body-title-2">
-                              Order pending: <span>ID 305830</span>
-                            </div>
-                            <div className="text-tiny">
-                              Ultricies at rhoncus at ullamcorper
-                            </div>
-                          </div>
-                        </div>
-                      </li>
-                      <li>
-                        <a href="index.html#" className="tf-button w-full">
-                          View all
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+                <NotificationDropdown />
                 <div className="header-item button-zoom-maximize">
                   <div className="">
                     <i className="icon-maximize" />
