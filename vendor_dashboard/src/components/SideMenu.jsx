@@ -205,14 +205,14 @@ export default function SideMenu() {
                     </a>
                     <ul className={`sub-menu ${expandedMenus['notifications'] ? 'show' : ''}`}>
                       <li className="sub-menu-item">
+                        <Link to="/notifications">
+                          <div className="text">All Notifications</div>
+                        </Link>
+                      </li>
+                      <li className="sub-menu-item">
                         <a href="http://shop.bazro.ge" target="_blank" rel="noopener noreferrer">
                           <div className="text">View Store</div>
                         </a>
-                      </li>
-                      <li className="sub-menu-item">
-                        <Link to="/store-settings">
-                          <div className="text">Store Setting</div>
-                        </Link>
                       </li>
                     </ul>
                   </li>

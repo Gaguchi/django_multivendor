@@ -187,6 +187,11 @@ export function NotificationProvider({ children }) {
         }
     }, []);
 
+    // Delete notification (alias for dismiss)
+    const deleteNotification = useCallback(async (notificationId) => {
+        return await dismissNotificationById(notificationId);
+    }, [dismissNotificationById]);
+
     // Add notification (for real-time updates)
     const addNotification = useCallback((notification) => {
         dispatch({ type: ActionTypes.ADD_NOTIFICATION, payload: notification });
@@ -226,6 +231,7 @@ export function NotificationProvider({ children }) {
         markAsRead,
         markAllAsRead,
         dismissNotificationById,
+        deleteNotification,
         addNotification,
         updateNotification,
         clearError

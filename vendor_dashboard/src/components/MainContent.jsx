@@ -4,6 +4,7 @@ import All from "../pages/products/All";
 import Add from '../pages/products/Add';
 import Edit from '../pages/products/Edit';
 import Orders from '../pages/Orders';
+import Notifications from '../pages/Notifications';
 import VendorProfileLoader from './VendorProfileLoader';
 
 export default function MainContent() {
@@ -22,6 +23,7 @@ export default function MainContent() {
                     <Route path="/addproduct" element={<Add />} />
                     <Route path="/editproduct/:id" element={<Edit />} />
                     <Route path="/orders/*" element={<Orders />} />
+                    <Route path="/notifications" element={<Notifications />} />
                   </Routes>
                 </VendorProfileLoader>
               </div>
