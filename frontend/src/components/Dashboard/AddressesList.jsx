@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
 import AddressForm from './AddressForm';
+import LeafletAddressFormWithMap from '../Address/LeafletAddressFormWithMap';
 
 export default function AddressesList({ filter = 'all' }) {
   const [addresses, setAddresses] = useState([]);
@@ -8,6 +9,42 @@ export default function AddressesList({ filter = 'all' }) {
   const [error, setError] = useState(null);
   const [editAddress, setEditAddress] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
+  
+  // State for map-enabled address forms
+  const [addressForm, setAddressForm] = useState({
+    full_name: '',
+    phone_number: '',
+    email: '',
+    address_line1: '',
+    address_line2: '',
+    city: '',
+    state: '',
+    postal_code: '',
+    country: 'US',
+    apartment_number: '',
+    entrance_number: '',
+    floor: '',
+    door_code: '',
+    delivery_instructions: '',
+    address_type: 'shipping',
+    is_default: false
+  });
+
+  // Handler for address form input changes
+  const handleAddressInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    
+    // Handle special case for bulk data update
+    if (name === 'full_form_data') {
+      setAddressForm(value);
+      return;
+    }
+    
+    setAddressForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
 
   useEffect(() => {
     fetchAddresses();
@@ -103,6 +140,7 @@ export default function AddressesList({ filter = 'all' }) {
       // Reset form state
       setEditAddress(null);
       setShowAddForm(false);
+      resetAddressForm();
     } catch (err) {
       console.error('Error saving address:', err);
       alert('Failed to save address. Please check your information and try again.');
@@ -111,9 +149,74 @@ export default function AddressesList({ filter = 'all' }) {
     }
   };
 
+  // Handler for map-enabled address form submission
+  const handleMapAddressSubmit = async (e) => {
+    e.preventDefault();
+    
+    try {
+      setLoading(true);
+      
+      const dataToSubmit = {
+        ...addressForm,
+        address_type: filter !== 'all' ? filter : addressForm.address_type || 'shipping'
+      };
+
+      if (editAddress && editAddress.id) {
+        // Update existing address
+        await api.put(`/api/users/addresses/${editAddress.id}/`, {
+          ...dataToSubmit,
+          id: editAddress.id
+        });
+      } else {
+        // Create new address
+        await api.post('/api/users/addresses/', dataToSubmit);
+      }
+      
+      // Refresh the address list
+      await fetchAddresses();
+      
+      // Reset form state
+      setEditAddress(null);
+      setShowAddForm(false);
+      resetAddressForm();
+    } catch (err) {
+      console.error('Error saving address:', err);
+      alert('Failed to save address. Please check your information and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Reset address form to initial state
+  const resetAddressForm = () => {
+    setAddressForm({
+      full_name: '',
+      phone_number: '',
+      email: '',
+      address_line1: '',
+      address_line2: '',
+      city: '',
+      state: '',
+      postal_code: '',
+      country: 'US',
+      apartment_number: '',
+      entrance_number: '',
+      floor: '',
+      door_code: '',
+      delivery_instructions: '',
+      address_type: filter !== 'all' ? filter : 'shipping',
+      is_default: addresses.length === 0
+    });
+  };
+
   const handleEditAddress = (address) => {
     setEditAddress(address);
     setShowAddForm(false);
+    // Populate the address form with the selected address data
+    setAddressForm({
+      ...address,
+      address_type: address.address_type || 'shipping'
+    });
   };
 
   if (loading && !addresses.length) {
@@ -182,6 +285,7 @@ export default function AddressesList({ filter = 'all' }) {
           onClick={() => {
             setShowAddForm(true);
             setEditAddress(null);
+            resetAddressForm();
           }}
           disabled={loading}
         >
@@ -206,14 +310,19 @@ export default function AddressesList({ filter = 'all' }) {
             </button>
           </div>
           <div className="form-body">
-            <AddressForm 
-              onSubmit={handleFormSubmit} 
-              initialData={{ 
+            <LeafletAddressFormWithMap 
+              addressForm={{
+                ...addressForm,
                 address_type: filter !== 'all' ? filter : 'shipping',
                 is_default: addresses.length === 0
               }}
+              handleAddressInputChange={handleAddressInputChange}
+              handleAddressSubmit={handleMapAddressSubmit}
               loading={loading}
-              addressType={filter !== 'all' ? filter : null}
+              user={null}
+              showNewAddressForm={true}
+              setShowNewAddressForm={() => setShowAddForm(false)}
+              selectedAddress={null}
             />
           </div>
         </div>
@@ -235,10 +344,15 @@ export default function AddressesList({ filter = 'all' }) {
             </button>
           </div>
           <div className="form-body">
-            <AddressForm 
-              onSubmit={handleFormSubmit} 
-              initialData={editAddress}
+            <LeafletAddressFormWithMap 
+              addressForm={addressForm}
+              handleAddressInputChange={handleAddressInputChange}
+              handleAddressSubmit={handleMapAddressSubmit}
               loading={loading}
+              user={null}
+              showNewAddressForm={true}
+              setShowNewAddressForm={() => setEditAddress(null)}
+              selectedAddress={editAddress?.id}
             />
           </div>
         </div>

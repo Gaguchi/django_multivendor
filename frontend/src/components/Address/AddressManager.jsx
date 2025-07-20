@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import api from '../../services/api';
+import AddressFormWithLeaflet from './AddressFormWithLeaflet';
 
 export default function AddressManager({ 
   user,
@@ -14,7 +15,8 @@ export default function AddressManager({
   addressError,
   loading,
   setShowNewAddressForm,
-  refreshAddresses // Add this prop for refreshing addresses after deletion
+  refreshAddresses, // Add this prop for refreshing addresses after deletion
+  useMapPicker = false // New prop to enable map picker
 }) {
   const [deleteLoading, setDeleteLoading] = useState(false);
   
@@ -131,23 +133,36 @@ export default function AddressManager({
       
       {/* Address form */}
       {(showNewAddressForm || !user || !addresses || addresses.length === 0) && (
-        <form onSubmit={handleAddressSubmit} id="address-form">
-          <div className="row">
-            <div className="col-md-6">
-              <div className="form-group">
-                <label>
-                  Full Name
-                  <abbr className="required" title="required">*</abbr>
-                </label>
-                <input 
-                  type="text" 
-                  className="form-control" 
-                  name="full_name"
-                  value={addressForm.full_name}
-                  onChange={handleAddressInputChange}
-                  required 
-                />
-              </div>
+        <>
+          {useMapPicker ? (
+            <AddressFormWithLeaflet
+              addressForm={addressForm}
+              handleAddressInputChange={handleAddressInputChange}
+              handleAddressSubmit={handleAddressSubmit}
+              loading={loading}
+              user={user}
+              showNewAddressForm={showNewAddressForm}
+              setShowNewAddressForm={setShowNewAddressForm}
+              selectedAddress={selectedAddress}
+            />
+          ) : (
+            <form onSubmit={handleAddressSubmit} id="address-form">
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="form-group">
+                    <label>
+                      Full Name
+                      <abbr className="required" title="required">*</abbr>
+                    </label>
+                    <input 
+                      type="text" 
+                      className="form-control" 
+                      name="full_name"
+                      value={addressForm.full_name}
+                      onChange={handleAddressInputChange}
+                      required 
+                    />
+                  </div>
             </div>
             <div className="col-md-6">
               <div className="form-group">
@@ -386,7 +401,9 @@ export default function AddressManager({
               </button>
             </div>
           )}
-        </form>
+            </form>
+          )}
+        </>
       )}
     </>
   );

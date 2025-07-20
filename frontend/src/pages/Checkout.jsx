@@ -682,6 +682,7 @@ export default function Checkout() {
                     loading={loading}
                     setShowNewAddressForm={setShowNewAddressForm}
                     refreshAddresses={fetchAddresses}
+                    useMapPicker={true} // Enable map-based address selection
                   />
                 </li>
               </ul>

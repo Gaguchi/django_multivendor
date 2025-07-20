@@ -27,6 +27,10 @@ import OrderDetail from './pages/OrderDetail'
 import OrderTracking from './pages/OrderTracking'
 import Reviews from './pages/Reviews'
 import IsolatedStickyTest from './pages/IsolatedStickyTest'
+import AddressMapDemo from './pages/AddressMapDemo'
+import MapDemo from './pages/MapDemo'
+import LeafletDemo from './pages/LeafletDemo'
+import TestLeafletMap from './pages/TestLeafletMap'
 import CartMergeNotification from './components/Cart/CartMergeNotification'
 import { initializePage } from './utils/jQuerySimple'
 
@@ -75,6 +79,10 @@ function AppContent() {
         <Route path="/track" element={<OrderTracking />} />
         <Route path="/track/:orderNumber" element={<OrderTracking />} />
         <Route path="/isolated-sticky-test" element={<IsolatedStickyTest />} />
+        <Route path="/address-map-demo" element={<AddressMapDemo />} />
+        <Route path="/map-demo" element={<MapDemo />} />
+        <Route path="/leaflet-demo" element={<LeafletDemo />} />
+        <Route path="/test-leaflet" element={<TestLeafletMap />} />
       </Route>
     </Routes>
   );
