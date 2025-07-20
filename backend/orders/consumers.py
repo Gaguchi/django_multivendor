@@ -69,6 +69,22 @@ class VendorOrderConsumer(AsyncWebsocketConsumer):
             'timestamp': event['timestamp']
         }))
 
+    async def new_notification(self, event):
+        """Send new notification to WebSocket"""
+        await self.send(text_data=json.dumps({
+            'type': 'new_notification',
+            'notification': event['notification'],
+            'timestamp': event['timestamp']
+        }))
+
+    async def notification_update(self, event):
+        """Send notification update to WebSocket"""
+        await self.send(text_data=json.dumps({
+            'type': 'notification_update',
+            'notification': event['notification'],
+            'timestamp': event['timestamp']
+        }))
+
     @database_sync_to_async
     def get_vendor(self, vendor_id):
         try:

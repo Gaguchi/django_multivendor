@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { vendorWebSocketService } from '../services/websocket';
 import { useVendor } from './VendorContext';
+import { useNotifications } from './NotificationContext';
 
 const WebSocketContext = createContext();
 
@@ -14,6 +15,8 @@ export const useWebSocket = () => {
 
 export function WebSocketProvider({ children }) {
   const { vendorId, isVendorLoaded } = useVendor();
+  const { addNotification, updateNotification, fetchUnreadCount } = useNotifications();
+  
   const [connectionState, setConnectionState] = useState('disconnected');
   const [lastMessage, setLastMessage] = useState(null);
   const [orderUpdates, setOrderUpdates] = useState([]);
@@ -63,7 +66,61 @@ export function WebSocketProvider({ children }) {
       const newUpdates = [newUpdate, ...prev].slice(0, 50);
       return newUpdates;
     });
+    
+    // Show a simple browser notification for new orders
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('🎉 New Order!', {
+        body: `Order #${data.order_number} has been placed`,
+        icon: '/favicon.ico'
+      });
+    }
   }, []);
+
+  const handleNotificationUpdate = useCallback((data) => {
+    console.log('[WebSocket Context] Notification update:', data);
+    setLastMessage({
+      type: 'notification_update',
+      data,
+      timestamp: new Date()
+    });
+    
+    // Update the notification in NotificationContext
+    if (updateNotification && data.notification) {
+      updateNotification(data.notification);
+    }
+    
+    // Refresh unread count after update
+    if (fetchUnreadCount) {
+      fetchUnreadCount();
+    }
+  }, [updateNotification, fetchUnreadCount]);
+
+  const handleNewNotification = useCallback((data) => {
+    console.log('[WebSocket Context] New notification:', data);
+    setLastMessage({
+      type: 'new_notification',
+      data,
+      timestamp: new Date()
+    });
+    
+    // Add the new notification to NotificationContext
+    if (addNotification && data.notification) {
+      addNotification(data.notification);
+    }
+    
+    // Refresh unread count
+    if (fetchUnreadCount) {
+      fetchUnreadCount();
+    }
+    
+    // Show a browser notification
+    if ('Notification' in window && Notification.permission === 'granted' && data.notification) {
+      new Notification(data.notification.title || 'New Notification', {
+        body: data.notification.message || 'You have a new notification',
+        icon: '/favicon.ico'
+      });
+    }
+  }, [addNotification, fetchUnreadCount]);
 
   // Setup WebSocket connection when vendor is loaded
   useEffect(() => {
@@ -76,6 +133,8 @@ export function WebSocketProvider({ children }) {
       vendorWebSocketService.on('error', handleError);
       vendorWebSocketService.on('orderStatusUpdate', handleOrderStatusUpdate);
       vendorWebSocketService.on('newOrder', handleNewOrder);
+      vendorWebSocketService.on('notificationUpdate', handleNotificationUpdate);
+      vendorWebSocketService.on('newNotification', handleNewNotification);
 
       // Connect
       vendorWebSocketService.connect(vendorId);
@@ -89,10 +148,12 @@ export function WebSocketProvider({ children }) {
         vendorWebSocketService.off('error', handleError);
         vendorWebSocketService.off('orderStatusUpdate', handleOrderStatusUpdate);
         vendorWebSocketService.off('newOrder', handleNewOrder);
+        vendorWebSocketService.off('notificationUpdate', handleNotificationUpdate);
+        vendorWebSocketService.off('newNotification', handleNewNotification);
         vendorWebSocketService.disconnect();
       };
     }
-  }, [isVendorLoaded, vendorId, handleConnected, handleDisconnected, handleError, handleOrderStatusUpdate, handleNewOrder]);
+  }, [isVendorLoaded, vendorId, handleConnected, handleDisconnected, handleError, handleOrderStatusUpdate, handleNewOrder, handleNotificationUpdate, handleNewNotification]);
 
   // Manually connect/disconnect
   const connect = useCallback(() => {

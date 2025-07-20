@@ -407,3 +407,100 @@
         display: none;
     }
 }
+
+/* WebSocket Status Indicator */
+.websocket-status {
+    font-size: 14px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    cursor: help;
+    transition: all 0.3s ease;
+}
+
+.websocket-status.connected {
+    color: #10b981;
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.websocket-status.disconnected {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+.websocket-status:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* New Notification Animation */
+.notification-row.new-notification {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+    border-left: 3px solid #3b82f6;
+    animation: newNotificationPulse 2s ease-in-out;
+}
+
+@keyframes newNotificationPulse {
+    0% {
+        background: rgba(59, 130, 246, 0.2);
+        transform: scale(1);
+    }
+    50% {
+        background: rgba(59, 130, 246, 0.1);
+        transform: scale(1.01);
+    }
+    100% {
+        background: rgba(59, 130, 246, 0.05);
+        transform: scale(1);
+    }
+}
+
+/* New notification badge */
+.new-notification::after {
+    content: "NEW";
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: #3b82f6;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-weight: bold;
+    z-index: 10;
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Real-time update indicator */
+.notifications-title .websocket-status {
+    margin-left: 10px;
+    font-size: 12px;
+    padding: 2px 6px;
+}
+
+/* Loading state enhancement for real-time */
+.notifications-page.real-time-loading .wg-table {
+    position: relative;
+}
+
+.notifications-page.real-time-loading .wg-table::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+    animation: loading-bar 1.5s ease-in-out infinite;
+    z-index: 10;
+}
+
+@keyframes loading-bar {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}

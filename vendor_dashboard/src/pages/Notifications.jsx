@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNotifications } from '../contexts/NotificationContext';
+import { useWebSocket } from '../contexts/WebSocketContext';
 import { formatDistanceToNow } from 'date-fns';
 import './Notifications.css';
 
@@ -16,12 +17,35 @@ export default function Notifications() {
         fetchNotifications 
     } = useNotifications();
     
+    const { isConnected, lastMessage } = useWebSocket();
+    
     const [filter, setFilter] = useState('all'); // all, unread, read
     const [selectedNotifications, setSelectedNotifications] = useState([]);
+    const [newNotificationIds, setNewNotificationIds] = useState(new Set());
 
     useEffect(() => {
         fetchNotifications();
     }, []);
+
+    // Handle real-time WebSocket messages
+    useEffect(() => {
+        if (lastMessage && lastMessage.type === 'new_notification') {
+            const notificationId = lastMessage.data.id;
+            if (notificationId) {
+                // Add visual indicator for new notification
+                setNewNotificationIds(prev => new Set([...prev, notificationId]));
+                
+                // Remove indicator after 5 seconds
+                setTimeout(() => {
+                    setNewNotificationIds(prev => {
+                        const newSet = new Set(prev);
+                        newSet.delete(notificationId);
+                        return newSet;
+                    });
+                }, 5000);
+            }
+        }
+    }, [lastMessage]);
 
     const filteredNotifications = notifications.filter(notification => {
         if (filter === 'unread') return !notification.is_read;
@@ -153,6 +177,11 @@ export default function Notifications() {
                             {unreadCount > 0 && (
                                 <span className="badge-item badge-blue">{unreadCount}</span>
                             )}
+                            {/* WebSocket Status Indicator */}
+                            <div className={`websocket-status ${isConnected ? 'connected' : 'disconnected'}`} 
+                                 title={isConnected ? 'Real-time notifications connected' : 'Real-time notifications disconnected'}>
+                                <i className={`icon-${isConnected ? 'wifi' : 'wifi-off'}`}></i>
+                            </div>
                         </div>
                     </div>
                     
@@ -283,7 +312,7 @@ export default function Notifications() {
                             <div className="divider mb-14"></div>
                             
                             {filteredNotifications.map((notification) => (
-                                <ul key={notification.id} className={`table-list notification-row ${!notification.is_read ? 'unread' : ''}`}>
+                                <ul key={notification.id} className={`table-list notification-row ${!notification.is_read ? 'unread' : ''} ${newNotificationIds.has(notification.id) ? 'new-notification' : ''}`}>
                                     <li style={{ width: '40px' }}>
                                         <label className="checkbox-container">
                                             <input 

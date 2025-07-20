@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNotifications } from '../../contexts/NotificationContext';
+import { useWebSocket } from '../../contexts/WebSocketContext';
 
 const NotificationDropdown = () => {
     const {
@@ -13,12 +14,37 @@ const NotificationDropdown = () => {
         dismissNotificationById,
         clearError
     } = useNotifications();
+    
+    const { lastMessage, connectionState } = useWebSocket();
+    const [hasNewNotification, setHasNewNotification] = useState(false);
+
+    // Debug logging for notifications
+    useEffect(() => {
+        console.log('[NotificationDropdown] Notifications updated:', notifications.length, 'notifications');
+        console.log('[NotificationDropdown] Unread count:', unreadCount);
+    }, [notifications, unreadCount]);
+
+    // Watch for new WebSocket notifications
+    useEffect(() => {
+        console.log('[NotificationDropdown] WebSocket message received:', lastMessage);
+        if (lastMessage?.type === 'new_notification') {
+            setHasNewNotification(true);
+            // Auto-clear the indicator after 5 seconds
+            const timer = setTimeout(() => {
+                setHasNewNotification(false);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [lastMessage]);
 
     // Handle notification click
     const handleNotificationClick = async (notification) => {
         if (!notification.is_read) {
             await markAsRead(notification.id);
         }
+        
+        // Clear new notification indicator when dropdown is used
+        setHasNewNotification(false);
         
         // Navigate to related page if applicable
         if (notification.related_order) {
@@ -74,6 +100,11 @@ const NotificationDropdown = () => {
         }
     };
 
+    // Filter to show only unread notifications and limit to 5
+    const unreadNotifications = notifications
+        .filter(notification => !notification.is_read)
+        .slice(0, 5);
+
     return (
         <div className="popup-wrap message type-header">
             <div className="dropdown">
@@ -83,10 +114,40 @@ const NotificationDropdown = () => {
                     id="dropdownMenuButton2" 
                     data-bs-toggle="dropdown" 
                     aria-expanded="false"
+                    onClick={() => setHasNewNotification(false)}
                 >
                     <span className="header-item">
                         <span className="text-tiny">{unreadCount}</span>
-                        <i className="icon-bell"></i>
+                        <i className={`icon-bell ${hasNewNotification ? 'animate-pulse' : ''}`}></i>
+                        {hasNewNotification && (
+                            <span 
+                                style={{
+                                    position: 'absolute',
+                                    top: '0',
+                                    right: '0',
+                                    width: '8px',
+                                    height: '8px',
+                                    backgroundColor: '#ff6b6b',
+                                    borderRadius: '50%',
+                                    animation: 'pulse 1s infinite'
+                                }}
+                            ></span>
+                        )}
+                        {/* Connection status indicator */}
+                        {connectionState === 'connected' && (
+                            <span 
+                                title="Real-time notifications active"
+                                style={{
+                                    position: 'absolute',
+                                    bottom: '0',
+                                    right: '0',
+                                    width: '6px',
+                                    height: '6px',
+                                    backgroundColor: '#28a745',
+                                    borderRadius: '50%'
+                                }}
+                            ></span>
+                        )}
                     </span>
                 </button>
                 <ul 
@@ -128,22 +189,22 @@ const NotificationDropdown = () => {
                     )}
                     
                     {/* Empty state */}
-                    {notifications.length === 0 && !loading && !error && (
+                    {unreadNotifications.length === 0 && !loading && !error && (
                         <li>
                             <div className="message-item item-1">
                                 <div className="image">
                                     <i className="icon-noti-1"></i>
                                 </div>
                                 <div>
-                                    <div className="body-title-2">No notifications</div>
+                                    <div className="body-title-2">No unread notifications</div>
                                     <div className="text-tiny">You're all caught up!</div>
                                 </div>
                             </div>
                         </li>
                     )}
                     
-                    {/* Notifications - using exact structure from your HTML */}
-                    {notifications.map((notification, index) => (
+                    {/* Notifications - showing only unread, max 5 */}
+                    {unreadNotifications.map((notification, index) => (
                         <li key={notification.id}>
                             <div 
                                 className={`message-item item-${(index % 4) + 1}`}
@@ -156,16 +217,15 @@ const NotificationDropdown = () => {
                                 <div>
                                     <div className="body-title-2">
                                         {notification.title}
-                                        {!notification.is_read && (
-                                            <span style={{ 
-                                                display: 'inline-block', 
-                                                width: '8px', 
-                                                height: '8px', 
-                                                backgroundColor: '#007bff', 
-                                                borderRadius: '50%', 
-                                                marginLeft: '8px' 
-                                            }}></span>
-                                        )}
+                                        {/* Since we're only showing unread, all will have the blue dot */}
+                                        <span style={{ 
+                                            display: 'inline-block', 
+                                            width: '8px', 
+                                            height: '8px', 
+                                            backgroundColor: '#007bff', 
+                                            borderRadius: '50%', 
+                                            marginLeft: '8px' 
+                                        }}></span>
                                     </div>
                                     <div className="text-tiny">
                                         {notification.message}
@@ -198,7 +258,7 @@ const NotificationDropdown = () => {
                     ))}
                     
                     {/* Mark all as read button */}
-                    {unreadCount > 0 && notifications.length > 0 && (
+                    {unreadCount > 0 && unreadNotifications.length > 0 && (
                         <li>
                             <a href="#" className="tf-button w-full" onClick={(e) => {
                                 e.preventDefault();

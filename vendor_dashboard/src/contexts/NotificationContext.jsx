@@ -207,11 +207,12 @@ export function NotificationProvider({ children }) {
         dispatch({ type: ActionTypes.CLEAR_ERROR });
     }, []);
 
-    // Auto-refresh notifications periodically
+    // Auto-refresh notifications periodically (reduced frequency since we have WebSocket)
     useEffect(() => {
         const interval = setInterval(() => {
+            // Only refresh unread count, as real-time updates handle the rest
             fetchUnreadCount();
-        }, 30000); // Refresh every 30 seconds
+        }, 60000); // Refresh every 60 seconds instead of 30
 
         return () => clearInterval(interval);
     }, [fetchUnreadCount]);

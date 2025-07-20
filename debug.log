@@ -23,3 +23,8 @@ django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. Y
 [2025-07-16 15:55:44,666] ERROR gpt_service Failed to get Copilot token: 401 - {"message":"Bad credentials","documentation_url":"https://docs.github.com/rest","status":"401"}
 [2025-07-17 21:46:30,762] INFO notifications Sent new order notification for ORDER-20250717214630 to vendor 5
 [2025-07-17 23:35:39,065] INFO notifications Sent new order notification for 4cf188c8b8 to vendor 2
+[2025-07-20 21:55:44,015] INFO services Created notification 15 for alice
+[2025-07-20 21:55:46,158] ERROR websocket Error sending WebSocket notification: Error 22 connecting to 127.0.0.1:6379. The remote computer refused the network connection.
+[2025-07-20 21:55:46,382] INFO services Created notification 16 for alice
+[2025-07-20 21:55:48,430] ERROR websocket Error sending WebSocket notification: Error 22 connecting to 127.0.0.1:6379. The remote computer refused the network connection.
+[2025-07-20 21:55:48,430] INFO signals Created new order notifications for order TEST-8cdca6d6

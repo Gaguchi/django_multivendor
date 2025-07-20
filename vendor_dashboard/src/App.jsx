@@ -9,6 +9,8 @@ import OAuthCallback from './components/OAuthCallback';
 import ProtectedRoute from './components/ProtectedRoute';
 import { VendorProvider } from './contexts/VendorContext';
 import { NotificationProvider } from './contexts/NotificationContext';
+import { WebSocketProvider } from './contexts/WebSocketContext';
+import { ToastProvider } from './contexts/ToastContext';
 import { isAuthenticated, isVendor, initializeTokenManagement, cleanupTokenManagement } from './utils/auth';
 import './assets/css/custom.css'; // Import custom CSS for menu fixes
 
@@ -29,6 +31,13 @@ function App() {
       document.body.classList.add('light-theme');
       document.body.classList.remove('dark-theme');
       console.log('App: Initialized with light theme');
+    }
+    
+    // Request notification permission
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission().then(permission => {
+        console.log('Notification permission:', permission);
+      });
     }
   }, []);
   // Check if user is authenticated and is a vendor
@@ -213,41 +222,45 @@ function App() {
   return (
     <VendorProvider>
       <NotificationProvider>
-        <Router future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true
-        }}>
-          <Routes>
-              <Route 
-                path="/login" 
-                element={isAuthorized ? <Navigate to="/" /> : <Login />} 
-              />
-              <Route 
-                path="/register" 
-              element={isAuthorized ? <Navigate to="/" /> : <Register />} 
-            />
-            <Route 
-              path="/auth/callback" 
-              element={<OAuthCallback />} 
-            />
-            <Route 
-              path="/" 
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/*" 
-              element={
-                <ProtectedRoute>
-                  <MainLayout />
-                </ProtectedRoute>
-              } 
-            />
-          </Routes>
-        </Router>
+        <ToastProvider>
+          <WebSocketProvider>
+            <Router future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true
+            }}>
+              <Routes>
+                  <Route 
+                    path="/login" 
+                    element={isAuthorized ? <Navigate to="/" /> : <Login />} 
+                  />
+                  <Route 
+                    path="/register" 
+                  element={isAuthorized ? <Navigate to="/" /> : <Register />} 
+                />
+                <Route 
+                  path="/auth/callback" 
+                  element={<OAuthCallback />} 
+                />
+                <Route 
+                  path="/" 
+                  element={
+                    <ProtectedRoute>
+                      <MainLayout />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/*" 
+                  element={
+                    <ProtectedRoute>
+                      <MainLayout />
+                    </ProtectedRoute>
+                  } 
+                />
+              </Routes>
+            </Router>
+          </WebSocketProvider>
+        </ToastProvider>
       </NotificationProvider>
     </VendorProvider>
   );

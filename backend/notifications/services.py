@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from orders.models import Order
 from vendors.models import Vendor
 from .models import Notification, NotificationPreferences
+from .websocket import send_notification_websocket
 import logging
 
 logger = logging.getLogger(__name__)
@@ -55,6 +56,10 @@ class NotificationService:
             )
             
             logger.info(f"Created notification {notification.id} for {recipient.username}")
+            
+            # Send WebSocket notification for real-time updates
+            send_notification_websocket(notification)
+            
             return notification
             
         except Exception as e:

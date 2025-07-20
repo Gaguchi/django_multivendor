@@ -6,6 +6,7 @@ from orders.models import Order, OrderItem
 from vendors.models import Vendor
 from .models import Notification, NotificationPreferences
 from .services import NotificationService
+from .websocket import send_notification_update_websocket
 import logging
 
 logger = logging.getLogger(__name__)
@@ -105,3 +106,14 @@ def cleanup_old_notifications():
     logger.info(f"Cleaned up {deleted_count} old read notifications and {expired_count} expired notifications")
     
     return deleted_count + expired_count
+
+@receiver(post_save, sender=Notification)
+def handle_notification_update(sender, instance, created, **kwargs):
+    """Handle notification updates and send WebSocket updates"""
+    try:
+        if not created:
+            # This is an update, send WebSocket notification
+            send_notification_update_websocket(instance)
+            logger.debug(f"Sent WebSocket update for notification {instance.id}")
+    except Exception as e:
+        logger.error(f"Error handling notification update for notification {instance.id}: {e}")

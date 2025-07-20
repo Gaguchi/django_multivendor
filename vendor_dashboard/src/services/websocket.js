@@ -83,6 +83,20 @@ class VendorWebSocketService {
           });
           break;
 
+        case 'new_notification':
+          this.emit('newNotification', {
+            notification: data.notification,
+            timestamp: data.timestamp
+          });
+          break;
+
+        case 'notification_update':
+          this.emit('notificationUpdate', {
+            notification: data.notification,
+            timestamp: data.timestamp
+          });
+          break;
+
         case 'pong':
           // Heartbeat response
           if (this.heartbeatTimeout) {
