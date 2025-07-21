@@ -10,17 +10,17 @@ const DEFAULT_MAP_CENTER = {
 };
 
 const MAP_CONFIG = {
-  zoom: 13,
+  zoom: 16, // Higher zoom for street detail
   minZoom: 3,
-  maxZoom: 18,
+  maxZoom: 20, // Increased for house-level detail
   zoomControl: true,
   attributionControl: true
 };
 
 const DEFAULT_TILE_PROVIDER = {
-  url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-  maxZoom: 19
+  maxZoom: 20 // High detail for street names and house numbers
 };
 
 const GEOCODING_CONFIG = {

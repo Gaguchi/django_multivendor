@@ -31,6 +31,7 @@ import AddressMapDemo from './pages/AddressMapDemo'
 import MapDemo from './pages/MapDemo'
 import LeafletDemo from './pages/LeafletDemo'
 import TestLeafletMap from './pages/TestLeafletMap'
+import DetailedMapDemo from './pages/DetailedMapDemo'
 import CartMergeNotification from './components/Cart/CartMergeNotification'
 import { initializePage } from './utils/jQuerySimple'
 
@@ -83,6 +84,7 @@ function AppContent() {
         <Route path="/map-demo" element={<MapDemo />} />
         <Route path="/leaflet-demo" element={<LeafletDemo />} />
         <Route path="/test-leaflet" element={<TestLeafletMap />} />
+        <Route path="/detailed-map-demo" element={<DetailedMapDemo />} />
       </Route>
     </Routes>
   );

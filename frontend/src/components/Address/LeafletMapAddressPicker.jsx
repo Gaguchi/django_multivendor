@@ -150,9 +150,38 @@ export default function LeafletMapAddressPicker({
   const [searchResults, setSearchResults] = useState([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [selectedTileProvider, setSelectedTileProvider] = useState('cartodb_voyager'); // Default to most detailed
   
   const searchInputRef = useRef(null);
   const searchTimeoutRef = useRef(null);
+
+  // Available tile providers for detailed view
+  const detailedTileProviders = {
+    cartodb_voyager: {
+      url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      name: 'Detailed Streets (Recommended)',
+      maxZoom: 20
+    },
+    openstreetmap: {
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      name: 'OpenStreetMap Standard',
+      maxZoom: 20
+    },
+    cartodb_positron: {
+      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      name: 'Clean Light Theme',
+      maxZoom: 20
+    },
+    stamen_toner: {
+      url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png',
+      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      name: 'High Contrast (Best for Reading)',
+      maxZoom: 20
+    }
+  };
 
   // Handle location selection
   const handleLocationSelect = useCallback((addressData) => {
@@ -268,10 +297,10 @@ export default function LeafletMapAddressPicker({
 
   return (
     <div className="leaflet-map-address-picker">
-      {/* Search Controls */}
+      {/* Enhanced Search Controls */}
       <div className="map-controls mb-3">
         <div className="row">
-          <div className="col-md-8">
+          <div className="col-md-6">
             <div className="search-container position-relative" ref={searchInputRef}>
               <div className="input-group">
                 <input
@@ -321,8 +350,27 @@ export default function LeafletMapAddressPicker({
             </div>
           </div>
           <div className="col-md-4">
+            <div className="tile-provider-selector">
+              <label htmlFor="tile-provider" className="form-label small text-muted">
+                <i className="fas fa-map"></i> Map Style:
+              </label>
+              <select 
+                id="tile-provider"
+                className="form-control form-control-sm"
+                value={selectedTileProvider}
+                onChange={(e) => setSelectedTileProvider(e.target.value)}
+              >
+                {Object.entries(detailedTileProviders).map(([key, provider]) => (
+                  <option key={key} value={key}>
+                    {provider.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <div className="col-md-2">
             {isLoadingAddress && (
-              <div className="text-muted">
+              <div className="text-muted small">
                 <i className="fas fa-spinner fa-spin"></i> Getting address...
               </div>
             )}
@@ -334,14 +382,15 @@ export default function LeafletMapAddressPicker({
       <div style={{ height, width: '100%', border: '1px solid #ddd', borderRadius: '4px' }}>
         <MapContainer
           center={markerPosition}
-          zoom={MAP_CONFIG.zoom}
+          zoom={16} // Higher zoom for street detail
           style={{ height: '100%', width: '100%' }}
-          zoomControl={MAP_CONFIG.zoomControl}
+          zoomControl={true}
+          maxZoom={20}
         >
           <TileLayer
-            url={DEFAULT_TILE_PROVIDER.url}
-            attribution={DEFAULT_TILE_PROVIDER.attribution}
-            maxZoom={DEFAULT_TILE_PROVIDER.maxZoom}
+            url={detailedTileProviders[selectedTileProvider].url}
+            attribution={detailedTileProviders[selectedTileProvider].attribution}
+            maxZoom={detailedTileProviders[selectedTileProvider].maxZoom}
           />
           
           <MapClickHandler 
@@ -355,7 +404,7 @@ export default function LeafletMapAddressPicker({
           {markerPosition && (
             <Marker 
               position={markerPosition}
-              draggable={MARKER_CONFIG.draggable}
+              draggable={true}
               eventHandlers={{
                 dragend: handleMarkerDrag
               }}
@@ -368,7 +417,9 @@ export default function LeafletMapAddressPicker({
       <div className="map-instructions mt-2">
         <small className="text-muted">
           <i className="fas fa-info-circle"></i> 
-          Search for an address above, click "My Location" to use your current location, or click anywhere on the map to select an address. You can also drag the marker to fine-tune the location.
+          <strong>High-Detail Maps:</strong> Search for an address above, click "My Location", or click anywhere on the map. 
+          Change map styles above for best street visibility. Zoom in to see house numbers and detailed street names. 
+          You can also drag the marker to fine-tune the location.
         </small>
       </div>
 
@@ -443,6 +494,29 @@ export default function LeafletMapAddressPicker({
         
         .map-instructions {
           font-size: 0.9em;
+        }
+        
+        .tile-provider-selector {
+          margin-bottom: 10px;
+        }
+        
+        .tile-provider-selector label {
+          font-weight: 600;
+          margin-bottom: 5px;
+          display: block;
+        }
+        
+        .tile-provider-selector select {
+          font-size: 0.85rem;
+          border-radius: 4px;
+        }
+        
+        /* Enhanced map controls styling */
+        .map-controls {
+          background: #f8f9fa;
+          padding: 15px;
+          border-radius: 8px;
+          border: 1px solid #e9ecef;
         }
         
         /* Override Leaflet popup z-index to prevent conflicts */

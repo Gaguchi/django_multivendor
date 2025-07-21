@@ -9,34 +9,62 @@ export const DEFAULT_MAP_CENTER = {
 
 // Map configuration for Leaflet
 export const MAP_CONFIG = {
-  zoom: 13,
+  zoom: 16, // Higher default zoom to show street details
   minZoom: 3,
-  maxZoom: 18,
+  maxZoom: 20, // Increased max zoom for house-level detail
   zoomControl: true,
   attributionControl: true
 };
 
 // Available tile layer providers (all free)
 export const TILE_PROVIDERS = {
-  // OpenStreetMap (default, completely free)
+  // OpenStreetMap (default, completely free) - High detail with street names
   openstreetmap: {
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    maxZoom: 19
+    maxZoom: 20 // Increased for house-level detail
   },
   
-  // CartoDB Positron (light theme, free)
+  // OpenStreetMap France (very detailed for European areas)
+  openstreetmap_france: {
+    url: 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 20
+  },
+  
+  // OpenStreetMap DE (high detail for German areas)
+  openstreetmap_de: {
+    url: 'https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 20
+  },
+  
+  // CartoDB Positron (light theme, free) - Clean with good street visibility
   cartodb_positron: {
     url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    maxZoom: 19
+    maxZoom: 20 // Increased for better detail
+  },
+  
+  // CartoDB Voyager (detailed with better street names)
+  cartodb_voyager: {
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    maxZoom: 20
   },
   
   // CartoDB Dark Matter (dark theme, free)
   cartodb_dark: {
     url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    maxZoom: 19
+    maxZoom: 20
+  },
+  
+  // Stamen Toner (high contrast for detailed street view)
+  stamen_toner: {
+    url: 'https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}{r}.png',
+    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 20
   },
   
   // OpenTopoMap (topographic, free)
@@ -47,8 +75,8 @@ export const TILE_PROVIDERS = {
   }
 };
 
-// Default tile provider
-export const DEFAULT_TILE_PROVIDER = TILE_PROVIDERS.cartodb_positron;
+// Default tile provider - Using CartoDB Voyager for best street detail
+export const DEFAULT_TILE_PROVIDER = TILE_PROVIDERS.cartodb_voyager;
 
 // Marker configuration
 export const MARKER_CONFIG = {
