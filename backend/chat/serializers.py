@@ -18,7 +18,7 @@ class UserBasicSerializer(serializers.ModelSerializer):
 class VendorBasicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vendor
-        fields = ['id', 'business_name', 'business_email', 'business_phone', 'logo']
+        fields = ['id', 'store_name', 'contact_email', 'phone', 'logo']
 
 
 class ChatRoomSerializer(serializers.ModelSerializer):
@@ -44,7 +44,7 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         
         # Check if current user is the customer
         if obj.customer == request_user:
-            return obj.vendor.business_name
+            return obj.vendor.store_name
         else:
             # Current user is the vendor, return customer name
             return f"{obj.customer.first_name} {obj.customer.last_name}".strip() or obj.customer.username
@@ -81,7 +81,7 @@ class ChatMessageSerializer(serializers.ModelSerializer):
         if obj.sender_type == 'customer' and obj.sender_user:
             return f"{obj.sender_user.first_name} {obj.sender_user.last_name}".strip() or obj.sender_user.username
         elif obj.sender_type == 'vendor' and obj.sender_vendor:
-            return obj.sender_vendor.business_name
+            return obj.sender_vendor.store_name
         else:
             return 'System'
     
@@ -125,5 +125,5 @@ class ChatParticipantSerializer(serializers.ModelSerializer):
         if obj.participant_type == 'customer' and obj.user:
             return f"{obj.user.first_name} {obj.user.last_name}".strip() or obj.user.username
         elif obj.participant_type == 'vendor' and obj.vendor:
-            return obj.vendor.business_name
+            return obj.vendor.store_name
         return 'Unknown'

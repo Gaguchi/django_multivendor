@@ -200,6 +200,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     authTokens,
+    isAuthenticated: !!user,
     login,
     logout,
     refreshToken,
