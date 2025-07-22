@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { ChatWebSocketProvider } from '../contexts/ChatWebSocketContext';
 import ChatList from '../../../frontend/src/components/chat/ChatList';
 import ChatInterface from '../../../frontend/src/components/chat/ChatInterface';
 import { FiMessageCircle } from 'react-icons/fi';
 
 const VendorChatPage = () => {
+  const { roomId } = useParams();
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [isMobileView, setIsMobileView] = useState(false);
+
+  // Set selected room based on URL parameter
+  useEffect(() => {
+    if (roomId) {
+      setSelectedRoom({ id: parseInt(roomId) });
+      setIsMobileView(true);
+    }
+  }, [roomId]);
 
   const handleRoomSelect = (room) => {
     setSelectedRoom(room);
@@ -33,9 +43,9 @@ const VendorChatPage = () => {
 
           {/* Chat Interface - Main Area */}
           <div className="flex-1 flex flex-col">
-            {selectedRoom ? (
+            {selectedRoom || roomId ? (
               <ChatInterface 
-                roomId={selectedRoom.id}
+                roomId={roomId || selectedRoom.id}
                 onClose={() => setSelectedRoom(null)}
               />
             ) : (
@@ -65,9 +75,9 @@ const VendorChatPage = () => {
             />
           ) : (
             /* Show Chat Interface on Mobile */
-            selectedRoom && (
+            (selectedRoom || roomId) && (
               <ChatInterface 
-                roomId={selectedRoom.id}
+                roomId={roomId || selectedRoom.id}
                 onClose={handleCloseMobileChat}
                 className="h-full"
               />

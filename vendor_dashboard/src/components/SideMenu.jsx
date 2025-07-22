@@ -130,13 +130,8 @@ export default function SideMenu() {
                     </a>
                     <ul className={`sub-menu ${expandedMenus['messages'] ? 'show' : ''}`}>
                       <li className="sub-menu-item">
-                        <Link to="/attributes">
-                          <div className="text">Attributes</div>
-                        </Link>
-                      </li>
-                      <li className="sub-menu-item">
-                        <Link to="/attributes/add">
-                          <div className="text">Add attributes</div>
+                        <Link to="/messages">
+                          <div className="text">All Messages</div>
                         </Link>
                       </li>
                     </ul>

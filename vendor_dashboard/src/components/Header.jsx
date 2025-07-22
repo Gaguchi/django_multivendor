@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { clearToken, getUserData } from '../utils/auth';
 import { useEffect } from 'react';
 import NotificationDropdown from './Notifications/NotificationDropdown';
+import MessageDropdown from './MessageDropdown';
 
 export default function Header() {
     const navigate = useNavigate();
@@ -383,6 +384,7 @@ export default function Header() {
                     </ul>
                   </div>
                 </div>
+                <MessageDropdown />
                 <NotificationDropdown />
                 <div className="header-item button-zoom-maximize">
                   <div className="">

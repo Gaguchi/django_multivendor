@@ -11,6 +11,7 @@ import { VendorProvider } from './contexts/VendorContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { WebSocketProvider } from './contexts/WebSocketContext';
 import { ToastProvider } from './contexts/ToastContext';
+import { ChatProvider } from './contexts/ChatContext';
 import { isAuthenticated, isVendor, initializeTokenManagement, cleanupTokenManagement } from './utils/auth';
 import './assets/css/custom.css'; // Import custom CSS for menu fixes
 
@@ -224,41 +225,35 @@ function App() {
       <NotificationProvider>
         <ToastProvider>
           <WebSocketProvider>
-            <Router future={{
-              v7_startTransition: true,
-              v7_relativeSplatPath: true
-            }}>
-              <Routes>
-                  <Route 
-                    path="/login" 
-                    element={isAuthorized ? <Navigate to="/" /> : <Login />} 
+            <ChatProvider>
+              <Router future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true
+              }}>
+                <Routes>
+                    <Route 
+                      path="/login" 
+                      element={isAuthorized ? <Navigate to="/" /> : <Login />} 
+                    />
+                    <Route 
+                      path="/register" 
+                    element={isAuthorized ? <Navigate to="/" /> : <Register />} 
                   />
                   <Route 
-                    path="/register" 
-                  element={isAuthorized ? <Navigate to="/" /> : <Register />} 
-                />
-                <Route 
-                  path="/auth/callback" 
-                  element={<OAuthCallback />} 
-                />
-                <Route 
-                  path="/" 
-                  element={
-                    <ProtectedRoute>
-                      <MainLayout />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/*" 
-                  element={
-                    <ProtectedRoute>
-                      <MainLayout />
-                    </ProtectedRoute>
-                  } 
-                />
-              </Routes>
-            </Router>
+                    path="/auth/callback" 
+                    element={<OAuthCallback />} 
+                  />
+                  <Route 
+                    path="/*" 
+                    element={
+                      <ProtectedRoute>
+                        <MainLayout />
+                      </ProtectedRoute>
+                    } 
+                  />
+                </Routes>
+              </Router>
+            </ChatProvider>
           </WebSocketProvider>
         </ToastProvider>
       </NotificationProvider>

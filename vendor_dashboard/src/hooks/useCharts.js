@@ -8,9 +8,19 @@ export const useChartInitialization = () => {
   useEffect(() => {
     console.log("Chart initialization hook triggered");
     
+    // Ensure React and DOM are ready
+    if (typeof document === 'undefined') {
+      console.warn("Document not available, skipping chart initialization");
+      return;
+    }
+    
     // Wait for DOM to fully render before initializing charts
     const initTimeout = setTimeout(() => {
-      initializeAllCharts();
+      try {
+        initializeAllCharts();
+      } catch (error) {
+        console.error("Error during chart initialization:", error);
+      }
     }, 500);
     
     // Cleanup function
