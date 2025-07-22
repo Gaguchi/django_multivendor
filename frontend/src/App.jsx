@@ -26,6 +26,7 @@ import Orders from './pages/Orders'
 import OrderDetail from './pages/OrderDetail'
 import OrderTracking from './pages/OrderTracking'
 import Reviews from './pages/Reviews'
+import ChatPage from './pages/ChatPage'
 import IsolatedStickyTest from './pages/IsolatedStickyTest'
 import AddressMapDemo from './pages/AddressMapDemo'
 import MapDemo from './pages/MapDemo'
@@ -73,6 +74,7 @@ function AppContent() {
         <Route path="/account/orders" element={<Orders />} />
         <Route path="/account/orders/:orderNumber" element={<OrderDetail />} />
         <Route path="/account/reviews" element={<Reviews />} />
+        <Route path="/chat" element={<ChatPage />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />

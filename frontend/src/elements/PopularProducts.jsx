@@ -1,7 +1,22 @@
+import React from 'react'
 import { useProducts } from '../hooks/useProducts'
 import ProductGrid from './ProductGrid'
 
 export default function PopularProducts() {
+  // Safety check for React hooks
+  if (!React || !React.useState) {
+    console.error('🚨 PopularProducts: React not properly initialized')
+    return (
+      <div>
+        <h2 className="section-title">Most Popular Products</h2>
+        <p className="section-info font2">Loading...</p>
+        <div className="products-container product-slider-tab rounded">
+          <div>React is loading...</div>
+        </div>
+      </div>
+    )
+  }
+
   const { data, isLoading, error } = useProducts()
 
   // Extract products array from paginated response

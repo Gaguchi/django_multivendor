@@ -1,7 +1,22 @@
+import React from 'react'
 import { useProducts } from '../hooks/useProducts'
 import ProductGrid from './ProductGrid'
 
 export default function Specials() {
+  // Safety check for React hooks
+  if (!React || !React.useState) {
+    console.error('🚨 Specials: React not properly initialized')
+    return (
+      <div>
+        <h2 className="section-title">Special Offers</h2>
+        <p className="section-info font2">Loading...</p>
+        <div className="products-container product-slider-tab rounded">
+          <div>React is loading...</div>
+        </div>
+      </div>
+    )
+  }
+
   const { data, isLoading, error } = useProducts({
     pageSize: 6 // Limit to 6 special products
   })

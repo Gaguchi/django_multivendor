@@ -1,13 +1,26 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
+import React from 'react'
 import api from '../services/api'
 
 export function useProducts(options = {}, queryConfig = {}) {
   // Reduced logging to minimize noise
   // console.log('🎣 useProducts hook called with options:', options)
   
+  // Safety check to ensure React is available
+  if (!React || !React.useMemo) {
+    console.error('🚨 React hooks not available - React may not be properly initialized')
+    return {
+      data: null,
+      isLoading: false,
+      error: new Error('React hooks not available'),
+      hasNextPage: false,
+      fetchNextPage: () => {},
+      isFetchingNextPage: false
+    }
+  }
+  
   // Stable query configuration
-  const stableConfig = useMemo(() => ({
+  const stableConfig = React.useMemo(() => ({
     staleTime: 1000,
     gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,

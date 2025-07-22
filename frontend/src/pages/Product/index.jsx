@@ -6,6 +6,7 @@ import { useCart } from '../../contexts/CartContext'
 import { useWishlist } from '../../contexts/WishlistContext'
 import { useAuth } from '../../contexts/AuthContext'
 import ProductReviews from '../../components/reviews/ProductReviews'
+import ChatButton from '../../components/chat/ChatButton'
 import styles from './Product.module.css'
 
 export default function Product() {
@@ -432,6 +433,16 @@ export default function Product() {
                             </button>
                           </div>
                         </div>
+                        
+                        {/* Chat with Vendor Button */}
+                        {product.vendor && (
+                          <div className="mt-3">
+                            <ChatButton 
+                              vendorId={product.vendor.id}
+                              vendorName={product.vendor.store_name}
+                            />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

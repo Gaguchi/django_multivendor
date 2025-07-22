@@ -18,13 +18,15 @@ try:
     from channels.routing import ProtocolTypeRouter, URLRouter
     from channels.auth import AuthMiddlewareStack
     import orders.routing
+    import chat.routing
+    
+    # Combine WebSocket URL patterns
+    websocket_urlpatterns = orders.routing.websocket_urlpatterns + chat.routing.websocket_urlpatterns
     
     application = ProtocolTypeRouter({
         "http": django_asgi_app,
         "websocket": AuthMiddlewareStack(
-            URLRouter(
-                orders.routing.websocket_urlpatterns
-            )
+            URLRouter(websocket_urlpatterns)
         ),
     })
 except ImportError:

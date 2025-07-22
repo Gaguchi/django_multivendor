@@ -86,6 +86,9 @@ if 'ai_search' in settings.INSTALLED_APPS:
 if 'notifications' in settings.INSTALLED_APPS:
     urlpatterns.append(path('api/notifications/', include('notifications.urls')))
 
+if 'chat' in settings.INSTALLED_APPS:
+    urlpatterns.append(path('api/chat/', include('chat.urls')))
+
 # Only include social auth URLs if the package is installed
 if 'social_django' in settings.INSTALLED_APPS:
     urlpatterns.append(path('auth/', include('social_django.urls', namespace='social')))

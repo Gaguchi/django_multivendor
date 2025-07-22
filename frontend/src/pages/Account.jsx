@@ -9,6 +9,9 @@ import DashboardSummary from '../components/Dashboard/DashboardSummary'
 import OrdersList from '../components/Dashboard/OrdersList'
 import AddressesList from '../components/Dashboard/AddressesList'
 
+// Import Chat Components
+import ChatPage from './ChatPage'
+
 export default function Account() {
     const { user, logout } = useAuth();
     const [searchParams] = useSearchParams();
@@ -188,6 +191,22 @@ export default function Account() {
                                         >
                                             <i className="icon-settings"></i>
                                             <span>Preferences</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div className="menu-section">
+                                <h3>Communication</h3>
+                                <ul>
+                                    <li>
+                                        <button 
+                                            className={`menu-item ${activeSection === 'messages' ? 'active' : ''}`}
+                                            onClick={() => handleSectionChange('messages')}
+                                        >
+                                            <i className="icon-message"></i>
+                                            <span>Messages</span>
+                                            <span className="badge">3</span>
                                         </button>
                                     </li>
                                 </ul>
@@ -386,6 +405,19 @@ export default function Account() {
                                                 <button type="button" className="btn-secondary">Reset</button>
                                             </div>
                                         </form>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Messages Section */}
+                            {activeSection === 'messages' && (
+                                <div className="messages-content">
+                                    <div className="section-header">
+                                        <h2>Messages</h2>
+                                        <p>Chat with vendors and manage your conversations</p>
+                                    </div>
+                                    <div className="chat-container">
+                                        <ChatPage />
                                     </div>
                                 </div>
                             )}

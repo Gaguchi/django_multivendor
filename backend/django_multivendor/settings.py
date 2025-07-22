@@ -74,6 +74,7 @@ PROJECT_APPS = [
     'search',  # AI search functionality
     'ai_search',  # AI-powered search with Ollama
     'notifications',  # Notification system
+    'chat',  # Real-time chat system
 ]
 
 # Optional third-party apps, only added if installed
