@@ -6,6 +6,8 @@ import { WishlistProvider } from './contexts/WishlistContext'
 import { OrderProvider } from './contexts/OrderContext'
 import { ReviewProvider } from './contexts/ReviewContext'
 import { ToastProvider } from './contexts/ToastContext'
+import { ChatProvider } from './contexts/ChatContext'
+import { ChatWebSocketProvider } from './contexts/ChatWebSocketContext'
 import { initModalCleanup } from './utils/modalCleanup'
 import Layout from './components/Layout'
 import HomePage from './pages/Home'
@@ -27,6 +29,7 @@ import OrderDetail from './pages/OrderDetail'
 import OrderTracking from './pages/OrderTracking'
 import Reviews from './pages/Reviews'
 import ChatPage from './pages/ChatPage'
+import Messages from './pages/Messages'
 import IsolatedStickyTest from './pages/IsolatedStickyTest'
 import AddressMapDemo from './pages/AddressMapDemo'
 import MapDemo from './pages/MapDemo'
@@ -75,6 +78,11 @@ function AppContent() {
         <Route path="/account/orders/:orderNumber" element={<OrderDetail />} />
         <Route path="/account/reviews" element={<Reviews />} />
         <Route path="/chat" element={<ChatPage />} />
+        <Route path="/messages" element={
+          <ChatWebSocketProvider>
+            <Messages />
+          </ChatWebSocketProvider>
+        } />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
@@ -100,8 +108,10 @@ function App() {
           <OrderProvider>
             <ReviewProvider>
               <ToastProvider>
-                <AppContent />
-                <CartMergeNotification />
+                <ChatProvider>
+                  <AppContent />
+                  <CartMergeNotification />
+                </ChatProvider>
               </ToastProvider>
             </ReviewProvider>
           </OrderProvider>

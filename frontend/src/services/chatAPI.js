@@ -16,10 +16,14 @@ export const chatAPI = {
   getChatMessages: (chatRoomId, page = 1) => 
     api.get(`/api/chat/api/messages/?chat_room=${chatRoomId}&page=${page}`),
   
-  sendMessage: (chatRoomId, content) => 
+  getMessages: (roomId, page = 1) => 
+    api.get(`/api/chat/api/messages/?chat_room=${roomId}&page=${page}`),
+  
+  sendMessage: (chatRoomId, messageData) => 
     api.post('/api/chat/api/messages/', {
       chat_room: chatRoomId,
-      content: content
+      content: messageData.content || messageData,
+      sender_type: messageData.sender_type || 'customer'
     }),
 
   // Chat Participants
