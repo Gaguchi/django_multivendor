@@ -148,3 +148,47 @@
         margin-bottom: 20px;
     }
 }
+
+/* Chat container styles for account page */
+.messages-content .chat-container {
+    height: 600px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.messages-content .chat-container .messages-container {
+    height: 100%;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.messages-content .section-header {
+    margin-bottom: 20px;
+}
+
+.messages-content .section-header h2 {
+    font-size: 1.8rem;
+    color: #222529;
+    margin-bottom: 8px;
+}
+
+.messages-content .section-header p {
+    color: #777;
+    margin-bottom: 0;
+}
+
+/* Adjust messages component for account page */
+.account-content .messages-container {
+    background: transparent;
+}
+
+.account-content .messages-sidebar {
+    background: #ffffff;
+    border-right: 1px solid #e9ecef;
+}
+
+.account-content .chat-main {
+    background: #ffffff;
+}

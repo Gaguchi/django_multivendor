@@ -11,6 +11,8 @@ import AddressesList from '../components/Dashboard/AddressesList'
 
 // Import Chat Components
 import ChatPage from './ChatPage'
+import Messages from './Messages'
+import { ChatWebSocketProvider } from '../contexts/ChatWebSocketContext'
 
 export default function Account() {
     const { user, logout } = useAuth();
@@ -417,7 +419,9 @@ export default function Account() {
                                         <p>Chat with vendors and manage your conversations</p>
                                     </div>
                                     <div className="chat-container">
-                                        <ChatPage />
+                                        <ChatWebSocketProvider>
+                                            <Messages />
+                                        </ChatWebSocketProvider>
                                     </div>
                                 </div>
                             )}

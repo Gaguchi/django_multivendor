@@ -7,7 +7,6 @@ import { OrderProvider } from './contexts/OrderContext'
 import { ReviewProvider } from './contexts/ReviewContext'
 import { ToastProvider } from './contexts/ToastContext'
 import { ChatProvider } from './contexts/ChatContext'
-import { ChatWebSocketProvider } from './contexts/ChatWebSocketContext'
 import { initModalCleanup } from './utils/modalCleanup'
 import Layout from './components/Layout'
 import HomePage from './pages/Home'
@@ -78,11 +77,6 @@ function AppContent() {
         <Route path="/account/orders/:orderNumber" element={<OrderDetail />} />
         <Route path="/account/reviews" element={<Reviews />} />
         <Route path="/chat" element={<ChatPage />} />
-        <Route path="/messages" element={
-          <ChatWebSocketProvider>
-            <Messages />
-          </ChatWebSocketProvider>
-        } />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
